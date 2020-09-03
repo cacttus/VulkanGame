@@ -8,7 +8,7 @@
             "name": "cpp - Build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${workspaceFolder}/bin/debug/VulkanMarioDemo_dx64",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -22,8 +22,27 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "C/C++: cpp build active file",
+            "preLaunchTask": "Build VMA",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "cpp - Build Only",
+            "type": "cppdbg",
+            "request":"launch",
+            "program": "",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "",
+            "setupCommands": [
+            ],
+            "preLaunchTask": "Build VMA",
             "miDebuggerPath": "/usr/bin/gdb"
         }
+
+
+
+
     ]
 }
