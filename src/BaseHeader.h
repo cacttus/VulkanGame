@@ -1,7 +1,7 @@
 
-
-#ifndef __BASEHEADER_H__
-#define __BASEHEADER_H__
+#pragma once
+#ifndef __BASEHEADER_H_0867302496729054820394__
+#define __BASEHEADER_H_0867302496729054820394__
 
 //Basic stuff.
 #include <iostream>

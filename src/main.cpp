@@ -1,16 +1,17 @@
-#include <SDL2/SDL.h>
+#include "./Gu.h"
 #include "./SDLVulkan.h"
+#include <SDL2/SDL.h>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
 using namespace VulkanGame;
 
-int main(int argc, char **argv) { 
+int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
 
-  std::cout<< "hello worldy world." <<std::endl;
+  Gu::initGlobals();
 
   SDLVulkan sdl;
 
@@ -20,6 +21,6 @@ int main(int argc, char **argv) {
   SDL_Delay(3000);
 
   sdl.cleanup();
-
+  Gu::destroyGlobals();
   return 0;
 }
