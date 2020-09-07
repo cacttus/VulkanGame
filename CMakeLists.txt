@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 project(VulkanGame VERSION 0.1.0)
 
 include(CTest)
@@ -38,3 +40,5 @@ if(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang
     #add_compile_options("$<$<CONFIG:RELEASE>:sdl2-config --cflags --libs>")
     
 endif()
+
+#remove warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]

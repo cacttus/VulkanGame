@@ -1,4 +1,4 @@
-
+#Single include/src.
 # set(SOURCE
 #    ${SOURCE}
 #    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
@@ -13,6 +13,7 @@
 # )
 
 #Gather all include & src
+message("/src/ current CMAKE src dir is " ${CMAKE_CURRENT_SOURCE_DIR})
 set(VG_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/)
 
 file(GLOB_RECURSE VG_SOURCE_FILES ${VG_SRC_DIR}*.cpp)
