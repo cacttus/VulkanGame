@@ -30,24 +30,28 @@
 #include "../gfx/GraphicsContext.h"
 #include "../gfx/RenderSettings.h"
 #include "../gfx/ShaderMaker.h"
-#include "../gfx/UiControls.h"   
-#include "../gfx/ParticleManager.h"   
+#include "../gfx/UiControls.h"
+#include "../gfx/ParticleManager.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/OpenGLApi.h"
 #include "../base/GLContext.h"
 #include "../model/ModelCache.h"
 #include "../model/VertexTypes.h"
 #include "../model/VertexFormat.h"
-#include "../ext/lodepng.h" 
+#include "../ext/lodepng.h"
 #include <chrono>
 #include <thread>
 #include <iostream>
 
+#ifndef BR2_OS_WINDOWS
+//For Sigtrap.
+#include <signal.h>
+#endif
 
 extern "C" {
-  //nothings commented on Apr 12, 2016
-  //It's not meant to be #included. Don't #include it, just compile & link it.
-  extern int stb_vorbis_decode_filename(const char* filename, int* channels, int* sample_rate, short** output);
+//nothings commented on Apr 12, 2016
+//It's not meant to be #included. Don't #include it, just compile & link it.
+extern int stb_vorbis_decode_filename(const char* filename, int* channels, int* sample_rate, short** output);
 }
 
 //don't put this in a header file
@@ -73,7 +77,7 @@ std::shared_ptr<EngineConfig> Gu::_pEngineConfig = nullptr;
 std::shared_ptr<Net> Gu::_pNet = nullptr;
 std::shared_ptr<InputManager> Gu::_pGlobalInput = nullptr;
 
-template < class Tx >
+template <class Tx>
 std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> tt) {
   AssertOrThrow2(tt != nullptr);
   //**TODO: verify that the calling thread is the main thread.  Deadlocks has been causing issues.
@@ -103,7 +107,10 @@ std::shared_ptr<GLContext> Gu::getCoreContext() {
   }
   return oglapi->getCoreContext()->getThis<GLContext>();
 }
-void Gu::setGraphicsApi(std::shared_ptr<GraphicsApi> api) { AssertOrThrow2(api != nullptr); _pGraphicsApi = api; }
+void Gu::setGraphicsApi(std::shared_ptr<GraphicsApi> api) {
+  AssertOrThrow2(api != nullptr);
+  _pGraphicsApi = api;
+}
 void Gu::checkErrorsDbg() { Gu::getCoreContext()->chkErrDbg(); }
 void Gu::checkErrorsRt() { Gu::getCoreContext()->chkErrRt(); }
 bool Gu::is64Bit() {
@@ -216,10 +223,9 @@ void Gu::initGlobals(const std::vector<std::string>& args) {
   getLogger()->enableLogToFile(Gu::getEngineConfig()->getEnableLogToFile());
   getLogger()->enableLogToConsole(Gu::getEngineConfig()->getEnableLogToConsole());
 
-
   //Print some environment Diagnostics
-  BRLogInfo(Stz  "Operating System: " + Gu::getOperatingSystemName());
-  BRLogInfo(Stz  "C++ Version: " + Gu::getCPPVersion());
+  BRLogInfo(Stz "Operating System: " + Gu::getOperatingSystemName());
+  BRLogInfo(Stz "C++ Version: " + Gu::getCPPVersion());
 
   if (Gu::getEngineConfig()->getShowConsole() == false) {
     OperatingSystem::hideConsole();
@@ -246,7 +252,6 @@ void Gu::loadConfig(const std::vector<std::string>& args) {
     parsearg(arg, key, value);
     processArg(key, value);
   }
-
 }
 //void Gu::setContext(std::shared_ptr<GraphicsContext> rb) {
 //    Gu::_pContext = rb;
@@ -280,11 +285,11 @@ bool Gu::isBigEndian() {
 #endif
 }
 std::shared_ptr<Img32> Gu::loadImage(std::string imgLoc) {
-  unsigned char* image = nullptr; //the raw pixels
+  unsigned char* image = nullptr;  //the raw pixels
   unsigned int width, height;
   int err;
   //char* imgData = 0;
- // uint32_t imgSize;
+  // uint32_t imgSize;
   std::shared_ptr<Img32> ret = nullptr;
 
   std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>("<none>");
@@ -293,7 +298,7 @@ std::shared_ptr<Img32> Gu::loadImage(std::string imgLoc) {
     err = lodepng_decode32(&image, &width, &height, (unsigned char*)fb->getData().ptr(), fb->getData().count());
     if (err != 0) {
       //FB should free itself.
-    //  Gu::SDLFileFree(imgData);
+      //  Gu::SDLFileFree(imgData);
       BRThrowException(Stz "Could not load image " + imgLoc + " err code = " + err);
     }
     else {
@@ -324,7 +329,7 @@ bool Gu::saveImage(std::string path, std::shared_ptr<Img32> spec) {
   unsigned char* buffer = 0;
   size_t buffersize = 0;
   //For some reason we have to call this twice, i'm not sure.  Maybe LODEPNG wants buffer to be allocated?
- // lodepng_encode_memory(&buffer, &buffersize, imageData, w, h, LCT_RGBA, 8);
+  // lodepng_encode_memory(&buffer, &buffersize, imageData, w, h, LCT_RGBA, 8);
   unsigned error = lodepng_encode_memory(&buffer, &buffersize, imageData, w, h, LCT_RGBA, 8);
   if (error == 0) {
     Allocator<char> allocr(buffersize, (char*)buffer);
@@ -339,7 +344,7 @@ bool Gu::saveImage(std::string path, std::shared_ptr<Img32> spec) {
     BRLogError("LodePng - Error encoding image '" + path + "'.");
     bRet = false;
   }
-  free(buffer);//lodepng_free
+  free(buffer);  //lodepng_free
 
   Gu::checkErrorsDbg();
 
@@ -370,19 +375,22 @@ static CFStringRef stdStrToCFStr(std::string st) {
 #endif
 
 void Gu::debugBreak() {
-#ifdef _WIN32
-#ifdef _DEBUG
+#ifdef BR2_OS_WINDOWS
   DebugBreak();
+#else
+#ifdef BR2_OS_LINUX
+  raise(SIGTRAP);
+#else
 #endif
 #endif
 }
 
 int Gu::loadSound(std::string path, int& __out_ iChannels, int& __out_ iSampleRate,
-  int16_t*& __out_ pData, int& __out_ nSamples, int& __out_ iDataLenBytes) {
+                  int16_t*& __out_ pData, int& __out_ nSamples, int& __out_ iDataLenBytes) {
   //  it returns the number of
-  // samples decoded, and you told it the number of channels and the sample rate.Multiply 
+  // samples decoded, and you told it the number of channels and the sample rate.Multiply
   // those three together, and you get the total number of shorts in the buffer;
-  // multiply by sizeof(short), and voilá; size of that buffer in bytes.
+  // multiply by sizeof(short), and voilï¿½; size of that buffer in bytes.
   nSamples = stb_vorbis_decode_filename(path.c_str(), &iChannels, &iSampleRate, &pData);
 
   if (nSamples <= 0) {
@@ -426,7 +434,6 @@ void Gu::inlineDrawBoxCont(const Box3f* b) {
   glVertex3f(b->_max.x, b->_max.y, b->_max.z);
   glVertex3f(b->_max.x, b->_max.y, b->_min.z);
 
-
   glVertex3f(b->_max.x, b->_max.y, b->_min.z);
   glVertex3f(b->_min.x, b->_max.y, b->_min.z);
   glVertex3f(b->_max.x, b->_max.y, b->_min.z);
@@ -437,16 +444,13 @@ void Gu::inlineDrawBoxCont(const Box3f* b) {
   glVertex3f(b->_min.x, b->_min.y, b->_max.z);
   glVertex3f(b->_max.x, b->_min.y, b->_max.z);
 
-
   glVertex3f(b->_min.x, b->_max.y, b->_min.z);
   glVertex3f(b->_min.x, b->_max.y, b->_max.z);
-
 
   glVertex3f(b->_max.x, b->_min.y, b->_min.z);
   glVertex3f(b->_max.x, b->_min.y, b->_max.z);
 #endif
 }
-
 
 float Gu::fade(float t) {
   //T = [0,1]
@@ -455,7 +459,6 @@ float Gu::fade(float t) {
   // the final output.
   return 6 * powf(t, 5) - 15 * powf(t, 4) + 10 * powf(t, 3);
   //  return 6*(t*t*t*t*t) - 15*(t*t*t*t) + 10*(t*t*t);         // 6t^5 - 15t^4 + 10t^3
-
 }
 
 void Gu::checkMemory() {
@@ -516,7 +519,7 @@ string_t Gu::getOperatingSystemName() {
   //#error "Operating System Error"
 
 #endif
-    //CheckOsErrorsDbg();
+  //CheckOsErrorsDbg();
   return res;
 }
 
@@ -530,7 +533,6 @@ uint32_t Gu::getCurrentThreadId() {
   return std::hash<std::thread::id>()(std::this_thread::get_id());
 #endif
   return threadId;
-
 }
 bool Gu::isDebug() {
 #ifdef _DEBUG
@@ -545,9 +547,7 @@ std::vector<string_t> Gu::argsToVectorOfString(int argc, char** argv, char delim
   //todo - fix the delimiter thing
   std::vector<string_t> ret;
   for (int i = 0; i < argc; ++i) {
-
     string_t str(argv[i]);
-
 
     ret.push_back(str);
   }
@@ -635,7 +635,6 @@ void Gu::createManagers() {
   _pNet = std::make_shared<Net>();
 }
 void Gu::updateManagers() {
-
   if (_pSequencer != nullptr) {
     _pSequencer->update();
   }
@@ -653,4 +652,4 @@ void Gu::sleepThread(uint64_t milliseconds) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 
-}//ns Game
+}  // namespace BR2

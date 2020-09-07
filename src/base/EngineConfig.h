@@ -65,7 +65,7 @@ class EngineConfig  ..  {
 };
 */
 
-#define XMLCONFIG_PROP(x) const string_t ##(x) = #x
+#define XMLCONFIG_PROP(x) const std::string x = #x
 
 class EngineConfig_Internal;
 class EngineConfig : public XmlFile {

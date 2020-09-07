@@ -12,13 +12,19 @@
 namespace BR2 {
 //Operating System global defines
 //We can use either SDL's defines, or use the defines in the expected OS headers
-// BR2_OS_WINDOWS, BR2_OS_ANDROID, BRO_OS_LINUX, BR2_OS_IOS, BRO_OS_OSX
+// BR2_OS_WINDOWS, BR2_OS_ANDROID, BR2_OS_LINUX, BR2_OS_IOS, BR2_OS_OSX
 #define MUST_OVERRIDE virtual
 #define SHADOWS
 
 #define BRO_MAX_PATH 512
 
-#define DEL_MEM(x) do{ if(x){delete x; x=nullptr;} } while(0);
+#define DEL_MEM(x) \
+  do {             \
+    if (x) {       \
+      delete x;    \
+      x = nullptr; \
+    }              \
+  } while (0);
 
 #define FILESYSTEM_ROOT_DIRECTORY "./data"
 #define CACHE_ROOT_DIRECTORY "./data/cache"
@@ -30,22 +36,22 @@ namespace BR2 {
 #define FALSE false
 #endif
 
-#define DOES_NOT_OVERRIDE 
+#define DOES_NOT_OVERRIDE
 #define DOES_NOT_INHERIT _NoInheritClassBase
 #define OVERRIDE override
 #define NOT_VIRTUAL
 #define FORCE_INLINE inline
 #define STATIC static
-#ifndef __inout_ 
+#ifndef __inout_
 #define __inout_
 #endif
 
-#ifndef __out_ 
+#ifndef __out_
 #define __out_
 #endif
 
-#ifndef __in_ 
-#define __in_ 
+#ifndef __in_
+#define __in_
 #endif
 
 #ifndef __ignored
@@ -53,12 +59,12 @@ namespace BR2 {
 #endif
 
 //optinoal parameter
-#ifndef __opt_ 
+#ifndef __opt_
 #define __opt_
 #endif
 
 //Reference parameter (class does not own data)
-#ifndef __ref_ 
+#ifndef __ref_
 #define __ref_
 #endif
 
@@ -84,25 +90,66 @@ typedef std::string string_t;
 /************************************************************************/
 /* Enums                                                                */
 /************************************************************************/
-enum class FrameState { None, SyncBegin, Update, Render, SyncEnd };
+enum class FrameState { None,
+                        SyncBegin,
+                        Update,
+                        Render,
+                        SyncEnd };
 
-namespace ColorSpace { typedef enum { Linear, SRGB } e; }
-namespace ButtonState { typedef enum { Up, Press, Down, Release, None } e; }//2/11/18 added "None" for no mouse interation
-namespace MouseButton { typedef enum { Left, Right, Middle } e; }
-namespace PlayState { typedef enum { Playing, Paused, Stopped, Ended }e; }
-namespace MemSize { typedef enum { MEMSZ_GIG2 = 536870912 } e; }
-namespace FileWriteMode { typedef enum { Truncate, Append }e; }
-namespace LoadState { typedef enum { NotLoaded, Loaded, LoadFailed } e; }
+namespace ColorSpace {
+typedef enum { Linear,
+               SRGB } e;
+}
+namespace ButtonState {
+typedef enum { Up,
+               Press,
+               Down,
+               Release,
+               None } e;
+}  // namespace ButtonState
+namespace MouseButton {
+typedef enum { Left,
+               Right,
+               Middle } e;
+}
+namespace PlayState {
+typedef enum { Playing,
+               Paused,
+               Stopped,
+               Ended } e;
+}
+namespace MemSize {
+typedef enum { MEMSZ_GIG2 = 536870912 } e;
+}
+namespace FileWriteMode {
+typedef enum { Truncate,
+               Append } e;
+}
+namespace LoadState {
+typedef enum { NotLoaded,
+               Loaded,
+               LoadFailed } e;
+}
 namespace KeyMod {
 typedef enum {
   None = 0x00,
-  Shift = 0x01, Alt = 0x02, Ctrl = 0x04,
-  ShiftDontCare = 0x08, AltDontCare = 0x10, CtrlDontCare = 0x20
+  Shift = 0x01,
+  Alt = 0x02,
+  Ctrl = 0x04,
+  ShiftDontCare = 0x08,
+  AltDontCare = 0x10,
+  CtrlDontCare = 0x20
 } e;
 }
-namespace RenderSystem { typedef enum { OpenGL, Vulkan } e; }
-enum class OpenGLProfile { Core, Compatibility, ES };
-enum class LineBreak { Unix, DOS };
+namespace RenderSystem {
+typedef enum { OpenGL,
+               Vulkan } e;
+}
+enum class OpenGLProfile { Core,
+                           Compatibility,
+                           ES };
+enum class LineBreak { Unix,
+                       DOS };
 enum class GamePadType { KeyboardAndMouse };
 
 /************************************************************************/
@@ -125,7 +172,7 @@ class Exception;
 class SoundSpec;
 class SoundCache;
 class TouchInfo;
-class InputManager; // Renamed InputManager;
+class InputManager;  // Renamed InputManager;
 class GameMemory;
 class AppRunner;
 class Delta;
@@ -142,7 +189,6 @@ class ProjectFile;
 class CSharpScript;
 class GraphicsWindow;
 
-
 class WindowManager;
 class CSharpScript;
 class CSharpCompiler;
@@ -153,35 +199,33 @@ class GamePad;
 class GamePadButton;
 class KeyboardGamePad;
 
-template < class Tx >
+template <class Tx>
 class DynamicBuffer;
-template < class Tx >
+template <class Tx>
 class GrowBuffer;
-template < class Tx >
+template <class Tx>
 class Allocator;
 
 template <class TItem>
 class HashMapItem;
-template < class Tx >
+template <class Tx>
 class HashMap;
-
 
 typedef uint64_t t_timeval;
 typedef string_t DiskLoc;
-typedef int32_t t_date;            // - Date information [m][d][y1][y2] = [8][27][198][7]
-typedef int64_t t_datetime;        // - A Date + the time.[m][d][y1][y2][h][m][s][ms]
-typedef uint32_t t_time;
+// typedef int32_t t_date;            // - Date information [m][d][y1][y2] = [8][27][198][7]
+// typedef int64_t t_datetime;        // - A Date + the time.[m][d][y1][y2][h][m][s][ms]
+// typedef uint32_t t_time;
 typedef std::vector<char> ByteBuffer;
-typedef GameMemory PureMemory;//Pure memory without a VPtr
-typedef PureMemory GpuMemory; //Pure memory without a VPtr
-
+typedef GameMemory PureMemory;  //Pure memory without a VPtr
+typedef PureMemory GpuMemory;   //Pure memory without a VPtr
 
 /************************************************************************/
 /* Base Classes                                                         */
 /************************************************************************/
 class GameMemory : DOES_NOT_INHERIT {
 public:
-  NOT_VIRTUAL ~GameMemory() DOES_NOT_OVERRIDE {} // Upon tests - this also will get called when the class is deleted.
+  NOT_VIRTUAL ~GameMemory() DOES_NOT_OVERRIDE {}  // Upon tests - this also will get called when the class is deleted.
   GameMemory() {}
 };
 class VirtualMemory : public GameMemory {
@@ -191,15 +235,15 @@ public:
   virtual ~VirtualMemory() DOES_NOT_OVERRIDE {
   }
 };
-template < typename Tx >
+template <typename Tx>
 class VirtualMemoryShared : public std::enable_shared_from_this<Tx> {
 public:
   VirtualMemoryShared() {
   }
   virtual ~VirtualMemoryShared() DOES_NOT_OVERRIDE {
   }
-  template < typename Ty> std::shared_ptr<Ty> getThis() {
-    return std::dynamic_pointer_cast<Tx>(this->shared_from_this());
+  template <typename Ty> std::shared_ptr<Ty> getThis() {
+    return std::dynamic_pointer_cast<Ty>(this->shared_from_this());
   }
 };
 class OperatingSystemMemory : DOES_NOT_INHERIT {
@@ -220,10 +264,6 @@ public:
   }
 };
 
-
-
-}//ns BR2
-
-
+}  // namespace BR2
 
 #endif

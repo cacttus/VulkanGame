@@ -7,60 +7,18 @@
 
 #include <iostream>
 
+#include <SDL2/SDL.h>
+
+#ifndef BRO_OS_WINDOWS
+//This gets the OS name
+#include <sys/utsname.h>
+//Sort of similar to windows GetLastError
+#include <sys/errno.h>
+#endif
+
 namespace BR2 {
 
-int32_t OperatingSystem::getNumberOfProcessors() {
-#ifdef BR2_OS_WINDOWS
-  SYSTEM_INFO si;
-  GetSystemInfo(&si);
-  return (int32_t)si.dwNumberOfProcessors;
-#elif BR2_OS_ANDROID
-  return android_getCpuCount();
-#else
-  OS_METHOD_NOT_IMPLEMENTED
-#endif
-}
-void OperatingSystem::showMouseCursor() {
-#ifdef BR2_OS_WINDOWS
-  CURSORINFO ci;
-  ci.cbSize = sizeof(CURSORINFO);
-  int nFailover = 10000;
-  do {
-    GetCursorInfo(&ci);
-    ShowCursor(true); //ShowCursor is not a boolean method - it increments/decrements a display counter
-    nFailover--;
-  } while ((ci.flags & CURSOR_SHOWING) == 0 && (nFailover > 0));
-#else
-  OS_METHOD_NOT_IMPLEMENTED
-#endif
-}
-void OperatingSystem::hideMouseCursor() {
-#ifdef BR2_OS_WINDOWS
-  CURSORINFO ci;
-  ci.cbSize = sizeof(CURSORINFO);
-  int nFailover = 10000;
-  do {
-    GetCursorInfo(&ci);
-    ShowCursor(false);//ShowCursor is not a boolean method - it increments/decrements a display counter
-    nFailover--;
-  } while ((ci.flags & CURSOR_SHOWING) > 0 && (nFailover > 0));
-#else
-  OS_METHOD_NOT_IMPLEMENTED
-#endif
-}
-bool OperatingSystem::getMouseCursorIsVisible() {
-  bool ret = false;
-#ifdef BR2_OS_WINDOWS
-  CURSORINFO ci;
-  ci.cbSize = sizeof(ci);
-  GetCursorInfo(&ci);
-  ret = (ci.flags & CURSOR_SHOWING) > 0;
-#else
-  OS_METHOD_NOT_IMPLEMENTED
-#endif
-    return ret;
-}
-string_t  OperatingSystem::getOperatingSystemName() {
+string_t OperatingSystem::getOperatingSystemName() {
   string_t res;
 #ifdef BR2_OS_WINDOWS
   OSVERSIONINFOEX vex;
@@ -110,15 +68,15 @@ string_t  OperatingSystem::getOperatingSystemName() {
   }
 
 #else
-  res = "Operating system name not available.";
-  OS_METHOD_NOT_IMPLEMENTED
+  struct utsname uts;
+  uname(&uts);
+  res = uts.sysname;
 #endif
-    return res;
+  return res;
 }
-
 string_t OperatingSystem::getUserFolderPath() {
   //returns "My Documents" on windows.
-  //Linux .. ?
+  //Linux ~ or /home/(user)/
   string_t ret;
 #ifdef BR2_OS_WINDOWS
   char lpstrPath[BRO_MAX_PATH];
@@ -129,8 +87,8 @@ string_t OperatingSystem::getUserFolderPath() {
   ret = string_t(lpstrPath);
   OperatingSystem::suppressError(OSErrorCode::ErrorNoToken, false);
 
-#elif BRO_OS_LINUX
-  ret = t_string("/usr/");
+#else
+  ret = std::string("~/");
 #endif
   return ret;
 }
@@ -162,65 +120,31 @@ void OperatingSystem::suppressError(OSErrorCode ec, bool bWriteMessage) {
   string_t strMsg = "";
 #ifdef BR2_OS_WINDOWS
   switch (ec) {
-  case OSErrorCode::FileNotFound:
-    strMsg = "File Not Found";
-  case OSErrorCode::PathNotFound:
-    strMsg = "Path Not Found";
-  case OSErrorCode::NoGuidTranslation:
-    strMsg = "No GUID Translation for Security Audit";
-  case OSErrorCode::ProcNotFound:
-    strMsg = "Proc Not Found";
-  default:
-    strMsg = "Failed to register operating system error code. Code was not defined in the engine.";
+    case OSErrorCode::FileNotFound:
+      strMsg = "File Not Found";
+    case OSErrorCode::PathNotFound:
+      strMsg = "Path Not Found";
+    case OSErrorCode::NoGuidTranslation:
+      strMsg = "No GUID Translation for Security Audit";
+    case OSErrorCode::ProcNotFound:
+      strMsg = "Proc Not Found";
+    default:
+      strMsg = "Failed to register operating system error code. Code was not defined in the engine.";
   };
 #else
-  OS_METHOD_NOT_IMPLEMENTED
-#endif
+  //TODO: Linux
 
-    if (getError() == (int)ec) {
-      clearAllErrors();
-      if (bWriteMessage) {
-        BRLogInfo(strMsg);
-      }
+#endif
+  if (getError() == (int)ec) {
+    clearAllErrors();
+    if (bWriteMessage) {
+      BRLogInfo(strMsg);
     }
+  }
 }
-void OperatingSystem::showErrorDialog(string_t& str, string_t title) {
-#ifdef BR2_OS_WINDOWS
-  string_t dialogPath =
-    FileSystem::combinePath(
-      FileSystem::getExecutableDirectory(), string_t("WindowsErrorDialog.exe")
-    );
-
-  if (FileSystem::fileExists(dialogPath)) {
-    string_t logDir = Gu::getLogger()->getLogPath();//FileSystem::getLogDirectory();
-    string_t dialogExeCommand;
-    dialogExeCommand = dialogPath;
-
-    title = StringUtil::replaceAll(title, "\n", "\\n");
-    str = StringUtil::replaceAll(str, "\n", "\\n");
-    logDir = StringUtil::replaceAll(logDir, "\n", "\\n");
-
-    title = StringUtil::replaceAll(title, "\r", "\\r");
-    str = StringUtil::replaceAll(str, "\r", "\\r");
-    logDir = StringUtil::replaceAll(logDir, "\r", "\\r");
-
-
-    title = StringUtil::replaceAll(title, "\"", "\"\"\"");
-    str = StringUtil::replaceAll(str, "\"", "\"\"\"");
-    logDir = StringUtil::replaceAll(logDir, "\"", "\"\"\"");
-
-
-    dialogExeCommand += Stz " \"" + title + "\"";
-    dialogExeCommand += Stz " \"" + str + "\"";
-    dialogExeCommand += Stz " \"" + logDir + "\"";
-    system(dialogExeCommand.c_str());
-  }
-  else {
-    MessageBoxA(NULL, str.c_str(), title.c_str(), MB_ICONEXCLAMATION | MB_OK);
-  }
-#else
-  OS_METHOD_NOT_IMPLEMENTED
-#endif
+void OperatingSystem::showErrorDialog(const string_t& str, const string_t& title) {
+  //Sweet. Thanks SDL.
+  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title.c_str(), str.c_str(), NULL);
 }
 void OperatingSystem::clearAllErrors() {
 #ifdef BR2_OS_WINDOWS
@@ -252,7 +176,7 @@ int32_t OperatingSystem::getError() {
 //}
 //size_t OperatingSystem::getProcessMemoryUsage()
 //{
-//    
+//
 //#ifdef BR2_OS_WINDOWS
 //    PROCESS_MEMORY_COUNTERS pmex;
 //    GetProcessMemoryInfo( GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmex, sizeof(PROCESS_MEMORY_COUNTERS) );
@@ -264,7 +188,7 @@ int32_t OperatingSystem::getError() {
 //}
 
 string_t OperatingSystem::getRuntimeEnvironmentStr() {
-#ifdef _WIN32 
+#ifdef _WIN32
   return string_t("Windows 32 Bit");
 #elif _WIN64
   return string_t("Windows 64 Bit");
@@ -289,23 +213,26 @@ void OperatingSystem::showConsole() {
 #ifdef BR2_OS_WINDOWS
   ShowWindow(GetConsoleWindow(), SW_SHOW);
 #else
-  OS_METHOD_NOT_IMPLEMENTED
+  //No idea.
+  BRLogWarn("Can't call 'show console' for linux.");
 #endif
 }
 void OperatingSystem::hideConsole() {
 #ifdef BR2_OS_WINDOWS
   ShowWindow(GetConsoleWindow(), SW_HIDE);
 #else
-  OS_METHOD_NOT_IMPLEMENTED
+  //No Idea.
+  BRLogWarn("Can't call 'hide console' for linux.");
+  //OS_METHOD_NOT_IMPLEMENTED
 #endif
 }
-string_t OperatingSystem::showOpenFolderDialog(string_t saved_path) {
+string_t OperatingSystem::showOpenFolderDialog(const string_t& saved_path) {
 #ifdef BR2_OS_WINDOWS
   WCHAR path[MAX_PATH];
 
   const char* path_param = saved_path.c_str();
 
-  BROWSEINFO bi = { 0 };
+  BROWSEINFO bi = {0};
   bi.lpszTitle = L"Browse for folder...";
   bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
   bi.lpfn = [](HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData) {
@@ -334,25 +261,36 @@ string_t OperatingSystem::showOpenFolderDialog(string_t saved_path) {
     return StringUtil::wStrToStr(std::wstring(path));
   }
 #else
+#ifdef BR2_OS_LINUX
+  //Must test this.
+  Gu::debugBreak();
+
+  char filename[1024];
+  FILE* f = popen("zenity --file-selection", "r");
+  fgets(filename, 1024, f);
+  return filename;
+#else
   OS_METHOD_NOT_IMPLEMENTED
 #endif
+#endif
 
-    return "";
+
+  return "";
 }
-string_t OperatingSystem::showOpenFileDialog(string_t title, string_t filter, string_t defaultext, string_t basePath) {
+string_t OperatingSystem::showOpenFileDialog(const string_t& title, const string_t& filter, const string_t& defaultext, const string_t& basePath) {
   string_t file = "";
 #ifdef BR2_OS_WINDOWS
-  OPENFILENAMEW ofn = { 0 };
-  WCHAR openFileNameReturnString[MAX_PATH];	// the filename will go here from the openfile dialog
+  OPENFILENAMEW ofn = {0};
+  WCHAR openFileNameReturnString[MAX_PATH];  // the filename will go here from the openfile dialog
   ZeroMemory(openFileNameReturnString, MAX_PATH);
 
   ofn.lStructSize = sizeof(OPENFILENAMEA);
   ofn.lpstrFileTitle = openFileNameReturnString;
   ofn.nMaxFileTitle = MAX_PATH;
   ofn.lpstrTitle = title.length() ? StringUtil::strToWStr(title).c_str() : 0;
-  ofn.lpstrFilter = filter.length() ? StringUtil::strToWStr(filter).c_str() : 0;//"COLLADA Files (*.DAE)\0*.DAE\0\0";
+  ofn.lpstrFilter = filter.length() ? StringUtil::strToWStr(filter).c_str() : 0;  //"COLLADA Files (*.DAE)\0*.DAE\0\0";
   ofn.lpstrInitialDir = basePath.length() ? StringUtil::strToWStr(basePath).c_str() : 0;
-  ofn.lpstrDefExt = defaultext.length() ? StringUtil::strToWStr(defaultext).c_str() : 0;//"DAE";
+  ofn.lpstrDefExt = defaultext.length() ? StringUtil::strToWStr(defaultext).c_str() : 0;  //"DAE";
   ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
 
   if (!GetOpenFileNameW(&ofn)) {
@@ -360,9 +298,19 @@ string_t OperatingSystem::showOpenFileDialog(string_t title, string_t filter, st
   }
   file = StringUtil::wStrToStr(openFileNameReturnString);
 #else
+#ifdef BR2_OS_LINUX
+  //Must test this.
+  Gu::debugBreak();
+  char filename[1024];
+  FILE* f = popen("zenity --file-selection", "r");
+  fgets(filename, 1024, f);
+  return filename;
+#else
   OS_METHOD_NOT_IMPLEMENTED
 #endif
-    return file;
+#endif
+
+  return file;
 }
 
-}//ns BR2
+}  // namespace BR2

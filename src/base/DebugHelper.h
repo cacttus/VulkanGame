@@ -53,7 +53,6 @@ public:
   static void debugHeapEnd();
   static void setBreakAlloc(int allocNum);
   static void breakPoint();
-  static void breakPoint(bool expr);
   static void debugBreak();//Breaks only on debuf
   static void checkMemory();
   static void setCheckAlways();

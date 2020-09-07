@@ -6,100 +6,103 @@
 //#endif
 namespace BR2 {
 //Explicit versions
-bool TypeConv::strToBool(string_t& s1, bool bThrowIfInvalid) {
+bool TypeConv::strToBool(const string_t& s1, bool bThrowIfInvalid) {
   string_t s = StringUtil::lowercase(s1);
 
-  if (StringUtil::equals(s, "1"))
+  if (StringUtil::equals(s, "1")) {
     return true;
-  else if (StringUtil::equals(s, "0"))
+  }
+  else if (StringUtil::equals(s, "0")) {
     return false;
-  else if (StringUtil::equals(s, "true"))
+  }
+  else if (StringUtil::equals(s, "true")) {
     return true;
-  else if (StringUtil::equals(s, "false"))
+  }
+  else if (StringUtil::equals(s, "false")) {
     return false;
-  else if (StringUtil::equals(s, "t"))
+  }
+  else if (StringUtil::equals(s, "t")) {
     return true;
-  else if (StringUtil::equals(s, "f"))
+  }
+  else if (StringUtil::equals(s, "f")) {
     return false;
-  else if (StringUtil::equals(s, "y"))
+  }
+  else if (StringUtil::equals(s, "y")) {
     return true;
-  else if (StringUtil::equals(s, "n"))
+  }
+  else if (StringUtil::equals(s, "n")) {
     return false;
-  else if (StringUtil::equals(s, "yes"))
+  }
+  else if (StringUtil::equals(s, "yes")) {
     return true;
-  else if (StringUtil::equals(s, "no"))
+  }
+  else if (StringUtil::equals(s, "no")) {
     return false;
-
+  }
   if (bThrowIfInvalid) {
     BRThrowException("Invalid boolean cast, tried to cast " + s1 + " to boolean.");
   }
 
   return false;
 }
-long TypeConv::strToLong(string_t& s) {
+long TypeConv::strToLong(const string_t& s) {
   long ret;
   try {
     ret = std::stol(s);
-  }
-  catch (const std::invalid_argument & ia) {
+  } catch (const std::invalid_argument& ia) {
     BRLogError("strToLong: Invalid parameter" + s + ". ex: " + ia.what());
 
     throw ia;
   }
   return ret;
 }
-bool TypeConv::strToInt(string_t& s, int32_t& out) {
+bool TypeConv::strToInt(const string_t& s, int32_t& out) {
   try {
     out = std::stoi(s);
-  }
-  catch (const std::invalid_argument & ia) {
+  } catch (const std::invalid_argument& ia) {
     BRLogError("strToInt: Invalid parameter" + s + ". ex: " + ia.what());
     return false;
   }
   return true;
 }
-int32_t TypeConv::strToInt(string_t& s) {
+int32_t TypeConv::strToInt(const string_t& s) {
   int32_t ret;
   try {
     ret = std::stoi(s);
-  }
-  catch (const std::invalid_argument & ia) {
+  } catch (const std::invalid_argument& ia) {
     BRLogError("strToInt: Invalid argument '" + s + "'. ex: " + ia.what());
 
     throw ia;
   }
   return ret;
 }
-float TypeConv::strToFloat(string_t& s) {
+float TypeConv::strToFloat(const string_t& s) {
   float ret;
   try {
     ret = std::stof(s);
-  }
-  catch (const std::invalid_argument & ia) {
+  } catch (const std::invalid_argument& ia) {
     BRLogError("strToFloat: Invalid argument '" + s + "'. ex: " + ia.what());
 
     throw ia;
   }
   return ret;
 }
-uint32_t TypeConv::strToUint(string_t& s) {
+uint32_t TypeConv::strToUint(const string_t& s) {
   uint32_t ret;
   try {
     ret = (uint32_t)std::stoi(s);
-  }
-  catch (const std::invalid_argument & ia) {
+  } catch (const std::invalid_argument& ia) {
     BRLogError("strToUint: Invalid argument " + s + "'. ex: " + ia.what());
 
     throw ia;
   }
   return ret;
 }
-double TypeConv::strToDouble(string_t& s) {
+double TypeConv::strToDouble(const string_t& s) {
   double ret;
   try {
     ret = std::stod(s);
-  }
-  catch (const std::invalid_argument & ia) {
+  } catch (const std::invalid_argument& ia) {
     BRLogError("strToDouble: Invalid argument '" + s + "'.");
 
     throw ia;
@@ -108,7 +111,7 @@ double TypeConv::strToDouble(string_t& s) {
   return ret;
 }
 
-int8_t TypeConv::strToByte(string_t& s) {
+int8_t TypeConv::strToByte(const string_t& s) {
   int32_t i = strToInt(s);
   return (t_byte)i;
 }
@@ -122,13 +125,13 @@ int8_t TypeConv::strToByte(string_t& s) {
 
 //////////////////////////////////////////////////////////////////////////
 //Silent Fail Versions
-float TypeConv::strToFloat(string_t& s, bool bFailed) {
+float TypeConv::strToFloat(const string_t& s, bool bFailed) {
   char* pend;
   float ret = (float)strtod(s.c_str(), &pend);
   bFailed = (bool)(*pend != '\0');
   return ret;
 }
-double TypeConv::strToDouble(string_t& s, bool bFailed) {
+double TypeConv::strToDouble(const string_t& s, bool bFailed) {
   char* pend;
   double ret = strtod(s.c_str(), &pend);
   bFailed = (bool)(*pend != '\0');
@@ -182,7 +185,6 @@ string_t TypeConv::uint64ToStr(const uint64_t& i) {
   return ret;
 }
 
-
 string_t TypeConv::wstrToStr(wchar_t* wstr) {
   string_t ret;
 
@@ -203,7 +205,7 @@ string_t TypeConv::wstrToStr(wchar_t* wstr) {
 //    return t_string((char*)buf);
 //}
 
-string_t TypeConv::intToStr(const  int32_t i, char* fmt) {
+string_t TypeConv::intToStr(const int32_t i, const char* const fmt) {
   int32_t cpy = i;
   char buf[32];
   snprintf((char*)buf, 32, fmt, i);
@@ -211,6 +213,4 @@ string_t TypeConv::intToStr(const  int32_t i, char* fmt) {
   return string_t((char*)buf);
 }
 
-
-
-}
+}  // namespace BR2

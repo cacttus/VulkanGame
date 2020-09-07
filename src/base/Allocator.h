@@ -257,7 +257,7 @@ template <typename Tx> bool Allocator<Tx>::operator!=(Allocator<Tx> &in_ptr) {
  *  @brief assigns and deep copies rhs allocator
  */
 template <typename Tx> void Allocator<Tx>::operator=(const Allocator<Tx> &rhs) {
-  _alloca(rhs.count());
+  alloca(rhs.count());
   copyFrom(&rhs);
 }
 /**

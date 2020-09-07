@@ -4,16 +4,21 @@
 #include "../base/StringUtil.h"
 #include "../base/WindowsIncludes.h"
 
-
 #include <iostream>
+
 #ifdef BR2_OS_WINDOWS
 #include <DbgHelp.h>
 #include <TlHelp32.h>
 #endif
-
+#ifdef BR2_OS_LINUX
+#include <execinfo.h>
+#endif
 
 namespace BR2 {
+#ifdef BR2_OS_WINDOWS
 HANDLE hCrtLog;
+#endif
+
 bool _bDoDebug = false;
 
 void staticDebugBreak(string_t str) {
@@ -23,7 +28,6 @@ void staticDebugBreak(string_t str) {
 void runtimeAssertion(string_t str) {
   BRThrowException(str);
 }
-
 DebugHelper::DebugHelper() {
 }
 DebugHelper::~DebugHelper() {
@@ -31,22 +35,16 @@ DebugHelper::~DebugHelper() {
 void DebugHelper::breakPoint() {
   Gu::debugBreak();
 }
-void DebugHelper::breakPoint(bool expr) {
-#ifdef _DEBUG
-  if (expr) {
-    //Gu
-    //AsmCpuDebugBreak();
-  }
 
-#endif
-}
 void DebugHelper::debugBreak() {
 #ifdef _DEBUG
   //  DebugValidate(NULL);    // asm int 3
 #endif
 }
 void DebugHelper::setCheckAlways() {
-  std::cout << ("****SETTING CHECK ALWAYS***") << std::endl;;
+#ifdef _DEBUG
+#ifdef BR2_OS_WINDOWS
+  std::cout << ("****SETTING CHECK ALWAYS***") << std::endl;
   int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
   //clear
   flags &= ~_CRTDBG_CHECK_ALWAYS_DF;
@@ -56,9 +54,15 @@ void DebugHelper::setCheckAlways() {
   //set
   flags |= _CRTDBG_CHECK_ALWAYS_DF;
   _CrtSetDbgFlag(flags);
+#else
+#pragma warning("Heap debugging not available on Linux.")
+#endif
+#endif
 }
 void DebugHelper::setCheck16() {
-  std::cout << ("****SETTING CHECK 16***") << std::endl;;
+#ifdef _DEBUG
+#ifdef BR2_OS_WINDOWS
+  std::cout << ("****SETTING CHECK 16***") << std::endl;
   int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
   //clear
   flags &= ~_CRTDBG_CHECK_ALWAYS_DF;
@@ -68,20 +72,24 @@ void DebugHelper::setCheck16() {
   //set
   flags |= _CRTDBG_CHECK_EVERY_16_DF;
   _CrtSetDbgFlag(flags);
+#else
+#pragma warning("Heap debugging not available on Linux.")
+#endif
+#endif
 }
 void DebugHelper::debugHeapBegin(bool bDoDebug) {
   _bDoDebug = bDoDebug;
-  if (_bDoDebug == false)
+  if (_bDoDebug == false) {
     return;
+  }
 
 #ifdef _DEBUG
 #ifdef BR2_OS_WINDOWS
-
   //This chekcs every block for problems
-#define VERBOSITY 
-    //every 16 blocks
-    // 
-    //
+#define VERBOSITY
+  //every 16 blocks
+  //
+  //
   int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
   //https://msdn.microsoft.com/en-us/library/5at7yxcs.aspx
   //flags |= _CRTDBG_CHECK_ALWAYS_DF;
@@ -106,7 +114,8 @@ void DebugHelper::debugHeapBegin(bool bDoDebug) {
     //_CrtSetReportFile( _CRT_ERROR, _CRTDBG_FILE_STDERR );
   }
 #else
-#error "Operating System Error"
+#pragma warning("Heap debugging not available on Linux.")
+
 #endif
 #endif
 }
@@ -114,7 +123,11 @@ void DebugHelper::setBreakAlloc(int allocNum) {
   if (_bDoDebug == false) {
     return;
   }
+#ifdef BR2_OS_WINDOWS
   _CrtSetBreakAlloc(allocNum);
+#else
+#pragma warning("Heap debugging not available on Linux.")
+#endif
 }
 
 void DebugHelper::debugHeapEnd() {
@@ -124,7 +137,7 @@ void DebugHelper::debugHeapEnd() {
 #ifdef _DEBUG
 #ifdef BR2_OS_WINDOWS
   _CrtCheckMemory();
-  //LEAK_CHECK_DF flag will call this 
+  //LEAK_CHECK_DF flag will call this
   _CrtDumpMemoryLeaks();
 
   //http://avid-insight.co.uk/2008/02/tracing-memory-leaks-in-c-microsoft-specific/
@@ -133,7 +146,7 @@ void DebugHelper::debugHeapEnd() {
     CloseHandle(hCrtLog);
   }
 #else
-#error "Operating System Error"
+#pragma warning("Heap debugging not available on Linux.")
 #endif
 #endif
 }
@@ -142,7 +155,7 @@ void DebugHelper::checkMemory() {
 #ifdef BR2_OS_WINDOWS
   _CrtCheckMemory();
 #else
-#error "Operating System Error"
+#pragma warning("Heap debugging not available on Linux.")
 #endif
 #endif
 }
@@ -167,7 +180,7 @@ string_t DebugHelper::modList() {
   // - Get first module
   if (!Module32First(hModuleSnap, &me32)) {
     ret = "Failed to get the module for call stack analysis.";
-    CloseHandle(hModuleSnap);     // Must clean up the snapshot object! 
+    CloseHandle(hModuleSnap);  // Must clean up the snapshot object!
     return ret;
   }
 
@@ -186,7 +199,7 @@ string_t DebugHelper::modList() {
   CloseHandle(hModuleSnap);
 
 #else
-  ret = "No module support for OS.";
+  ret = "No module support for Linux, &c.";
 #endif
   return ret;
 }
@@ -220,7 +233,31 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
 
   free(symbol);
 #else
-  ret = "No Stack Info for current OS.  Derek PUT IT IN.";
+  //Test this --
+  Gu::debugBreak();
+
+  //Linux - taken from the man pages.
+  //https://linux.die.net/man/3/backtrace_symbols
+  int j, nptrs;
+#define SIZE 100
+  void *buffer[100];
+  char **strings;
+
+  nptrs = backtrace(buffer, SIZE);
+  printf("backtrace() returned %d addresses\n", nptrs);
+
+  strings = backtrace_symbols(buffer, nptrs);
+  if (strings == NULL) {
+    perror("backtrace_symbols");
+    exit(EXIT_FAILURE);
+  }
+
+  for (j = 0; j < nptrs; j++) {
+    callStack.push_back(std::string(strings[j]));
+  }
+
+  free(strings);
+
 #endif
   return callStack;
 }
@@ -244,9 +281,6 @@ string_t DebugHelper::getCallingMethod() {
   else {
     return str[3];
   }
-
 }
 
-
-
-}//ns game
+}  // namespace BR2

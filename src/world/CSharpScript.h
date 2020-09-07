@@ -45,7 +45,7 @@ public:
   virtual void onUpdate(float delta) override;
   virtual void onExit() override;
 private:
-  std::unique_ptr<CSharpScript_Internal> _pint = nullptr;
+  std::unique_ptr<CSharpScript_Internal> _pint = {nullptr};
 };
 
 }//ns BR2

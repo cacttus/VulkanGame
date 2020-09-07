@@ -26,18 +26,18 @@ namespace BR2 {
 class TypeConv {
 public:
   //ToVal
-  static bool strToBool(string_t& s, bool bThrowIfInvalid = false);
-  static long strToLong(string_t& s);
-  static int32_t strToInt(string_t& s);
-  static bool strToInt(string_t& s, int32_t& out);//Similar to .net' parseInt
-  static uint32_t strToUint(string_t& s);
-  static int8_t strToByte(string_t& s);
-  static float strToFloat(string_t& s);
-  static double strToDouble(string_t& s);
+  static bool strToBool(const string_t& s, bool bThrowIfInvalid = false);
+  static long strToLong(const string_t& s);
+  static int32_t strToInt(const string_t& s);
+  static bool strToInt(const string_t& s, int32_t& out);//Similar to .net' parseInt
+  static uint32_t strToUint(const string_t& s);
+  static int8_t strToByte(const string_t& s);
+  static float strToFloat(const string_t& s);
+  static double strToDouble(const string_t& s);
 
   //Silent Fail Verions
-  static float strToFloat(string_t& s, bool bFailed);
-  static double strToDouble(string_t& s, bool bFailed);
+  static float strToFloat(const string_t& s, bool bFailed);
+  static double strToDouble(const string_t& s, bool bFailed);
 
   //ToStr
   static string_t intToStr(const int32_t i);
@@ -54,7 +54,7 @@ public:
   static string_t wstrToStr(wchar_t* wstr);
 
   //Format Verions
-  static string_t intToStr(const  int32_t i, char* fmt);
+  static string_t intToStr(const  int32_t i, const char* const fmt);
 };
 
 

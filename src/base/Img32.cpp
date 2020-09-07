@@ -33,20 +33,22 @@ void Img32::fillWithColor(Color4ub c) {
     }
   }
 }
-Pixel4ub Img32::invert(Pixel4ub p) {
-  p.r() = ~p.r();
-  p.g() = ~p.g();
-  p.b() = ~p.b();
+Pixel4ub Img32::invert(const Pixel4ub& p) {
+  Pixel4ub ret;
+  ret.r() = ~p.r();
+  ret.g() = ~p.g();
+  ret.b() = ~p.b();
   return p;
 }
 // boo
 void Img32::invert() {
   for (uint32_t i = 0; i < _iWidth; ++i) {
     for (uint32_t j = 0; j < _iHeight; ++j) {
-      setPixel32(i, j, invert(getPixel32(i, j)));
+      Pixel4ub p = getPixel32(i, j);
+      Pixel4ub inv = invert(p);
+      setPixel32(i, j, inv);
     }
   }
-
 }
 /**
 *   The alloc/release data functions are legacy and have been
@@ -63,7 +65,7 @@ void Img32::releaseData() {
 void Img32::freeData() {
   releaseData();
 }
-size_t Img32::getSizeBytes() const { return _pData->byteSize(); }              // - Image size  in bytes.
+size_t Img32::getSizeBytes() const { return _pData->byteSize(); }  // - Image size  in bytes.
 
 /**
 *   @fn create()
@@ -72,8 +74,8 @@ size_t Img32::getSizeBytes() const { return _pData->byteSize(); }              /
 void Img32::create(int w, int h) {
   releaseData();
 
-  _iWidth = w;        // - Width of the image in pixels.
-  _iHeight = h;        // - Height of the image in pixels.
+  _iWidth = w;   // - Width of the image in pixels.
+  _iHeight = h;  // - Height of the image in pixels.
   //bpp=count_format_bytes_per_pixel(format)*8;        // - Bits per pixel.
   int pixSize = 0;
 
@@ -81,7 +83,7 @@ void Img32::create(int w, int h) {
 
   AssertOrThrow2(pixSize == 4);
 
-  int32_t imgsize = w * h * pixSize;    // - Image size in bytes.
+  int32_t imgsize = w * h * pixSize;  // - Image size in bytes.
 
   allocData(imgsize);
 }
@@ -90,7 +92,7 @@ void Img32::create(int w, int h) {
 *   @brief Desaturate this image.
 */
 
-int8_t Img32::toGray(Pixel4ub& in) {
+int8_t Img32::toGray(const Pixel4ub& in) {
   return (11 * in.r() + 16 * in.g() + 5 * in.b()) / 32;
 }
 Pixel4ub* Img32::pixelOff(int32_t x, int32_t y) {
@@ -99,14 +101,14 @@ Pixel4ub* Img32::pixelOff(int32_t x, int32_t y) {
   AssertOrThrow2(y < (int32_t)_iHeight && y >= 0);
 
   size_t off = vofftos((size_t)x, (size_t)y, (size_t)getWidth());
-  off *= getBytesPerPixel();    //StaticBufffer is a char array so we must scale the size
+  off *= getBytesPerPixel();  //StaticBufffer is a char array so we must scale the size
 
-  return  (Pixel4ub*)(_pData->ptrOff(off));//unsafe cast
+  return (Pixel4ub*)(_pData->ptrOff(off));  //unsafe cast
 }
 Pixel4ub& Img32::pixelAt32(int32_t x, int32_t y) {
-  return  *(pixelOff(x, y));
+  return *(pixelOff(x, y));
 }
-void Img32::setPixel32(int32_t x, int32_t y, Pixel4ub& pix) {
+void Img32::setPixel32(int32_t x, int32_t y, const Pixel4ub& pix) {
   *(pixelOff(x, y)) = pix;
 }
 int32_t Img32::hwrap(int32_t off) {
@@ -129,7 +131,7 @@ int32_t Img32::vwrap(int32_t off) {
 *    TODO: this wraps no matter WHAT!!!!!!!!!
 *
 */
-std::shared_ptr<Img32> Img32::applyFilter(Matrix3x3& kernel, size_t nPasses, bool wrap) {
+std::shared_ptr<Img32> Img32::applyFilter(const Matrix3x3& kernel, size_t nPasses, bool wrap) {
   if (!_pData)
     return 0;
 
@@ -176,7 +178,6 @@ std::shared_ptr<Img32> Img32::applyFilter(Matrix3x3& kernel, size_t nPasses, boo
   //            setPixel32(x, y, pix8);
   //        }
 
-
   return 0;
 }
 /**
@@ -206,7 +207,7 @@ std::shared_ptr<Img32> Img32::applyFilter(Matrix3x3& kernel, size_t nPasses, boo
 //    grid.p33 = pixelAt32(x + 1, y + 1);
 //
 //    //if(x-1<0)
-//    //    
+//    //
 //    //else if(wrap)
 //    //    grid.p12 = pixelAt(x+getWidth(),y);
 //    //else grid.w12=false;
@@ -236,7 +237,7 @@ std::shared_ptr<Img32> Img32::applyFilter(Matrix3x3& kernel, size_t nPasses, boo
 *   clear to a color
 *
 */
-void Img32::clearTo(Pixel4ub p) {
+void Img32::clearTo(const Pixel4ub& p) {
   int bytes = 4;
 
   for (uint32_t i = 0; i < _iWidth * _iHeight * (uint32_t)bytes; i += bytes) {
@@ -277,7 +278,7 @@ RetCode Img32::normalize(float depth) {
     return GR_FAIL;
   }
 
-  std::shared_ptr<Img32> pRet = std::make_shared<Img32>();//Heap
+  std::shared_ptr<Img32> pRet = std::make_shared<Img32>();  //Heap
 
   pRet->copyParams(shared_from_this());
   pRet->allocData(_pData->byteSize());
@@ -293,7 +294,7 @@ RetCode Img32::normalize(float depth) {
   _pData = pRet->_pData;
   pRet->_pData = NULL;
 
-  pRet = nullptr;//delete pRet;
+  pRet = nullptr;  //delete pRet;
 
   return GR_OK;
 }
@@ -330,24 +331,21 @@ Pixel4ub Img32::normalizePixel(int32_t x, int32_t y, float depth) {
   int Gh = 0, Gv = 0, i;
   float len;
   int mat[9] = {
-      toGray(pixelAt32(hwrap(x - 1),vwrap(y - 1))),toGray(pixelAt32(hwrap(x - 0),vwrap(y - 1))),toGray(pixelAt32(hwrap(x + 1),vwrap(y - 1))),
-      toGray(pixelAt32(hwrap(x - 1),vwrap(y + 0))),toGray(pixelAt32(hwrap(x - 0),vwrap(y + 0))),toGray(pixelAt32(hwrap(x + 1),vwrap(y + 0))),
-      toGray(pixelAt32(hwrap(x - 1),vwrap(y + 1))),toGray(pixelAt32(hwrap(x - 0),vwrap(y + 1))),toGray(pixelAt32(hwrap(x + 1),vwrap(y + 1)))
-  };
+      toGray(pixelAt32(hwrap(x - 1), vwrap(y - 1))), toGray(pixelAt32(hwrap(x - 0), vwrap(y - 1))), toGray(pixelAt32(hwrap(x + 1), vwrap(y - 1))),
+      toGray(pixelAt32(hwrap(x - 1), vwrap(y + 0))), toGray(pixelAt32(hwrap(x - 0), vwrap(y + 0))), toGray(pixelAt32(hwrap(x + 1), vwrap(y + 0))),
+      toGray(pixelAt32(hwrap(x - 1), vwrap(y + 1))), toGray(pixelAt32(hwrap(x - 0), vwrap(y + 1))), toGray(pixelAt32(hwrap(x + 1), vwrap(y + 1)))};
   static int sobel_v[9] = {
-      -1,    -2,    -1,
+      -1, -2, -1,
 
-      0,    0,    0,
+      0, 0, 0,
 
-      1,    2,    1
-  };
+      1, 2, 1};
   static int sobel_h[9] = {
-      1,    0,    -1,
+      1, 0, -1,
 
-      2,    0,    -2,
+      2, 0, -2,
 
-      1,    0,    -1
-  };
+      1, 0, -1};
 
   for (i = 0; i < 9; ++i)
     Gh += mat[i] * sobel_h[i];
@@ -372,25 +370,22 @@ Pixel4ub Img32::normalizePixel(int32_t x, int32_t y, float depth) {
 Pixel4ub Img32::normalizePixel32(int32_t x, int32_t y, float depth) {
   AssertOrThrow2(_pData != nullptr);
 
-#define pav(x,y) contrast(pixelAverage24(pixelAt32(hwrap(x),vwrap(y))))
+#define pav(x, y) contrast(pixelAverage24(pixelAt32(hwrap(x), vwrap(y))))
 
   float mat[9] = {
-      pav(x - 1,y - 1),pav(x  ,y - 1),pav(x + 1,y - 1),
-      pav(x - 1,y),pav(x  ,y),pav(x + 1,y),
-      pav(x - 1,y + 1),pav(x  ,y + 1),pav(x + 1,y + 1)
-  };
+      pav(x - 1, y - 1), pav(x, y - 1), pav(x + 1, y - 1),
+      pav(x - 1, y), pav(x, y), pav(x + 1, y),
+      pav(x - 1, y + 1), pav(x, y + 1), pav(x + 1, y + 1)};
 
   //scharr operator
   static float sobel_v1[9] = {
-       3, 10, 3,
-       0,     0, 0,
-      -3,-10,-3
-  };
+      3, 10, 3,
+      0, 0, 0,
+      -3, -10, -3};
   static float sobel_h1[9] = {
-       3, 0,-3,
-      10, 0,-10,
-       3, 0,-3
-  };
+      3, 0, -3,
+      10, 0, -10,
+      3, 0, -3};
   //static int sobel_v2[9] = {
   //    1, 2, 1,
   //    0, 0, 0,
@@ -412,7 +407,7 @@ Pixel4ub Img32::normalizePixel32(int32_t x, int32_t y, float depth) {
 
   static const float div_1 = 1.0f / 32.0f;
 
-  float fH1 = (sumH1 + 16.0f) * div_1;//max range of this kernel will be [-4,4] - scale into [0,1]
+  float fH1 = (sumH1 + 16.0f) * div_1;  //max range of this kernel will be [-4,4] - scale into [0,1]
   float fV1 = (sumV1 + 16.0f) * div_1;
   //float fH2 = ((float)sumH2 + 1024.0f)*div_1;//max range of this kernel will be [-1024,1024] - scale into [0,1]
   //float fV2 = ((float)sumV2 + 1024.0f)*div_1;
@@ -425,21 +420,21 @@ Pixel4ub Img32::normalizePixel32(int32_t x, int32_t y, float depth) {
 
   //**Due to the problems with normal mapping the y really can't be any different from 1 or else the
   //filter will skew the bump map in +z or +x
-  Vec3f v(fH1, .67f, fV1);//problem with bump mapping normals being negative forced us to do this. they are negative when you have a high depth magnitude +-1.0 
-              //no values below or at .5
-              // 1 = little or no bump
-              //.58 - .8 
-  v = (v * 2.0f) - 1.0f;//untranslate in order to normalize
+  Vec3f v(fH1, .67f, fV1);  //problem with bump mapping normals being negative forced us to do this. they are negative when you have a high depth magnitude +-1.0
+                            //no values below or at .5
+                            // 1 = little or no bump
+                            //.58 - .8
+  v = (v * 2.0f) - 1.0f;    //untranslate in order to normalize
 
   //salt
   v += vec3::normalize(Vec3f(Alg::meft11(x | rand()), 0, Alg::meft11(y | rand()))) * 0.002262058f;
 
   v.normalize();
 
-  v = (v + 1.0f) / 2.0f;//translate back
+  v = (v + 1.0f) / 2.0f;  //translate back
 
   //v = Vec3f(0,1,0);//debug
-  //v = (v+1.0f)*0.5f;//store translated so we can convert it in shader. (v+1) / 2 
+  //v = (v+1.0f)*0.5f;//store translated so we can convert it in shader. (v+1) / 2
   v *= 255.0f;
 
   // - swapping g with b doesn't work. Z points into the screen.
@@ -447,7 +442,7 @@ Pixel4ub Img32::normalizePixel32(int32_t x, int32_t y, float depth) {
   pix.r() = (t_byte)(v.x);
   pix.g() = (t_byte)(v.y);
   pix.b() = (t_byte)(v.z);
-  pix.a() = pixelAt32(hwrap(x), vwrap(y)).a();//allow for transparency don't change!
+  pix.a() = pixelAt32(hwrap(x), vwrap(y)).a();  //allow for transparency don't change!
 
   return pix;
 }
@@ -494,8 +489,8 @@ void Img32::shiftV(int numPixels, Img32& __out_ bi) {
   //*In order to shift LEFT you can just add negative width pixels
   //*image width - 1, -2, etc..
   //Create the new image and copy it from this image.
-//   bi.create(getWidth(), getHeight());
-//   bi.getData()->copyFrom(getData());
+  //   bi.create(getWidth(), getHeight());
+  //   bi.getData()->copyFrom(getData());
 
   if (numPixels >= getWidth()) {
     numPixels = numPixels % getWidth();
@@ -534,8 +529,8 @@ void Img32::shiftH(int numPixels, Img32& __out_ bi) {
   //*In order to shift LEFT you can just add negative width pixels
   //*image width - 1, -2, etc..
   //Create the new image and copy it from this image.
- // bi.create( getWidth(), getHeight() );
-//  bi.getData()->copyFrom( getData() );
+  // bi.create( getWidth(), getHeight() );
+  //  bi.getData()->copyFrom( getData() );
 
   if (numPixels >= getWidth()) {
     numPixels = numPixels % getWidth();
@@ -574,8 +569,8 @@ void Img32::shiftH(int numPixels, Img32& __out_ bi) {
 void Img32::wipeH(int numPixels, Img32& __out_ bi) {
   //Create the new image and copy it from this image.
   //Analog of ShiftH
-//  bi.create(getWidth(), getHeight());
-//  bi.getData()->copyFrom(getData());
+  //  bi.create(getWidth(), getHeight());
+  //  bi.getData()->copyFrom(getData());
 
   if (numPixels >= getWidth()) {
     numPixels = numPixels % getWidth();
@@ -601,8 +596,8 @@ void Img32::wipeH(int numPixels, Img32& __out_ bi) {
 void Img32::wipeV(int numPixels, Img32& __out_ bi) {
   //Create the new image and copy it from this image.
   //Analog of ShiftV
-//  bi.create(getWidth(), getHeight());
- // bi.getData()->copyFrom(getData());
+  //  bi.create(getWidth(), getHeight());
+  // bi.getData()->copyFrom(getData());
 
   if (numPixels >= getWidth()) {
     numPixels = numPixels % getWidth();
@@ -619,12 +614,11 @@ void Img32::wipeV(int numPixels, Img32& __out_ bi) {
   uint8_t* ptB;
   begA = 0;
   begSiz = shiftSize;
-  begB = (getHeight()) * rowsize - shiftSize; //data size - shiftSize
+  begB = (getHeight()) * rowsize - shiftSize;  //data size - shiftSize
 
   ptA = _pData->ptr() + begA;
   ptB = bi.getData()->ptr() + begB;
   memcpy(ptB, ptA, begSiz);
-
 }
 void Img32::flipRB() {
   flipRB32();
@@ -647,16 +641,14 @@ void Img32::flipRB32() {
     }
   }
 }
-std::shared_ptr<Img32> Img32::copySubImageTo(Vec2i& off, Vec2i& size) {
+std::shared_ptr<Img32> Img32::copySubImageTo(const Vec2i& off, const Vec2i& size) {
   std::shared_ptr<Img32> ret = std::make_shared<Img32>();
   ret->create(size.x, size.y);
-
   ret->copySubImageFrom(ivec2(0, 0), off, size, shared_from_this());
-
   return ret;
 }
 //Image formats must be identical
-void Img32::copySubImageFrom(Vec2i& myOff, Vec2i& otherOff, Vec2i& size, std::shared_ptr<Img32> pOtherImage) {
+void Img32::copySubImageFrom(const Vec2i& myOff, const Vec2i& otherOff, const Vec2i& size, std::shared_ptr<Img32> pOtherImage) {
   if (getData() == NULL) {
     BRThrowException("Copy SubImage 2 - From image was not allocated");
   }
@@ -689,10 +681,11 @@ void Img32::copySubImageFrom(Vec2i& myOff, Vec2i& otherOff, Vec2i& size, std::sh
 
   for (int iScanLine = 0; iScanLine < nLines; ++iScanLine) {
     void* vdst = (void*)pixelOff(scanPos.x, scanPos.y + iScanLine);
-    void* vsrc = (void*)pOtherImage->pixelOff(otherOff.x, otherOff.y + (nLines - iScanLine - 1));//Note: we do this here because the tga images are flipped upside down for some reason in the texture composer.
+    void* vsrc = (void*)pOtherImage->pixelOff(otherOff.x, otherOff.y + (nLines - iScanLine - 1));  //Note: we do this here because the tga images are flipped upside down for some reason in the texture composer.
     memcpy(vdst, vsrc, scanLineByteSize);
   }
-  _CrtCheckMemory();
+
+
 }
 
 void Img32::convertDataFrom24BitTo32Bit(t_byte defaultAlpha) {
@@ -721,7 +714,6 @@ void Img32::convertDataFrom24BitTo32Bit(t_byte defaultAlpha) {
 
   DEL_MEM(_pData);
   _pData = newBuffer;
-
 }
 void Img32::flipImage20161206(uint8_t* image, int width, int height) {
   int rowSiz = width * 4;
@@ -741,7 +733,6 @@ void Img32::flipImage20161206(uint8_t* image, int width, int height) {
   delete[] rowTmp1;
 }
 
-
 //Needed for some parts of SDL
 int32_t Img32::getPitch() const {
   int32_t pitch = getBytesPerPixel() * getWidth();
@@ -752,7 +743,7 @@ int32_t Img32::getRMask() const {
     return 0xff000000;
   }
   else {
-    return 0xff000000;//ARGB
+    return 0xff000000;  //ARGB
   }
 }
 int32_t Img32::getGMask() const {
@@ -797,7 +788,6 @@ bool Img32::parseImagePatch(std::shared_ptr<Img32> master, std::vector<std::shar
   if (vFlip) {
     master->flipV();
   }
-
 
   //Get Tile Markers
   for (int x = 0; x < master->getWidth(); ++x) {
@@ -858,11 +848,11 @@ bool Img32::parseImagePatch(std::shared_ptr<Img32> master, std::vector<std::shar
       int32_t y0 = vecYMarkers[iy - 1];
       int32_t y1 = vecYMarkers[iy];
 
-      if (x1 > x0&& y1 > y0) {
+      if (x1 > x0 && y1 > y0) {
         voff.construct(x0, y0);
         vsiz.construct(x1 - x0, y1 - y0);
         img = master->copySubImageTo(voff, vsiz);
-        ret.push_back(img);//std::make_shared<Texture2DSpec>(img, Gu::getGraphicsContext(), eFilter));
+        ret.push_back(img);  //std::make_shared<Texture2DSpec>(img, Gu::getGraphicsContext(), eFilter));
       }
       else {
         //Invalid Patch segment
@@ -872,7 +862,6 @@ bool Img32::parseImagePatch(std::shared_ptr<Img32> master, std::vector<std::shar
   }
 
   return bRet;
-
 }
 
 void Img32::serialize(std::shared_ptr<BinaryFile> bf) {
@@ -901,20 +890,6 @@ void Img32::deserialize(std::shared_ptr<BinaryFile> bf) {
   else {
     bf->read((const char*)getData()->ptr(), nBytes);
   }
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-}//ns game
+}  // namespace BR2
