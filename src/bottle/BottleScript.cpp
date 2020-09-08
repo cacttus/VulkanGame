@@ -319,7 +319,7 @@ void BottleScript::testDraw2d() {
     getContext()->getParty()->make(
         vv,
         100,
-        0, //**PARTICLE HYASH NAME
+        0, // **PARTICLE HYASH NAME
         40.f, 80.f,
         0.3f, 3,//life
         30.0f, 40.0f,//scale
@@ -338,7 +338,7 @@ void BottleScript::toggleDebug(std::shared_ptr<InputManager> pFingers) {
       getScene()->getUiScreen()->debugForceLayoutChanged();
     }
   }
-  else if (pFingers->modsHeld(KeyMod::None)) {
+  else if (pFingers->modsHeld(KeyMod::NoKeyMod)) {
     //NONE
     //TODO: add this stuff to Controller, or better yet, make it part of the UI
     TOGGLECD(SDL_SCANCODE_KP_0, Gu::getRenderSettings()->getDebug()->getShadowHelpVisible());
@@ -402,7 +402,7 @@ GridShow::e BottleScript::toggleShowGrid() {
   if (_pWorld25 != nullptr) {
     return _pWorld25->toggleShowGrid();
   }
-  return GridShow::e::None;
+  return GridShow::e::NoShow;
 }
 void BottleScript::placeObject(std::shared_ptr<ModelSpec> ms) {
   _pWorldEditor->placeObject(ms);

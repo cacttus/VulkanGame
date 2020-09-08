@@ -421,7 +421,7 @@ public:
       this->push(item);
     }
   }
-  std::shared_ptr<CSharpVariable> CSCallstack::top();
+  std::shared_ptr<CSharpVariable> top();
   std::vector<std::shared_ptr<CSharpVariable>> pop(size_t count = 1) {
     std::vector<std::shared_ptr<CSharpVariable>> ret;
     for (size_t x = 0; x < count; ++x) {
@@ -437,7 +437,7 @@ private:
 };
 class CSRuntimeContext : public CSharpContext {
 public:
-  void init() {
+  void init() override {
     //_callstack = std::make_shared<CSCallstack>(getThis<CSRuntimeContext>());
   }
   virtual void error(string_t err) override {
@@ -765,6 +765,9 @@ public:
     //  term->execute(context);
     //}
     //return evaluated_value;
+    return nullptr;
+    //std::shared_ptr<CSharpVariable> x = std::make_shared<CSharpVariable>();
+    //return x;
   }
   virtual void execute(std::shared_ptr<CSRuntimeContext> context) override {
     evaluate(context);
@@ -1523,7 +1526,7 @@ public:
       });
 
 
-    //*Old ideas**
+    // *Old ideas**
           Lex everything into CSToken, ignore contexts and constructs like {} ()
             class CSToken
             Keyword, Identifier, Number, LBrace, RBrace, LParen, RParen, SQuote, DQuote, Semicolon, Operator

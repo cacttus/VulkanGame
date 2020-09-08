@@ -30,8 +30,8 @@ public:
   std::shared_ptr<SpriteBucket> getBucket() { return _pBucket; }
 
 protected:
-  virtual void pkp(std::vector<string_t>& tokens);
-  virtual void preLoad();
+  virtual void pkp(std::vector<string_t>& tokens) override;
+  virtual void preLoad() override;
   virtual void postLoad();
   std::shared_ptr<SpriteBucket> _pBucket = nullptr;
   std::vector<std::shared_ptr<SpriteSpec>> _vecMotionSpecs;

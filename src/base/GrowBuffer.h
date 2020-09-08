@@ -27,19 +27,19 @@ public:
   Tx* next();
   Tx* cur();
   Tx* at(size_t i);
-  size_t count() { return getAddedItemCount(); }
+  size_t count() { return this->getAddedItemCount(); }
   void add(const Tx& item);
 };
 template < typename Tx >
 GrowBuffer<Tx>::GrowBuffer(uint32_t iChunkSize) :
-  DynamicBuffer(iChunkSize) {
+  DynamicBuffer<Tx>(iChunkSize) {
 }
 template < typename Tx >
 GrowBuffer<Tx>::~GrowBuffer() {
 }
 template < typename Tx >
 Tx* GrowBuffer<Tx>::ptr() {
-  return (Tx*)getBuffer()->ptr();
+  return (Tx*)this->getBuffer()->ptr();
 }
 template < class Tx >
 void GrowBuffer<Tx>::add(const Tx& item) {
@@ -48,28 +48,28 @@ void GrowBuffer<Tx>::add(const Tx& item) {
 template < typename Tx >
 Tx* GrowBuffer<Tx>::next() {
   //*THIS CLAS HAS AN MOV OR ALLOC ERROR WHEN CALLING NEXT() 8/20/2017
-  DynamicBuffer::add(1);
+  DynamicBuffer<Tx>::add(1);
 
   //SH: (getAddedByteCount() / TSize - 1)*TSize;
-  size_t off = getAddedItemCount();
+  size_t off = this->getAddedItemCount();
 
-  Tx* t = (Tx*)(getBuffer()->ptrOff(off));
+  Tx* t = (Tx*)(this->getBuffer()->ptrOff(off));
 
   return t;
 }
 template < typename Tx >
 Tx* GrowBuffer<Tx>::cur() {
   //SH: (getAddedByteCount() / TSize - 1)*TSize;
-  size_t off = getAddedItemCount();
+  size_t off = this->getAddedItemCount();
 
-  Tx* pRet = (Tx*)(getBuffer()->ptrOff(off));
+  Tx* pRet = (Tx*)(this->getBuffer()->ptrOff(off));
 
   return pRet;
 }
 template < typename Tx >
 Tx* GrowBuffer<Tx>::at(size_t i) {
   size_t off = i;
-  Tx* pRet = (Tx*)getBuffer()->ptrOff(off);
+  Tx* pRet = (Tx*)this->getBuffer()->ptrOff(off);
   return pRet;
 }
 

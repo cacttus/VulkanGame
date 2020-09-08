@@ -40,7 +40,7 @@ public:
   void unmapBuffer();
 
   void unbindBuffer();
-  void GpuBufferData::setGlBufferType(GLenum type) {
+  void setGlBufferType(GLenum type) {
     _glBufferType = type;
   }
 protected:

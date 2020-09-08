@@ -11,7 +11,6 @@
 #include "../base/TreeNode.h"
 #include "../math/MathAll.h"
 
-#include "../base/SDLGLIncludes.h"
 
 namespace BR2 {
 //GPU Types
@@ -22,9 +21,9 @@ typedef vec3 GpuVec3f;
 typedef ivec3 GpuVec3i;    // X Y Z size of the block.  This actually is square
 typedef uint32_t GpuUInt;
 //typedef std::future<bool> GpuFuture;
-typedef GLuint GpuTexId;
-typedef GLenum GpuEnum;
-typedef GLuint GpuBufferId;
+//typedef GLuint GpuTexId;
+//typedef GLenum GpuEnum;
+//typedef GLuint GpuBufferId;
 
 //Make this global. stop the madness.
 typedef v_v3n3x2 ModelVertexType;
@@ -35,7 +34,11 @@ namespace BoxPoint { typedef enum { NBL, NBR, NTL, NTR, FBL, FBR, FTL, FTR } e; 
 //namespace GpuAnimationMemoryModel { typedef enum { MODEL_CPU_ANIMATION_OR_STATIC_MODEL, MODEL_GPU_ANIMATION_WITH_SWAP_BUFFERS } e; }
 namespace MeshSkinStatus { typedef enum { Uninitialized, NoSkin, Allocated, Error } e; }
 //namespace ModelDrawMode { typedef enum { Color, Pick } e; }
-namespace ParentType { typedef enum { None, Bone, Object, Armature } e; }
+// #ifdef NoParent
+// //NoParent is defined in X.h (Linux). TODO: Figure out where we are including X.h and move it out of here.
+// #undef NoParent
+// #endif
+enum class ParentType { NoParent, Bone, Object, Armature };
 
 //////////////////////////////////////////////////////////////////////////
 class UtilMeshInline2d;

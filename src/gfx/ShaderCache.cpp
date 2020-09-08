@@ -2,7 +2,7 @@
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
 #include "../base/Gu.h"
-#include "../base/Oglerr.h"
+#include "../base/OglErr.h"
 #include "../base/GLContext.h"
 #include "../gfx/ShaderCache.h"
 #include "../gfx/ShaderSubProgram.h"
@@ -42,7 +42,7 @@ ShaderCache::~ShaderCache() {
   _vecBinaries.resize(0);
 }
 
-string_t ShaderCache::getBinaryNameFromProgramName(string_t& progName) {
+string_t ShaderCache::getBinaryNameFromProgramName(const string_t& progName) {
   string_t fb = progName + ".sb";
   return FileSystem::combinePath(_strCacheDirectory, fb);//::appendCacheDirectory(fb);
 }
@@ -151,7 +151,7 @@ GLProgramBinary* ShaderCache::getBinaryFromDisk(string_t& programName) {
   return pbin;
 
 }
-void ShaderCache::saveBinaryToDisk(string_t& programName, GLProgramBinary* bin) {
+void ShaderCache::saveBinaryToDisk(const string_t& programName, GLProgramBinary* bin) {
   DiskFile df;
   string_t binaryName = getBinaryNameFromProgramName(programName);
   string_t binPath = FileSystem::getPathFromPath(binaryName);
@@ -177,7 +177,7 @@ void ShaderCache::saveBinaryToDisk(string_t& programName, GLProgramBinary* bin) 
 *    @fn deleteBinaryFromDisk
 *    @brief
 */
-void ShaderCache::deleteBinaryFromDisk(string_t& programName) {
+void ShaderCache::deleteBinaryFromDisk(const string_t& programName) {
   string_t binaryName = getBinaryNameFromProgramName(programName);
 
   if (!FileSystem::fileExists(binaryName)) {

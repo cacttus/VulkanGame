@@ -27,20 +27,20 @@ public:
   void enableLogToFile(bool bLogToFile);
 
   void logInfo(string_t msg);
-  void logInfo(string_t msg, int line, char* file, BR2::Exception* e = nullptr, bool hideStackTrace = true);
-  void logWarn(string_t msg, int line, char* file, BR2::Exception* e = nullptr, bool hideStackTrace = true);    // - Log an error with exception contents.
-  void logError(string_t msg, int line, char* file, BR2::Exception* e = nullptr, bool hideStackTrace = false);  // - Log an error with exception contents.
-  void logDebug(string_t msg, int line, char* file, BR2::Exception* e = nullptr, bool hideStackTrace = true);
-  void logWarnCycle(string_t msg, int line, char* file, BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);   // - Log an error with exception contents.
-  void logErrorCycle(string_t msg, int line, char* file, BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);  // - Log an error with exception contents.
-  void logDebugCycle(string_t msg, int line, char* file, BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);  // - Log an error with exception contents.
+  void logInfo(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
+  void logWarn(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);    // - Log an error with exception contents.
+  void logError(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = false);  // - Log an error with exception contents.
+  void logDebug(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
+  void logWarnCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);   // - Log an error with exception contents.
+  void logErrorCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);  // - Log an error with exception contents.
+  void logDebugCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);  // - Log an error with exception contents.
 
   string_t getLogPath();
 
 private:
   Logger_Internal* _pint = nullptr;
 };
-}  //ns game
+}  // namespace BR2
 
 //from Clang: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
 //  __FILE__ is a char*

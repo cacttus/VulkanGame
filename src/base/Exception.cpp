@@ -1,7 +1,6 @@
 #include "../base/Exception.h"
 #include "../base/Logger.h"
 
-
 namespace BR2 {
 Exception::Exception(string_t c, int line, const char* file, bool bLogError) {
   _line = line;
@@ -14,15 +13,8 @@ Exception::Exception(string_t c, int line, const char* file, bool bLogError) {
 
   Gu::debugBreak();
 }
-string_t Exception::what() {
+string_t Exception::what() const {
   return _msg + " file:" + _file + " line:" + _line;
 }
 
-
-
-
-
-
-
-
-}//ns Game
+}  // namespace BR2

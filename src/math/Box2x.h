@@ -20,7 +20,7 @@ public:
   VecType _p0, _p1;
 
   FORCE_INLINE Box2x();
-  FORCE_INLINE Box2x(VecType& min, VecType& max);
+  FORCE_INLINE Box2x(const VecType& min, const VecType& max);
   FORCE_INLINE Box2x(const Tx& min_x, const Tx& min_y, const Tx& max_x, const Tx& max_y);
 
   FORCE_INLINE void construct(const Tx& min_x, const Tx& min_y, const Tx& max_x, const Tx& max_y);
@@ -86,7 +86,7 @@ template < class Tx >
 FORCE_INLINE Box2x<Tx>::Box2x() {
 }
 template < class Tx >
-FORCE_INLINE Box2x<Tx>::Box2x(VecType& min, VecType& max) :_p0(min), _p1(max) {
+FORCE_INLINE Box2x<Tx>::Box2x(const VecType& min, const VecType& max) :_p0(min), _p1(max) {
 }
 template < class Tx >
 FORCE_INLINE Box2x<Tx>::Box2x(const Tx& min_x, const Tx& min_y, const Tx& max_x, const Tx& max_y) {

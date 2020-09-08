@@ -56,7 +56,7 @@ public:
   void updateBox(double sx, double sy, double sw, double sh);
 
 private:
-  std::unique_ptr<RenderViewport_Internal> _pint = nullptr;
+  std::unique_ptr<RenderViewport_Internal> _pint = {nullptr};
 };
 
 }//ns BR2

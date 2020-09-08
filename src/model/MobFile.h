@@ -39,7 +39,7 @@ public:
   MeshSpecData();
   virtual ~MeshSpecData();
 
-  void setParentType(ParentType::e pt) { _eParentType = pt; }
+  void setParentType(ParentType pt) { _eParentType = pt; }
 
   bool tkObjFile(MobFile* pMobFile, std::vector<string_t>& tokens);
   std::shared_ptr<MeshSpec> makeSpec(MobFile* mb);
@@ -53,11 +53,11 @@ private:
   string_t _strParentName;
   mat4 _matBasis;
   mat4 _matParentInverse;
-  PhysicsShapeType::e _ePhysicsShapeType = PhysicsShapeType::e::None;
+  PhysicsShapeType::e _ePhysicsShapeType = PhysicsShapeType::e::NoShape;
   bool _bKinematicShape = false;//true if shape is attached.
   bool _bDynamicShape = false;//true if shape is attached.
   bool _bHideRender = false;
-  ParentType::e _eParentType = ParentType::e::None;
+  ParentType _eParentType = ParentType::NoParent;
   //*Don't clear these when you load the next mesh - indexes are defined by all the PREVIOUS vertexes. Stupid, but it's OBJ file.
   std::vector<vec3> _vecVerts;
   std::vector<vec3> _vecNormals;
@@ -141,7 +141,7 @@ public:
 
   string_t getMobDir();
   std::vector<std::shared_ptr<ModelSpec>>& getModelSpecs() { return _vecModelSpecs; }
-  ParentType::e parseParentType(string_t pt);
+  ParentType parseParentType(string_t pt);
 private:
   float _fVersion = 0.02f;
 

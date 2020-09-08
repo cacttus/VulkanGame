@@ -68,8 +68,8 @@ bool ShaderAttribute::isOpenGLBuiltInAttrib(string_t strName) {
   else if (StringUtil::equals(strName, "gl_BaseInstance")) { return true; }
   return false;
 }
-VertexUserType::e ShaderAttribute::parseUserType(string_t& name) {
-  VertexUserType::e ret = VertexUserType::e::None;
+VertexUserType ShaderAttribute::parseUserType(string_t& name) {
+  VertexUserType ret = VertexUserType::NoVertexType;
 
   //Validate some errors
   string_t err = "";
@@ -112,37 +112,37 @@ VertexUserType::e ShaderAttribute::parseUserType(string_t& name) {
   else {
     //**In the old system we had a more generic approach to this, but here we just hard code it.
     if (StringUtil::equals(name, "_v201")) {
-      ret = VertexUserType::e::v2_01;
+      ret = VertexUserType::v2_01;
     }
     else if (StringUtil::equals(name, "_v301")) {
-      ret = VertexUserType::e::v3_01;
+      ret = VertexUserType::v3_01;
     }
     else if (StringUtil::equals(name, "_v401")) {
-      ret = VertexUserType::e::v4_01;
+      ret = VertexUserType::v4_01;
     }
     else if (StringUtil::equals(name, "_v402")) {
-      ret = VertexUserType::e::v4_02;
+      ret = VertexUserType::v4_02;
     }
     else if (StringUtil::equals(name, "_v403")) {
-      ret = VertexUserType::e::v4_03;
+      ret = VertexUserType::v4_03;
     }
     else if (StringUtil::equals(name, "_n301")) {
-      ret = VertexUserType::e::n3_01;
+      ret = VertexUserType::n3_01;
     }
     else if (StringUtil::equals(name, "_c301")) {
-      ret = VertexUserType::e::c3_01;
+      ret = VertexUserType::c3_01;
     }
     else if (StringUtil::equals(name, "_c401")) {
-      ret = VertexUserType::e::c4_01;
+      ret = VertexUserType::c4_01;
     }
     else if (StringUtil::equals(name, "_x201")) {
-      ret = VertexUserType::e::x2_01;
+      ret = VertexUserType::x2_01;
     }
     else if (StringUtil::equals(name, "_i201")) {
-      ret = VertexUserType::e::i2_01;
+      ret = VertexUserType::i2_01;
     }
     else if (StringUtil::equals(name, "_u201")) {
-      ret = VertexUserType::e::u2_01;
+      ret = VertexUserType::u2_01;
     }
     else {
       //Wer're going to hit this in the beginning because we can have a lot of different attrib types.

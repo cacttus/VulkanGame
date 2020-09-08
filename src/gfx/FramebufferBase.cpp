@@ -40,11 +40,11 @@ void FramebufferBase::checkFramebufferComplete() {
   attachAllTargets();
   setDrawAllTargets();
 
-  GLenum Status = getContext()->glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  GLenum status = getContext()->glCheckFramebufferStatus(GL_FRAMEBUFFER);
   getContext()->chkErrRt();
 
-  if (Status != GL_FRAMEBUFFER_COMPLETE) {
-    if (Status == GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE) {
+  if (status != GL_FRAMEBUFFER_COMPLETE) {
+    if (status == GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE) {
       BRLogError("Framebuffer is not complete.  Multisampling error.  Make sure that you enable " +
         "multisampling on ALL textures, additionally make sure all textures have the same setting for FIXED_SAMPLE_LOCATIONS");
     }
@@ -166,7 +166,7 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shar
   return inf;
 }
 void FramebufferBase::deleteTargets() {
-  getContext()->glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+  getContext()->glBindFramebuffer(GL_FRAMEBUFFER, (GLuint)0);
 
   if (_uiGlFramebufferId > 0) {
     getContext()->glDeleteFramebuffers(1, &_uiGlFramebufferId);

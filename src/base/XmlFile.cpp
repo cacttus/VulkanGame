@@ -65,7 +65,8 @@ std::shared_ptr<PackageConfiguration> XmlFile::getXMLConfiguration(string_t file
       XmlConfigEntry ent(it_child->name());
       for (auto it_attr = it_child->attributes().begin(); it_attr != it_child->attributes().end(); it_attr++) {
         std::string st(it_attr->name());
-        ent._attrs.add(st, std::make_shared<XmlConfigAttribute>(st, it_attr->value()));
+        std::shared_ptr<XmlConfigAttribute> att = std::make_shared<XmlConfigAttribute>(st, it_attr->value());
+        ent._attrs.add(st, att);
       }
       ret->_entries.add(ent._tagname, ent);
     }

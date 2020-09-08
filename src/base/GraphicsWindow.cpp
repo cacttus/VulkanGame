@@ -36,7 +36,7 @@ public:
   std::shared_ptr<Delta> _pDelta = nullptr;
   std::shared_ptr<InputManager> _pInput = nullptr;
 
-  FrameState _eFrameState = FrameState::None;
+  FrameState _eFrameState = FrameState::NoFrameState;
 
   SDL_Window* _pSDLWindow = nullptr;
   bool _bFullscreen = false;

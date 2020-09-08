@@ -1,5 +1,5 @@
 #include "../base/BaseHeader.h"
-#include "../base/oglErr.h"
+#include "../base/OglErr.h"
 #include "../base/Logger.h"
 #include "../base/GLContext.h"
 #include "../base/DebugHelper.h"

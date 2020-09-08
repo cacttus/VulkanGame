@@ -48,10 +48,10 @@ private:
   //const int _ciMaxParticles = 1024;
   int _iMaxParticles = 1024;
 
-  std::unique_ptr<Particle[]> _pParticles = nullptr;
+  std::unique_ptr<Particle[]> _pParticles = {nullptr};
   std::shared_ptr<Atlas> _pParticleAtlas = nullptr;
   std::shared_ptr<GLContext> _pContext = nullptr;
-  std::unique_ptr<QuadBufferMesh> _pQuadBufferMesh = nullptr;
+  std::unique_ptr<QuadBufferMesh> _pQuadBufferMesh = {nullptr};
   // PartyShader* _pPartyShader = nullptr;
   string_t _sAtlasName;
   void reset();

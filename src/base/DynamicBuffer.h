@@ -21,7 +21,7 @@ namespace BR2 {
 *   *Adds to the end
 *   *Removes from the beginning
 */
-template < class Tx >
+template <class Tx>
 class DynamicBuffer : public IOBufferBase<Tx> {
 public:
   DynamicBuffer(int32_t chunkSizeItems);
@@ -36,7 +36,7 @@ public:
   virtual void clear();
   Allocator<Tx>* getData();
   void shiftOutFirstElement();
-  void add(size_t nItemsToAdd); //Add items to the end
+  void add(size_t nItemsToAdd);  //Add items to the end
   string_t toString();
 
 protected:
@@ -45,32 +45,28 @@ protected:
   size_t getNumUsedChunks();
 
 private:
-  size_t _iAddCountItems; // bytes in the buffer
-  size_t _iChunkSizeItems; // Amount to allocate when running out of room
+  size_t _iAddCountItems;   // bytes in the buffer
+  size_t _iChunkSizeItems;  // Amount to allocate when running out of room
 
   void checkToGrow(size_t numToAdd);
   void checkToShrink(size_t numToRemove);
 };
-template < class Tx >
-DynamicBuffer<Tx>::DynamicBuffer(int32_t chunkSizeItems) :
-  _iChunkSizeItems(chunkSizeItems) {
+template <class Tx>
+DynamicBuffer<Tx>::DynamicBuffer(int32_t chunkSizeItems) : _iChunkSizeItems(chunkSizeItems) {
   AssertOrThrow2(_iChunkSizeItems > 0);
   clear();
 }
-template < class Tx >
+template <class Tx>
 DynamicBuffer<Tx>::~DynamicBuffer() {
 }
-template < class Tx >
+template <class Tx>
 void DynamicBuffer<Tx>::clear() {
   _iAddCountItems = 0;
-  getBuffer()->dealloc();
+  this->getBuffer()->dealloc();
 }
-template < class Tx >
+template <class Tx>
 RetCode DynamicBuffer<Tx>::write(
-  const Tx* bytes
-  , size_t count
-  , size_t offset_in
-) {
+    const Tx* bytes, size_t count, size_t offset_in) {
   size_t offset;
 
   if (offset_in == memsize_max)
@@ -84,14 +80,13 @@ RetCode DynamicBuffer<Tx>::write(
 
   return gr;
 }
-template < class Tx >
+template <class Tx>
 RetCode DynamicBuffer<Tx>::read(
-  Tx* buf
-  , size_t count
-  , size_t buflen // in items
-  , size_t offset // offset in items
+    Tx* buf, size_t count, size_t buflen  // in items
+    ,
+    size_t offset  // offset in items
 ) {
-  AssertOrThrow2(getBuffer()->count() >= (offset + count));
+  AssertOrThrow2(this->getBuffer()->count() >= (offset + count));
   AssertOrThrow2(buflen >= (offset + count));
 
   RetCode gr = IOBufferBase<Tx>::read(buf, count, buflen, offset);
@@ -100,87 +95,79 @@ RetCode DynamicBuffer<Tx>::read(
 
   return gr;
 }
-template < class Tx >
+template <class Tx>
 void DynamicBuffer<Tx>::checkToGrow(size_t numToAdd) {
-  if (!getBuffer()->isAllocated())
-    getBuffer()->_alloca(_iChunkSizeItems);
+  if (!this->getBuffer()->isAllocated()){
+    this->getBuffer()->_alloca(_iChunkSizeItems);
+  }
 
   size_t needed = getNumChunksNeeded(_iAddCountItems + numToAdd);
   size_t used = getNumUsedChunks();
   size_t chunksToAdd = (needed - used);
 
   if (chunksToAdd > 0) {
-    getBuffer()->grow(chunksToAdd * _iChunkSizeItems, used * _iChunkSizeItems);
+    this->getBuffer()->grow(chunksToAdd * _iChunkSizeItems, used * _iChunkSizeItems);
   }
 
   _iAddCountItems += numToAdd;
 }
-template < class Tx >
+template <class Tx>
 void DynamicBuffer<Tx>::checkToShrink(size_t numToRemove) {
-  if (!getBuffer()->isAllocated())
-    getBuffer()->_alloca(_iChunkSizeItems);
+  if (!this->getBuffer()->isAllocated()){
+    this->getBuffer()->_alloca(_iChunkSizeItems);
+  }
 
   size_t nUsed = getNumUsedChunks();
   size_t numToShrink = _iChunkSizeItems - nUsed;
 
   //Shrinking must retain at least chunksize items when allocated.
   if (numToShrink > 0) {
-    getBuffer()->shrink(nUsed * _iChunkSizeItems, numToShrink * _iChunkSizeItems);
+    this->getBuffer()->shrink(nUsed * _iChunkSizeItems, numToShrink * _iChunkSizeItems);
   }
 
   _iAddCountItems -= numToRemove;
 }
-template < class Tx >
+template <class Tx>
 Allocator<Tx>* DynamicBuffer<Tx>::getData() {
-  return &_data;
+  return &(this->_data);
 }
-template < class Tx >
+template <class Tx>
 void DynamicBuffer<Tx>::shiftOutFirstElement() {
-  if (getBuffer()->count() > 0) {
-    getBuffer()->shrink(0, 1);
+  if (this->getBuffer()->count() > 0) {
+    this->getBuffer()->shrink(0, 1);
     _iAddCountItems--;
   }
 }
-template < class Tx >
+template <class Tx>
 void DynamicBuffer<Tx>::add(size_t nItemsToAdd) {
   // - Adds items
   checkToGrow(nItemsToAdd);
 }
-template < class Tx >
+template <class Tx>
 string_t DynamicBuffer<Tx>::toString() {
-  string_t ret(getBuffer()->ptr(), getBuffer()->count() * TSize);
+  string_t ret(this->getBuffer()->ptr(), this->getBuffer()->count() * this->TSize);
   return ret;
 }
-template < class Tx >
+template <class Tx>
 void DynamicBuffer<Tx>::copyFrom(DynamicBuffer<Tx>* rhs) {
   AssertOrThrow2(rhs != NULL);
-  if (getBuffer()->byteSize() != rhs->getBuffer()->byteSize()) {
-    getBuffer()->dealloc();
-    getBuffer()->alloca(rhs->getBuffer()->count());
+  if (this->getBuffer()->byteSize() != rhs->getBuffer()->byteSize()) {
+    this->getBuffer()->dealloc();
+    this->getBuffer()->alloca(rhs->getBuffer()->count());
   }
-  getBuffer()->copyFrom(rhs->getBuffer());
+  this->getBuffer()->copyFrom(rhs->getBuffer());
 }
-template < class Tx >
+template <class Tx>
 size_t DynamicBuffer<Tx>::getNumChunksNeeded(size_t nItems) {
-  size_t n = nItems / _iChunkSizeItems; //Full Chunks
-  n += (nItems % _iChunkSizeItems) > 0; // Remainder of a chunk
+  size_t n = nItems / _iChunkSizeItems;  //Full Chunks
+  n += (nItems % _iChunkSizeItems) > 0;  // Remainder of a chunk
   return n;
 }
-template < class Tx >
+template <class Tx>
 size_t DynamicBuffer<Tx>::getNumUsedChunks() {
   return getNumChunksNeeded(_iAddCountItems);
 }
 
-
-
-
-
-
-
-
-
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

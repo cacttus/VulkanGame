@@ -90,7 +90,7 @@ typedef std::string string_t;
 /************************************************************************/
 /* Enums                                                                */
 /************************************************************************/
-enum class FrameState { None,
+enum class FrameState { NoFrameState,
                         SyncBegin,
                         Update,
                         Render,
@@ -132,7 +132,7 @@ typedef enum { NotLoaded,
 }
 namespace KeyMod {
 typedef enum {
-  None = 0x00,
+  NoKeyMod = 0x00,
   Shift = 0x01,
   Alt = 0x02,
   Ctrl = 0x04,

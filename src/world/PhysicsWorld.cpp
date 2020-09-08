@@ -41,7 +41,7 @@ PhysicsWorld::~PhysicsWorld() {
   //DEL_MEM(_pRenderBucket);
 }
 
-std::shared_ptr<PhysicsWorld> PhysicsWorld::create(std::shared_ptr<Scene> s, float fNodeWidth, float fNodeHeight, vec3& vUp,
+std::shared_ptr<PhysicsWorld> PhysicsWorld::create(std::shared_ptr<Scene> s, float fNodeWidth, float fNodeHeight, const vec3& vUp,
   MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
   MpInt mpNodesY, uint32_t iGridCountLimit) {
   std::shared_ptr<PhysicsWorld> w = std::make_shared<PhysicsWorld>(s);
@@ -50,7 +50,7 @@ std::shared_ptr<PhysicsWorld> PhysicsWorld::create(std::shared_ptr<Scene> s, flo
 }
 std::multimap<float, std::shared_ptr<PhysicsGrid>>& PhysicsWorld::getVisibleGrids() { return _pRenderBucket->getGrids(); }
 std::multimap<float, std::shared_ptr<SceneNode>>& PhysicsWorld::getVisibleNodes() { return _pRenderBucket->getObjs(); }
-void PhysicsWorld::init(float fNodeWidth, float fNodeHeight, vec3& vUp,
+void PhysicsWorld::init(float fNodeWidth, float fNodeHeight,const vec3& vUp,
   MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
   MpInt mpNodesY, uint32_t iGridCountLimit) {
   _vUp = vUp;
@@ -331,7 +331,8 @@ void PhysicsWorld::update(float delta) {
   Perf::pushPerf();
   for (std::pair<NodeId, std::shared_ptr<PhysicsNode>> p : _mapObjects) {
     //Still update hidden objects (i.e., correct boundbox computation), but don't draw them.
-    p.second->update(delta, std::map<Hash32, std::shared_ptr<Animator>>());
+    std::map<Hash32, std::shared_ptr<Animator>> mmm;
+    p.second->update(delta, mmm);
   }
 
   _pAwareness->update(delta);
@@ -699,19 +700,19 @@ void PhysicsWorld::unstick_if_moved(std::shared_ptr<PhysicsNode> obA, std::share
   if (obA != nullptr && obA->getIsStatic() == false) {
     //We multiply the velocity by -1 to invert it, since the "stuck"
     //formula uses a velocity that points AWAY from the given cube.
-    unstick_ob_v2(p_new_a, v_tmp_a * -1.0f, bA, bB, move_t, ob_fric_a, v_new_a);
+    unstick_ob_v2(p_new_a, (v_tmp_a * -1.0f), bA, bB, move_t, ob_fric_a, v_new_a);
 
     //*wE NEED TO S
     obA->setTempPos(p_new_a);
     obA->setTempVelocity(v_new_a);
   }
   if (obB != nullptr && obB->getIsStatic() == false) {
-    unstick_ob_v2(p_new_b, v_tmp_b * -1.0f, bB, bA, move_t, ob_fric_b, v_new_b);
+    unstick_ob_v2(p_new_b, (v_tmp_b * -1.0f), bB, bA, move_t, ob_fric_b, v_new_b);
     obB->setTempPos(p_new_b);
     obB->setTempVelocity(v_new_b);
   }
 }
-void PhysicsWorld::unstick_ob_v2(vec3& ob_in_p, vec3& ob_in_v, Box3f* boxA, Box3f* boxB,
+void PhysicsWorld::unstick_ob_v2(vec3& ob_in_p, const vec3& ob_in_v, Box3f* boxA, Box3f* boxB,
   float move_t, float ob_friction, vec3& __out_ out_new_v) {
   //The position must already be added by ct, and
   //Assume the bounding boxes are recalculated

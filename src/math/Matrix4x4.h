@@ -23,26 +23,27 @@ namespace BR2 {
 class Matrix4x4 : public PureMemory {
 public:
   float
-    _m11, _m12, _m13, _m14,
-    _m21, _m22, _m23, _m24,
-    _m31, _m32, _m33, _m34,
-    _m41, _m42, _m43, _m44;
+      _m11,
+      _m12, _m13, _m14,
+      _m21, _m22, _m23, _m24,
+      _m31, _m32, _m33, _m34,
+      _m41, _m42, _m43, _m44;
 
   FORCE_INLINE Matrix4x4();
   FORCE_INLINE Matrix4x4(float* mat);
   FORCE_INLINE NOT_VIRTUAL ~Matrix4x4() DOES_NOT_OVERRIDE {}
 
-  FORCE_INLINE  float& Mat(size_t i) { return (float&)*((float*)(this) + i); }
+  FORCE_INLINE float& Mat(size_t i) { return (float&)*((float*)(this) + i); }
   const FORCE_INLINE float& Mat(size_t i) const { return (float&)*((float*)(this) + i); }
   FORCE_INLINE int32_t nRows() { return 4; }
   FORCE_INLINE int32_t nCols() { return 4; }
-  FORCE_INLINE int32_t size() { return 16; }     // - Returns the number of entries in this matrix.
+  FORCE_INLINE int32_t size() { return 16; }  // - Returns the number of entries in this matrix.
   FORCE_INLINE static Matrix4x4 identity() {
     float m[] = {
-        1,0,0,0,
-        0,1,0,0,
-        0,0,1,0,
-        0,0,0,1 };
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1};
     return Matrix4x4(m);
   }
 
@@ -75,7 +76,7 @@ public:
   FORCE_INLINE Matrix4x4 inverseOf();
   FORCE_INLINE Vector4 row(int row);
   FORCE_INLINE Vector4 col(int col);
-  FORCE_INLINE Matrix4x4& projection(float n, float f, float l, float r, float t, float b); // set up a projection matrix.
+  FORCE_INLINE Matrix4x4& projection(float n, float f, float l, float r, float t, float b);  // set up a projection matrix.
 
   FORCE_INLINE string_t toString() const;
 
@@ -91,12 +92,12 @@ public:
 
 #pragma region Operators
   FORCE_INLINE float& operator[](const size_t& i);
-  FORCE_INLINE float         operator[](const size_t& i) const;
+  FORCE_INLINE float operator[](const size_t& i) const;
   FORCE_INLINE Matrix4x4& operator*=(const Matrix4x4& m);
-  FORCE_INLINE const Vector4   operator*(const Vector4& v) const;
+  FORCE_INLINE const Vector4 operator*(const Vector4& v) const;
   FORCE_INLINE Matrix4x4& operator=(const float f);
-  FORCE_INLINE bool          operator==(const Matrix4x4& rhs) const;
-  FORCE_INLINE bool          operator!=(const Matrix4x4& rhs) const;
+  FORCE_INLINE bool operator==(const Matrix4x4& rhs) const;
+  FORCE_INLINE bool operator!=(const Matrix4x4& rhs) const;
   FORCE_INLINE Matrix4x4& operator=(const Matrix4x4& m);
   FORCE_INLINE const Matrix4x4 operator*(const Matrix4x4& m) const;
 #pragma endregion
@@ -107,14 +108,14 @@ public:
   FORCE_INLINE STATIC Matrix4x4 getTranslation(vec3& vTrans);
   FORCE_INLINE STATIC Matrix4x4 getTranslation(float x, float y, float z);
 
-  FORCE_INLINE STATIC Matrix4x4 getRotationDeg(t_degrees a, vec3& vAxis);
-  FORCE_INLINE STATIC Matrix4x4 getRotationRad(t_radians a, vec3& vAxis);
+  FORCE_INLINE STATIC Matrix4x4 getRotationDeg(t_degrees a, const vec3& vAxis);
+  FORCE_INLINE STATIC Matrix4x4 getRotationRad(t_radians a, const vec3& vAxis);
   FORCE_INLINE STATIC Matrix4x4 getRotationDeg(t_degrees a, float x, float y, float z);
   FORCE_INLINE STATIC Matrix4x4 getRotationRad(t_radians a, float x, float y, float z);
 
   FORCE_INLINE STATIC Matrix4x4 getRotationToVector(vec3 v, vec3 up);
 
-  FORCE_INLINE STATIC Matrix4x4 getScale(vec3& vScale);
+  FORCE_INLINE STATIC Matrix4x4 getScale(const vec3& vScale);
   FORCE_INLINE STATIC Matrix4x4 getScale(float x, float y, float z);
 
   FORCE_INLINE STATIC Matrix4x4 getProjection(float n, float f, float l, float r, float t, float b);
@@ -124,10 +125,8 @@ public:
   FORCE_INLINE STATIC bool parse(string_t, Matrix4x4& mOut);
 #pragma endregion
 
-
   FORCE_INLINE void decompose(vec4& pos, mat4& rot, vec4& scale) const;
   FORCE_INLINE void decompose(vec4& pos, vec4& rot, vec4& scale, bool bDegreeRotation = false) const;
-
 };
 
 FORCE_INLINE Matrix4x4::Matrix4x4() {
@@ -188,7 +187,7 @@ FORCE_INLINE Matrix4x4 Matrix4x4::operator+(const Matrix4x4& m) const {
 FORCE_INLINE Quaternion Matrix4x4::getQuaternion() {
   double s0, s1, s2;
   int32_t k0, k1, k2, k3;
-  float  q[4];
+  float q[4];
   if (_m11 + _m22 + _m33 > 0.0f) {
     k0 = 3;
     k1 = 2;
@@ -228,7 +227,7 @@ FORCE_INLINE Quaternion Matrix4x4::getQuaternion() {
   float t = (float)(s0 * _m11 + s1 * _m22 + s2 * _m33 + 1.0f);
   //assert(t>=0.0);
   //if( t==0.0 ) t=1e-10f;
-  float s = (float)(MathUtils::brRsqrt(t) * 0.5f);/*reciprocalSqrt(t)*0.5f;*/
+  float s = (float)(MathUtils::brRsqrt(t) * 0.5f); /*reciprocalSqrt(t)*0.5f;*/
 
   q[k0] = s * t;
 
@@ -275,7 +274,7 @@ FORCE_INLINE Matrix4x4 Matrix4x4::getTranslation(float x, float y, float z) {
 *    @return A matrix witht the specified rotation.
 *    @param a - ANGLE IN DEGREES!
 */
-FORCE_INLINE Matrix4x4 Matrix4x4::getRotationDeg(t_degrees a, vec3& vAxis) {
+FORCE_INLINE Matrix4x4 Matrix4x4::getRotationDeg(t_degrees a, const vec3& vAxis) {
   return getRotationDeg(a, vAxis.x, vAxis.y, vAxis.z);
 }
 FORCE_INLINE Matrix4x4 Matrix4x4::getRotationDeg(t_degrees a, float x, float y, float z) {
@@ -290,7 +289,7 @@ FORCE_INLINE Matrix4x4 Matrix4x4::getRotationDeg(t_degrees a, float x, float y, 
 *    @return A matrix witht the specified rotation.
 *    @param a - Radians.
 */
-FORCE_INLINE Matrix4x4 Matrix4x4::getRotationRad(t_radians a, vec3& vAxis) {
+FORCE_INLINE Matrix4x4 Matrix4x4::getRotationRad(t_radians a, const vec3& vAxis) {
   return getRotationRad(a, vAxis.x, vAxis.y, vAxis.z);
 }
 FORCE_INLINE Matrix4x4 Matrix4x4::getRotationRad(t_radians a, float x, float y, float z) {
@@ -344,12 +343,11 @@ FORCE_INLINE Matrix4x4 Matrix4x4::getRotationToVector(Vector3 v, Vector3 up) {
 
   Vector3 perp = up.cross(v);
 
-  if (perp.x + perp.y + perp.z == 0.0) // vectors are direct opposites.
+  if (perp.x + perp.y + perp.z == 0.0)  // vectors are direct opposites.
   {
     Vector3 scuz(up.y, -up.z, up.x);
     scuz.normalize();
     perp = scuz.cross(v);
-
   }
 
   //TODO: possible error may rotate opposite. (would need to do opposite cross of up.cross(v) scuz cross v
@@ -363,7 +361,7 @@ FORCE_INLINE Matrix4x4 Matrix4x4::getRotationToVector(Vector3 v, Vector3 up) {
 *    @return A matrix witht the specified scaling.
 *
 */
-FORCE_INLINE Matrix4x4 Matrix4x4::getScale(vec3& vScale) {
+FORCE_INLINE Matrix4x4 Matrix4x4::getScale(const vec3& vScale) {
   return getScale(vScale.x, vScale.y, vScale.z);
 }
 FORCE_INLINE Matrix4x4 Matrix4x4::getScale(float x, float y, float z) {
@@ -394,7 +392,7 @@ FORCE_INLINE Matrix4x4& Matrix4x4::projection(float n, float f, float l, float r
   _m41 = 0;
 
   _m12 = 0;
-  _m22 = (2 * n) / (t - b);// *-1.0f; // we added a neagtive here because IDK WHY this is not right
+  _m22 = (2 * n) / (t - b);  // *-1.0f; // we added a neagtive here because IDK WHY this is not right
   _m32 = 0;
   _m42 = 0;
 
@@ -409,7 +407,7 @@ FORCE_INLINE Matrix4x4& Matrix4x4::projection(float n, float f, float l, float r
   _m44 = 0;
 
 #ifdef COORDINATE_SYSTEM_RHS
-  //m = m.transposed(); 
+  //m = m.transposed();
   transpose();
 #endif
 
@@ -449,7 +447,7 @@ FORCE_INLINE Matrix4x4 Matrix4x4::getLookAt(const vec3& eye, const vec3& center,
   return m;
 }
 FORCE_INLINE void Matrix4x4::lookAt(const vec3& eye, const vec3& center, const vec3& up) {
-  // also see 
+  // also see
   //http://www-01.ibm.com/support/knowledgecenter/ssw_aix_53/com.ibm.aix.opengl/doc/openglrf/gluLookAt.htm%23b5c874e426rree
   /*
       Let E be the 3d column vector(eyeX, eyeY, eyeZ).
@@ -475,9 +473,9 @@ FORCE_INLINE void Matrix4x4::lookAt(const vec3& eye, const vec3& center, const v
   Matrix4x4 mm;
   // It seems to be an exact transpose.
   mm._m11 = S.x, mm._m12 = S.y, mm._m13 = S.z, mm._m14 = 0,
-    mm._m21 = D.x, mm._m22 = D.y, mm._m23 = D.z, mm._m24 = 0,
-    mm._m31 = L.x, mm._m32 = L.y, mm._m33 = L.z, mm._m34 = 0,
-    mm._m41 = 0, mm._m42 = 0, mm._m43 = 0, mm._m44 = 1;
+  mm._m21 = D.x, mm._m22 = D.y, mm._m23 = D.z, mm._m24 = 0,
+  mm._m31 = L.x, mm._m32 = L.y, mm._m33 = L.z, mm._m34 = 0,
+  mm._m41 = 0, mm._m42 = 0, mm._m43 = 0, mm._m44 = 1;
 
   // Not sure if this is right. seems to mimic the opengl matrix correctly
   //mm._m11 = S.x, mm._m12 = D.x, mm._m13 = L.x, mm._m14 =   0,
@@ -527,7 +525,6 @@ FORCE_INLINE void Matrix4x4::scale(float x, float y, float z) {
 */
 FORCE_INLINE void Matrix4x4::rotateDeg(t_degrees a, float x, float y, float z) {
   *this *= getRotationDeg(a, x, y, z);
-
 }
 /**
 *    @fn rotateCat()
@@ -544,11 +541,10 @@ FORCE_INLINE void Matrix4x4::rotateRad(t_radians a, float x, float y, float z) {
 */
 FORCE_INLINE Matrix4x4& Matrix4x4::transpose() {
   float f[] = {
-  _m11, _m21, _m31, _m41,
-  _m12, _m22, _m32, _m42,
-  _m13, _m23, _m33, _m43,
-  _m14, _m24, _m34, _m44
-  };
+      _m11, _m21, _m31, _m41,
+      _m12, _m22, _m32, _m42,
+      _m13, _m23, _m33, _m43,
+      _m14, _m24, _m34, _m44};
 
   *this = f;
 
@@ -593,8 +589,8 @@ FORCE_INLINE void Matrix4x4::setIdentity() {
   _m11 = _m22 = _m33 = _m44 = 1.0;
 
   _m21 = _m31 = _m41 = _m12 =
-    _m32 = _m42 = _m13 = _m23 =
-    _m43 = _m14 = _m24 = _m34 = 0.0;
+      _m32 = _m42 = _m13 = _m23 =
+          _m43 = _m14 = _m24 = _m34 = 0.0;
 }
 /**
 *    @fn at()
@@ -627,7 +623,6 @@ FORCE_INLINE int32_t Matrix4x4::rowNum(int ind) {
 *    pivoting a single element. This method can be optimized better.
 */
 FORCE_INLINE float Matrix4x4::det() {
-
   /*
       0    4    8    12
       1    5    9    13
@@ -641,41 +636,8 @@ FORCE_INLINE float Matrix4x4::det() {
   */
 
   //TODO:Optimize later.
-  return(
-    _m11 * (
-    (_m22 * _m33 * _m44)
-      + (_m23 * _m34 * _m42)
-      + (_m24 * _m32 * _m43)
-      - (_m22 * _m34 * _m43)
-      - (_m23 * _m32 * _m44)
-      - (_m24 * _m33 * _m42)
-      )
-    - _m12 * (
-    (_m21 * _m33 * _m44)
-      + (_m23 * _m34 * _m41)
-      + (_m24 * _m31 * _m43)
-      - (_m21 * _m34 * _m43)
-      - (_m23 * _m31 * _m44)
-      - (_m24 * _m33 * _m41)
-      )
-    + _m13 * (
-    (_m21 * _m32 * _m44)
-      + (_m22 * _m34 * _m41)
-      + (_m24 * _m31 * _m42)
-      - (_m21 * _m34 * _m42)
-      - (_m22 * _m31 * _m44)
-      - (_m24 * _m32 * _m41)
-      )
-    - _m14 * (
-    (_m21 * _m32 * _m43)
-      + (_m22 * _m33 * _m41)
-      + (_m23 * _m31 * _m42)
-      - (_m21 * _m33 * _m42)
-      - (_m22 * _m31 * _m43)
-      - (_m23 * _m32 * _m41)
-      )
-    );
-
+  return (
+      _m11 * ((_m22 * _m33 * _m44) + (_m23 * _m34 * _m42) + (_m24 * _m32 * _m43) - (_m22 * _m34 * _m43) - (_m23 * _m32 * _m44) - (_m24 * _m33 * _m42)) - _m12 * ((_m21 * _m33 * _m44) + (_m23 * _m34 * _m41) + (_m24 * _m31 * _m43) - (_m21 * _m34 * _m43) - (_m23 * _m31 * _m44) - (_m24 * _m33 * _m41)) + _m13 * ((_m21 * _m32 * _m44) + (_m22 * _m34 * _m41) + (_m24 * _m31 * _m42) - (_m21 * _m34 * _m42) - (_m22 * _m31 * _m44) - (_m24 * _m32 * _m41)) - _m14 * ((_m21 * _m32 * _m43) + (_m22 * _m33 * _m41) + (_m23 * _m31 * _m42) - (_m21 * _m33 * _m42) - (_m22 * _m31 * _m43) - (_m23 * _m32 * _m41)));
 }
 /**
 *    @fn adj()
@@ -684,12 +646,11 @@ FORCE_INLINE float Matrix4x4::det() {
 FORCE_INLINE Matrix4x4 Matrix4x4::adj() {
   //TODO:Optimize (transpose)
   float f[] = {
-  cofactor(0,0), cofactor(0,1), cofactor(0,2), cofactor(0,3),
-  cofactor(1,0), cofactor(1,1), cofactor(1,2), cofactor(1,3),
-  cofactor(2,0), cofactor(2,1), cofactor(2,2), cofactor(2,3),
-  cofactor(3,0), cofactor(3,1), cofactor(3,2), cofactor(3,3)
-  };
-  return Matrix4x4(f);//.transpose();
+      cofactor(0, 0), cofactor(0, 1), cofactor(0, 2), cofactor(0, 3),
+      cofactor(1, 0), cofactor(1, 1), cofactor(1, 2), cofactor(1, 3),
+      cofactor(2, 0), cofactor(2, 1), cofactor(2, 2), cofactor(2, 3),
+      cofactor(3, 0), cofactor(3, 1), cofactor(3, 2), cofactor(3, 3)};
+  return Matrix4x4(f);  //.transpose();
 }
 /**
 *    @fn getInverse()
@@ -700,7 +661,7 @@ FORCE_INLINE Matrix4x4 Matrix4x4::invert() {
   //**Note:
   //Transpose of an orthogonal matrix is it's inverse
   //If we're orthogonal return the transpose.
- //     return this->transposed();
+  //     return this->transposed();
 
   // - Convert the matrix to Reduced RE form
   Matrix4x4 m;
@@ -749,7 +710,7 @@ FORCE_INLINE Vector4 Matrix4x4::col(int col) {
 FORCE_INLINE float& Matrix4x4::operator[](const size_t& i) {
   return Mat(i);
 }
-FORCE_INLINE float  Matrix4x4::operator[](const size_t& i) const {
+FORCE_INLINE float Matrix4x4::operator[](const size_t& i) const {
   return Mat(i);
 }
 /**
@@ -860,24 +821,22 @@ FORCE_INLINE const Matrix4x4 Matrix4x4::operator*(const Matrix4x4& m) const {
   return tmp;
 }
 FORCE_INLINE string_t Matrix4x4::toString() const {
-  return
-    TypeConv::floatToStr(_m11) + "," +
-    TypeConv::floatToStr(_m12) + "," +
-    TypeConv::floatToStr(_m13) + "," +
-    TypeConv::floatToStr(_m14) + "\n" +
-    TypeConv::floatToStr(_m21) + "," +
-    TypeConv::floatToStr(_m22) + "," +
-    TypeConv::floatToStr(_m23) + "," +
-    TypeConv::floatToStr(_m24) + "\n" +
-    TypeConv::floatToStr(_m31) + "," +
-    TypeConv::floatToStr(_m32) + "," +
-    TypeConv::floatToStr(_m33) + "," +
-    TypeConv::floatToStr(_m34) + "\n" +
-    TypeConv::floatToStr(_m41) + "," +
-    TypeConv::floatToStr(_m42) + "," +
-    TypeConv::floatToStr(_m43) + "," +
-    TypeConv::floatToStr(_m44)
-    ;
+  return TypeConv::floatToStr(_m11) + "," +
+         TypeConv::floatToStr(_m12) + "," +
+         TypeConv::floatToStr(_m13) + "," +
+         TypeConv::floatToStr(_m14) + "\n" +
+         TypeConv::floatToStr(_m21) + "," +
+         TypeConv::floatToStr(_m22) + "," +
+         TypeConv::floatToStr(_m23) + "," +
+         TypeConv::floatToStr(_m24) + "\n" +
+         TypeConv::floatToStr(_m31) + "," +
+         TypeConv::floatToStr(_m32) + "," +
+         TypeConv::floatToStr(_m33) + "," +
+         TypeConv::floatToStr(_m34) + "\n" +
+         TypeConv::floatToStr(_m41) + "," +
+         TypeConv::floatToStr(_m42) + "," +
+         TypeConv::floatToStr(_m43) + "," +
+         TypeConv::floatToStr(_m44);
 }
 FORCE_INLINE Vec3f Matrix4x4::getTranslation() const {
   Vec3f ret;
@@ -910,16 +869,15 @@ FORCE_INLINE float Matrix4x4::getTranslationZ() const {
   return _m43;
 }
 FORCE_INLINE Matrix4x4 Matrix4x4::getOrtho(float left, float right, float top,
-  float bottom, float neard, float fard) {
+                                           float bottom, float neard, float fard) {
   Matrix4x4 mm;
 
   float a1 = 2.0f / (right - left);
-  float a2 = 2.0f / (top - bottom);  //IDK WY
-  float a3 = -2.0f / (fard - neard); //IDK WY
+  float a2 = 2.0f / (top - bottom);   //IDK WY
+  float a3 = -2.0f / (fard - neard);  //IDK WY
   float t1 = (right + left) / (right - left) * -1.0f;
   float t2 = (top + bottom) / (top - bottom) * -1.0f;
   float t3 = (fard + neard) / (fard - neard) * -1.0f;
-
 
   //Row major order version
   //mm._m11 =a1, mm._m12 = 0, mm._m13 = 0, mm._m14 =t1,
@@ -929,9 +887,9 @@ FORCE_INLINE Matrix4x4 Matrix4x4::getOrtho(float left, float right, float top,
 
   // ** OpenGL version - the transpose of the former.
   mm._m11 = a1, mm._m12 = 0, mm._m13 = 0, mm._m14 = 0,
-    mm._m21 = 0, mm._m22 = a2, mm._m23 = 0, mm._m24 = 0,
-    mm._m31 = 0, mm._m32 = 0, mm._m33 = a3, mm._m34 = 0,
-    mm._m41 = t1, mm._m42 = t2, mm._m43 = t3, mm._m44 = 1;
+  mm._m21 = 0, mm._m22 = a2, mm._m23 = 0, mm._m24 = 0,
+  mm._m31 = 0, mm._m32 = 0, mm._m33 = a3, mm._m34 = 0,
+  mm._m41 = t1, mm._m42 = t2, mm._m43 = t3, mm._m44 = 1;
 
   return mm;
 }
@@ -1025,12 +983,10 @@ FORCE_INLINE bool Matrix4x4::parse(string_t tok, Matrix4x4& mOut) {
     31  32  33  34
     41  42  43  44
 */
-STATIC FORCE_INLINE string_t tstr(const mat4& x) { 
-  return x.toString(); 
+STATIC FORCE_INLINE string_t tstr(const mat4& x) {
+  return x.toString();
 }
 
-
-
-}
+}  // namespace BR2
 
 #endif

@@ -49,7 +49,7 @@ private:
 class LightNodeDir : public LightNodeBase {
 public:
   LightNodeDir(string_t name, bool bShadow);
-  static std::shared_ptr<LightNodeDir> LightNodeDir::create(string_t name, bool bShadow);
+  static std::shared_ptr<LightNodeDir> create(string_t name, bool bShadow);
   virtual ~LightNodeDir() override;
 
   virtual void update(float delta, std::map<Hash32, std::shared_ptr<Animator>>& mapAnimators) override;
@@ -95,7 +95,7 @@ public:
 
   bool renderShadows(std::shared_ptr<ShadowBox> pf); // - Called by lightmanager to set up the light
   
-  std::shared_ptr<GpuPointLight> LightNodePoint::getGpuLight() { return _pGpuLight; }
+  std::shared_ptr<GpuPointLight> getGpuLight() { return _pGpuLight; }
   void setEnableFlicker(bool b) { _bFlickerEnabled = b; if (_bFlickerEnabled == FALSE) _fFlickerAddRadius = 0.0f; }
   float getLightAttenuation() { return _attenuation; }
   void setLightAttenuation(float f) { _attenuation = f; }

@@ -35,14 +35,14 @@ public:
   std::shared_ptr<ShaderBase> tryLoadCachedBinary(string_t programName, std::vector<string_t> shaderFiles); \
 
 protected:
-  string_t getBinaryNameFromProgramName(string_t& progName);
+  string_t getBinaryNameFromProgramName(const string_t& progName);
   bool isSupported() { return _bCacheIsSupported; }
   void freeLoadedBinary(GLProgramBinary* bin);
   GLProgramBinary* getBinaryFromGpu(std::shared_ptr<ShaderBase> prog);
   std::shared_ptr<ShaderBase> loadBinaryToGpu(std::string, GLProgramBinary* bin);
   GLProgramBinary* getBinaryFromDisk(string_t& programName);
-  void saveBinaryToDisk(string_t& programName, GLProgramBinary* bin);
-  void deleteBinaryFromDisk(string_t& programName);
+  void saveBinaryToDisk(const string_t& programName, GLProgramBinary* bin);
+  void deleteBinaryFromDisk(const string_t& programName);
 
 private:
   bool _bCacheIsSupported = false;

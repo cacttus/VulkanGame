@@ -321,7 +321,7 @@ void World25::createHandCursor() {
   getScene()->attachChild(ob);
 }
 
-std::shared_ptr<ModelNode> World25::makeObj(string_t mobName, vec3& vR3PosToSnap) {
+std::shared_ptr<ModelNode> World25::makeObj(string_t mobName, const vec3& vR3PosToSnap) {
   //TODO: hash + LUT
   std::shared_ptr<ModelNode> wo = nullptr;
   std::shared_ptr<WorldObj> pFound = nullptr;
@@ -492,30 +492,30 @@ void World25::updateHandCursorAndAddToRenderList(float delta) {
 }
 
 void World25::updateTouch(std::shared_ptr<InputManager> pFingers) {
-  if (pFingers->keyPress(SDL_SCANCODE_U)) {
-    std::shared_ptr<LightNodeDir> ld = nullptr;
-    if (_pPhysics->findNode<LightNodeDir>(ld)) {
-      ld->setPos(ld->getPos() + vec3(0.2, 0, 0));
-    }
-  }
-  if (pFingers->keyPress(SDL_SCANCODE_J)) {
-    std::shared_ptr<LightNodeDir> ld = nullptr;
-    if (_pPhysics->findNode<LightNodeDir>(ld)) {
-      ld->setPos(ld->getPos() + vec3(-0.2, 0, 0));
-    }
-  }
-  if (pFingers->keyPress(SDL_SCANCODE_H)) {
-    std::shared_ptr<LightNodeDir> ld = nullptr;
-    if (_pPhysics->findNode<LightNodeDir>(ld)) {
-      ld->setPos(ld->getPos() + vec3(0, 0, -0.2));
-    }
-  }
-  if (pFingers->keyPress(SDL_SCANCODE_K)) {
-    std::shared_ptr<LightNodeDir> ld = nullptr;
-    if (_pPhysics->findNode<LightNodeDir>(ld)) {
-      ld->setPos(ld->getPos() + vec3(0, 0, 0.2));
-    }
-  }
+  // if (pFingers->keyPress(SDL_SCANCODE_U)) {
+  //   std::shared_ptr<LightNodeDir> ld = nullptr;
+  //   if (_pPhysics->findNode<LightNodeDir>(ld)) {
+  //     ld->setPos(ld->getPos() + vec3(0.2, 0, 0));
+  //   }
+  // }
+  // if (pFingers->keyPress(SDL_SCANCODE_J)) {
+  //   std::shared_ptr<LightNodeDir> ld = nullptr;
+  //   if (_pPhysics->findNode<LightNodeDir>(ld)) {
+  //     ld->setPos(ld->getPos() + vec3(-0.2, 0, 0));
+  //   }
+  // }
+  // if (pFingers->keyPress(SDL_SCANCODE_H)) {
+  //   std::shared_ptr<LightNodeDir> ld = nullptr;
+  //   if (_pPhysics->findNode<LightNodeDir>(ld)) {
+  //     ld->setPos(ld->getPos() + vec3(0, 0, -0.2));
+  //   }
+  // }
+  // if (pFingers->keyPress(SDL_SCANCODE_K)) {
+  //   std::shared_ptr<LightNodeDir> ld = nullptr;
+  //   if (_pPhysics->findNode<LightNodeDir>(ld)) {
+  //     ld->setPos(ld->getPos() + vec3(0, 0, 0.2));
+  //   }
+  // }
   if (pFingers->keyPress(SDL_SCANCODE_F7)) {
     _bDisableLighting = !_bDisableLighting;
   }
@@ -541,11 +541,11 @@ void World25::updateTouch(std::shared_ptr<InputManager> pFingers) {
   //}
 }
 void World25::turnOffSun() {
-  std::shared_ptr<LightNodeDir> light = nullptr;
-  if (_pPhysics->findNode<LightNodeDir>(light)) {
-    if (light->isHidden()) { light->show(); }
-    else { light->hide(); }
-  }
+  // std::shared_ptr<LightNodeDir> light = nullptr;
+  // if (_pPhysics->findNode<LightNodeDir>(light)) {
+  //   if (light->isHidden()) { light->show(); }
+  //   else { light->hide(); }
+  // }
 }
 void World25::turnOffLamp() {
   std::shared_ptr<PhysicsNode> mn = _pPhysics->findNode("Tall_Lamp");
@@ -647,7 +647,7 @@ void World25::drawDeferred(RenderParams& rp) {
   Perf::popPerf();
 }
 void World25::drawForward(RenderParams& rp) {
-  if (_eShowGrid != GridShow::e::None) {
+  if (_eShowGrid != GridShow::e::NoShow) {
     //draw grid liens
     Gu::getCoreContext()->pushBlend();
     Gu::getCoreContext()->pushDepthTest();
@@ -1070,14 +1070,14 @@ ivec3 World25::v3Toi3CellLocal(vec3& v) {
 }
 
 GridShow::e World25::toggleShowGrid() {
-  if (_eShowGrid == GridShow::e::None) {
+  if (_eShowGrid == GridShow::e::NoShow) {
     _eShowGrid = GridShow::e::Top;
   }
   else if (_eShowGrid == GridShow::e::Top) {
     _eShowGrid = GridShow::e::TopSideBot;
   }
   else if (_eShowGrid == GridShow::e::TopSideBot) {
-    _eShowGrid = GridShow::e::None;
+    _eShowGrid = GridShow::e::NoShow;
   }
   else {
     Gu::debugBreak();

@@ -32,29 +32,29 @@ void ShaderMaker::initialize() {
   _pShaderCompiler = std::make_shared<ShaderCompiler>(Gu::getCoreContext(), shadersDir);
 
   //Single VT shaders
-  _pImageShader = makeShader(std::vector<string_t> { "f_v3x2_diffuse.vs", "f_v3x2_diffuse.ps" });
-  _pNormalsShader = makeShader(std::vector<string_t> { "f_v3n3_normals.vs", "f_v3n3_normals.gs", "f_v3n3_normals.ps" });
-  _pShadowBlendShader = makeShader(std::vector<string_t> {"v2x2_shadow_blend.vs", "v2x2_shadow_blend.ps" });
-  _pDepthOfField = makeShader(std::vector<string_t> {"v3x2_depth_of_field.vs", "v3x2_depth_of_field.ps" });
-  _pSmoothGen = makeShader(std::vector<string_t> {"v3x2_smooth_gen.vs", "v3x2_smooth_gen.ps" });
-  
+  _pImageShader = makeShader(std::vector<string_t>{"f_v3x2_diffuse.vs", "f_v3x2_diffuse.ps"});
+  _pNormalsShader = makeShader(std::vector<string_t>{"f_v3n3_normals.vs", "f_v3n3_normals.gs", "f_v3n3_normals.ps"});
+  _pShadowBlendShader = makeShader(std::vector<string_t>{"v2x2_shadow_blend.vs", "v2x2_shadow_blend.ps"});
+  _pDepthOfField = makeShader(std::vector<string_t>{"v3x2_depth_of_field.vs", "v3x2_depth_of_field.ps"});
+  _pSmoothGen = makeShader(std::vector<string_t>{"v3x2_smooth_gen.vs", "v3x2_smooth_gen.ps"});
+
   //Multiple VT shaders
-  _pShadowShaders.insert(std::make_pair(v_v3::getVertexFormat(), makeShader(std::vector<string_t> {"v3_shadowmap.vs", "v3_shadowmap.ps" })));
-  _pShadowShaders.insert(std::make_pair(v_v3x2::getVertexFormat(), makeShader(std::vector<string_t> {"v3x2_shadowmap.vs", "v3x2_shadowmap.ps" })));
+  _pShadowShaders.insert(std::make_pair(v_v3::getVertexFormat(), makeShader(std::vector<string_t>{"v3_shadowmap.vs", "v3_shadowmap.ps"})));
+  _pShadowShaders.insert(std::make_pair(v_v3x2::getVertexFormat(), makeShader(std::vector<string_t>{"v3x2_shadowmap.vs", "v3x2_shadowmap.ps"})));
 
-  _pDiffuseShaders.insert(std::make_pair(v_v3n3x2::getVertexFormat(), makeShader(std::vector<string_t> { "d_v3n3x2_diffuse.vs", "d_v3n3x2_diffuse.ps" })));
-  _pDiffuseShaders.insert(std::make_pair(v_v3x2::getVertexFormat(), makeShader(std::vector<string_t> { "d_v3x2_diffuse.vs", "d_v3x2_diffuse.ps" })));
-  _pDiffuseShaders.insert(std::make_pair(v_v3n3::getVertexFormat(), makeShader(std::vector<string_t> { "d_v3n3_diffuse.vs", "d_v3n3_diffuse.ps" })));
-  _pDiffuseShaders.insert(std::make_pair(v_v3::getVertexFormat(), makeShader(std::vector<string_t> { "d_v3_diffuse.vs", "d_v3_diffuse.ps" })));
-  _pDiffuseShaders.insert(std::make_pair(v_v2x2::getVertexFormat(), makeShader(std::vector<string_t> { "d_v2x2_diffuse.vs", "d_v2x2_diffuse.ps" })));
+  _pDiffuseShaders.insert(std::make_pair(v_v3n3x2::getVertexFormat(), makeShader(std::vector<string_t>{"d_v3n3x2_diffuse.vs", "d_v3n3x2_diffuse.ps"})));
+  _pDiffuseShaders.insert(std::make_pair(v_v3x2::getVertexFormat(), makeShader(std::vector<string_t>{"d_v3x2_diffuse.vs", "d_v3x2_diffuse.ps"})));
+  _pDiffuseShaders.insert(std::make_pair(v_v3n3::getVertexFormat(), makeShader(std::vector<string_t>{"d_v3n3_diffuse.vs", "d_v3n3_diffuse.ps"})));
+  _pDiffuseShaders.insert(std::make_pair(v_v3::getVertexFormat(), makeShader(std::vector<string_t>{"d_v3_diffuse.vs", "d_v3_diffuse.ps"})));
+  _pDiffuseShaders.insert(std::make_pair(v_v2x2::getVertexFormat(), makeShader(std::vector<string_t>{"d_v2x2_diffuse.vs", "d_v2x2_diffuse.ps"})));
 
-  _pGlassShaders.insert(std::make_pair(v_v3n3x2::getVertexFormat(), makeShader(std::vector<string_t> { "f_v3n3x2_glass.vs", "f_v3n3x2_glass.ps" })));
-  _pGlassShaders.insert(std::make_pair(v_v3n3::getVertexFormat(), makeShader(std::vector<string_t> { "f_v3n3_glass.vs", "f_v3n3_glass.ps" })));
+  _pGlassShaders.insert(std::make_pair(v_v3n3x2::getVertexFormat(), makeShader(std::vector<string_t>{"f_v3n3x2_glass.vs", "f_v3n3x2_glass.ps"})));
+  _pGlassShaders.insert(std::make_pair(v_v3n3::getVertexFormat(), makeShader(std::vector<string_t>{"f_v3n3_glass.vs", "f_v3n3_glass.ps"})));
 
-  _pFlatShaders.insert(std::make_pair(v_v2c4::getVertexFormat(), makeShader(std::vector<string_t> { "f_v2c4_flat.vs", "f_v2c4_flat.ps" })));
-  _pFlatShaders.insert(std::make_pair(v_v3c4::getVertexFormat(), makeShader(std::vector<string_t> { "f_v3c4_flat.vs", "f_v3c4_flat.ps" })));
+  _pFlatShaders.insert(std::make_pair(v_v2c4::getVertexFormat(), makeShader(std::vector<string_t>{"f_v2c4_flat.vs", "f_v2c4_flat.ps"})));
+  _pFlatShaders.insert(std::make_pair(v_v3c4::getVertexFormat(), makeShader(std::vector<string_t>{"f_v3c4_flat.vs", "f_v3c4_flat.ps"})));
 
-  _pGuiShader = makeShader(std::vector<string_t> { "f_gui.vs", "f_gui.gs", "f_gui.ps" });
+  _pGuiShader = makeShader(std::vector<string_t>{"f_gui.vs", "f_gui.gs", "f_gui.ps"});
 
   //////////////////////////////////////////////////////////////////////////
   getComputeLimits();
@@ -83,14 +83,13 @@ std::shared_ptr<ShaderBase> ShaderMaker::getValidShaderForVertexType(ShaderMap& 
   }
   if (match == nullptr) {
     //BroLogError("Could not match shader for vertex type.");
-   // BroThrowNotImplementedException();
+    // BroThrowNotImplementedException();
     return nullptr;
   }
   return shaders.find(match)->second;
 }
 
 void ShaderMaker::getComputeLimits() {
-
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &_maxWorkGroupDims[0]);
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &_maxWorkGroupDims[1]);
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &_maxWorkGroupDims[2]);
@@ -102,12 +101,13 @@ void ShaderMaker::getComputeLimits() {
     BRThrowException("The max number of shader storage buffers is zero. This likely means you are running an older graphics card where Compute Shading isn't supported.");
   }
   _maxBufferBindings = maxBindings;
-
 }
 
-std::shared_ptr<ShaderBase> ShaderMaker::makeShader(std::vector<string_t>& vecFiles) {
+std::shared_ptr<ShaderBase> ShaderMaker::makeShader(const std::vector<string_t>& vecFiles) {
   std::vector<std::shared_ptr<ShaderSubProgram>> vecSubProgs;
   std::shared_ptr<ShaderBase> pShader = nullptr;
+
+  std::vector<string_t> files_copy(vecFiles);
 
   //20160608 Note:
   //  1) We create a shader sub-program with glCreateShader
@@ -116,19 +116,19 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeShader(std::vector<string_t>& vecFi
   //          This is a problem.  We should attempt to get the cached program first
   //  4) Then we compile/link all programs
   try {
-    removeDuplicateSourceFiles(vecFiles);
-    string_t strShaderName = getShaderNameFromFileNames(vecFiles);
-    fullyQualifyFiles(vecFiles);
-    BRLogInfo("Making '" + strShaderName + "', Processing " + vecFiles.size() + " files.");
+    removeDuplicateSourceFiles(files_copy);
+    string_t strShaderName = getShaderNameFromFileNames(files_copy);
+    fullyQualifyFiles(files_copy);
+    BRLogInfo("Making '" + strShaderName + "', Processing " + files_copy.size() + " files.");
 
-    pShader = _pShaderCache->tryLoadCachedBinary(strShaderName, vecFiles);
+    pShader = _pShaderCache->tryLoadCachedBinary(strShaderName, files_copy);
 
     if (pShader != nullptr) {
       pShader->setProgramStatus(ShaderStatus::Linked);
       _mapPrograms.insert(std::make_pair(pShader->getNameHashed(), pShader));
     }
     else {
-      loadSubPrograms(vecFiles, vecSubProgs);
+      loadSubPrograms(files_copy, vecSubProgs);
       if (checkForErrors(vecSubProgs, pShader)) {
         return nullptr;
       }
@@ -158,10 +158,8 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeShader(std::vector<string_t>& vecFi
       return nullptr;
     }
 
-
     BRLogInfo("Load Success\r\n------------------------------\r\n");
-  }
-  catch (Exception * ex) {
+  } catch (Exception* ex) {
     BRLogError(ex->what());
   }
 
@@ -177,7 +175,7 @@ void ShaderMaker::deleteShader(std::shared_ptr<ShaderBase> ps) {
   }
 }
 void ShaderMaker::fullyQualifyFiles(std::vector<string_t>& vecFiles) {
-  for (size_t iFile = 0; iFile < vecFiles.size(); iFile++) { // strFile : vecFiles) {
+  for (size_t iFile = 0; iFile < vecFiles.size(); iFile++) {  // strFile : vecFiles) {
     string_t qual = FileSystem::combinePath(Gu::getPackage()->getShadersFolder(), vecFiles[iFile]);
     vecFiles[iFile] = qual;
   }
@@ -217,7 +215,6 @@ string_t ShaderMaker::getGeneralErrorsAsString(bool clear) {
   return ret;
 }
 bool ShaderMaker::checkForErrors(std::vector<std::shared_ptr<ShaderSubProgram>>& vecSubProgs, std::shared_ptr<ShaderBase> sp) {
-
   string_t errStr = getGeneralErrorsAsString();
 
   for (std::shared_ptr<ShaderSubProgram> subProg : vecSubProgs) {
@@ -236,7 +233,7 @@ bool ShaderMaker::checkForErrors(std::vector<std::shared_ptr<ShaderSubProgram>>&
   }
   if (sp != nullptr) {
     if (sp->getLinkErrors().size() > 0) {
-      errStr += Stz"Link Errors:" + "\r\n";
+      errStr += Stz "Link Errors:" + "\r\n";
       for (string_t str : sp->getLinkErrors()) {
         errStr += str + "\r\n";
       }
@@ -260,7 +257,6 @@ bool ShaderMaker::checkForErrors(std::vector<std::shared_ptr<ShaderSubProgram>>&
     }
   }
   return false;
-
 }
 
 void ShaderMaker::loadSubPrograms(std::vector<string_t>& vecFiles, std::vector<std::shared_ptr<ShaderSubProgram>>& __out_ subProgs) {
@@ -269,7 +265,6 @@ void ShaderMaker::loadSubPrograms(std::vector<string_t>& vecFiles, std::vector<s
 
   // - Remove dupes in source files.
   for (string_t strFile : vecFiles) {
-
     if (!FileSystem::fileExists(strFile)) {
       _vecGeneralErrors.push_back(Stz "Shader source file '" + strFile + "' was not found.");
       continue;
@@ -289,7 +284,6 @@ void ShaderMaker::removeDuplicateSourceFiles(std::vector<string_t>& vecFiles) {
         vecFiles.erase(vecFiles.begin() + j);
         j--;
       }
-
     }
   }
 }
@@ -339,18 +333,16 @@ void ShaderMaker::compileShaderSubProgram(std::shared_ptr<ShaderSubProgram> pSha
     string_t str = pShader->getHumanReadableErrorString();
     addGeneralError(str);
   }
-
 }
 std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr<ShaderSubProgram>>& vecpsp, string_t& programName) {
   std::shared_ptr<ShaderBase> pProgram = std::make_shared<ShaderBase>(programName);
-  pProgram->init(); //The program must be constructed for the shader cache.
+  pProgram->init();  //The program must be constructed for the shader cache.
 
   //One compilation time which is the same across all sub-programs.
   time_t compileTime = time(NULL);
 
   // - Compile and add all sub programs
   for (std::shared_ptr<ShaderSubProgram> subProg : vecpsp) {
-
     if (subProg == nullptr) {
       BRThrowException(" [OpenGL] Tried to bind a null shader program.  Check for shader compile errors. ");
     }
@@ -373,8 +365,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
     }
   }
 
-
-  for (std::shared_ptr<ShaderSubProgram> subProg : pProgram->getSubPrograms()) {//size_t i = 0; i<pProgram->_vecSubPrograms.size(); ++i) {
+  for (std::shared_ptr<ShaderSubProgram> subProg : pProgram->getSubPrograms()) {  //size_t i = 0; i<pProgram->_vecSubPrograms.size(); ++i) {
     std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glAttachShader(pProgram->getGlId(), subProg->getGlId());
     GLuint err = glGetError();
 
@@ -386,7 +377,6 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
     }
     subProg->setStatus(ShaderStatus::e::Linked);
   }
-
 
   // - Issue here - do we need to validate? is it really a performance issue?
   if (!validateShadersForProgram(pProgram)) {
@@ -458,13 +448,12 @@ bool ShaderMaker::validateShadersForProgram(std::shared_ptr<ShaderBase> psp) {
     if (!validateSubProgram(subProg, psp)) {
       std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glDetachShader(psp->getGlId(), subProg->getGlId());
       psp->getLinkErrors().push_back(Stz
-        "[Link] Failed to validate sub-program " + subProg->getSourceLocation()
-      );
+                                     "[Link] Failed to validate sub-program " +
+                                     subProg->getSourceLocation());
       retVal = false;
     }
     subProg->setStatus(ShaderStatus::e::CreateComplete);
   }
-
 
   return retVal;
 }
@@ -481,8 +470,7 @@ bool ShaderMaker::validateSubProgram(std::shared_ptr<ShaderSubProgram> prog, std
   }
   if (prog->getStatus() != ShaderStatus::e::Linked) {
     psp->getLinkErrors().push_back(
-      Stz " Sub-Program invalid status: " + (int)prog->getStatus() + " : " + prog->getSourceLocation()
-    );
+        Stz " Sub-Program invalid status: " + (int)prog->getStatus() + " : " + prog->getSourceLocation());
     return false;
   }
 
@@ -565,11 +553,10 @@ void ShaderMaker::parseUniforms(std::shared_ptr<ShaderBase> sb) {
 
         uniformName = "_ufShadowFrustumSamples";
       }
-      else if (StringUtil::findFirstOf(name, std::vector<char> { '.', '[', ']' }) != string_t::npos) {
+      else if (StringUtil::findFirstOf(name, std::vector<char>{'.', '[', ']'}) != string_t::npos) {
         BRLogWarn("Uniform name '" + name + "' was not valid but was parsed as a basic uniform. Could be a buffer. (parse error).");
         Gu::debugBreak();
       }
-
 
       if (StringUtil::equals(uniformName, "gl_NumWorkGroups")) {
         BRLogError(" [The GPU implementation thought the system variable " + uniformName + " was a uniform variable.  This is incorrect.  Ignoring...");
@@ -584,7 +571,6 @@ void ShaderMaker::parseUniforms(std::shared_ptr<ShaderBase> sb) {
       //Uniform is a member of a block.
     }
   }
-
 }
 void ShaderMaker::parseUniformBlocks(std::shared_ptr<ShaderBase> sb) {
   //Blocks are global to all shaders.
@@ -661,9 +647,9 @@ void ShaderMaker::parseAttributes(std::shared_ptr<ShaderBase> sb) {
     //Verify no dupes.
     for (ShaderAttribute* attrOther : sb->getAttributes()) {
       if (attrOther->getUserType() == attr->getUserType()) {
-        if (attrOther->getUserType() != VertexUserType::e::None) {
+        if (attrOther->getUserType() != VertexUserType::NoVertexType) {
           err += Stz "  " + sb->getProgramName() +
-            " - Duplicate shader attribute '" + VertexFormat::getUserTypeName(attrOther->getUserType()) + "'.";
+                 " - Duplicate shader attribute '" + VertexFormat::getUserTypeName(attrOther->getUserType()) + "'.";
           Gu::debugBreak();
         }
       }
@@ -721,42 +707,89 @@ void ShaderMaker::shaderBound(std::shared_ptr<ShaderBase> sb) {
   if (sb == nullptr) {
     std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glUseProgram(0);
   }
-  else {// if(_pBound != sb ){ //*this was causing errors because we must be calling UseProgram somewhere.
+  else {  // if(_pBound != sb ){ //*this was causing errors because we must be calling UseProgram somewhere.
     std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glUseProgram(sb->getGlId());
   }
   _pBound = sb;
-
 }
-
 
 string_t ShaderMaker::systemTypeToSTring(OpenGLShaderVarType::e eType) {
   switch (eType) {
-  case OpenGLShaderVarType::ut_notype: return  "ut_notype "; break;
-  case OpenGLShaderVarType::GpuInt1: return    "GpuInt1   "; break;
-  case OpenGLShaderVarType::GpuInt2: return    "GpuInt2   "; break;
-  case OpenGLShaderVarType::GpuInt3: return    "GpuInt3   "; break;
-  case OpenGLShaderVarType::GpuInt4: return    "GpuInt4   "; break;
-  case OpenGLShaderVarType::GpuUint1: return   "GpuUint1  "; break;
-  case OpenGLShaderVarType::GpuUint2: return   "GpuUint2  "; break;
-  case OpenGLShaderVarType::GpuUint3: return   "GpuUint3  "; break;
-  case OpenGLShaderVarType::GpuUint4: return   "GpuUint4  "; break;
-  case OpenGLShaderVarType::GpuFloat1: return  "GpuFloat1 "; break;
-  case OpenGLShaderVarType::GpuFloat2: return  "GpuFloat2 "; break;
-  case OpenGLShaderVarType::GpuFloat3: return  "GpuFloat3 "; break;
-  case OpenGLShaderVarType::GpuFloat4: return  "GpuFloat4 "; break;
-  case OpenGLShaderVarType::GpuBool1: return   "GpuBool1  "; break;
-  case OpenGLShaderVarType::GpuBool2: return   "GpuBool2  "; break;
-  case OpenGLShaderVarType::GpuBool3: return   "GpuBool3  "; break;
-  case OpenGLShaderVarType::GpuBool4: return   "GpuBool4  "; break;
-  case OpenGLShaderVarType::GpuMat2: return    "GpuMat2   "; break;
-  case OpenGLShaderVarType::GpuMat3: return    "GpuMat3   "; break;
-  case OpenGLShaderVarType::GpuMat4: return    "GpuMat4   "; break;
-  case OpenGLShaderVarType::GpuDouble1: return "GpuDouble1"; break;
-  case OpenGLShaderVarType::GpuDouble2: return "GpuDouble2"; break;
-  case OpenGLShaderVarType::GpuDouble3: return "GpuDouble3"; break;
-  case OpenGLShaderVarType::GpuDouble4: return "GpuDouble4"; break;
-  default: return "Unknown.";
-    break;
+    case OpenGLShaderVarType::ut_notype:
+      return "ut_notype ";
+      break;
+    case OpenGLShaderVarType::GpuInt1:
+      return "GpuInt1   ";
+      break;
+    case OpenGLShaderVarType::GpuInt2:
+      return "GpuInt2   ";
+      break;
+    case OpenGLShaderVarType::GpuInt3:
+      return "GpuInt3   ";
+      break;
+    case OpenGLShaderVarType::GpuInt4:
+      return "GpuInt4   ";
+      break;
+    case OpenGLShaderVarType::GpuUint1:
+      return "GpuUint1  ";
+      break;
+    case OpenGLShaderVarType::GpuUint2:
+      return "GpuUint2  ";
+      break;
+    case OpenGLShaderVarType::GpuUint3:
+      return "GpuUint3  ";
+      break;
+    case OpenGLShaderVarType::GpuUint4:
+      return "GpuUint4  ";
+      break;
+    case OpenGLShaderVarType::GpuFloat1:
+      return "GpuFloat1 ";
+      break;
+    case OpenGLShaderVarType::GpuFloat2:
+      return "GpuFloat2 ";
+      break;
+    case OpenGLShaderVarType::GpuFloat3:
+      return "GpuFloat3 ";
+      break;
+    case OpenGLShaderVarType::GpuFloat4:
+      return "GpuFloat4 ";
+      break;
+    case OpenGLShaderVarType::GpuBool1:
+      return "GpuBool1  ";
+      break;
+    case OpenGLShaderVarType::GpuBool2:
+      return "GpuBool2  ";
+      break;
+    case OpenGLShaderVarType::GpuBool3:
+      return "GpuBool3  ";
+      break;
+    case OpenGLShaderVarType::GpuBool4:
+      return "GpuBool4  ";
+      break;
+    case OpenGLShaderVarType::GpuMat2:
+      return "GpuMat2   ";
+      break;
+    case OpenGLShaderVarType::GpuMat3:
+      return "GpuMat3   ";
+      break;
+    case OpenGLShaderVarType::GpuMat4:
+      return "GpuMat4   ";
+      break;
+    case OpenGLShaderVarType::GpuDouble1:
+      return "GpuDouble1";
+      break;
+    case OpenGLShaderVarType::GpuDouble2:
+      return "GpuDouble2";
+      break;
+    case OpenGLShaderVarType::GpuDouble3:
+      return "GpuDouble3";
+      break;
+    case OpenGLShaderVarType::GpuDouble4:
+      return "GpuDouble4";
+      break;
+    default:
+      return "Unknown.";
+      break;
   }
 }
 void ShaderMaker::setUfBlock(string_t name, void* value, size_t copySizeBytes, bool bIgnore) {
@@ -775,9 +808,4 @@ void ShaderMaker::addGeneralError(string_t str) {
   _vecGeneralErrors.push_back(str);
 }
 
-
-
-
-
-
-}//ns Game
+}  // namespace BR2

@@ -18,18 +18,18 @@ VertexFormat::~VertexFormat() {
   //    DEL_MEM(_vecComponents[icomp]);
   //}
 }
-void VertexFormat::addComponent(VertexUserType::e eUserType) {
+void VertexFormat::addComponent(VertexUserType eUserType) {
 
   GLenum eType;
   int compCount;
   int size;
   switch (eUserType) {
-  case VertexUserType::e::v2_01:
+  case VertexUserType::v2_01:
     eType = GL_FLOAT;
     compCount = 2;
     size = sizeof(vec2);
     break;
-  case VertexUserType::e::v3_01:
+  case VertexUserType::v3_01:
     //*******************************************
     //**Look at the size: vec4 - note this from the opengl wiki
     //"Implementations sometimes get the std140 layout wrong for vec3 components. 
@@ -39,55 +39,55 @@ void VertexFormat::addComponent(VertexUserType::e eUserType) {
     size = sizeof(vec4);
     //*******************************************
     break;
-  case VertexUserType::e::v4_01:
-  case VertexUserType::e::v4_02:
-  case VertexUserType::e::v4_03:
+  case VertexUserType::v4_01:
+  case VertexUserType::v4_02:
+  case VertexUserType::v4_03:
     eType = GL_FLOAT;
     compCount = 4;
     size = sizeof(vec4);
     break;
-  case VertexUserType::e::c4_01:
+  case VertexUserType::c4_01:
     eType = GL_FLOAT;
     compCount = 4;
     size = sizeof(vec4);
     break;
-  case VertexUserType::e::c3_01:
+  case VertexUserType::c3_01:
     eType = GL_FLOAT;
     compCount = 3;
     size = sizeof(vec4);//**Look at the size: vec4 - note this from the opengl wiki
     break;
-  case VertexUserType::e::n3_01:
+  case VertexUserType::n3_01:
     eType = GL_FLOAT;
     compCount = 3;
     size = sizeof(vec4);//**Look at the size: vec4 - note this from the opengl wiki
     break;
-  case VertexUserType::e::x2_01:
+  case VertexUserType::x2_01:
     eType = GL_FLOAT;
     compCount = 2;
     size = sizeof(vec4);//**Look at the size: vec4 - note this from the opengl wiki
     break;
-  case VertexUserType::e::i2_01:
+  case VertexUserType::i2_01:
     eType = GL_INT;
     compCount = 2;
     size = sizeof(vec2);
     break;
-  case VertexUserType::e::u2_01:
+  case VertexUserType::u2_01:
     eType = GL_UNSIGNED_INT;
     compCount = 2;
     size = sizeof(uvec2);
     break;
     //**std430 padded types.
-//case VertexUserType::e::v3_01_STD430:
+//case VertexUserType::v3_01_STD430:
 //    eType = GL_FLOAT;
 //    compCount = 3;
 //    size = sizeof(vec4);
 //    break;
-//case VertexUserType::e::n3_01_STD430:
+//case VertexUserType::n3_01_STD430:
 //    eType = GL_FLOAT;
 //    compCount = 3;
 //    size = sizeof(vec4);
 //    break;
-//case VertexUserType::e::x2_01_STD430:
+//case VertexUserType::x2_01_STD430:
 //    eType = GL_FLOAT;
 //    compCount = 2;
 //    size = sizeof(vec4);
@@ -98,7 +98,7 @@ void VertexFormat::addComponent(VertexUserType::e eUserType) {
 
   addComponent(eType, compCount, size, eUserType);
 }
-void VertexFormat::addComponent(GLenum type, int componentCount, int size, VertexUserType::e eUserType) {
+void VertexFormat::addComponent(GLenum type, int componentCount, int size, VertexUserType eUserType) {
 
   //Check duples
   for (std::pair<int, std::shared_ptr<VertexComponent>> p : _vecComponents) {
@@ -131,7 +131,7 @@ void VertexFormat::addComponent(GLenum type, int componentCount, int size, Verte
     _iVertexSizeBytes += comp->getSizeBytes();
   }
 }
-std::shared_ptr<VertexComponent> VertexFormat::getComponentForUserType(VertexUserType::e eUserType) {
+std::shared_ptr<VertexComponent> VertexFormat::getComponentForUserType(VertexUserType eUserType) {
   std::map<int, std::shared_ptr<VertexComponent>>::iterator it = _vecComponents.find((int)eUserType);
   if (it == _vecComponents.end()) {
     return nullptr;
@@ -240,17 +240,17 @@ GLenum VertexFormat::computeAttributeType(GLenum type, GLuint count) {
     BRThrowNotImplementedException();
   }
 }
-string_t VertexFormat::getUserTypeName(VertexUserType::e eUserType) {
+string_t VertexFormat::getUserTypeName(VertexUserType eUserType) {
   switch (eUserType) {
-  case VertexUserType::e::c4_01: return ("Color4f"); break;
-  case VertexUserType::e::v2_01: return ("Position2f"); break;
-  case VertexUserType::e::v3_01: return ("Position3f"); break;
-  case VertexUserType::e::n3_01: return ("Normal3f"); break;
-  case VertexUserType::e::x2_01: return ("Texcoord2f"); break;
-  case VertexUserType::e::u2_01: return ("Unsigned_Int_2"); break;
-  case VertexUserType::e::v4_01:
-  case VertexUserType::e::v4_02:
-  case VertexUserType::e::v4_03:
+  case VertexUserType::c4_01: return ("Color4f"); break;
+  case VertexUserType::v2_01: return ("Position2f"); break;
+  case VertexUserType::v3_01: return ("Position3f"); break;
+  case VertexUserType::n3_01: return ("Normal3f"); break;
+  case VertexUserType::x2_01: return ("Texcoord2f"); break;
+  case VertexUserType::u2_01: return ("Unsigned_Int_2"); break;
+  case VertexUserType::v4_01:
+  case VertexUserType::v4_02:
+  case VertexUserType::v4_03:
     return ("Position4f"); break;
   };
 

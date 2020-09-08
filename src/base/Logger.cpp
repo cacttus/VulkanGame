@@ -26,7 +26,11 @@ namespace BR2 {
 #pragma region Logger_Internal
 class Logger_Internal {
 public:
-  enum class LogLevel { Debug, Info, Warn, Error, };
+  enum class LogLevel { Debug,
+                        Info,
+                        Warn,
+                        Error,
+  };
   string_t _logDir;
   string_t _logFileName;
   std::atomic_bool _bAsync = false;
@@ -42,15 +46,15 @@ public:
   std::atomic_bool _kill;
 
   string_t addStackTrace(string_t msg);
-  void addLineFileToMsg(string_t msg, int line, char* file);
+  void addLineFileToMsg(string_t msg, int line, const char* file);
   string_t createMessageHead(LogLevel level);
-  void log(string_t msg, string_t header, BR2::Exception* e);
+  void log(string_t msg, string_t header, const BR2::Exception* const e);
   void processLogs_Async();
 
-  void log_cycle_mainThread(std::function<void()> f, bool,int);
-  void log_wedi_mainThread(string_t msg, int line, char* file, BR2::Exception* e, bool hideStackTrace, Logger_Internal::LogLevel level);
+  void log_cycle_mainThread(std::function<void()> f, bool, int);
+  void log_wedi_mainThread(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level);
 };
-void Logger_Internal::log_wedi_mainThread(string_t msg, int line, char* file, BR2::Exception* e, bool hideStackTrace, Logger_Internal::LogLevel level) {
+void Logger_Internal::log_wedi_mainThread(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level) {
   if (_bEnabled == false) {
     return;
   }
@@ -81,7 +85,7 @@ string_t Logger_Internal::addStackTrace(string_t msg) {
   msg += DebugHelper::getStackTrace();
   return msg;
 }
-void Logger_Internal::addLineFileToMsg(string_t msg, int line, char* file) {
+void Logger_Internal::addLineFileToMsg(string_t msg, int line, const char* file) {
   if (_bSuppressLineFileDisplay == false) {
     msg = msg + "  (" + FileSystem::getFileNameFromPath(file) + " : " + line + ")";
   }
@@ -100,9 +104,9 @@ string_t Logger_Internal::createMessageHead(LogLevel level) {
   else if (level == LogLevel::Error) {
     str = "ERR";
   }
-  return Stz "" + DateTime::timeToStr(DateTime::getTime()) + " " + str + " ";
+  return Stz "" + DateTime::getDateTime().timeToStr() + " " + str + " ";
 }
-void Logger_Internal::log(string_t msg, string_t header, BR2::Exception* e) {
+void Logger_Internal::log(string_t msg, string_t header, const BR2::Exception*  const e) {
   string_t m = header + " " + msg;
 
   if (e != nullptr) {
@@ -219,12 +223,12 @@ void Logger::init(string_t cache) {
       }
       //delete in this thread.
       delete li;
-      });
+    });
     th.detach();
   }
 
   //*Note: do not call the #define shortcuts here.
-  logInfo(Stz(_pint->_bAsync ? "Async " : "") + "Logger Initializing " + DateTime::dateTimeToStr(DateTime::getDateTime()));
+  logInfo(Stz(_pint->_bAsync ? "Async " : "") + "Logger Initializing " + DateTime::getDateTime().toString());
 }
 string_t Logger::getLogPath() {
   return _pint->_logDir;
@@ -232,32 +236,35 @@ string_t Logger::getLogPath() {
 void Logger::logInfo(string_t msg) {
   logInfo(msg, -1, "", nullptr, true);
 }
-void Logger::logInfo(string_t msg, int line, char* file, BR2::Exception* e, bool hideStackTrace) {
+void Logger::logInfo(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Info);
 }
-void Logger::logError(string_t msg, int line, char* file, BR2::Exception* e, bool hideStackTrace) {
+void Logger::logError(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Error);
 }
-void Logger::logWarn(string_t msg, int line, char* file, BR2::Exception* e, bool hideStackTrace) {
+void Logger::logWarn(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Warn);
 }
-void Logger::logDebug(string_t msg, int line, char* file, BR2::Exception* e, bool hideStackTrace) {
+void Logger::logDebug(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Debug);
 }
-void Logger::logWarnCycle(string_t msg, int line, char* file, BR2::Exception* e, int iCycle, bool force) {
+void Logger::logWarnCycle(string_t msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
   _pint->log_cycle_mainThread([&]() {
     logWarn(msg, line, file, e);
-    }, force, iCycle);
+  },
+                              force, iCycle);
 }
-void Logger::logErrorCycle(string_t msg, int line, char* file, BR2::Exception* e, int iCycle, bool force) {
+void Logger::logErrorCycle(string_t msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
   _pint->log_cycle_mainThread([&]() {
     logError(msg, line, file, e);
-    }, force, iCycle);
+  },
+                              force, iCycle);
 }
-void Logger::logDebugCycle(string_t msg, int line, char* file, BR2::Exception* e, int iCycle, bool force) {
+void Logger::logDebugCycle(string_t msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
   _pint->log_cycle_mainThread([&]() {
     logDebug(msg, line, file, e);
-    }, force, iCycle);
+  },
+                              force, iCycle);
 }
 void Logger::enableLogToConsole(bool bLogToConsole) {
   _pint->_bLogToConsole = bLogToConsole;
@@ -269,4 +276,4 @@ void Logger::enableLogToFile(bool bLogToFile) {
 }
 
 #pragma endregion
-}//ns game
+}  // namespace BR2

@@ -4,7 +4,7 @@
 #include "../base/Img32.h"
 #include "../base/Allocator.h"
 #include "../base/FileSystem.h"
-#include "../base/oglErr.h"
+#include "../base/OglErr.h"
 #include "../base/EngineConfig.h"
 #include "../base/DiskFile.h"
 #include "../base/OperatingSystem.h"

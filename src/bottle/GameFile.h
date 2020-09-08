@@ -26,8 +26,8 @@ private:
   string_t _strWorldName;
 
   //Inherited
-  virtual void pkp(std::vector<string_t>& tokens);
-  virtual void preLoad();
+  virtual void pkp(std::vector<string_t>& tokens) override;
+  virtual void preLoad() override;
   virtual void postLoad();
 };
 

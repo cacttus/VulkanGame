@@ -1,7 +1,7 @@
 #include "../gfx/VulkanApi.h"
 #include "../base/Logger.h"
 #include "../base/Exception.h"
-#include "../base/oglErr.h"
+#include "../base/OglErr.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/SDLUtils.h"
 

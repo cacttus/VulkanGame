@@ -13,7 +13,7 @@ namespace BR2 {
 class Exception {
 public:
   Exception(string_t c, int line, const char* file, bool bLogError = true);
-  string_t what();
+  string_t what() const;
 
 private:
   int _line;
@@ -21,8 +21,6 @@ private:
   const char* _file;
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

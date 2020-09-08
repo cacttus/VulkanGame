@@ -2,7 +2,7 @@
 #include "../base/Hash.h"
 #include "../base/ApplicationPackage.h"
 #include "../base/GLContext.h"
-#include "../base/oglErr.h"
+#include "../base/OglErr.h"
 #include "../base/FileSystem.h"
 #include "../base/Logger.h"
 #include "../gfx/QuadBufferMesh.h"
@@ -35,9 +35,9 @@
 #include "../bottle/W25GridMesh.h"
 
 namespace BR2 {
-WorldGrid::WorldGrid(std::shared_ptr<World25> pworld, ivec3& viPos, bool bEmpty) :
-  PhysicsGrid(pworld->getPhysics(), viPos, BottleUtils::getNodeWidth(), BottleUtils::getNodeHeight(), bEmpty),
-  _pWorld25(pworld) {
+WorldGrid::WorldGrid(std::shared_ptr<World25> pworld, ivec3& viPos, bool bEmpty) : 
+PhysicsGrid(pworld->getPhysics(), viPos, BottleUtils::getNodeWidth(), BottleUtils::getNodeHeight(), bEmpty),
+                                                                                   _pWorld25(pworld) {
 }
 WorldGrid::~WorldGrid() {
   deleteMeshes();
@@ -47,10 +47,10 @@ WorldGrid::~WorldGrid() {
 void WorldGrid::initSync() {
   //All meshes must be created because meshes "class" handles meshes now.
   for (int iMatter = 0; iMatter < GridMeshLayer::e::MaxMatters; ++iMatter) {
-    _pMeshes[iMatter] = std::make_shared<W25GridMesh>(getThis<WorldGrid>(), (GridMeshLayer::e) iMatter);
+    _pMeshes[iMatter] = std::make_shared<W25GridMesh>(getThis<WorldGrid>(), (GridMeshLayer::e)iMatter);
   }
 }
-void WorldGrid::getCellData(BlockNode* parent, WorldCellFile* __out pFile) {
+void WorldGrid::getCellData(BlockNode* parent, WorldCellFile* __out_ pFile) {
   WorldCellData* pd;
 
   if (parent == nullptr) {
@@ -91,8 +91,8 @@ void WorldGrid::getCellData(BlockNode* parent, WorldCellFile* __out pFile) {
 void WorldGrid::consolidate() {
   // return;
 
-   //New fn.
-   //Remove empty nodes.
+  //New fn.
+  //Remove empty nodes.
   bool bEmpty = true;
   _nPruned = 0;
   _nNodes = 0;
@@ -198,7 +198,7 @@ void WorldGrid::fillObjects() {
   //}
   //Add objects.
 
-//    _mapPostInitCells.clear();
+  //    _mapPostInitCells.clear();
 }
 WorldCell* WorldGrid::getCellForIndex(ivec3& idx) {
   vec3 vp = getOriginR3();
@@ -275,7 +275,7 @@ void WorldGrid::settleLiquids() {
     for (WorldCell* pc : vdCopy) {
       W25Geom liq = pc->getGeom(GridMeshLayer::e::Transparent);
 
-      if (liq != W25GEOM_EMPTY) //Add && _bLiquidStable here to avoid extraneous updates.
+      if (liq != W25GEOM_EMPTY)  //Add && _bLiquidStable here to avoid extraneous updates.
       {
         W25Geom liqNewCell = liq;
         //Check a corner.
@@ -323,8 +323,8 @@ void WorldGrid::settleLiquidsNeighbor(WorldCell* pc, PhysicsGridSide::e eSide) {
 void WorldGrid::spreadLiquid(int ic, WorldCell* pc, int ni, WorldCell* pn, W25Geom& __out_ val) {
   AssertOrThrow2(ic >= 0 && ic < 8 && ni >= 0 && ni < 8);
   if (w25_get(pc->getGeom(GridMeshLayer::e::Transparent), ic) &&
-    !w25_get(pn->getGeom(GridMeshLayer::e::Transparent), ni) &&
-    !w25_get(pn->getGeom(GridMeshLayer::e::Opaque), ni)) {
+      !w25_get(pn->getGeom(GridMeshLayer::e::Transparent), ni) &&
+      !w25_get(pn->getGeom(GridMeshLayer::e::Opaque), ni)) {
     w25_set(val, ni);
     if (pc->getTile(GridMeshLayer::e::Transparent) != W25TILE_EMPTY) {
       pn->setTile(GridMeshLayer::e::Transparent, pc->getTile(GridMeshLayer::e::Transparent));
@@ -342,7 +342,7 @@ void WorldGrid::getLocalCellRangeForBox(Box3f& box, ivec3& p0, ivec3& p1) {
   p0 = getWorld25()->v3Toi3CellLocal(p0_local);
   p1 = getWorld25()->v3Toi3CellLocal(p1_local);
 
-  int ciMaxCellsXYZ = (int)BottleUtils::getNumCellsWidth(); // 1 bil
+  int ciMaxCellsXYZ = (int)BottleUtils::getNumCellsWidth();  // 1 bil
 
   //**So invalid intervals are bound to happen here because the input bound box is
   //likely going to be outside the range of this node.
@@ -458,7 +458,7 @@ void WorldGrid::raycastCells(Ray_t* pr, std::multimap<float, WorldCell*>& outCel
 void WorldGrid::markAllCellsDirty() {
   iterateCells([this](WorldCell* pc) {
     _vecLiquidMod.insert(pc);
-    });
+  });
 }
 void WorldGrid::markCellDirty(WorldCell* pc) {
   _vecLiquidMod.insert(pc);
@@ -469,8 +469,7 @@ void WorldGrid::beginGenAsync(std::function<void()> func) {
   _genFuture = std::async(std::launch::async, [that, func] {
     try {
       func();
-    }
-    catch (Exception * ex) {
+    } catch (Exception* ex) {
       //Thread was killed
       if (that->getKilled()) {
         BRLogInfo("Grid generation cancelled.");
@@ -480,7 +479,7 @@ void WorldGrid::beginGenAsync(std::function<void()> func) {
       }
     }
     return true;
-    });
+  });
 }
 void WorldGrid::generateStage1() {
   std::shared_ptr<WorldGrid> that = getThis<WorldGrid>();
@@ -488,7 +487,7 @@ void WorldGrid::generateStage1() {
 
   beginGenAsync([that]() {
     that->generateStage1Sync();
-    });
+  });
 }
 void WorldGrid::generateStage2() {
   std::shared_ptr<WorldGrid> that = getThis<WorldGrid>();
@@ -496,7 +495,7 @@ void WorldGrid::generateStage2() {
 
   beginGenAsync([that]() {
     that->generateStage2Sync();
-    });
+  });
 }
 void WorldGrid::killGen() {
   _bKilled = true;
@@ -546,13 +545,13 @@ void WorldGrid::generateStage1Sync() {
 #endif
   checkKilled();
 
-  consolidate();//Bug somewhere here.
+  consolidate();  //Bug somewhere here.
   checkKilled();
 
   markAllCellsDirty();
   checkKilled();
 
-  fillObjects(); //Must come before make mesh.
+  fillObjects();  //Must come before make mesh.
   checkKilled();
 }
 void WorldGrid::postGenerateStage1() {
@@ -578,7 +577,7 @@ void WorldGrid::postGenerateStage2() {
 
     //Finish generating synchronous opengl stuff (render thread)
     for (int iMatter = 0; iMatter < GridMeshLayer::e::MaxMatters; ++iMatter) {
-      Gu::checkErrorsRt();//_pWorld25->getContext()->chkErrRt();
+      Gu::checkErrorsRt();  //_pWorld25->getContext()->chkErrRt();
       if (_pMeshes[iMatter] != nullptr) {
         _pMeshes[iMatter]->sendMeshToGpu();
       }
@@ -610,7 +609,7 @@ void WorldGrid::debugVerifyAllInternalCellsLinked(BlockNode* parent) {
         }
       }
     }
-    });
+  });
 }
 void WorldGrid::redoNeighborConfigs() {
   for (int iNeighbor = 0; iNeighbor < c_nNeighbors; ++iNeighbor) {
@@ -630,7 +629,7 @@ void WorldGrid::redoSide(PhysicsGridSide::e eSide, BlockNode* parent) {
       //We shouldn't have to redo the neighbor cells, since we're only culling the given side.
       updateRedoMeshForCell(pc, false);
     }
-    });
+  });
 }
 void WorldGrid::deflateCellIndexes(GridMeshLayer::e eMatter, int32_t iOldOff, int32_t iOldCount, WorldCell* pRemoved, BlockNode* parent) {
   //Updates the mesh indexes for the cells, called when we edit the grid (remove a cell).
@@ -645,13 +644,13 @@ void WorldGrid::deflateCellIndexes(GridMeshLayer::e eMatter, int32_t iOldOff, in
           int32_t new_off = noff - iOldCount;
           if (new_off < 0) {
             Gu::debugBreak();
-            new_off = 0;    //**Error
+            new_off = 0;  //**Error
           }
           pc->getVisibleCell()->setMeshIndexOffset(eMatter, new_off);
         }
       }
     }
-    });
+  });
 }
 void WorldGrid::iterateCells(std::function<void(WorldCell*)> func, BlockNode* parent) {
   //Iterates all NON-NULL cells.
@@ -696,7 +695,7 @@ size_t WorldGrid::getNodeSizeKb() {
   int nodeSize = (int)sizeof(BlockNode);
   int gridSize = (int)sizeof(WorldGrid);
   iNodeSizeKb += _nNodes * nodeSize;
-  iNodeSizeKb += _nCells * sizeof(WorldCell*); //_setCells.size() ;
+  iNodeSizeKb += _nCells * sizeof(WorldCell*);  //_setCells.size() ;
   iNodeSizeKb += gridSize;
   iNodeSizeKb /= 1024;
   return iNodeSizeKb;
@@ -743,37 +742,30 @@ string_t WorldGrid::getGenProfileString() {
 
   iSizeKb = iNodeSizeKb + iMeshSizeKb + iCellSizeKb;
 
-  iTimeMs = _tvDivide
-    + _tvSave
-    + _tvLoad
-    + _tvLink
-    + _tvMesh
-    + _tvProp
-    + _tvPostGen1
-    + _tvPostGen2;
+  iTimeMs = _tvDivide + _tvSave + _tvLoad + _tvLink + _tvMesh + _tvProp + _tvPostGen1 + _tvPostGen2;
 
   return Stz getGridPos().toString() + "  " + iSizeKb + "kb (" + iNodeSizeKb + " node+ " + iCellSizeKb + " cell+ " + iMeshSizeKb + " mesh) " + iTimeMs + "ms \r\n " +
-    "#CellSiz " + cellSize + "+ " +
-    "#NodeSiz " + nodeSize + "+ " +
-    "#GridSiz " + gridSize + "+ " +
-    "\r\n" +
-    "#Verts " + nVerts + "+ " +
-    "#Indexes " + nIndexes + "(" + nIndexes / 3 + " tris)+ " +
-    "\r\n" +
-    "#Cells " + (int)_nCells + "+ " +
-    "#Nodes " + (int)_nNodes + "+ " +
-    "#Pruned " + (int)_nPruned + "+ " +
-    "\r\n" +
-    "   Div " + (int)_tvDivide + "ms+ " +
-    "Save " + (int)_tvSave + "ms+ " +
-    "Load " + (int)_tvLoad + "ms+ " +
-    "Link " + (int)_tvLink + "ms+ " +
-    "\r\n" +
-    "   Mesh " + (int)_tvMesh + "ms+ " +
-    "Prop " + (int)_tvProp + "ms+ " +
-    "Post1 " + (int)_tvPostGen1 + "ms " +
-    "Post2 " + (int)_tvPostGen2 + "ms " +
-    "\n";
+         "#CellSiz " + cellSize + "+ " +
+         "#NodeSiz " + nodeSize + "+ " +
+         "#GridSiz " + gridSize + "+ " +
+         "\r\n" +
+         "#Verts " + nVerts + "+ " +
+         "#Indexes " + nIndexes + "(" + nIndexes / 3 + " tris)+ " +
+         "\r\n" +
+         "#Cells " + (int)_nCells + "+ " +
+         "#Nodes " + (int)_nNodes + "+ " +
+         "#Pruned " + (int)_nPruned + "+ " +
+         "\r\n" +
+         "   Div " + (int)_tvDivide + "ms+ " +
+         "Save " + (int)_tvSave + "ms+ " +
+         "Load " + (int)_tvLoad + "ms+ " +
+         "Link " + (int)_tvLink + "ms+ " +
+         "\r\n" +
+         "   Mesh " + (int)_tvMesh + "ms+ " +
+         "Prop " + (int)_tvProp + "ms+ " +
+         "Post1 " + (int)_tvPostGen1 + "ms " +
+         "Post2 " + (int)_tvPostGen2 + "ms " +
+         "\n";
 }
 void WorldGrid::cleanEmptyNodes() {
   //TODO:
@@ -825,7 +817,7 @@ void WorldGrid::linkCellsInternal(bool bUnlink) {
   //L to R
   stitchBoundariesX_r(_pRoot->getChild(BlockPos8::e::NBP3_ABL), _pRoot->getChild(BlockPos8::e::NBP3_ABR), bUnlink, false);
   stitchBoundariesX_r(_pRoot->getChild(BlockPos8::e::NBP3_ATL), _pRoot->getChild(BlockPos8::e::NBP3_ATR), bUnlink, false);
-  stitchBoundariesX_r(_pRoot->getChild(BlockPos8::e::NBP3_FBL), _pRoot->getChild(BlockPos8::e::NBP3_FBR), bUnlink, false);	// - Link order same as in Phase 1
+  stitchBoundariesX_r(_pRoot->getChild(BlockPos8::e::NBP3_FBL), _pRoot->getChild(BlockPos8::e::NBP3_FBR), bUnlink, false);  // - Link order same as in Phase 1
   stitchBoundariesX_r(_pRoot->getChild(BlockPos8::e::NBP3_FTL), _pRoot->getChild(BlockPos8::e::NBP3_FTR), bUnlink, false);
   //B to T
   stitchBoundariesY_r(_pRoot->getChild(BlockPos8::e::NBP3_ABL), _pRoot->getChild(BlockPos8::e::NBP3_ATL), bUnlink, false);
@@ -914,26 +906,22 @@ void WorldGrid::stitchNodesZ(BlockNode* giver, BlockNode* taker, bool bUnlink) {
 }
 void WorldGrid::stitchBoundariesX_r(BlockNode* giver, BlockNode* taker, bool bUnlink, bool bQueue) {
   BlockPos8::e othr[] = {
-      BlockPos8::NBP3_ABR, BlockPos8::NBP3_ATR, BlockPos8::NBP3_FBR, BlockPos8::NBP3_FTR
-  };
+      BlockPos8::NBP3_ABR, BlockPos8::NBP3_ATR, BlockPos8::NBP3_FBR, BlockPos8::NBP3_FTR};
   stitchBoundaries_r(giver, taker, bUnlink, bQueue, 0, PhysicsGridSide::e::gR, othr);
 }
 void WorldGrid::stitchBoundariesY_r(BlockNode* giver, BlockNode* taker, bool bUnlink, bool bQueue) {
   BlockPos8::e othr[] = {
-      BlockPos8::NBP3_ATL, BlockPos8::NBP3_ATR, BlockPos8::NBP3_FTL, BlockPos8::NBP3_FTR
-  };
+      BlockPos8::NBP3_ATL, BlockPos8::NBP3_ATR, BlockPos8::NBP3_FTL, BlockPos8::NBP3_FTR};
   stitchBoundaries_r(giver, taker, bUnlink, bQueue, 1, PhysicsGridSide::e::gT, othr);
 }
 void WorldGrid::stitchBoundariesZ_r(BlockNode* giver, BlockNode* taker, bool bUnlink, bool bQueue) {
   BlockPos8::e othr[] = {
-      BlockPos8::NBP3_FBL, BlockPos8::NBP3_FBR, BlockPos8::NBP3_FTL, BlockPos8::NBP3_FTR
-  };
+      BlockPos8::NBP3_FBL, BlockPos8::NBP3_FBR, BlockPos8::NBP3_FTL, BlockPos8::NBP3_FTR};
   stitchBoundaries_r(giver, taker, bUnlink, bQueue, 2, PhysicsGridSide::e::gF, othr);
 }
 void WorldGrid::stitchBoundaries_r(BlockNode* giver, BlockNode* taker, bool bUnlink, bool bQueue,
-  int ax, PhysicsGridSide::e gLink,
-  BlockPos8::e(&othr)[4]
-) {
+                                   int ax, PhysicsGridSide::e gLink,
+                                   BlockPos8::e (&othr)[4]) {
   if (!giver || !taker) {
     return;
   }
@@ -957,8 +945,8 @@ void WorldGrid::stitchBoundaries_r(BlockNode* giver, BlockNode* taker, bool bUnl
       //Don't link cells if empty.  There won't be any
     }
     else {
-      if (giver->getCells() && taker->getCells()) {//New - thsi is for debugging, really all leaves should have cells
-          // A->B
+      if (giver->getCells() && taker->getCells()) {  //New - thsi is for debugging, really all leaves should have cells
+        // A->B
         for (int i = 0; i < 4; ++i) {
           linkBlocks(giver->getCell(othr[i]), taker->getCell(othrOpp[i]), gLink, bUnlink, bQueue);
         }
@@ -1000,7 +988,8 @@ void WorldGrid::linkBlocks(WorldCell* b1, WorldCell* b2, PhysicsGridSide::e nrp,
     }
     if (b2 != nullptr) {
       b2->setNeighbor(PhysicsGrid::getOppNeighborIndex(nrp), nullptr);
-    }void redoSide(PhysicsGridSide::e eSide);
+    }
+    void redoSide(PhysicsGridSide::e eSide);
   }
   else {
     if (b1->getNeighbor(nrp) != nullptr) {
@@ -1026,9 +1015,12 @@ void WorldGrid::linkBlocks(WorldCell* b1, WorldCell* b2, PhysicsGridSide::e nrp,
   }
 }
 BlockPos8::e WorldGrid::oppAx(BlockPos8::e ePos, int ax) {
-  if (ax == 0) return BottleUtils::oppBlockPosX(ePos);
-  else if (ax == 1) return BottleUtils::oppBlockPosY(ePos);
-  else if (ax == 2) return BottleUtils::oppBlockPosZ(ePos);
+  if (ax == 0)
+    return BottleUtils::oppBlockPosX(ePos);
+  else if (ax == 1)
+    return BottleUtils::oppBlockPosY(ePos);
+  else if (ax == 2)
+    return BottleUtils::oppBlockPosZ(ePos);
   BRThrowNotImplementedException();
 }
 void WorldGrid::debugBlocksAreSpatiallyCoherent(WorldCell* b1, WorldCell* b2) {
@@ -1078,4 +1070,4 @@ void WorldGrid::updateRedoMesh(GridMeshLayer::e eMatter) {
 std::shared_ptr<MeshNode> WorldGrid::getMesh() {
   return _pMeshes[GridMeshLayer::e::Opaque]->getMesh();
 }
-}//ns Game
+}  // namespace BR2

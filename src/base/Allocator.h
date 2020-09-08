@@ -16,7 +16,7 @@ namespace BR2 {
 *  @brief Base class that manages the allocation of user-defined memory blocks.
 */
 template <typename Tx> class Allocator : public VirtualMemory {
-  public:
+public:
   FORCE_INLINE Allocator();
   FORCE_INLINE Allocator(size_t allocCount, Tx *ptFill = nullptr);
   FORCE_INLINE virtual ~Allocator() override;
@@ -33,7 +33,7 @@ template <typename Tx> class Allocator : public VirtualMemory {
   }  // - Get # of items allocated
 
   FORCE_INLINE size_t tsize() const { return sizeof(Tx); }
-  FORCE_INLINE void alloca(size_t count = 0);   // - Allocate
+  FORCE_INLINE void _alloca(size_t count = 0);  // - Allocate
   FORCE_INLINE void realloca(size_t newCount);  // - Reallocate
   FORCE_INLINE void reallocBytes(size_t newSize);
   FORCE_INLINE void grow(size_t itemCount,
@@ -93,14 +93,14 @@ template <typename Tx> class Allocator : public VirtualMemory {
   FORCE_INLINE bool operator!=(Allocator<Tx> &ptr);
   FORCE_INLINE void operator=(const Allocator<Tx> &rhs);
 
-  public:
+public:
   typedef Tx dataType;
   typedef size_t size_type;
 
-  protected:
+protected:
   Tx *_pT;
 
-  private:
+private:
   size_t _num;        // number of elements (T's) allocated
   size_t _lastNum;    // last allocation.
   size_t _allocSize;  // - The last size allocated or 0
@@ -273,10 +273,12 @@ template <typename Tx> Tx &Allocator<Tx>::at(size_t index) {
  *    @fn alloc()
  *    @brief Allocate a list of blocks.
  */
-template <typename Tx> void Allocator<Tx>::alloca(size_t count) {
+template <typename Tx> void Allocator<Tx>::_alloca(size_t count) {
   dealloc();
 
-  if (count == 0) return;
+  if (count == 0) {
+    return;
+  }
   _lastSize = _allocSize;
   _lastNum = _num;
 
@@ -362,7 +364,7 @@ void Allocator<Tx>::grow(size_t add_count, size_t itemOffset) {
 
   newCount = (int64_t)count() + add_count;
 
-  newData.alloca(newCount);
+  newData._alloca(newCount);
 
   size_t countA = itemOffset;
   size_t countB = (size_t)count() - itemOffset;
@@ -402,7 +404,7 @@ void Allocator<Tx>::shrink(size_t itemOffset, size_t numItemsToRemove) {
   // - we should allow zero for memory copies
   // so if count is zero it shouldn't matter.
 
-  newData.alloca(newCount);
+  newData._alloca(newCount);
 
   size_t endSize = count() - (itemOffset + numItemsToRemove);
 
@@ -625,7 +627,8 @@ void Allocator<Tx>::swapChunk(size_t iOff, size_t iCountToRemove,
                               const Tx *pDataToSwap, size_t iCountToSwap) {
   if (iCountToRemove > iCountToSwap) {
     shrink(iOff, iCountToRemove - iCountToSwap);
-  } else if (iCountToRemove < iCountToSwap) {
+  }
+  else if (iCountToRemove < iCountToSwap) {
     grow(iCountToSwap - iCountToRemove, iOff);
   }
   // else do nothing - data same size

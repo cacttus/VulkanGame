@@ -394,7 +394,7 @@ void GameUi::createToolbar() {
       if (std::shared_ptr<BottleScript> bs = r_w.lock()) {
         Gu::getSoundCache()->tryPlay(sk->pButtonClickSound);
         GridShow::e eShow = bs->toggleShowGrid();
-        if (eShow == GridShow::e::None) {
+        if (eShow == GridShow::e::NoShow) {
           img->setTexture(sk->pTbGrid0);
         }
         else if (eShow == GridShow::e::Top) {

@@ -8,9 +8,7 @@
 #include "../model/MeshSpec.h"
 
 namespace BR2 {
-ObjFile::ObjFile(std::shared_ptr<GLContext> c) :
-  _pContext(c)
-  , _bDebugDisableVertexCompression(false) //**Set this to false to disable compressed vertexes (optimized meshes)
+ObjFile::ObjFile(std::shared_ptr<GLContext> c) : _pContext(c), _bDebugDisableVertexCompression(false)  //**Set this to false to disable compressed vertexes (optimized meshes)
 {
   _iCurrentLine = 0;
 }
@@ -24,7 +22,7 @@ ObjFile::~ObjFile() {
 }
 void ObjFile::load(string_t& strFilePath, bool flipWinding) {
   BinaryFile bufferedFile(c_strVersion);
-  uint32_t iLastGroupOffset;    // - For NON relative vertexes (ones with no '-' in front of their indexes we have
+  uint32_t iLastGroupOffset;  // - For NON relative vertexes (ones with no '-' in front of their indexes we have
 
   _sFileName = strFilePath;
   _bFlipWinding = flipWinding;
@@ -56,12 +54,12 @@ vec2 ObjFile::readVec2(BinaryFile& pBufferedFile) {
   return ret;
 }
 void ObjFile::loadObjFileContents(BinaryFile& pBufferedFile) {
-  string_t    tok;
+  string_t tok;
   vec3 temp_v3;
   vec2 temp_v2;
 
   while (!pBufferedFile.eof()) {
-    tok = pBufferedFile.getTok(); // plows through whitespace.
+    tok = pBufferedFile.getTok();  // plows through whitespace.
 
     if (!tok.compare("mtllib")) {
       //20160509 Not Supported
@@ -93,7 +91,6 @@ void ObjFile::loadObjFileContents(BinaryFile& pBufferedFile) {
     // - Eat to the next line, that is eat \r\n
     pBufferedFile.eatLine();
   }
-
 }
 void ObjFile::parseGeom(BinaryFile& pBufferedFile, string_t& tok) {
   tok = pBufferedFile.getTokSameLineOrReturnEmpty();
@@ -105,15 +102,15 @@ void ObjFile::parseGeom(BinaryFile& pBufferedFile, string_t& tok) {
   }
 }
 void ObjFile::parseFace(BinaryFile& pBufferedFile, string_t& tok) {
-  std::vector <string_t> strVec;
+  std::vector<string_t> strVec;
   int32_t iComp;
   int32_t indices[3];
 
   // - Parse face groups x,y,z:  x/x/x  y/y/y  z/z/z
   for (int igroup = 0; igroup < 3; ++igroup) {
     tok = pBufferedFile.getTok();
-    int32_t strlind = 0; // last index of '/' + 1 (one char after it)
-    int32_t curComponent = 0; // the current component ex "v" inside of the v/t/n etc
+    int32_t strlind = 0;       // last index of '/' + 1 (one char after it)
+    int32_t curComponent = 0;  // the current component ex "v" inside of the v/t/n etc
 
     tok = StringUtil::trim(tok);
     StringUtil::split(tok, '/', strVec);
@@ -123,14 +120,14 @@ void ObjFile::parseFace(BinaryFile& pBufferedFile, string_t& tok) {
       indices[iComp] = parseFaceComponent(tok, strlind, iComp);
     }
 
-    addFaceVertex(indices[0], indices[1], indices[2]);//v, x, n
+    addFaceVertex(indices[0], indices[1], indices[2]);  //v, x, n
 
     strVec.clear();
   }
 }
 int32_t ObjFile::parseFaceComponent(string_t& tok, int32_t& strlind, int32_t iComponent) {
-  size_t strind = 0;// current index of '/'
-  int32_t idx; // parsed vertex face index
+  size_t strind = 0;  // current index of '/'
+  int32_t idx;        // parsed vertex face index
   string_t rt;
 
   strind = tok.find_first_of('/', strlind);
@@ -153,7 +150,7 @@ int32_t ObjFile::parseFaceComponent(string_t& tok, int32_t& strlind, int32_t iCo
     idx = TypeConv::strToInt(rt);
   }
 
-  strlind = (int32_t)strind + 1; // cut out the '//'
+  strlind = (int32_t)strind + 1;  // cut out the '//'
 
   return idx;
 }
@@ -220,7 +217,6 @@ void ObjFile::addCurrentSpec() {
   }
   _matLocalMatrix = mat4::identity();
   _pCurrentSpec = NULL;
-
 }
 
 void ObjFile::copySpecFragments(std::shared_ptr<MeshSpec> pSpec) {
@@ -271,7 +267,6 @@ mat4 ObjFile::parseMat4(BinaryFile& bf) {
   mat4 mOut;
   mat4::parse(mat_str, mOut);
   return mOut;
-
 }
 
-}//ns Game
+}  // namespace BR2

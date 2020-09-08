@@ -83,7 +83,7 @@ private:
   std::shared_ptr<Texture2DSpec> _pTex = nullptr;
   std::shared_ptr<Atlas> _pParticlesAtlas = nullptr;
 
-  void init();
+  void init() override;
   void createUi();
   void setDebugMode();
   void draw2d();

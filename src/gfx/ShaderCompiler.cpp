@@ -47,7 +47,7 @@ void ShaderCompiler::loadSource(std::shared_ptr<ShaderSubProgram> pSubProg) {
 
   pSubProg->setStatus(ShaderStatus::e::Loaded);
 }
-void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg, string_t& location, std::vector<string_t>& lines, time_t& greatestModifyTime) {
+void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg,const  string_t& location, std::vector<string_t>& lines, time_t& greatestModifyTime) {
   //char* data;
   time_t modTime;
 
@@ -198,7 +198,7 @@ ShaderCompiler::IncludeVec ShaderCompiler::getIncludes(std::vector<string_t>& li
 
   return _includes;
 }
-void ShaderCompiler::loadSourceData(string_t& location, std::shared_ptr<BinaryFile> __out_ sourceData) {
+void ShaderCompiler::loadSourceData(const string_t& location, std::shared_ptr<BinaryFile> __out_ sourceData) {
   if (!Gu::getPackage()->fileExists(location)) {
     sourceData = NULL;
     _loadStatus = ShaderStatus::e::FileNotFound;
@@ -285,7 +285,9 @@ void ShaderCompiler::compile(std::shared_ptr<ShaderSubProgram> pSubProg) {
   for (size_t i = 0; i < pSubProg->getSourceLines().size(); ++i) {
     if (pSubProg->getSourceLines()[i].size()) {
       arg[i] = new char[pSubProg->getSourceLines()[i].size()];
-      memcpy_s(arg[i], pSubProg->getSourceLines()[i].size(), pSubProg->getSourceLines()[i].c_str(), pSubProg->getSourceLines()[i].size());
+      std::memcpy(arg[i], pSubProg->getSourceLines()[i].c_str(), pSubProg->getSourceLines()[i].size());
+      //Windows..Error
+      //memcpy_s(arg[i], pSubProg->getSourceLines()[i].size(), pSubProg->getSourceLines()[i].c_str(), pSubProg->getSourceLines()[i].size());
     }
   }
 

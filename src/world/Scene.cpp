@@ -55,11 +55,11 @@ Scene::~Scene() {
 void Scene::init() {
   BRLogInfo("Making PhysicsWorld");
   _pPhysicsWorld =
-    PhysicsWorld::create(getThis<Scene>(),
-      BottleUtils::getNodeWidth(), BottleUtils::getNodeHeight(), std::move(vec3(0, 1, 0)),
-      BottleUtils::getAwarenessRadiusXZ(), BottleUtils::getAwarenessIncrementXZ(),
-      BottleUtils::getAwarenessRadiusY(), BottleUtils::getAwarenessIncrementY(),
-      BottleUtils::getNodesY(), BottleUtils::getMaxGridCount());
+      PhysicsWorld::create(getThis<Scene>(),
+                           BottleUtils::getNodeWidth(), BottleUtils::getNodeHeight(), std::move(vec3(0, 1, 0)),
+                           BottleUtils::getAwarenessRadiusXZ(), BottleUtils::getAwarenessIncrementXZ(),
+                           BottleUtils::getAwarenessRadiusY(), BottleUtils::getAwarenessIncrementY(),
+                           BottleUtils::getNodesY(), BottleUtils::getMaxGridCount());
 
   BRLogInfo("..LightManager");
   _pLightManager = std::make_shared<LightManager>(getThis<Scene>());
@@ -98,8 +98,7 @@ void Scene::afterAttachedToWindow() {
   //TEst
 
   std::shared_ptr<MeshNode> ec = MeshNode::create("Ball", true,
-    MeshUtils::makeSphere(2, 20, 20)
-  );
+                                                  MeshUtils::makeSphere(2, 20, 20));
   attachChild(ec);
 
   std::shared_ptr<LightNodePoint> lp = LightNodePoint::create("hi", false);
@@ -113,7 +112,6 @@ void Scene::afterAttachedToWindow() {
   //TEst
   //TEst
 
-
   //Activate all nodes by traversing this parent root.
   std::shared_ptr<Scene> scene = getThis<Scene>();
   scene->iterateBreadthFirst<SceneNode>([scene](std::shared_ptr<SceneNode> node) {
@@ -121,7 +119,7 @@ void Scene::afterAttachedToWindow() {
       node->afterAddedToScene(scene);
     }
     return true;
-    });
+  });
 }
 void Scene::createUi() {
   string_t DEBUG_FONT = "Lato-Regular.ttf";
@@ -151,7 +149,7 @@ void Scene::createUi() {
   //Cursor
   std::shared_ptr<UiCursor> cs = UiCursor::create(pCursorSkin);
   cs->width() = "32px";
-  cs->height() = "auto"; // Auto?
+  cs->height() = "auto";  // Auto?
   _pUiScreen->setCursor(cs);
   Gu::checkErrorsDbg();
 }
@@ -169,7 +167,7 @@ void Scene::update(float delta) {
   //  _pLightManager->update(getWindow()->getDelta()->get());
   //}
 
-    //**TEST PATHS**
+  //**TEST PATHS**
   if (paths.size() == 0) {
     std::shared_ptr<Path> path;
     std::shared_ptr<CubicBezierSpline> spline;
@@ -179,7 +177,7 @@ void Scene::update(float delta) {
 
     //Small path
     pts.clear();
-    pts = std::vector({ vec3(0,0,0), vec3(1,0,0), vec3(1,0,1), vec3(0,0,1) });
+    pts = std::vector({vec3(0, 0, 0), vec3(1, 0, 0), vec3(1, 0, 1), vec3(0, 0, 1)});
     spline = std::make_shared<CubicBezierSpline>(pts, false, false);
     path = std::make_shared<Path>("Path", spline, 0.2f, 0.0f);
     path->setPos(std::move(vec3(10, y, 10)));
@@ -190,14 +188,14 @@ void Scene::update(float delta) {
     pts.clear();
     float m = 0.5f;
     pts = std::vector({
-      vec3(0,0,-m),//pt
-      vec3(m * 1.5f,0,-m),
-      vec3(m * 1.5f,0,m),
-      vec3(0,0,m), //pt
-      vec3(-m * 1.5f,0,m),
-      vec3(-m * 1.5f,0,-m),
-      vec3(0,0,-m) //pt
-      });
+        vec3(0, 0, -m),  //pt
+        vec3(m * 1.5f, 0, -m),
+        vec3(m * 1.5f, 0, m),
+        vec3(0, 0, m),  //pt
+        vec3(-m * 1.5f, 0, m),
+        vec3(-m * 1.5f, 0, -m),
+        vec3(0, 0, -m)  //pt
+    });
     spline = std::make_shared<CubicBezierSpline>(pts, false, false);
     path = std::make_shared<Path>("Path", spline, 3.2f, 0.0f);
     path->setPos(std::move(vec3(10, y, 13)));
@@ -206,15 +204,15 @@ void Scene::update(float delta) {
 
     //1
     pts.clear();
-    jj = (size_t)10;// Random::nextUint32(6, 10);
+    jj = (size_t)10;  // Random::nextUint32(6, 10);
     for (size_t j = 0; j < jj; ++j) {
       pts.push_back(Random::nextVec3(std::move(vec3(-10, -10, -10)), std::move(vec3(10, 10, 10))));
     }
     spline = std::make_shared<CubicBezierSpline>(pts, true, false);
     path = std::make_shared<Path>("Path", spline, 4.0f, 0.0f);
     path->setPos(
-      vec3(-6,y,-6)
-      //Random::nextVec3(std::move(vec3(-10, y, -10)), std::move(vec3(10, y, 10)))
+        vec3(-6, y, -6)
+        //Random::nextVec3(std::move(vec3(-10, y, -10)), std::move(vec3(10, y, 10)))
     );
     paths.push_back(path);
     attachChild(path);
@@ -228,8 +226,7 @@ void Scene::update(float delta) {
     spline = std::make_shared<CubicBezierSpline>(pts, true, false);
     path = std::make_shared<Path>("Path", spline, 9.0f, 0.0f);
     path->setPos(
-      Random::nextVec3(std::move(vec3(-10, y, -10)), std::move(vec3(10, y, 10)))
-    );
+        Random::nextVec3(std::move(vec3(-10, y, -10)), std::move(vec3(10, y, 10))));
     paths.push_back(path);
     attachChild(path);
   }
@@ -238,7 +235,8 @@ void Scene::update(float delta) {
     p->update(delta);
   }
 
-  SceneNode::update(delta, std::map<Hash32, std::shared_ptr<Animator>>());
+  std::map<Hash32, std::shared_ptr<Animator>> mmm;
+  SceneNode::update(delta, mmm);
 }
 void Scene::idle(int64_t us) {
 }
@@ -259,13 +257,12 @@ std::vector<std::shared_ptr<CameraNode>> Scene::getAllCameras() {
   iterateBreadthFirst<CameraNode>([&ret](std::shared_ptr<CameraNode> cam) {
     ret.push_back(cam);
     return true;
-    });
+  });
   return ret;
 }
 void Scene::createFlyingCamera() {
   //In the future we will replace this witht he active object.
   BRLogInfo("Creating Flying Camera");
-
 
 #ifdef BR_NOSCRIPT
   BRLogInfo("Creating Fly Camera.");
@@ -279,7 +276,7 @@ void Scene::createFlyingCamera() {
   float nh = BottleUtils::getNodeHeight();
   float nw = BottleUtils::getNodeWidth();
   _pDefaultCamera->setPos(std::move(vec3(0, nh + nh * 0.5f, 0)));
-  _pDefaultCamera->lookAt(std::move(vec3(nw * 0.5f, nh+BottleUtils::getCellHeight()*2, nw * 0.5f)));
+  _pDefaultCamera->lookAt(std::move(vec3(nw * 0.5f, nh + BottleUtils::getCellHeight() * 2, nw * 0.5f)));
 
 #else
   //Sort of also a scripting test.
@@ -293,8 +290,7 @@ void Scene::debugChangeRenderState() {
   std::shared_ptr<InputManager> inp = getInput();
 
   //TODO: these should all be in rednersettings 1/22/18
-//SHIFT + X key combos!!
-  
+  //SHIFT + X key combos!!
 
   if (inp->shiftHeld()) {
     if (inp->keyPress(SDL_SCANCODE_F1)) {
@@ -380,13 +376,13 @@ void Scene::drawForward(RenderParams& rp) {
   //  std::shared_ptr<SceneNode> pm = p.second;
   //  pm->drawForward(rp);
   //}
-        
+
   SceneNode::drawForward(rp);
 }
 void Scene::drawBackgroundImage() {
   if (_pQuadMeshBackground == nullptr) {
     _pQuadMeshBackground = MeshUtils::createScreenQuadMesh(
-      getActiveCamera()->getViewport()->getWidth(), getActiveCamera()->getViewport()->getHeight());
+        getActiveCamera()->getViewport()->getWidth(), getActiveCamera()->getViewport()->getHeight());
     _pTex = Gu::getTexCache()->getOrLoad(TexFile("test_bk", Gu::getPackage()->makeAssetPath("textures", "test_tex3.png")));
   }
   std::shared_ptr<CameraNode> bc = getActiveCamera();
@@ -405,7 +401,6 @@ void Scene::drawShadow(RenderParams& rp) {
   SceneNode::drawShadow(rp);
 }
 void Scene::drawForwardDebug(RenderParams& rp) {
-
   RenderUtils::drawAxisShader(getActiveCamera());
   RenderUtils::drawGridShader(getActiveCamera());
 
@@ -457,23 +452,23 @@ void Scene::setDebugMode() {
   }
 }
 void Scene::dbgl(string_t st) {
-  if (_pDebugLabel != nullptr) { 
-    std::string dtxt = _pDebugLabel->getText() + st + "\r\n"; 
-    _pDebugLabel->setText(dtxt); 
+  if (_pDebugLabel != nullptr) {
+    std::string dtxt = _pDebugLabel->getText() + st + "\r\n";
+    _pDebugLabel->setText(dtxt);
   }
 }
 void Scene::drawDebugText() {
   int bx = 5;
-  int by = 32 + 34;// 0 is the height of the font
-  int dy = 16;//Also the font size
+  int by = 32 + 34;  // 0 is the height of the font
+  int dy = 16;       //Also the font size
   int cy = 0;
 
   //Clear
   _pDebugLabel->setText("");
-  
+
   dbgl(Stz "" + StringUtil::floatToStr2d(getWindow()->getFpsMeter()->getFps()));
   if (_bShowDebugText) {
-    size_t iVisibleLights = 0;//_pWorld25->getFrameVisibleLights().size();
+    size_t iVisibleLights = 0;  //_pWorld25->getFrameVisibleLights().size();
     dbgl(Stz "  Debug: " + (_bDrawDebug ? "Enabled" : "Disabled"));
     dbgl(Stz "  Culling: " + (_bDebugDisableCull ? "Disabled" : "Enabled"));
     dbgl(Stz "  Depth Test: " + (_bDebugDisableDepthTest ? "Disabled" : "Enabled"));
@@ -501,7 +496,7 @@ std::shared_ptr<TreeNode> Scene::attachChild(std::shared_ptr<TreeNode> pChild, b
     pChild->iterateBreadthFirst<SceneNode>([scene](std::shared_ptr<SceneNode> node) {
       node->afterAddedToScene(scene);
       return true;
-      });
+    });
   }
 
   return ret;
@@ -517,7 +512,7 @@ bool Scene::detachChild(std::shared_ptr<TreeNode> pChild) {
   pChild->iterateBreadthFirst<SceneNode>([scene](std::shared_ptr<SceneNode> node) {
     node->afterRemovedFromScene(scene);
     return true;
-    });
+  });
 
   return ret;
 }
@@ -539,4 +534,4 @@ void Scene::makeParticles() {
   _pParticleManager->init(_pParticlesAtlas, BottleUtils::c_iMaxParticles);
   Gu::checkErrorsDbg();
 }
-}//ns BR2
+}  // namespace BR2

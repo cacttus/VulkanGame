@@ -26,8 +26,8 @@ BaseCollider::~BaseCollider() {
   DEL_MEM(_pBoundBox);
 }
 //TODO: manage this, somehow.
-void BaseCollider::setNodeVelocity(vec3& nodeVel) { BRThrowNotImplementedException(); }
-void BaseCollider::setNodePosition(vec3& nodePos) { BRThrowNotImplementedException(); }
+void BaseCollider::setNodeVelocity(const vec3& nodeVel) { BRThrowNotImplementedException(); }
+void BaseCollider::setNodePosition(const vec3& nodePos) { BRThrowNotImplementedException(); }
 //void BaseCollider::setVelocity(vec3& v) {
 //  _vVelocity = v;
 //  //Don't update anything here. we set this often.
@@ -63,7 +63,7 @@ void BaseCollider::validateSanePhysics() {
   if (getNode()->getVelocity().squaredLength() > PHY_MAX_VELOCITY_LENGTH_SQR) {
     //You're going too fast, stap.//Stop moving.
 //    Gu::debugBreak();
-    setNodeVelocity(std::move(vec3(0, 0, 0)));
+    setNodeVelocity(vec3(0, 0, 0));
   }
   if (!pos.isNormalFloat()) {
     //    Gu::debugBreak();

@@ -8,7 +8,7 @@
 #include "../base/GraphicsWindow.h"
 #include "../base/SDLUtils.h"
 #include "../base/Gu.h"
-#include "../base/oglErr.h"
+#include "../base/OglErr.h"
 #include "../base/OperatingSystem.h"
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
@@ -107,10 +107,10 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
 }
 void AppRunner_Internal::doShowError(string_t err, Exception* e) {
   if (e != nullptr) {
-    OperatingSystem::showErrorDialog(e->what() + err);
+    OperatingSystem::showErrorDialog(e->what() + err, Stz "Error");
   }
   else {
-    OperatingSystem::showErrorDialog("No Error Message" + err);
+    OperatingSystem::showErrorDialog("No Error Message" + err, Stz "Error");
   }
 }
 void AppRunner_Internal::runUnitTests(std::vector<std::function<bool()>> unit_tests) {
@@ -258,7 +258,7 @@ void AppRunner_Internal::runGameLoopTryCatch() {
 }
 
 void AppRunner_Internal::exitApp(string_t error, int rc) {
-  OperatingSystem::showErrorDialog(error + SDLNet_GetError());
+  OperatingSystem::showErrorDialog(error + SDLNet_GetError(), Stz "Error");
 
   Gu::debugBreak();
 

@@ -196,7 +196,7 @@ void Material::serialize(std::shared_ptr<BinaryFile> fb) {
 
 }
 void TextureSlot::deserialize(std::shared_ptr<BinaryFile> fb) {
-  fb->readUint32((uint32_t)_iTexFileHashed);
+  fb->readUint32((uint32_t&)_iTexFileHashed);
   fb->readFloat(_fInfluence);
   int32_t n;
   fb->readInt32(n);

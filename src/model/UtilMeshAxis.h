@@ -17,7 +17,7 @@ namespace BR2 {
 class UtilMeshAxis : public UtilMesh {
 public:
   UtilMeshAxis(std::shared_ptr<GLContext> ctx,
-    float scale = 10.0f, float lineWidth = 1.0f, mat4& transform = mat4::identity());
+    float scale = 10.0f, float lineWidth = 1.0f, const mat4& transform = mat4::identity());
   virtual ~UtilMeshAxis() override;
 
   virtual void generate() override;

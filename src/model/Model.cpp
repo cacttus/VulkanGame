@@ -411,7 +411,7 @@ bool Armature::tkArmFile(MobFile* pMobFile, std::vector<string_t>& tokens) {
       string_t name = pMobFile->getCleanToken(tokens, iind);
       int32_t id = TypeConv::strToInt(pMobFile->getCleanToken(tokens, iind));
       string_t parent = pMobFile->getCleanToken(tokens, iind);
-      ParentType::e ep = pMobFile->parseParentType(pMobFile->getCleanToken(tokens, iind));
+      ParentType ep = pMobFile->parseParentType(pMobFile->getCleanToken(tokens, iind));
       _pCurBone = std::make_shared<BoneSpec>(name, id);
 
       _pCurBone->setParentName(parent, ep);
@@ -811,7 +811,8 @@ std::shared_ptr<ModelNode> ModelNode::create(string_t name, std::shared_ptr<Mode
   std::shared_ptr<ModelNode> m = std::make_shared<ModelNode>(name, ps);
   m->init();
   m->stopAllActions();
-  m->update(0.0, std::map<Hash32, std::shared_ptr<Animator>>());
+  std::map<Hash32, std::shared_ptr<Animator>> mmm;
+  m->update(0.0, mmm);
   return m;
 }
 
@@ -863,7 +864,7 @@ void ModelNode::buildNodeParents() {
     std::shared_ptr<SceneNode> pNode = p.second;
     string_t strChild = pNode->getSpec()->getName();
     string_t strParent = pNode->getSpec()->getParentName();
-    if (pNode->getSpec()->getParentType() == ParentType::e::Bone) {
+    if (pNode->getSpec()->getParentType() == ParentType::Bone) {
       //Bone parents - we may end up not even using bone aprents.
       bool bFound = false;
       for (std::shared_ptr<ArmatureNode> pan : _vecArmatures) {

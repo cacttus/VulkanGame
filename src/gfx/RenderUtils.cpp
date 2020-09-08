@@ -26,8 +26,8 @@ void RenderUtils::resetRenderState() {
     Gu::getShaderMaker()->shaderBound(nullptr);
 
     //glUseProgram(NULL);//DO NOT CALL - we must maintain consistency on the gpu driver
-    Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
-    Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, NULL);
+    Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)0);
+    Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, (GLuint)0);
 
     int iMaxTextures = 0;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&iMaxTextures);
@@ -43,17 +43,15 @@ void RenderUtils::resetRenderState() {
     Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
 
     //Note: Client textures are deprecated
-  //  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-  //  glDisableClientState(GL_COLOR_ARRAY);
-  //  glDisableClientState(GL_NORMAL_ARRAY);
-  //  glDisableClientState(GL_VERTEX_ARRAY);
-  //  glDisableClientState(GL_INDEX_ARRAY);
-  //  glClientActiveTexture(GL_TEXTURE0);
+    //  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    //  glDisableClientState(GL_COLOR_ARRAY);
+    //  glDisableClientState(GL_NORMAL_ARRAY);
+    //  glDisableClientState(GL_VERTEX_ARRAY);
+    //  glDisableClientState(GL_INDEX_ARRAY);
+    //  glClientActiveTexture(GL_TEXTURE0);
     glDisable(GL_LIGHTING);
-
   }
   RenderUtils::debugGetRenderState();
-
 }
 
 #pragma region Debug Draw
@@ -66,32 +64,32 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
   //UNSAFE
   static const float s = 100;
   static const GLfloat _vertexes[] = {
-      0,0,0,
-      0,0,s,
-      s,0,0,
-      s,0,s
-  };
+      0, 0, 0,
+      0, 0, s,
+      s, 0, 0,
+      s, 0, s};
   static const GLfloat _colors[] = {
-      1,1,1,1,
-      1,1,1,1,
-      1,1,1,1,
-      1,1,1,1
-  };
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1,
+      1, 1, 1, 1};
   static const GLfloat _normals[] = {
-      0,1,0,
-      0,1,0,
-      0,1,0,
-      0,1,0
-  };
+      0, 1, 0,
+      0, 1, 0,
+      0, 1, 0,
+      0, 1, 0};
   static const GLfloat _tcoords[] = {
-      0,1,
-      0,0,
-      1,1,
-      1,0
-  };
+      0, 1,
+      0, 0,
+      1, 1,
+      1, 0};
   static const GLushort _indexes[] = {
-      0,1,2,
-      2,1,3,
+      0,
+      1,
+      2,
+      2,
+      1,
+      3,
   };
 
   static const int _nIndexes = 6;
@@ -99,11 +97,11 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
   Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
 
   GLuint bdVerts,
-    bdColors,
-    bdTextures,
-    bdNormals,
-    bdIndexes,
-    vaoIndexes;
+      bdColors,
+      bdTextures,
+      bdNormals,
+      bdIndexes,
+      vaoIndexes;
 
   Gu::getCoreContext()->glGenVertexArrays(1, (GLuint*)&vaoIndexes);
   Gu::getCoreContext()->glBindVertexArray(vaoIndexes);
@@ -116,35 +114,34 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
 
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdVerts);
   Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
-    4 * sizeof(GLfloat) * 3,
-    _vertexes,
-    GL_STATIC_DRAW);
+                                     4 * sizeof(GLfloat) * 3,
+                                     _vertexes,
+                                     GL_STATIC_DRAW);
 
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdColors);
   Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
-    4 * sizeof(GLfloat) * 4,
-    _colors,
-    GL_STATIC_DRAW);
+                                     4 * sizeof(GLfloat) * 4,
+                                     _colors,
+                                     GL_STATIC_DRAW);
 
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdNormals);
   Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
-    4 * sizeof(GLfloat) * 3,
-    _normals,
-    GL_STATIC_DRAW);
+                                     4 * sizeof(GLfloat) * 3,
+                                     _normals,
+                                     GL_STATIC_DRAW);
 
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdTextures);
   Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
-    4 * sizeof(GLfloat) * 2,
-    _tcoords,
-    GL_STATIC_DRAW);
+                                     4 * sizeof(GLfloat) * 2,
+                                     _tcoords,
+                                     GL_STATIC_DRAW);
 
   //Hmm...
   Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bdIndexes);
   Gu::getCoreContext()->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-    6 * sizeof(GL_UNSIGNED_SHORT),
-    _indexes,
-    GL_STATIC_DRAW);
-
+                                     6 * sizeof(GL_UNSIGNED_SHORT),
+                                     _indexes,
+                                     GL_STATIC_DRAW);
 
   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,NULL);
   //glBindBuffer(GL_ARRAY_BUFFER,NULL);
@@ -152,53 +149,52 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
   // MUST BIND BUFFER DATA TO USE VERTEX ATTRIBS
   // MUST USE VBOS WITH VERTEX ATTRIBS
 
-
   Gu::getCoreContext()->glEnableVertexAttribArray(attr_v);
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdVerts);
   Gu::getCoreContext()->glVertexAttribPointer(attr_v,
-    3,
-    GL_FLOAT,
-    GL_FALSE,
-    sizeof(GLfloat) * 3,
-    NULL);
+                                              3,
+                                              GL_FLOAT,
+                                              GL_FALSE,
+                                              sizeof(GLfloat) * 3,
+                                              NULL);
   Gu::getCoreContext()->glEnableVertexAttribArray(attr_c);
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdColors);
   Gu::getCoreContext()->glVertexAttribPointer(attr_c,
-    4,
-    GL_FLOAT,
-    GL_FALSE,
-    sizeof(GLfloat) * 4,
-    NULL);
+                                              4,
+                                              GL_FLOAT,
+                                              GL_FALSE,
+                                              sizeof(GLfloat) * 4,
+                                              NULL);
   Gu::getCoreContext()->glEnableVertexAttribArray(attr_n);
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdNormals);
   Gu::getCoreContext()->glVertexAttribPointer(attr_n,
-    3,
-    GL_FLOAT,
-    GL_FALSE,
-    sizeof(GLfloat) * 3,
-    NULL);
+                                              3,
+                                              GL_FLOAT,
+                                              GL_FALSE,
+                                              sizeof(GLfloat) * 3,
+                                              NULL);
   Gu::getCoreContext()->glEnableVertexAttribArray(attr_t);
   Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdTextures);
   Gu::getCoreContext()->glVertexAttribPointer(attr_t,
-    2,
-    GL_FLOAT,
-    GL_FALSE,
-    sizeof(GLfloat) * 2,
-    NULL);
+                                              2,
+                                              GL_FLOAT,
+                                              GL_FALSE,
+                                              sizeof(GLfloat) * 2,
+                                              NULL);
   // CheckGpuErrorsDbg();
 
-       //std::cout<<_vertexes<<std::endl;
-       //std::cout<<_colors<<std::endl;
-       //std::cout<<_normals<<std::endl;
-       //std::cout<<_tcoords<<std::endl;
-       //std::cout<<_indexes<<std::endl;
+  //std::cout<<_vertexes<<std::endl;
+  //std::cout<<_colors<<std::endl;
+  //std::cout<<_normals<<std::endl;
+  //std::cout<<_tcoords<<std::endl;
+  //std::cout<<_indexes<<std::endl;
 
   Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bdIndexes);
 
   Gu::getCoreContext()->glBindVertexArray(vaoIndexes);
-  glDrawElements(GL_TRIANGLES, _nIndexes, GL_UNSIGNED_SHORT, NULL);
-  Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, NULL);
+  glDrawElements(GL_TRIANGLES, _nIndexes, GL_UNSIGNED_SHORT, nullptr);
+  Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)0);
+  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, (GLuint)0);
 
   Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdVerts);
   Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdColors);
@@ -207,7 +203,7 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
   Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdIndexes);
   Gu::getCoreContext()->glDeleteVertexArrays(1, (GLuint*)&vaoIndexes);
 }
-void RenderUtils::drawAxisShader(std::shared_ptr<CameraNode> cam, float scale, float lineWidth, mat4& transform) {
+void RenderUtils::drawAxisShader(std::shared_ptr<CameraNode> cam, float scale, float lineWidth, const mat4& transform) {
   UtilMeshAxis* ax = new UtilMeshAxis(Gu::getCoreContext(), scale, lineWidth, transform);
   ax->init();
   ax->draw(cam);
@@ -220,7 +216,7 @@ void RenderUtils::drawAxisShader(std::shared_ptr<CameraNode> cam, float scale, f
 //    ax->draw();
 //    delete ax;
 //}
-void RenderUtils::drawWireSphereShader(std::shared_ptr<CameraNode> cam, float fRadius, vec4& vColor, int32_t nSlices, int32_t nStacks, mat4* pMatrix) {
+void RenderUtils::drawWireSphereShader(std::shared_ptr<CameraNode> cam, float fRadius, const vec4& vColor, int32_t nSlices, int32_t nStacks, mat4* pMatrix) {
   UtilMeshSphere* ax = new UtilMeshSphere(Gu::getCoreContext(), fRadius, vec3(0, 0, 0), vColor, nSlices, nStacks);
   ax->init();
   if (pMatrix != nullptr) {
@@ -229,13 +225,13 @@ void RenderUtils::drawWireSphereShader(std::shared_ptr<CameraNode> cam, float fR
   ax->draw(cam);
   delete ax;
 }
-void RenderUtils::drawWireBoxShader(std::shared_ptr<CameraNode> cam, Box3f* box, vec3& vOffset, vec4& vColor) {
+void RenderUtils::drawWireBoxShader(std::shared_ptr<CameraNode> cam, const Box3f* box, const vec3& vOffset, const vec4& vColor) {
   UtilMeshBox* ax = new UtilMeshBox(Gu::getCoreContext(), box, vOffset, vColor);
   ax->init();
   ax->draw(cam);
   delete ax;
 }
-void RenderUtils::drawSolidBoxShaded(std::shared_ptr<CameraNode> cam, Box3f* box, vec3& vOffset, vec4& vColor) {
+void RenderUtils::drawSolidBoxShaded(std::shared_ptr<CameraNode> cam, const Box3f* box, const vec3& vOffset, const vec4& vColor) {
   UtilMeshBox* ax = new UtilMeshBox(Gu::getCoreContext(), box, vOffset, vColor);
   ax->setWireFrame(false);
   ax->init();
@@ -262,60 +258,54 @@ void RenderUtils::drawSolidBoxShaded(std::shared_ptr<CameraNode> cam, Box3f* box
 //{
 //    mesh.end();
 //}
-void RenderUtils::drawGridShader(std::shared_ptr<CameraNode> cam, float r, float g, float b, int32_t nSlices, float fSliceWidth, vec3& center, std::shared_ptr<ShaderBase> pShader) {
+void RenderUtils::drawGridShader(std::shared_ptr<CameraNode> cam, float r, float g, float b, int32_t nSlices, float fSliceWidth, const vec3& center, std::shared_ptr<ShaderBase> pShader) {
   UtilMeshGrid* pGrid = new UtilMeshGrid(Gu::getCoreContext(), r, g, b, nSlices, fSliceWidth, center);
   pGrid->init();
   pGrid->draw(cam);
   delete pGrid;
 }
-void RenderUtils::drawFrustumShader(std::shared_ptr<CameraNode> cam, std::shared_ptr<FrustumBase> pf, vec4& avColor) {
+void RenderUtils::drawFrustumShader(std::shared_ptr<CameraNode> cam, std::shared_ptr<FrustumBase> pf, const vec4& avColor) {
   Gu::getCoreContext()->setLineWidth(3.0f);
 
   UtilMeshInline mi(Gu::getCoreContext());
   Color4f c4 = avColor;
   mi.begin(GL_LINES);
   {
-    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_ftl), c4));// Edges
+    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_ftl), c4));  // Edges
     mi.vt2(v_v3c4(pf->PointAt(fpt_nbr), c4), v_v3c4(pf->PointAt(fpt_fbr), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_nbl), c4), v_v3c4(pf->PointAt(fpt_fbl), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ntr), c4), v_v3c4(pf->PointAt(fpt_ftr), c4));
-    mi.vt2(v_v3c4(pf->PointAt(fpt_ftl), c4), v_v3c4(pf->PointAt(fpt_ftr), c4));// Far Quad
+    mi.vt2(v_v3c4(pf->PointAt(fpt_ftl), c4), v_v3c4(pf->PointAt(fpt_ftr), c4));  // Far Quad
     mi.vt2(v_v3c4(pf->PointAt(fpt_fbl), c4), v_v3c4(pf->PointAt(fpt_fbr), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ftl), c4), v_v3c4(pf->PointAt(fpt_fbl), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ftr), c4), v_v3c4(pf->PointAt(fpt_fbr), c4));
-    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_ntr), c4));// Near Quad
+    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_ntr), c4));  // Near Quad
     mi.vt2(v_v3c4(pf->PointAt(fpt_nbl), c4), v_v3c4(pf->PointAt(fpt_nbr), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_nbl), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ntr), c4), v_v3c4(pf->PointAt(fpt_nbr), c4));
   }
   mi.endAndDraw(cam);
   Gu::getCoreContext()->setLineWidth(1.0f);
-
 }
 #pragma endregion
 
-
-
-
 #pragma region Debug Output
 
-
-void appendLine(string_t& st, char* c) {
+void appendLine(string_t& st, const char* c) {
   st += c;
   st += "\r\n";
 }
-void appendLine(string_t& st, string_t& c) {
+void appendLine(string_t& st, const string_t& c) {
   st += c;
   st += "\r\n";
 }
-
 
 string_t RenderUtils::debugGetRenderState(bool bForceRun, bool bPrintToStdout, bool bSaveFramebufferTexture) {
   //This method is called in frames to drag down the debug arrow
   // and we skip it unless we force it to run.
   //Do not comment
   if (!bForceRun) {
-    return "";//Do not comment
+    return "";  //Do not comment
   }
   string_t strState = "";
 
@@ -336,7 +326,6 @@ string_t RenderUtils::debugGetRenderState(bool bForceRun, bool bPrintToStdout, b
   GLint iDepthTest;
   glGetIntegerv(GL_DEPTH_TEST, (GLint*)&iDepthTest);
   appendLine(strState, Stz " Depth Test:" + (iDepthTest ? "ENABLED" : "DISABLED"));
-
 
   Gu::getCoreContext()->chkErrRt();
   RenderUtils::debugGetLegacyViewAndMatrixStack(strState);
@@ -382,7 +371,7 @@ void RenderUtils::debugGetBufferState(string_t& strState) {
   GLint iBoundBuffer;
   GLint iCurrentProgram;
   GLint iElementArrayBufferBinding;
-  GLint iSsboBinding;    //shader storage
+  GLint iSsboBinding;  //shader storage
   GLint iUniformBufferBinding;
   GLint iVertexArrayBinding;
 
@@ -403,16 +392,13 @@ void RenderUtils::debugGetBufferState(string_t& strState) {
   Gu::getCoreContext()->chkErrRt();
   if (Gu::getShaderMaker()->getBound() != nullptr) {
     appendLine(strState, Stz "Bound Shader Name:" +
-      Gu::getShaderMaker()->getBound()->getProgramName());
+                             Gu::getShaderMaker()->getBound()->getProgramName());
     RenderUtils::debugPrintActiveUniforms(Gu::getShaderMaker()->getBound()->getGlId(), strState);
     // appendLine(strState, Gu::getShaderMaker()->getBound()->debugGetUniformValues());
-
   }
   else {
     appendLine(strState, "Bound Shader Name: None");
   }
-
-
 }
 void RenderUtils::debugPrintActiveUniforms(int iGlProgramId, string_t& strState) {
   GLint nUniforms;
@@ -496,7 +482,6 @@ void RenderUtils::debugPrintActiveUniforms(int iGlProgramId, string_t& strState)
 
     //Data
     if (Gu::getShaderMaker()->getBound() != nullptr) {
-
       std::shared_ptr<ShaderUniform> uf = Gu::getShaderMaker()->getBound()->getUniformByName(uniformName);
       if (uf != nullptr) {
         appendLine(strState, ("  Buffer Data:"));
@@ -516,37 +501,99 @@ void RenderUtils::debugPrintActiveUniforms(int iGlProgramId, string_t& strState)
 }
 string_t RenderUtils::openGlTypeToString(GLenum type) {
   switch (type) {
-  case GL_UNSIGNED_INT: return ("GL_UNSIGNED_INT        "); break;
-  case GL_UNSIGNED_INT_VEC2: return ("GL_UNSIGNED_INT_VEC2 "); break;
-  case GL_UNSIGNED_INT_VEC3: return ("GL_UNSIGNED_INT_VEC3 "); break;
-  case GL_UNSIGNED_INT_VEC4: return ("GL_UNSIGNED_INT_VEC4 "); break;
-  case GL_FLOAT: return ("GL_FLOAT                "); break;
-  case GL_FLOAT_VEC2: return ("GL_FLOAT_VEC2         "); break;
-  case GL_FLOAT_VEC3: return ("GL_FLOAT_VEC3         "); break;
-  case GL_FLOAT_VEC4: return ("GL_FLOAT_VEC4         "); break;
-  case GL_INT: return ("GL_INT                "); break;
-  case GL_INT_VEC2: return ("GL_INT_VEC2             "); break;
-  case GL_INT_VEC3: return ("GL_INT_VEC3             "); break;
-  case GL_INT_VEC4: return ("GL_INT_VEC4             "); break;
-  case GL_BOOL: return ("GL_BOOL                 "); break;
-  case GL_BOOL_VEC2: return ("GL_BOOL_VEC2         "); break;
-  case GL_BOOL_VEC3: return ("GL_BOOL_VEC3         "); break;
-  case GL_BOOL_VEC4: return ("GL_BOOL_VEC4         "); break;
-  case GL_FLOAT_MAT2: return ("GL_FLOAT_MAT2         "); break;
-  case GL_FLOAT_MAT3: return ("GL_FLOAT_MAT3         "); break;
-  case GL_FLOAT_MAT4: return ("GL_FLOAT_MAT4         "); break;
-  case GL_SAMPLER_1D: return ("GL_SAMPLER_1D         "); break;
-  case GL_SAMPLER_2D: return ("GL_SAMPLER_2D         "); break;
-  case GL_SAMPLER_3D: return ("GL_SAMPLER_3D         "); break;
-  case GL_SAMPLER_CUBE: return ("GL_SAMPLER_CUBE         "); break;
-  case GL_SAMPLER_1D_SHADOW: return ("GL_SAMPLER_1D_SHADOW "); break;
-  case GL_SAMPLER_2D_SHADOW: return ("GL_SAMPLER_2D_SHADOW "); break;
-  case GL_2_BYTES: return ("GL_2_BYTES            "); break;
-  case GL_3_BYTES: return ("GL_3_BYTES            "); break;
-  case GL_4_BYTES: return ("GL_4_BYTES            "); break;
-  case GL_UNSIGNED_SHORT: return ("GL_UNSIGNED_SHORT    "); break;
-  case GL_SHORT: return ("GL_SHORT                "); break;
-  case GL_DOUBLE: return ("GL_DOUBLE            "); break;
+    case GL_UNSIGNED_INT:
+      return ("GL_UNSIGNED_INT        ");
+      break;
+    case GL_UNSIGNED_INT_VEC2:
+      return ("GL_UNSIGNED_INT_VEC2 ");
+      break;
+    case GL_UNSIGNED_INT_VEC3:
+      return ("GL_UNSIGNED_INT_VEC3 ");
+      break;
+    case GL_UNSIGNED_INT_VEC4:
+      return ("GL_UNSIGNED_INT_VEC4 ");
+      break;
+    case GL_FLOAT:
+      return ("GL_FLOAT                ");
+      break;
+    case GL_FLOAT_VEC2:
+      return ("GL_FLOAT_VEC2         ");
+      break;
+    case GL_FLOAT_VEC3:
+      return ("GL_FLOAT_VEC3         ");
+      break;
+    case GL_FLOAT_VEC4:
+      return ("GL_FLOAT_VEC4         ");
+      break;
+    case GL_INT:
+      return ("GL_INT                ");
+      break;
+    case GL_INT_VEC2:
+      return ("GL_INT_VEC2             ");
+      break;
+    case GL_INT_VEC3:
+      return ("GL_INT_VEC3             ");
+      break;
+    case GL_INT_VEC4:
+      return ("GL_INT_VEC4             ");
+      break;
+    case GL_BOOL:
+      return ("GL_BOOL                 ");
+      break;
+    case GL_BOOL_VEC2:
+      return ("GL_BOOL_VEC2         ");
+      break;
+    case GL_BOOL_VEC3:
+      return ("GL_BOOL_VEC3         ");
+      break;
+    case GL_BOOL_VEC4:
+      return ("GL_BOOL_VEC4         ");
+      break;
+    case GL_FLOAT_MAT2:
+      return ("GL_FLOAT_MAT2         ");
+      break;
+    case GL_FLOAT_MAT3:
+      return ("GL_FLOAT_MAT3         ");
+      break;
+    case GL_FLOAT_MAT4:
+      return ("GL_FLOAT_MAT4         ");
+      break;
+    case GL_SAMPLER_1D:
+      return ("GL_SAMPLER_1D         ");
+      break;
+    case GL_SAMPLER_2D:
+      return ("GL_SAMPLER_2D         ");
+      break;
+    case GL_SAMPLER_3D:
+      return ("GL_SAMPLER_3D         ");
+      break;
+    case GL_SAMPLER_CUBE:
+      return ("GL_SAMPLER_CUBE         ");
+      break;
+    case GL_SAMPLER_1D_SHADOW:
+      return ("GL_SAMPLER_1D_SHADOW ");
+      break;
+    case GL_SAMPLER_2D_SHADOW:
+      return ("GL_SAMPLER_2D_SHADOW ");
+      break;
+    case GL_2_BYTES:
+      return ("GL_2_BYTES            ");
+      break;
+    case GL_3_BYTES:
+      return ("GL_3_BYTES            ");
+      break;
+    case GL_4_BYTES:
+      return ("GL_4_BYTES            ");
+      break;
+    case GL_UNSIGNED_SHORT:
+      return ("GL_UNSIGNED_SHORT    ");
+      break;
+    case GL_SHORT:
+      return ("GL_SHORT                ");
+      break;
+    case GL_DOUBLE:
+      return ("GL_DOUBLE            ");
+      break;
   }
   return Stz "Undefined " + (int)type;
 }
@@ -567,60 +614,69 @@ void RenderUtils::debugGetTextureState(string_t& strState) {
   appendLine(strState, ("--TEXTURE STATE"));
   GLint iActiveTexture;
   GLint iTextureBindingBuffer;
-  GLint iTextureBinding;    //Texture ID
+  GLint iTextureBinding;  //Texture ID
   GLint iMaxVertexTextureUnits;
   GLint iMaxTextureUnits;
   GLint iMaxCombinedTextureUnits;
 
-  glGetIntegerv(GL_ACTIVE_TEXTURE, &iActiveTexture);//Texture ID    0x84C0 is TEXTURE0
-  glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureBinding);//Texture ID    
+  glGetIntegerv(GL_ACTIVE_TEXTURE, &iActiveTexture);       //Texture ID    0x84C0 is TEXTURE0
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureBinding);  //Texture ID
   glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureBindingBuffer);
   glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &iMaxVertexTextureUnits);
   glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &iMaxTextureUnits);
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &iMaxCombinedTextureUnits);
 
-
-  appendLine(strState, Stz  "Active Texture ID: " + iTextureBinding);
-  appendLine(strState, Stz  "Active Texture Buffer ID: " + iTextureBindingBuffer);
-  appendLine(strState, Stz  "Current active texture: " + "GL_TEXTURE" + (iActiveTexture - 0x84C0));
-  appendLine(strState, Stz  "Max Texture Units: " + iMaxTextureUnits);
-  appendLine(strState, Stz  "Max Vertex Texture Units: " + iMaxVertexTextureUnits);
-  appendLine(strState, Stz  "Max Combined Texture Units: " + iMaxCombinedTextureUnits);
-  appendLine(strState, Stz  "Below are the bound textures Per Texture Channel:");
+  appendLine(strState, Stz "Active Texture ID: " + iTextureBinding);
+  appendLine(strState, Stz "Active Texture Buffer ID: " + iTextureBindingBuffer);
+  appendLine(strState, Stz "Current active texture: " + "GL_TEXTURE" + (iActiveTexture - 0x84C0));
+  appendLine(strState, Stz "Max Texture Units: " + iMaxTextureUnits);
+  appendLine(strState, Stz "Max Vertex Texture Units: " + iMaxVertexTextureUnits);
+  appendLine(strState, Stz "Max Combined Texture Units: " + iMaxCombinedTextureUnits);
+  appendLine(strState, Stz "Below are the bound textures Per Texture Channel:");
   // - Get bound texture units.
   for (int i = 0; i < iMaxVertexTextureUnits; ++i) {
     Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0 + i);
     appendLine(strState, Stz "  Channel " + i);
-    glGetIntegerv(GL_TEXTURE_BINDING_1D, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz "     1D: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_1D, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     1D: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_1D_ARRAY, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz "     1D_ARRAY: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_1D_ARRAY, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     1D_ARRAY: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     2D: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     2D_ARRAY: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_ARRAY: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     2D_MULTISAMPLE: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     2D_MULTISAMPLE_ARRAY: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE_ARRAY: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_3D, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     3D: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_3D, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     3D: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     BUFFER: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     BUFFER: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     CUBE_MAP: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     CUBE_MAP: " + (int)iTextureBinding);
     iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &iTextureBinding); if (iTextureBinding > 0) appendLine(strState, Stz"     RECTANGLE: " + (int)iTextureBinding);
+    glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     RECTANGLE: " + (int)iTextureBinding);
   }
 }
 void RenderUtils::debugGetFramebufferAttachmentState(string_t& strState) {
   appendLine(strState, "-----------------------------------");
   appendLine(strState, "--FRAMEBUFFERS");
   GLenum eDrawBuffer;
-  GLint iDrawFramebufferBinding;//name of fb beijmg drawn to
-  GLint iReadFramebufferBinding;//name of fb beijmg drawn to
+  GLint iDrawFramebufferBinding;  //name of fb beijmg drawn to
+  GLint iReadFramebufferBinding;  //name of fb beijmg drawn to
   GLint iRenderbufferBinding;
   GLenum eReadBuffer;
-  GLint iSamplerBinding;    //!Texture sampler (should be 2d??)
+  GLint iSamplerBinding;  //!Texture sampler (should be 2d??)
   GLint maxColorAttachments = 0;
   GLint boundFramebuffer;
   //Reference enums
@@ -628,8 +684,8 @@ void RenderUtils::debugGetFramebufferAttachmentState(string_t& strState) {
   //#define GL_BACK 0x0405
 
   // Framebuffers
-  glGetIntegerv(GL_DRAW_BUFFER, (GLint*)&eDrawBuffer);//0x08CE0 is the COLOR ATTACHMENT 1, 0x0405 is the default BACK buffer.
-  glGetIntegerv(GL_READ_BUFFER, (GLint*)&eReadBuffer);//Default: GL_BACK
+  glGetIntegerv(GL_DRAW_BUFFER, (GLint*)&eDrawBuffer);  //0x08CE0 is the COLOR ATTACHMENT 1, 0x0405 is the default BACK buffer.
+  glGetIntegerv(GL_READ_BUFFER, (GLint*)&eReadBuffer);  //Default: GL_BACK
   glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &iDrawFramebufferBinding);
   glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &iReadFramebufferBinding);
   glGetIntegerv(GL_RENDERBUFFER_BINDING, &iRenderbufferBinding);
@@ -660,10 +716,8 @@ void RenderUtils::debugGetFramebufferAttachmentState(string_t& strState) {
   }
   RenderUtils::debugPrintFBOAttachment(strState, GL_DEPTH_ATTACHMENT);
   RenderUtils::debugPrintFBOAttachment(strState, GL_STENCIL_ATTACHMENT);
-
 }
 void RenderUtils::debugPrintFBOAttachment(string_t& strState, GLenum attachment) {
-
   GLint attachmentName = 0;
   GLint attachmentType = 0;
   GLint mipmapLevel = 0;
@@ -691,7 +745,6 @@ void RenderUtils::debugPrintFBOAttachment(string_t& strState, GLenum attachment)
     Gu::getCoreContext()->chkErrRt();
     appendLine(strState, Stz "    Type: " + "GL_RENDERBUFFER");
     appendLine(strState, Stz "    Name: " + attachmentName);
-
   }
   else if (attachmentType == GL_TEXTURE) {
     Gu::getCoreContext()->glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, attachment, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &attachmentName);
@@ -772,24 +825,24 @@ void RenderUtils::debugGetVertexArrayState(string_t& strState) {
       //so an error will be generated if index is 0. The initial value for all
       //other generic vertex attributes is (0,0,0,1).
       switch (iAttribArrayType) {
-      case GL_INT:
-        Gu::getCoreContext()->glGetVertexAttribIiv(iAttrib, GL_CURRENT_VERTEX_ATTRIB, (GLint*)&iCurAttrib);
-        Gu::getCoreContext()->chkErrRt();
-        appendLine(strState, Stz "  Cur Value: " + iCurAttrib[0] + "," + iCurAttrib[1] + "," + iCurAttrib[2] + "," + iCurAttrib[3]);
-        break;
-      case GL_UNSIGNED_INT:
-        Gu::getCoreContext()->glGetVertexAttribIuiv(iAttrib, GL_CURRENT_VERTEX_ATTRIB, (GLuint*)&uiCurAttrib);
-        Gu::getCoreContext()->chkErrRt();
-        appendLine(strState, Stz "  Cur Value: " + uiCurAttrib[0] + "," + uiCurAttrib[1] + "," + uiCurAttrib[2] + "," + uiCurAttrib[3]);
-        break;
-      case GL_FLOAT:
-        Gu::getCoreContext()->glGetVertexAttribfv(iAttrib, GL_CURRENT_VERTEX_ATTRIB, (GLfloat*)&iCurAttrib);
-        Gu::getCoreContext()->chkErrRt();
-        appendLine(strState, Stz "  Cur Value: " + fCurAttrib[0] + "," + fCurAttrib[1] + "," + fCurAttrib[2] + "," + fCurAttrib[3]);
-        break;
-      default:
-        appendLine(strState, "  TODO:Cur Value: ");
-        break;
+        case GL_INT:
+          Gu::getCoreContext()->glGetVertexAttribIiv(iAttrib, GL_CURRENT_VERTEX_ATTRIB, (GLint*)&iCurAttrib);
+          Gu::getCoreContext()->chkErrRt();
+          appendLine(strState, Stz "  Cur Value: " + iCurAttrib[0] + "," + iCurAttrib[1] + "," + iCurAttrib[2] + "," + iCurAttrib[3]);
+          break;
+        case GL_UNSIGNED_INT:
+          Gu::getCoreContext()->glGetVertexAttribIuiv(iAttrib, GL_CURRENT_VERTEX_ATTRIB, (GLuint*)&uiCurAttrib);
+          Gu::getCoreContext()->chkErrRt();
+          appendLine(strState, Stz "  Cur Value: " + uiCurAttrib[0] + "," + uiCurAttrib[1] + "," + uiCurAttrib[2] + "," + uiCurAttrib[3]);
+          break;
+        case GL_FLOAT:
+          Gu::getCoreContext()->glGetVertexAttribfv(iAttrib, GL_CURRENT_VERTEX_ATTRIB, (GLfloat*)&iCurAttrib);
+          Gu::getCoreContext()->chkErrRt();
+          appendLine(strState, Stz "  Cur Value: " + fCurAttrib[0] + "," + fCurAttrib[1] + "," + fCurAttrib[2] + "," + fCurAttrib[3]);
+          break;
+        default:
+          appendLine(strState, "  TODO:Cur Value: ");
+          break;
       };
     }
     //This reads the attrib values such as float, int etc.
@@ -798,7 +851,6 @@ void RenderUtils::debugGetVertexArrayState(string_t& strState) {
   }
 }
 #pragma endregion
-
 
 void RenderUtils::saveTexture(string_t&& strLoc, GLuint iGLTexId, GLenum eTexTarget, int iCubeMapSide) {
   std::shared_ptr<Img32> bi = std::make_shared<Img32>();
@@ -836,7 +888,7 @@ void RenderUtils::saveFramebufferAsPng(string_t&& strLoc, GLuint iFBOId) {
 
     std::shared_ptr<Img32> bi = std::make_shared<Img32>(iFbWidth, iFbHeight);
     glReadPixels(0, 0, iFbWidth, iFbHeight, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)bi->getData()->ptr());
-    bi->flipV(); //the GL tex image must be flipped to show uprih
+    bi->flipV();  //the GL tex image must be flipped to show uprih
     Gu::saveImage(strLoc, bi);
   }
   Gu::getCoreContext()->glBindFramebuffer(GL_FRAMEBUFFER, iFbBindingLast);
@@ -879,7 +931,7 @@ void RenderUtils::createDepthTexture(GLuint* __out_ texId, int32_t w, int32_t h,
 
   if (bMsaaEnabled == false) {
     //For some reason you can't use this with multisample.
-    glTexParameteri(texTarget, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);//GL_NONE
+    glTexParameteri(texTarget, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);  //GL_NONE
     Gu::getCoreContext()->chkErrRt();
     glTexParameteri(texTarget, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
     Gu::getCoreContext()->chkErrRt();
@@ -902,7 +954,7 @@ void RenderUtils::createDepthTexture(GLuint* __out_ texId, int32_t w, int32_t h,
       glTexImage2D(texTarget, 0, eDepth, w, h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
       Gu::checkErrorsRt();
     }
-    });
+  });
 
   Gu::checkErrorsRt();
 }
@@ -948,7 +1000,6 @@ void RenderUtils::getCompatibleDepthComponent(GLenum eRequestedDepth, std::funct
   func(eDepthSize);
   while (true) {
     if (glGetError() != GL_NO_ERROR) {
-
       if (eDepthSize == GL_DEPTH_COMPONENT32F) {
         BRLogWarn("32 bit floating point depth buffer not supported. Attempting another format.");
         eDepthSize = GL_DEPTH_COMPONENT32;
@@ -971,9 +1022,7 @@ void RenderUtils::getCompatibleDepthComponent(GLenum eRequestedDepth, std::funct
       break;
     }
   }
-
 }
-
 
 bool RenderUtils::getTextureBindingForTextureId(GLint testTex, GLenum& __out_ target, GLenum& __out_ binding) {
   // GLenum target;
@@ -1002,10 +1051,14 @@ bool RenderUtils::getTextureBindingForTextureId(GLint testTex, GLenum& __out_ ta
   return false;
 }
 GLenum RenderUtils::getTexBindingForTexTarget(GLenum eTarget) {
-  if (eTarget == GL_TEXTURE_1D) return GL_TEXTURE_BINDING_1D;
-  else if (eTarget == GL_TEXTURE_2D) return GL_TEXTURE_BINDING_2D;
-  else if (eTarget == GL_TEXTURE_3D) return GL_TEXTURE_BINDING_1D;
-  else if (eTarget == GL_TEXTURE_CUBE_MAP) return GL_TEXTURE_BINDING_CUBE_MAP;
+  if (eTarget == GL_TEXTURE_1D)
+    return GL_TEXTURE_BINDING_1D;
+  else if (eTarget == GL_TEXTURE_2D)
+    return GL_TEXTURE_BINDING_2D;
+  else if (eTarget == GL_TEXTURE_3D)
+    return GL_TEXTURE_BINDING_1D;
+  else if (eTarget == GL_TEXTURE_CUBE_MAP)
+    return GL_TEXTURE_BINDING_CUBE_MAP;
   BRThrowException("Fialed to get tex binding for target " + eTarget);
   return 0;
 }
@@ -1055,12 +1108,12 @@ bool RenderUtils::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLu
       calculatedType = GL_UNSIGNED_BYTE;
       bufsiz_bytes = w * h * 4;
     }
-    else if (internalFormat == GL_RGBA32F) {//All color buffers
+    else if (internalFormat == GL_RGBA32F) {  //All color buffers
       calculatedFmt = GL_RGBA;
       calculatedType = GL_UNSIGNED_BYTE;
       bufsiz_bytes = w * h * 4;
     }
-    else if (internalFormat == GL_R32UI) {//Pick buffer
+    else if (internalFormat == GL_R32UI) {  //Pick buffer
       calculatedType = GL_UNSIGNED_INT;
       calculatedFmt = GL_RED_INTEGER;
       bufsiz_bytes = w * h * 4;
@@ -1088,7 +1141,7 @@ bool RenderUtils::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLu
     }
     else {
       BRLogError("Invalid or Unsupported texture internal format when reading from GPU" +
-        (int)internalFormat);
+                 (int)internalFormat);
       Gu::debugBreak();
     }
 
@@ -1108,8 +1161,10 @@ bool RenderUtils::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLu
             std::cout << " ,(" << r << "," << g << "," << b << "," << a << ")";
             iNonZero++;
           }
-          lastr = r; lastg = g; lastb = b; lasta = a;
-
+          lastr = r;
+          lastg = g;
+          lastb = b;
+          lasta = a;
         }
       }
       int nnn = 0;
@@ -1126,86 +1181,84 @@ bool RenderUtils::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLu
   glBindTexture(eTexTargetBase, iSavedTextureBinding);
   Gu::checkErrorsRt();
 
-
   return true;
 }
 void RenderUtils::makeVertexFormats() {
   if (v_v3c4x2::_pVertexFormat == nullptr) {
     v_v3c4x2::_pVertexFormat = std::make_shared<VertexFormat>("v_v3c4x2");
-    v_v3c4x2::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3c4x2::_pVertexFormat->addComponent(VertexUserType::e::c4_01);
-    v_v3c4x2::_pVertexFormat->addComponent(VertexUserType::e::x2_01);
+    v_v3c4x2::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3c4x2::_pVertexFormat->addComponent(VertexUserType::c4_01);
+    v_v3c4x2::_pVertexFormat->addComponent(VertexUserType::x2_01);
   }
   if (v_v2c4x2::_pVertexFormat == nullptr) {
     v_v2c4x2::_pVertexFormat = std::make_shared<VertexFormat>("v_v2c4x2");
-    v_v2c4x2::_pVertexFormat->addComponent(VertexUserType::e::v2_01);
-    v_v2c4x2::_pVertexFormat->addComponent(VertexUserType::e::c4_01);
-    v_v2c4x2::_pVertexFormat->addComponent(VertexUserType::e::x2_01);
+    v_v2c4x2::_pVertexFormat->addComponent(VertexUserType::v2_01);
+    v_v2c4x2::_pVertexFormat->addComponent(VertexUserType::c4_01);
+    v_v2c4x2::_pVertexFormat->addComponent(VertexUserType::x2_01);
   }
   if (v_v3n3x2::_pVertexFormat == nullptr) {
     v_v3n3x2::_pVertexFormat = std::make_shared<VertexFormat>("v_v3n3x2");
-    v_v3n3x2::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3n3x2::_pVertexFormat->addComponent(VertexUserType::e::n3_01);
-    v_v3n3x2::_pVertexFormat->addComponent(VertexUserType::e::x2_01);
+    v_v3n3x2::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3n3x2::_pVertexFormat->addComponent(VertexUserType::n3_01);
+    v_v3n3x2::_pVertexFormat->addComponent(VertexUserType::x2_01);
   }
   if (v_v3x2::_pVertexFormat == nullptr) {
     v_v3x2::_pVertexFormat = std::make_shared<VertexFormat>("v_v3x2");
-    v_v3x2::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3x2::_pVertexFormat->addComponent(VertexUserType::e::x2_01);
+    v_v3x2::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3x2::_pVertexFormat->addComponent(VertexUserType::x2_01);
   }
   if (v_v3n3::_pVertexFormat == nullptr) {
     v_v3n3::_pVertexFormat = std::make_shared<VertexFormat>("v_v3n3");
-    v_v3n3::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3n3::_pVertexFormat->addComponent(VertexUserType::e::n3_01);
+    v_v3n3::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3n3::_pVertexFormat->addComponent(VertexUserType::n3_01);
   }
   if (v_v3::_pVertexFormat == nullptr) {
     v_v3::_pVertexFormat = std::make_shared<VertexFormat>("v_v3");
-    v_v3::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
+    v_v3::_pVertexFormat->addComponent(VertexUserType::v3_01);
   }
   if (v_v2x2::_pVertexFormat == nullptr) {
     v_v2x2::_pVertexFormat = std::make_shared<VertexFormat>("v_v2x2");
-    v_v2x2::_pVertexFormat->addComponent(VertexUserType::e::v2_01);
-    v_v2x2::_pVertexFormat->addComponent(VertexUserType::e::x2_01);
+    v_v2x2::_pVertexFormat->addComponent(VertexUserType::v2_01);
+    v_v2x2::_pVertexFormat->addComponent(VertexUserType::x2_01);
   }
   if (v_v2c4::_pVertexFormat == nullptr) {
     v_v2c4::_pVertexFormat = std::make_shared<VertexFormat>("v_v2c4");
-    v_v2c4::_pVertexFormat->addComponent(VertexUserType::e::v2_01);
-    v_v2c4::_pVertexFormat->addComponent(VertexUserType::e::c4_01);
+    v_v2c4::_pVertexFormat->addComponent(VertexUserType::v2_01);
+    v_v2c4::_pVertexFormat->addComponent(VertexUserType::c4_01);
   }
   if (v_v3c3x2n3::_pVertexFormat == nullptr) {
     v_v3c3x2n3::_pVertexFormat = std::make_shared<VertexFormat>("v_v3c3x2n3");
-    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::e::c3_01);
-    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::e::x2_01);
-    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::e::n3_01);
+    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::c3_01);
+    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::x2_01);
+    v_v3c3x2n3::_pVertexFormat->addComponent(VertexUserType::n3_01);
   }
   if (v_v3i2n3::_pVertexFormat == nullptr) {
     v_v3i2n3::_pVertexFormat = std::make_shared<VertexFormat>("v_v3i2n3");
-    v_v3i2n3::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3i2n3::_pVertexFormat->addComponent(VertexUserType::e::i2_01);
-    v_v3i2n3::_pVertexFormat->addComponent(VertexUserType::e::n3_01);
+    v_v3i2n3::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3i2n3::_pVertexFormat->addComponent(VertexUserType::i2_01);
+    v_v3i2n3::_pVertexFormat->addComponent(VertexUserType::n3_01);
   }
   if (v_v3c4::_pVertexFormat == nullptr) {
     v_v3c4::_pVertexFormat = std::make_shared<VertexFormat>("v_v3c4");
-    v_v3c4::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3c4::_pVertexFormat->addComponent(VertexUserType::e::c4_01);
+    v_v3c4::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3c4::_pVertexFormat->addComponent(VertexUserType::c4_01);
   }
   if (v_v3c4x2n3::_pVertexFormat == nullptr) {
     v_v3c4x2n3::_pVertexFormat = std::make_shared<VertexFormat>("v_v3c4x2n3");
-    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::e::v3_01);
-    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::e::c4_01);
-    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::e::x2_01);
-    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::e::n3_01);
+    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::v3_01);
+    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::c4_01);
+    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::x2_01);
+    v_v3c4x2n3::_pVertexFormat->addComponent(VertexUserType::n3_01);
   }
   if (v_GuiVert::_pVertexFormat == nullptr) {
     v_GuiVert::_pVertexFormat = std::make_shared<VertexFormat>("v_GuiVert");
-    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::e::v4_01);
-    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::e::v4_02);
-    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::e::v4_03);
-    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::e::v2_01);
-    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::e::u2_01);
+    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::v4_01);
+    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::v4_02);
+    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::v4_03);
+    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::v2_01);
+    v_GuiVert::_pVertexFormat->addComponent(VertexUserType::u2_01);
   }
 }
 
-
-}//ns game
+}  // namespace BR2

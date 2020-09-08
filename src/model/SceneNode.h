@@ -23,7 +23,7 @@ public:
   BaseSpec() {} //Serialized version
   BaseSpec(string_t strName);
   virtual ~BaseSpec() override;
-  ParentType::e getParentType() { return _eParentType; }
+  ParentType getParentType() { return _eParentType; }
   Box3f* getBoundBoxObject() { return _pBox; }
 
   string_t getName() { return _strName; }
@@ -44,7 +44,7 @@ public:
     //_mBind = bind;
     _mInvBind = bind;
   }
-  void setParentName(string_t str, ParentType::e ee) { _strParentName = str; setParentType(ee); }
+  void setParentName(string_t str, ParentType ee) { _strParentName = str; setParentType(ee); }
   string_t getParentName() { return _strParentName; }
   virtual void serialize(std::shared_ptr<BinaryFile> fb);
   virtual void deserialize(std::shared_ptr<BinaryFile> fb);
@@ -58,8 +58,8 @@ protected:
   mat4 _mParentInverse;   //This is just for mesh objects that have mesh parents.
   //mat4 _mBasis;//Where the object is - base rotation &c.
   string_t _strParentName;
-  ParentType::e _eParentType = ParentType::e::None;
-  void setParentType(ParentType::e pt) { _eParentType = pt; }
+  ParentType _eParentType = ParentType::NoParent;
+  void setParentType(ParentType pt) { _eParentType = pt; }
 };
 /**
 *  @class BaseNode
@@ -98,16 +98,16 @@ public:
   void setPos(const vec3&& p);
   vec3 getViewNormal();
   void setViewNormal(const vec3& p, bool normalize = true);
-  void setScale(vec3& v);
+  void setScale(const vec3& v);
   vec3 getScale();
   bool getTransformChanged();
-  void setRot(vec4&& axis_angle_radians);
+  void setRot(const vec4&& axis_angle_radians);
   std::shared_ptr<BaseSpec> getSpec();
   mat4& getLocal();
   mat4& getWorld();
   mat4& getAnimated();
   vec3 getVelocity();
-  void setVelocity(vec3& vel);
+  void setVelocity(const vec3& vel);
   void setBoneParent(std::shared_ptr<BoneNode> bn);
   std::shared_ptr<BoneNode> getBoneParent();
   bool isMeshNode();

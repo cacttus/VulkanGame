@@ -24,7 +24,7 @@ public:
   virtual ~WorldGrid() override;
 
   void setQueued() { _eGenState = GridGenState::e::Queued; }
-  bool getIsGenerating();
+  bool getIsGenerating() override;
   size_t getSizeKb();
   ClimateInstance* getClimateInstance() { return _pClimateInstance; }
   void setClimateInstance(ClimateInstance* pi) { _pClimateInstance = pi; }
@@ -71,7 +71,7 @@ public:
   void expand();
   void consolidate();
   void createAllCells(WorldCellFile* pFile, World25GridGen::e eGen, WipGrid* pDat);
-  void getCellData(BlockNode* parent, WorldCellFile* __out cellData);
+  void getCellData(BlockNode* parent, WorldCellFile*  cellData);
   void getObjData(WorldCellFile* pFile);
   virtual std::shared_ptr<MeshNode> getMesh() override;
 
@@ -129,8 +129,8 @@ private:
   BlockNode* rootNeighbor(PhysicsGridSide::e n);
   void makeMesh(bool bAsync = false);
   void updateRedoMeshForCell(WorldCell* pc, bool bNeighbors);
-  void WorldGrid::debugVerifyAllInternalCellsLinked(BlockNode* parent = nullptr);
-  void WorldGrid::stitchBoundaries_r(BlockNode* giver, BlockNode* taker, bool bUnlink, bool bQueue,
+  void debugVerifyAllInternalCellsLinked(BlockNode* parent = nullptr);
+  void stitchBoundaries_r(BlockNode* giver, BlockNode* taker, bool bUnlink, bool bQueue,
     int ax, PhysicsGridSide::e gLink, BlockPos8::e(&othr)[4]);
   size_t getNodeSizeKb();
   size_t getMeshSizeKb();

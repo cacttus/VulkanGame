@@ -239,24 +239,23 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
   //Linux - taken from the man pages.
   //https://linux.die.net/man/3/backtrace_symbols
   int j, nptrs;
-#define SIZE 100
-  void *buffer[100];
+#define BT_BUF_SIZE 100
+  void *buffer[BT_BUF_SIZE];
   char **strings;
 
-  nptrs = backtrace(buffer, SIZE);
+  nptrs = backtrace(buffer, BT_BUF_SIZE);
   printf("backtrace() returned %d addresses\n", nptrs);
 
   strings = backtrace_symbols(buffer, nptrs);
   if (strings == NULL) {
-    perror("backtrace_symbols");
-    exit(EXIT_FAILURE);
+    BRLogError("Could not perform linux stack trace.");
   }
-
-  for (j = 0; j < nptrs; j++) {
-    callStack.push_back(std::string(strings[j]));
+  else {
+    for (j = 0; j < nptrs; j++) {
+      callStack.push_back(std::string(strings[j]));
+    }
+    free(strings);
   }
-
-  free(strings);
 
 #endif
   return callStack;

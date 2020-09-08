@@ -16,7 +16,7 @@ namespace BR2 {
 */
 class UtilMeshBox : public UtilMesh {
 public:
-  UtilMeshBox(std::shared_ptr<GLContext> ctx, Box3f* pCube, vec3& vOffset, Color4f& vColor);
+  UtilMeshBox(std::shared_ptr<GLContext> ctx, const Box3f* pCube, const vec3& vOffset, const Color4f& vColor);
   virtual ~UtilMeshBox() override;
   void setWireFrame(bool blnWireFrame) { _blnWireFrame = blnWireFrame; }
 
@@ -29,12 +29,9 @@ private:
   vec3 _vOffset;
   vec4 _vColor;
   bool _blnWireFrame;
-  Box3f* _pCube;
-
+  Box3f _pCube;
 };
 
-}//ns game
-
-
+}  // namespace BR2
 
 #endif

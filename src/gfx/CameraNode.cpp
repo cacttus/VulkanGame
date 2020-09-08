@@ -141,7 +141,7 @@ const vec3 CameraNode::getLookAt() {
   vec3 r = getPos() + getViewNormal();
   return r;
 }
-void CameraNode::lookAt(vec3& v) {
+void CameraNode::lookAt(const vec3& v) {
   setViewNormal(std::move(v-getPos()));
 }
 void CameraNode::zoom(float amt) {

@@ -4,7 +4,7 @@
 *    @date May 8, 2017
 *    @author MetalMario971
 *
-*    © 2017
+*    ï¿½ 2017
 *
 *
 */
@@ -22,7 +22,7 @@ public:
   int32_t getComponentCount() { return _iComponentCount; }
   GLenum getDataType() { return _eDataType; }
   GLenum getAttributeType();
-  VertexUserType::e getUserType() { return _eUserType; }
+  VertexUserType getUserType() { return _eUserType; }
   int32_t getByteOffset() { return _iByteOffset; }
   int32_t getLocation() { return _iLocation; }
   string_t getUserTypeName();
@@ -32,7 +32,7 @@ private:
   int32_t _iSizeBytes;
   int32_t _iComponentCount;
   GLenum _eDataType;
-  VertexUserType::e _eUserType = VertexUserType::e::None;
+  VertexUserType _eUserType = VertexUserType::NoVertexType;
   int32_t _iLocation;
   int32_t _iByteOffset;
 };
@@ -44,12 +44,12 @@ public:
   string_t getName() { return _strName; }
   int32_t getSizeBytes() const { return _iVertexSizeBytes; }
   // void enableAndBindAllArraysForVaoBuffer(std::shared_ptr<VboData> pVboData);
-  void addComponent(VertexUserType::e eUserType);
-  void addComponent(GLenum type, int componentCount, int size, VertexUserType::e eUserType = VertexUserType::e::None); //ex GL_FLOAT, 3, sizeof(vec4) for an aligned vec3
-  std::shared_ptr<VertexComponent> getComponentForUserType(VertexUserType::e eUserType);
+  void addComponent(VertexUserType eUserType);
+  void addComponent(GLenum type, int componentCount, int size, VertexUserType eUserType = VertexUserType::NoVertexType); //ex GL_FLOAT, 3, sizeof(vec4) for an aligned vec3
+  std::shared_ptr<VertexComponent> getComponentForUserType(VertexUserType eUserType);
   const std::map<int, std::shared_ptr<VertexComponent>>& getComponents() { return _vecComponents; }
   static GLenum computeAttributeType(GLenum type, GLuint count);
-  static string_t getUserTypeName(VertexUserType::e t);
+  static string_t getUserTypeName(VertexUserType t);
   int matchTypeForShaderType(std::shared_ptr<VertexFormat> shaderType);
 
 private:

@@ -21,15 +21,33 @@ DateTime::DateTime(tm *t, int ms) {
   this->_year = t->tm_year;
   this->_milliseconds = ms;
 }
-DateTime DateTime::getDateTime() {
+string_t DateTime::getAsString() {
+  string_t ret = DateTime::getDateTime().toString();
+  return ret;
+}
+DateTime DateTime::fromMilliseconds(uint64_t in_ms) {
   //Test
   Gu::debugBreak();
 
+  uint32_t hh = in_ms % (60 * 60 * 60 * 1000) / (60 * 60 * 1000);
+  uint32_t mm = in_ms % (60 * 60 * 1000) / (60 * 1000);
+  uint32_t ss = in_ms % (60 * 1000) / (1000);
+  uint32_t ms = in_ms % (1000);
+
+  tm tt;
+  tt.tm_hour = hh;
+  tt.tm_min = mm;
+  tt.tm_sec = ss;
+  DateTime dt(&tt, ms);
+  return dt;
+}
+DateTime DateTime::getDateTime() {
   time_t t = time(NULL);
   tm *tm_struct = localtime(&t);
 
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch()).count();
+                std::chrono::system_clock::now().time_since_epoch())
+                .count();
 
   ms = (ms % 1000);
   DateTime dt(tm_struct, (int)ms);
@@ -39,23 +57,30 @@ DateTime DateTime::getDateTime() {
 string_t DateTime::toString() {
   //Test
   Gu::debugBreak();
-  
+
   //returns "dd/mm/yyyy hh:mm:ss" Todo: localize this (of course).
   string_t dt = dateToStr("/");
   string_t tm = timeToStr(":");
   string_t ret = Stz dt + " " + tm;
   return ret;
 }
-string_t DateTime::dateToStr(const string_t& delim) {
+string_t DateTime::dateToStr(const string_t &delim) {
   string_t ret;
-  ret += TypeConv::intToStr(this->_day);
-  ret += delim;
-  ret += TypeConv::intToStr(this->_month);
-  ret += delim;
-  ret += TypeConv::intToStr(this->_year);
+  if (this->_day >= 0) {
+    ret += TypeConv::intToStr(this->_day);
+    ret += delim;
+  }
+  if (this->_month >= 0) {
+    ret += TypeConv::intToStr(this->_month);
+    ret += delim;
+  }
+  if (this->_year >= 0) {
+    ret += TypeConv::intToStr(this->_year);
+  }
+
   return ret;
 }
-string_t DateTime::timeToStr(const string_t& delim, bool hour, bool minute, bool second, bool millisecond) {
+string_t DateTime::timeToStr(const string_t &delim, bool hour, bool minute, bool second, bool millisecond) {
   string_t ret = "";
 
   string_t h, m, s, ms, del;
@@ -63,23 +88,31 @@ string_t DateTime::timeToStr(const string_t& delim, bool hour, bool minute, bool
   h = m = s = ms = del = "";
 
   if (hour) {
-    h = TypeConv::intToStr(this->_hours, "%02i");
-    del = delim;
-    ret += h + del;
+    if (this->_hours >= 0) {
+      h = TypeConv::intToStr(this->_hours, "%02i");
+      del = delim;
+      ret += h + del;
+    }
   }
   if (minute) {
-    m = TypeConv::intToStr(this->_minutes, "%02i");
-    del = delim;
-    ret += m + del;
+    if (this->_minutes >= 0) {
+      m = TypeConv::intToStr(this->_minutes, "%02i");
+      del = delim;
+      ret += m + del;
+    }
   }
   if (second) {
-    s = TypeConv::intToStr(this->_seconds, "%02i");
-    del = delim;
-    ret += s + del;
+    if (this->_seconds >= 0) {
+      s = TypeConv::intToStr(this->_seconds, "%02i");
+      del = delim;
+      ret += s + del;
+    }
   }
   if (millisecond) {
-    ms = TypeConv::intToStr(this->_milliseconds, "%03i");
-    ret += ms;
+    if (this->_milliseconds >= 0) {
+      ms = TypeConv::intToStr(this->_milliseconds, "%03i");
+      ret += ms;
+    }
   }
 
   return ret;
@@ -473,14 +506,7 @@ int DateTime::second() {
 //
 //   return getTime(hh, mm, ss, ms);
 // }
-// t_time DateTime::getTime(t_timeval in_ms) {
-//   uint32_t hh = in_ms % (60 * 60 * 60 * 1000) / (60 * 60 * 1000);
-//   uint32_t mm = in_ms % (60 * 60 * 1000) / (60 * 1000);
-//   uint32_t ss = in_ms % (60 * 1000) / (1000);
-//   uint32_t ms = in_ms % (1000);
-//
-//   return getTime(hh, mm, ss, ms);
-// }
+
 // t_time DateTime::getTime(uint32_t hh, uint32_t mm, uint32_t ss, uint32_t ms) {
 //   return (t_time)(
 //       (hh << TIME_HH_LSH) |

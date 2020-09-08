@@ -10,7 +10,7 @@ NodeData::NodeData(string_t name) {
 NodeData::~NodeData() {
 }
 void NodeData::deserialize(std::shared_ptr<BinaryFile> bf) {
-  bf->readString(std::move(_strName));
+  bf->readString(_strName);
 }
 void NodeData::serialize(std::shared_ptr<BinaryFile> bf) {
   bf->writeString(std::move(_strName));

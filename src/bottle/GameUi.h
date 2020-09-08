@@ -4,7 +4,7 @@
 *    @date February 22, 2018
 *    @author Derek Page
 *
-*    © 2018
+*    ï¿½ 2018
 *
 *
 */
@@ -42,13 +42,13 @@ class UiAssetItem : public UiElement {
   std::shared_ptr<ModelSpec> _pNode = nullptr;
   std::shared_ptr<GameUi> _pGameUi = nullptr;
 public:
-  static std::shared_ptr<UiAssetItem> UiAssetItem::create(
+  static std::shared_ptr<UiAssetItem> create(
     std::shared_ptr<GameUi> gi,
     std::shared_ptr<ModelSpec> ms,
     float contW, float contH,
     std::shared_ptr<UiFlexButtonSkin> flexSkin,
     std::shared_ptr<UiTex> coinImage);
-  virtual void UiAssetItem::init() override {
+  virtual void init() override {
     UiElement::init();
   }
 };
@@ -62,7 +62,7 @@ public:
 
   void createToolbar();
   void createCursor();
-  void GameUi::createDummySkin();
+  void createDummySkin();
   std::shared_ptr<UiWindow> createAssetWindow();
   std::shared_ptr<UiWindow> createConfigWindow();
   std::shared_ptr<UiWindow> createTerrainWindow();

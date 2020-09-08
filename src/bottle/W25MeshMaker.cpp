@@ -542,7 +542,7 @@ W25MeshConf::W25MeshConf(std::shared_ptr<W25MeshMaker> pm) : _pMeshMaker(pm) {
 }
 W25MeshConf::~W25MeshConf() {
 }
-void W25MeshConf::raycastTris(Ray_t* ra, vec3& vOrigin, float fCellWidth, float fCellHeight) {
+void W25MeshConf::raycastTris(Ray_t* ra, const vec3& vOrigin, float fCellWidth, float fCellHeight) {
   PlaneHit ph;
   RaycastHit rhTemp;
 

@@ -453,8 +453,7 @@ string_t FileSystem::formatPath(string_t p) {
   return StringUtil::replaceAll(p, '\\', '/');
 }
 string_t FileSystem::getScreenshotFilename() {
-  string_t fname = DateTime::dateTimeToStr(DateTime::getDateTime()) + "_" +
-                   FileSystem::getExecutableName() + "_frame.png";
+  string_t fname = DateTime::getAsString() + "_" + FileSystem::getExecutableName() + "_frame.png";
   fname = FileSystem::replaceInvalidCharsFromFilename(fname);
   fname = StringUtil::replaceAll(fname, " ", "_");
   fname = FileSystem::combinePath(Gu::getPackage()->getCacheFolder(), fname);

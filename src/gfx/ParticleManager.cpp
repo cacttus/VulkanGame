@@ -157,7 +157,8 @@ void ParticleManager::draw(std::shared_ptr<ShaderBase> pShader) {
   {
     glDisable(GL_CULL_FACE);
     _pParticleAtlas->bind(TextureChannel::e::Channel0, pShader);
-    _pQuadBufferMesh->draw(RenderParams(pShader));
+    RenderParams rp(pShader);
+    _pQuadBufferMesh->draw(rp);
   }
   Graphics->popCullFace();
   _pQuadBufferMesh->resetCopy();

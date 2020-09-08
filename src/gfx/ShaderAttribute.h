@@ -29,7 +29,7 @@ public:
   int32_t getGlLocation() { return _iGLLocation; } // layout=0 ,.. etc
   GLenum getGlAttributeType() { return _eGLAttribType; }//returns GL_FLOAT_VEC3 for _V301, etc.
   GLsizei getGlAttributeSize() { return _iGLAttribSize; } //*Note this isn't the "components"
-  VertexUserType::e getUserType() { return _eUserType; } //Our custom system type which gets matched in the VAO.
+  VertexUserType getUserType() { return _eUserType; } //Our custom system type which gets matched in the VAO.
 
 private:
   string_t _strName;
@@ -39,8 +39,8 @@ private:
   GLsizei _iGLAttribSize;//*Note this isn't the "components" But would return "1" for FLOAT_VEC3 etc.
   string_t _strError;
   //We need to still store the datatype 
-  VertexUserType::e _eUserType = VertexUserType::e::None;
-  VertexUserType::e parseUserType(string_t& name);
+  VertexUserType _eUserType = VertexUserType::NoVertexType;
+  VertexUserType parseUserType(string_t& name);
   void parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, int32_t attribIndex);
   bool _bIsBuiltInAttrib = false;
   static bool isOpenGLBuiltInAttrib(string_t strName);

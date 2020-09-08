@@ -45,8 +45,8 @@ public:
   Box3f* getBoundBox() { return _pBoundBox; }
   
   //Since we're not implementing this yet, let's just blank these out.
-  void setNodeVelocity(vec3& nodeVel);
-  void setNodePosition(vec3& nodePos);
+  void setNodeVelocity(const vec3& nodeVel);
+  void setNodePosition(const vec3& nodePos);
   
   //**these are on the parent SceneNode
   //vec3 getVelocity() { return _vVelocity; }

@@ -20,21 +20,18 @@ public:
   virtual ~VulkanContext() override;
 
   // virtual bool load(std::shared_ptr<AppBase> br) override { return true; }
-   //virtual void update(float delta)  override {}
-  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false)  override { return true; }
+  //virtual void update(float delta)  override {}
+  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false) override { return true; }
   virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false) override { return true; }
 
-  virtual void pushCullFace() {}
-  virtual void popCullFace() {}
-  virtual void pushBlend() {}
-  virtual void popBlend() {}
-  virtual void pushDepthTest() {}
-  virtual void popDepthTest() {}
-
+  virtual void pushCullFace() override {}
+  virtual void popCullFace() override {}
+  virtual void pushBlend() override {}
+  virtual void popBlend() override {}
+  virtual void pushDepthTest() override {}
+  virtual void popDepthTest() override {}
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

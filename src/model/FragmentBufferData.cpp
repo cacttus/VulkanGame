@@ -4,11 +4,11 @@
 namespace BR2 {
 FragmentBufferData::FragmentBufferData(std::shared_ptr<VertexFormat> vft) :  _pVertexFormat(vft)
 {
-    _v2f1 = _pVertexFormat->getComponentForUserType(VertexUserType::e::v2_01);
-    _v3f1 = _pVertexFormat->getComponentForUserType(VertexUserType::e::v3_01);
-    _n3f1 = _pVertexFormat->getComponentForUserType(VertexUserType::e::n3_01);
-    _c4f1 = _pVertexFormat->getComponentForUserType(VertexUserType::e::c4_01);
-    _x2f1 = _pVertexFormat->getComponentForUserType(VertexUserType::e::x2_01);
+    _v2f1 = _pVertexFormat->getComponentForUserType(VertexUserType::v2_01);
+    _v3f1 = _pVertexFormat->getComponentForUserType(VertexUserType::v3_01);
+    _n3f1 = _pVertexFormat->getComponentForUserType(VertexUserType::n3_01);
+    _c4f1 = _pVertexFormat->getComponentForUserType(VertexUserType::c4_01);
+    _x2f1 = _pVertexFormat->getComponentForUserType(VertexUserType::x2_01);
 }
 FragmentBufferData::~FragmentBufferData()
 {

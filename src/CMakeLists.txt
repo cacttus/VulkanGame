@@ -1,29 +1,11 @@
-#Single include/src.
-# set(SOURCE
-#    ${SOURCE}
-#    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/SDLVulkan.cpp
-#    PARENT_SCOPE
-# )
-# set(HEADERS
-#    ${HEADERS}
-#    ${CMAKE_CURRENT_SOURCE_DIR}/SDLVulkan.h
-#    ${CMAKE_CURRENT_SOURCE_DIR}/BaseHeader.h
-#    PARENT_SCOPE
-# )
-
-#Gather all include & src
 message("/src/ current CMAKE src dir is " ${CMAKE_CURRENT_SOURCE_DIR})
 set(VG_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-file(GLOB_RECURSE VG_SOURCE_FILES ${VG_SRC_DIR}*.cpp)
-file(GLOB_RECURSE VG_HEADER_FILES ${VG_SRC_DIR}*.h)
-set (VG_INCLUDE_DIRS "")
-foreach (_headerFile ${BR2_HEADERS_BR2})
-    get_filename_component(_dir ${_headerFile} PATH)
-    list (APPEND VG_INCLUDE_DIRS ${_dir})
-endforeach()
-list(REMOVE_DUPLICATES VG_INCLUDE_DIRS)
+file(GLOB_RECURSE VG_SOURCE_FILES ${VG_SRC_DIR}*.cpp *.c)
+file(GLOB_RECURSE VG_HEADER_FILES ${VG_SRC_DIR}*.h *.hpp)
+
+#message(" + Headers " ${VG_HEADER_FILES})
+#message(" + Sources " ${VG_SOURCE_FILES})
 
 set(SOURCE
    ${SOURCE}

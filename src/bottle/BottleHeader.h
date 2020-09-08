@@ -37,7 +37,7 @@ typedef v_v3i2n3 W25MeshVert;
 
 #define PIX_OBJ_TYPE_INVALID 0
 enum class GameMode { Play, WorldSelect };
-namespace GridShow { typedef enum { None, Top, TopSideBot } e; }
+namespace GridShow { typedef enum { NoShow, Top, TopSideBot } e; }
 namespace BR2Mode { typedef enum { Play, WorldSelect } e; }
 namespace DrawType { typedef enum { Sprite, Box5, Mesh, Model, MaxDrawTypes } e; }
 namespace EditMode { typedef enum { Invalid, Tile, Block, Vertex, VertexGroup, HillTile, PlaceObject, NineTile, Select,  Proc, MaxEditModes} e; }
@@ -59,14 +59,14 @@ namespace BlockPos8 { typedef enum { NBP3_ABL, NBP3_ABR, NBP3_ATL, NBP3_ATR, NBP
 namespace GridGenState { typedef enum { PreGen, Queued, Stage1, Stage1Complete, Stage2, Generated } e; }
 
 typedef uint32_t PlaceIndex; //0-26 are the vertexes in LHS axis-order, 27 - 50 - are the 24 sub-quad indexes in AA LHS (4 per side)
-namespace PlaceMode { typedef enum { None, Orient } e; }
+namespace PlaceMode { typedef enum { NoPlaceMode, Orient } e; }
 
 //CrossA  |\+   + is normal
 //CrossB  +/|
 //CrossC  |/+
 //CrossD  +\|
 namespace W25Plane {
-typedef enum { Left, Right, Bottom, Top, Back, Front, CrossA, CrossB, CrossC, CrossD, None } e;
+typedef enum { Left, Right, Bottom, Top, Back, Front, CrossA, CrossB, CrossC, CrossD, NoPlane } e;
 };
 namespace W25SidePlace {
 typedef enum { Top, Bot, Side, Cross, Count } e;

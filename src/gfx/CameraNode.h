@@ -26,7 +26,7 @@ public:
 
   void zoom(float amt);
   const vec3 getLookAt();
-  void lookAt(vec3& v);
+  void lookAt(const vec3& v);
   //void setLookAt(vec3&& v) { _vLookAt = v; }
   const mat4& getView() { return _mView; }
   const mat4& getProj() { return _mProj; }

@@ -39,7 +39,7 @@ private:
   //std::shared_ptr<PhysicsGrid> getThis() { return shared_from_this(); }
   ivec3 _viPos;
   Box3f* _pBoundBox = nullptr;
-  std::unique_ptr<NodeManifold> _pManifold = nullptr;
+  std::unique_ptr<NodeManifold> _pManifold = {nullptr};
   float _fNodeWidth, _fNodeHeight;
   std::shared_ptr<PhysicsWorld> _pPhysicsWorld = nullptr;
   std::shared_ptr<PhysicsGrid> _pNeighbor[c_nNeighbors];

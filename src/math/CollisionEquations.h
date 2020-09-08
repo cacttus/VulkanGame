@@ -39,7 +39,7 @@ class CollisionEquations {
   static bool int_intersect_t(float ta0, float ta1, float tb0, float tb1);
   static void sat_box_int_swap_t(float& a, float& b);
   static bool in_01(float x);
-  static CollisionResult::e sat_axis_box_t_fast(
+  static CollisionResult sat_axis_box_t_fast(
     const float& v0, const float& c0, const float& r0,
     const float& v1, const float& c1, const float& r1,
     float& __out_ t_out, float& __out_ t0_out, float& __out_ t1_out);
@@ -56,13 +56,13 @@ public:
     bool& bStuck, bool bCheckingIfStuck);
   static void aa_point_contact_plane(vec3& pt, vec3& bc, vec3& out_n);
   static void aa_box_contact_plane_3(const Box3f* ba, const Box3f* bb, vec3& out_n, const vec3& in_v);
-  static CollisionResult::e line_plane_collision_linear(
+  static CollisionResult line_plane_collision_linear(
     const vec3& p1, // position of sphere
     const vec3& p2, // velocity of sphere
     const Plane3f& plane,
     float& out_t //[out] collision time
   );
-  static CollisionResult::e CollisionEquations::line_plane_collision_linear(
+  static CollisionResult line_plane_collision_linear(
     const vec3& p1, // point 1
     const vec3& p2, // point 2
     const vec3& plane_n,
@@ -77,7 +77,7 @@ public:
     const ConvexHull& a_hull, const vec3& a_hull_v,
     const ConvexHull& b_hull, const vec3& b_hull_v,
     float& out_t0, float& out_t1);
-  static CollisionResult::e CollisionEquations::sphere_collide_sphere(
+  static CollisionResult sphere_collide_sphere(
     const vec3& v1, const vec3& p1, const float r1
     , const vec3& v2, const vec3& p2, const float r2
     , float& t, float& root_1, float& root_2

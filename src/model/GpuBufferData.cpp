@@ -71,7 +71,8 @@ void GpuBufferData::readbytes(size_t num_elements, void* __out_ buf, int32_t ele
   {
     void* pData = nullptr;
     mapBuffer(GL_WRITE_ONLY, pData);
-    memcpy_s((void*)buf, readSize, pData, readSize);
+    //memcpy_s((void*)buf, readSize, pData, readSize);
+    std::memcpy((void*)buf, pData, readSize);
     unmapBuffer();
   }
   unbindBuffer();
@@ -119,7 +120,8 @@ void GpuBufferData::copyDataClientServer(size_t num_elements, const void* frags,
     //we intend to have it to be the GIVEN size. glBufferData will reallocate it.
     void* pData = nullptr;
     mapBuffer(GL_WRITE_ONLY, pData);
-    memcpy_s((void*)pData, getByteSize(), frags, copySizeBytes);
+    std::memcpy((void*)pData, frags, copySizeBytes);
+    //memcpy_s((void*)pData, getByteSize(), frags, copySizeBytes);
     unmapBuffer();
 
     _pContext->chkErrDbg();

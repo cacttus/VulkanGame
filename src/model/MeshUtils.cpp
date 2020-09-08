@@ -21,72 +21,79 @@ bool MeshGenParams::logAndExit(string_t str) {
   return false;
 }
 bool MeshGenParams::parse(string_t genString) {
-  char* cx = new char[genString.length() + 1];
-  int bufsiz = 128;
-  char buf[128];
-  char bufind = 0;
-  int parseMode = 0;
-  memset(cx, 0, genString.length() + 1);
-  memset(buf, 0, bufsiz);
-  strcpy_s(cx, genString.length() + 1, genString.c_str());
-  int iparameter = 0;
-
-  // - 
-  char* c = cx;
-  char ptc;
-  while (*c) {
-    ptc = *c;
-    if (isalnum((int)ptc)) {
-      buf[bufind++] = tolower(ptc);
-    }
-    else if (ptc == '.') {
-      //if(parseMode==0);
-      if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
-      _strClass = string_t(buf);
-      memset(buf, 0, bufsiz);
-      bufind = 0;
-      parseMode = 1;
-    }
-    else if (ptc == '(') {
-      if (!(parseMode == 1)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
-      if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
-      iparameter = 0;
-      string_t algorithm = string_t(buf);
-
-      _eGenType = getGenerationAlgorithmFromString(algorithm);
-
-      memset(buf, 0, bufsiz);
-      bufind = 0;
-      parseMode = 2;
-    }
-    else if (ptc == ',') {
-      if (!(parseMode == 2)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");;
-      if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");;
-      if (!(iparameter < MeshGenParams::MaxParams)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");;
-      _strParams[iparameter++] = string_t(buf);
-      memset(buf, 0, bufsiz);
-      bufind = 0;
-      parseMode = 2;
-    }
-    else if (ptc == ')') {
-      if (!(parseMode == 2)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");;
-      if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");;
-      if (!(iparameter < MeshGenParams::MaxParams)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");;
-      _strParams[iparameter++] = string_t(buf);
-      memset(buf, 0, bufsiz);
-      bufind = 0;
-      parseMode = 3;
-    }
-
-    c++;
-  }
-  delete[] cx;
-
-  _uiParamCount = iparameter;
-
-  if (parseMode != 3) {
-    return logAndExit(" [MESH GEN] Format error in mesh generation parse string.");
-  }
+  BRThrowNotImplementedException();
+  //   char* cx = new char[genString.length() + 1];
+  //   int bufsiz = 128;
+  //   char buf[128];
+  //   char bufind = 0;
+  //   int parseMode = 0;
+  //   memset(cx, 0, genString.length() + 1);
+  //   memset(buf, 0, bufsiz);
+  //   strcpy_s(cx, genString.length() + 1, genString.c_str());
+  //   int iparameter = 0;
+  //
+  //   // -
+  //   char* c = cx;
+  //   char ptc;
+  //   while (*c) {
+  //     ptc = *c;
+  //     if (isalnum((int)ptc)) {
+  //       buf[bufind++] = tolower(ptc);
+  //     }
+  //     else if (ptc == '.') {
+  //       //if(parseMode==0);
+  //       if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       _strClass = string_t(buf);
+  //       memset(buf, 0, bufsiz);
+  //       bufind = 0;
+  //       parseMode = 1;
+  //     }
+  //     else if (ptc == '(') {
+  //       if (!(parseMode == 1)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       iparameter = 0;
+  //       string_t algorithm = string_t(buf);
+  //
+  //       _eGenType = getGenerationAlgorithmFromString(algorithm);
+  //
+  //       memset(buf, 0, bufsiz);
+  //       bufind = 0;
+  //       parseMode = 2;
+  //     }
+  //     else if (ptc == ',') {
+  //       if (!(parseMode == 2)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       ;
+  //       if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       ;
+  //       if (!(iparameter < MeshGenParams::MaxParams)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       ;
+  //       _strParams[iparameter++] = string_t(buf);
+  //       memset(buf, 0, bufsiz);
+  //       bufind = 0;
+  //       parseMode = 2;
+  //     }
+  //     else if (ptc == ')') {
+  //       if (!(parseMode == 2)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       ;
+  //       if (!(strlen((char*)buf))) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       ;
+  //       if (!(iparameter < MeshGenParams::MaxParams)) return logAndExit(" [MESH GEN] Sequence error parsing mesh gen string.");
+  //       ;
+  //       _strParams[iparameter++] = string_t(buf);
+  //       memset(buf, 0, bufsiz);
+  //       bufind = 0;
+  //       parseMode = 3;
+  //     }
+  //
+  //     c++;
+  //   }
+  //   delete[] cx;
+  //
+  //   _uiParamCount = iparameter;
+  //
+  //   if (parseMode != 3) {
+  //     return logAndExit(" [MESH GEN] Format error in mesh generation parse string.");
+  //   }
 
   return true;
 }
@@ -161,15 +168,14 @@ std::shared_ptr<MeshSpec> MeshUtils::generateFromParameters(MeshGenParams* pgp) 
 *    Generate an arc segment -  a square mapped onto a paraboloid
 */
 std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2, float refHeight, vec3 refPos, int32_t slices) {
-  std::shared_ptr<MeshSpec> ma = std::make_shared<MeshSpec>(StringUtil::generate(), MeshMakerVert::getVertexFormat());//VertexFormatType::V_V3C4N3X2,IndexFormatType::INDEX_32_BIT_TYPE);
+  std::shared_ptr<MeshSpec> ma = std::make_shared<MeshSpec>(StringUtil::generate(), MeshMakerVert::getVertexFormat());  //VertexFormatType::V_V3C4N3X2,IndexFormatType::INDEX_32_BIT_TYPE);
   int32_t nVerts = (slices + 1) * (slices + 1);
-  int32_t nIndexes = (slices) * (slices) * 2 * 3;
+  int32_t nIndexes = (slices) * (slices)*2 * 3;
   int32_t nFaces = nIndexes / 3;
   ma->allocMesh(nVerts, nIndexes);
 
   ma->beginEdit();
   {
-
     float aRadius = radius;
     float pRadius = radius2;
 
@@ -180,7 +186,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
     // - Clockwise vertex winding?
     bool cw_winding = false;
 
-    float res = (aRadius) * (aRadius)-(pRadius) * (pRadius);
+    float res = (aRadius) * (aRadius) - (pRadius) * (pRadius);
     float sqrtres = MathUtils::brSqrt(res);
     float PlaneSize = 2.0f * sqrtres;
 
@@ -194,7 +200,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
     float z_height = 0.0f;
     float height = 0.0f;
 
-    vec3 SV; // temporary vertex
+    vec3 SV;  // temporary vertex
     int count = 0;
     size_t offset;
 
@@ -224,14 +230,14 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
         ma->c4f(offset) = Color4f(1, 1, 1, 1);
       }
     }
-    size_t fn_index; //face normal index
+    size_t fn_index;  //face normal index
     // Done calculating vertices, calculate the indices
     int index = 0;
     Vec3f va, vb, vc, d1, d2;
     //Indices = new unsigned short[NumIndices];
     for (int i = 0; i < slices; i++) {
       for (int j = 0; j < slices; j++) {
-        int startvert = (i * (slices)+j);
+        int startvert = (i * (slices) + j);
 
         if (cw_winding == false) {
           // Triangle 1
@@ -252,8 +258,8 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
 
           //**Test: flat normals
           ma->n3f(ma->i32(index - 3)) =
-            ma->n3f(ma->i32(index - 2)) =
-            ma->n3f(ma->i32(index - 1)) = d1.cross(d2).normalize();
+              ma->n3f(ma->i32(index - 2)) =
+                  ma->n3f(ma->i32(index - 1)) = d1.cross(d2).normalize();
 
           // Triangle 2
           ma->i32(index++) = startvert + slices + 1;
@@ -270,29 +276,28 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
           d2 = vb - vc;
 
           // AssertOrThrow2( ((index-3)/3) < (int)ma->getFaceNormals()->count() );
-          //    
+          //
           //    ma->getFaceNormals()->at(fn_index) = d1.cross(d2).normalize();
 
-              //**Test: flat normals
+          //**Test: flat normals
           ma->n3f(ma->i32(index - 3)) =
-            ma->n3f(ma->i32(index - 2)) =
-            ma->n3f(ma->i32(index - 1)) = d1.cross(d2).normalize();
-
+              ma->n3f(ma->i32(index - 2)) =
+                  ma->n3f(ma->i32(index - 1)) = d1.cross(d2).normalize();
 
           AssertOrThrow2(index - 1 < nIndexes);
           //assert( index-1 < nVerts );
         }
         else {
         }
-      }//for
-    }//for
+      }  //for
+    }    //for
   }
   ma->endEdit();
   finalizeSpec(ma);
 
   return ma;
 }
-std::shared_ptr<MeshSpec> MeshUtils::makeBox(Box3f* pCube, vec4* color, Matrix4x4* applyMat, vec3* offset) {
+std::shared_ptr<MeshSpec> MeshUtils::makeBox(const Box3f* pCube, const vec4* color, const Matrix4x4* applyMat, const vec3* offset) {
   vec3 vi = pCube->_min;
   vec3 va = pCube->_max;
 
@@ -308,7 +313,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBox(Box3f* pCube, vec4* color, Matrix4x
 
   return makeBox(f, color, applyMat, offset);
 }
-std::shared_ptr<MeshSpec> MeshUtils::makeBox(float length, vec4* color, mat4* applyMat, vec3* offset) {
+std::shared_ptr<MeshSpec> MeshUtils::makeBox(float length, const vec4* color, const mat4* applyMat, const vec3* offset) {
   vec3 f[8];
   f[BoxPoint::FBL] = vec3(-1.0f, -1.0f, -1.0f);
   f[BoxPoint::FBR] = vec3(1.0f, -1.0f, -1.0f);
@@ -325,13 +330,13 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBox(float length, vec4* color, mat4* ap
 
   return makeBox(f, color, applyMat, offset);
 }
-std::shared_ptr<MeshSpec> MeshUtils::makeBox(vec3(&extents)[8], Color4f* color, Matrix4x4* applyMat, vec3* offset) {
+std::shared_ptr<MeshSpec> MeshUtils::makeBox(vec3 (&extents)[8], const Color4f* color, const Matrix4x4* applyMat, const vec3* offset) {
   std::shared_ptr<MeshSpec> ms = std::make_shared<MeshSpec>(StringUtil::generate(), MeshMakerVert::getVertexFormat());
   ms->allocMesh(6 * 4, 2 * 6 * 3);
   // - Instantiate everything
- //ms->allocateFaceNormals(6 * 2);
- //ms->allocateFragments();
- //ms->allocateIndexes();
+  //ms->allocateFaceNormals(6 * 2);
+  //ms->allocateFragments();
+  //ms->allocateIndexes();
   ms->beginEdit();
   {
     int frag = 0;
@@ -347,7 +352,6 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBox(vec3(&extents)[8], Color4f* color, 
         extents[i] = (m * v4);
       }
     }
-
 
     vec3 vn;
 
@@ -399,7 +403,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBox(vec3(&extents)[8], Color4f* color, 
     //ms->getFaceNormals()->at(norm++) = vn;
     //ms->getFaceNormals()->at(norm++) = vn;
 
-     //BACK
+    //BACK
     ms->v3f(frag++) = extents[BoxPoint::NBR];
     ms->v3f(frag++) = extents[BoxPoint::NBL];
     ms->v3f(frag++) = extents[BoxPoint::NTR];
@@ -481,7 +485,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
   int cur_ind = 0;
   float theta;
   float phi;
-  int topVert = 0;    // - first vertex in the pie
+  int topVert = 0;  // - first vertex in the pie
   int bottomVert;
   Color4f myc;
   size_t nFrags = (slices) * (stacks - 1) + 2;
@@ -506,7 +510,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
   {
     // - Generate top cap frag
     ma->v3f(frag).x = radius * sinf(phi) * cosf(theta);
-    ma->v3f(frag).z = -radius * sinf(phi) * sinf(theta);//OpenGL...
+    ma->v3f(frag).z = -radius * sinf(phi) * sinf(theta);  //OpenGL...
     ma->v3f(frag).y = radius * cosf(phi);
 
     vmin = Vec3f::minv(ma->v3f(frag), vmin);
@@ -526,7 +530,6 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
 
     for (int j = 0; j < stacks; ++j) {
       for (int i = 0; i < slices; ++i) {
-
         if (j == 0) {
           //top cap
           if (i < slices - 1) {
@@ -534,21 +537,21 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
             ma->i32(cur_ind++) = frag;
             ma->i32(cur_ind++) = frag + 1;
           }
-          else//seam vert
+          else  //seam vert
           {
             ma->i32(cur_ind++) = topVert;
             ma->i32(cur_ind++) = frag;
-            ma->i32(cur_ind++) = topVert + 1;//the first vert of the stack ring
+            ma->i32(cur_ind++) = topVert + 1;  //the first vert of the stack ring
           }
         }
         else if (j == stacks - 1) {
           //bottom cap
           if (i < slices - 1) {
-            ma->i32(cur_ind++) = bottomVert;    //Maintain CCW Winding
+            ma->i32(cur_ind++) = bottomVert;  //Maintain CCW Winding
             ma->i32(cur_ind++) = bottomVert - slices + i + 1;
             ma->i32(cur_ind++) = bottomVert - slices + i;
           }
-          else//seam vert
+          else  //seam vert
           {
             ma->i32(cur_ind++) = bottomVert;
             ma->i32(cur_ind++) = bottomVert - slices;
@@ -566,7 +569,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
             ma->i32(cur_ind++) = frag + 1;
             ma->i32(cur_ind++) = frag - slices + 1;
           }
-          else//seam vert
+          else  //seam vert
           {
             //tri1
             ma->i32(cur_ind++) = frag - slices;
@@ -576,16 +579,15 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
             ma->i32(cur_ind++) = frag - slices;
             ma->i32(cur_ind++) = frag - slices + 1;
             ma->i32(cur_ind++) = frag - slices - slices + 1;
-
           }
         }
 
-        if (j < stacks - 1)//Dont make verts for the bottom stack (it is the bottom cap point we made before)
+        if (j < stacks - 1)  //Dont make verts for the bottom stack (it is the bottom cap point we made before)
         {
           theta = (float)(((2.0f * M_PI) / (float)slices) * (float)i);
           phi = (float)(((M_PI) / (float)stacks) * (float)(j + 1));
           ma->v3f(frag).x = radius * sinf(phi) * cosf(theta);
-          ma->v3f(frag).z = -radius * sinf(phi) * sinf(theta);//OpenGL...
+          ma->v3f(frag).z = -radius * sinf(phi) * sinf(theta);  //OpenGL...
           ma->v3f(frag).y = radius * cosf(phi);
 
           vmin = Vec3f::minv(ma->v3f(frag), vmin);
@@ -597,12 +599,11 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
           }
           //OpenGL TCOORDS
           ma->x2f(frag).x = (float)i / ((float)slices - 1.0f);
-          ma->x2f(frag).y = ((float)(stacks - j) / (float)stacks);//OpenGL (coord is bottom left of map)(
+          ma->x2f(frag).y = ((float)(stacks - j) / (float)stacks);  //OpenGL (coord is bottom left of map)(
           ma->c4f(frag) = myc;
 
           frag++;
         }
-
       }
     }
 
@@ -625,7 +626,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
     ma->x2f(frag).y = 0.0f;
     ma->c4f(frag) = myc;
 
-    frag++;    // so the check works.
+    frag++;  // so the check works.
 
     AssertOrThrow2(cur_ind == ma->indexCount());
     AssertOrThrow2(frag == ma->fragCount());
@@ -646,7 +647,6 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
   }
   ma->endEdit();
 
-
   finalizeSpec(ma, &vmin, &vmax);
   return ma;
 }
@@ -662,14 +662,12 @@ std::shared_ptr<MeshSpec> MeshUtils::makeCone(float radius, float h, int32_t sli
 
   // - Exactly the same as generating two circles, one with height.
 
-
-  ma->allocMesh((slices + 1) + 1, ((slices) * 3) * 2);
+  ma->allocMesh((slices + 1) + 1, ((slices)*3) * 2);
 
   int frag = 0, cur_ind = 0;
 
   ma->beginEdit();
   {
-
     // - Generate the CIRCLE bottom
     // - center
     ma->v3f(frag).x = 0.0;
@@ -689,12 +687,12 @@ std::shared_ptr<MeshSpec> MeshUtils::makeCone(float radius, float h, int32_t sli
 
     int center = 0;
     int top = 1;
-    int first = 2;    // - first vertex in the pie
+    int first = 2;  // - first vertex in the pie
 
     for (int i = 0; i < slices; ++i) {
       ma->v3f(frag).x = radius * cosf((((2.0f * (float)M_PI) / (float)slices) * (float)i));
       ma->v3f(frag).y = 0.0;
-      ma->v3f(frag).z = -radius * sinf((((2.0f * (float)M_PI) / (float)slices) * (float)i));//(negative)- for OpenGL
+      ma->v3f(frag).z = -radius * sinf((((2.0f * (float)M_PI) / (float)slices) * (float)i));  //(negative)- for OpenGL
 
       ma->x2f(frag).x = 1.0f * ((float)i / (float)slices);
       ma->x2f(frag).y = 0.0f;
@@ -726,7 +724,6 @@ std::shared_ptr<MeshSpec> MeshUtils::makeCone(float radius, float h, int32_t sli
       }
       frag++;
     }
-
   }
   ma->endEdit();
 
@@ -745,13 +742,12 @@ std::shared_ptr<MeshSpec> MeshUtils::makeCircle(float radius, int32_t slices) {
 
   std::shared_ptr<MeshSpec> ma = std::make_shared<MeshSpec>(StringUtil::generate(), MeshMakerVert::getVertexFormat());
 
-  ma->allocMesh(slices + 1, (slices) * 3);
+  ma->allocMesh(slices + 1, (slices)*3);
 
   int frag = 0, cur_ind = 0;
 
   ma->beginEdit();
   {
-
     // - center
     ma->v3f(frag).x = 0.0;
     ma->v3f(frag).y = 0.0;
@@ -801,8 +797,6 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBillboardXY(float xscale, float yscale,
 
   ma->beginEdit();
   {
-
-
     int ip = 0;
     ma->v3f(0) = Vector3(+xscale, -yscale, 0);
     ma->v3f(1) = Vector3(-xscale, -yscale, 0);
@@ -870,7 +864,6 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBillboardXY(float xscale, float yscale,
     ma->i32(fi++) = 4;
     ma->i32(fi++) = 6;
     ma->i32(fi++) = 7;
-
   }
   ma->endEdit();
   finalizeSpec(ma);
@@ -933,7 +926,7 @@ std::shared_ptr<MeshNode> MeshUtils::createScreenQuadMesh(int w, int h) {
   verts[0].x = vec2(0, 1);
   verts[1].x = vec2(1, 1);
   verts[2].x = vec2(0, 0);
-  verts[3].x = vec2(1, 0); //**Notice: here opengl texture untis don't match the vertex units becuase textures are upside down.
+  verts[3].x = vec2(1, 0);  //**Notice: here opengl texture untis don't match the vertex units becuase textures are upside down.
 
   inds.push_back(0);
   inds.push_back(1);
@@ -943,11 +936,7 @@ std::shared_ptr<MeshNode> MeshUtils::createScreenQuadMesh(int w, int h) {
   inds.push_back(3);
   inds.push_back(2);
 
-  quadMesh = MeshNode::create("ScreenQuadMesh", false, std::make_shared<MeshSpec>(verts.data(),
-    verts.size(), inds.data(), inds.size(), v_v3x2::getVertexFormat(), nullptr
-    )
-  );
-
+  quadMesh = MeshNode::create("ScreenQuadMesh", false, std::make_shared<MeshSpec>(verts.data(), verts.size(), inds.data(), inds.size(), v_v3x2::getVertexFormat(), nullptr));
 
   return quadMesh;
 }
@@ -960,10 +949,4 @@ vec3* MeshUtils::getVertexElementOffset(vec3* verts, size_t iElementIndex, size_
   return ret;
 }
 
-
-
-
-
-
-
-}//ns game
+}  // namespace BR2

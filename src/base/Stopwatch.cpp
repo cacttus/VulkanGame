@@ -3,12 +3,8 @@
 #include "../base/DateTime.h"
 #include "../base/Gu.h"
 
-
 namespace BR2 {
-
-Stopwatch::Stopwatch(string_t strName, bool bStart) :
-  _tA(0)
-  , _tB(0) {
+Stopwatch::Stopwatch(string_t strName, bool bStart) : _tA(0), _tB(0) {
   _strName = strName;
   if (bStart) {
     start();
@@ -40,10 +36,10 @@ t_timeval Stopwatch::deltaMicrosecondsRemainder() {
 }
 string_t Stopwatch::toString(bool bFancy) {
   if (bFancy) {
-    return DateTime::timeToStr(DateTime::getTime(deltaMilliseconds()));
+    string_t st = DateTime::fromMilliseconds(deltaMilliseconds()).timeToStr(":");
+    return st;
   }
   else {
-
     return Stz "" + _strName + " " + StringUtil::format("%.2f", (float)deltaMilliseconds() + ((float)deltaMicrosecondsRemainder() / 1000.0f)) + "ms";
   }
 }
@@ -71,4 +67,4 @@ bool Stopwatch::pulse(t_timeval isGreaterThanMs) {
   return bRet;
 }
 
-}//ns game
+}  // namespace BR2

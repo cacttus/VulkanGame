@@ -1,5 +1,5 @@
 /**
-*  @file oglErr.h
+*  @file OglErr.h
 *  @date November 22, 2016
 *  @author MetalMario971
 */

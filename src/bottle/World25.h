@@ -49,7 +49,7 @@ public:
   std::shared_ptr<SpriteBucket> getSpriteBucket();
   std::shared_ptr<PhysicsWorld> getPhysics() { return _pPhysics; }
 
-  std::shared_ptr<ModelNode> makeObj(string_t mobName, vec3& vR3PosToSnap);
+  std::shared_ptr<ModelNode> makeObj(string_t mobName, const vec3& vR3PosToSnap);
 
   int32_t getMeshTrisFrame() { return _nMeshTrisFrame; }
   int32_t getQuadTrisFrame() { return _nQuadTrisFrame; }
@@ -112,7 +112,7 @@ private:
   int64_t _iMarchStamp = 1;
   string_t _strGameName;//Portals 12/22/17
   string_t _strWorldName;
-  GridShow::e _eShowGrid = GridShow::e::None;
+  GridShow::e _eShowGrid = GridShow::e::NoShow;
 
   std::shared_ptr<PhysicsGrid> loadGrid(const ivec3& pos);
   void updateHandCursorAndAddToRenderList(float);

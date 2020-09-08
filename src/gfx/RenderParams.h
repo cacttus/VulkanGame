@@ -11,7 +11,9 @@
 #include "../model/ModelHeader.h"
 #include "../base/SDLGLIncludes.h"
 
+
 namespace BR2 {
+
 class RenderParams_Internal;
 /**
 *  @class RenderParams
@@ -26,7 +28,7 @@ public:
   // void clearTextures() { _setTextures.clear(); }
   int32_t getCount();
   void setCount(int32_t i);
-  void setDrawMode(GLenum e);
+  void setDrawMode(DrawMode e);
   std::shared_ptr<ShaderBase> getShader();
   void setShader(std::shared_ptr<ShaderBase> sb);
   void setMesh(std::shared_ptr<MeshNode> x);

@@ -12,7 +12,7 @@
 
 namespace BR2 {
 
-CollisionResult::e CollisionEquations::sat_axis_box_t_fast(
+CollisionResult CollisionEquations::sat_axis_box_t_fast(
   const float& v0, const float& c0, const float& r0,
   const float& v1, const float& c1, const float& r1,
   float& __out_ t_out, float& __out_ t0_out, float& __out_ t1_out) {
@@ -28,11 +28,11 @@ CollisionResult::e CollisionEquations::sat_axis_box_t_fast(
     if (int_intersect_t(ax1, ax2, bx1, bx2) == false) {
       //We are not already intersecting - so no collision
       t0_out = t1_out = FLT_MAX;
-      return CollisionResult::e::Avoided;
+      return CollisionResult::Avoided;
     }
     //We are already intersecting - so collision at t=0
     t0_out = t1_out = 1.0;
-    return CollisionResult::e::Stuck;
+    return CollisionResult::Stuck;
   }
 
   //Original thing
@@ -50,12 +50,12 @@ CollisionResult::e CollisionEquations::sat_axis_box_t_fast(
   // if t0 >1 && t1 > 1 then no collision
   // otherwise yes
   if (t0_out < 0 && t1_out < 0) {
-    return CollisionResult::e::Avoided;
+    return CollisionResult::Avoided;
   }
   if (t0_out > 1 && t1_out > 1) {
-    return CollisionResult::e::Avoided;
+    return CollisionResult::Avoided;
   }
-  return CollisionResult::e::Collided;
+  return CollisionResult::Collided;
 }
 bool CollisionEquations::in_range_t(float t0, float t1, float x) {
   bool b = (x >= t0 && x <= t1);
@@ -99,14 +99,14 @@ bool CollisionEquations::sat_box_axis_t(float c1, float c2, float r1, float r2, 
   float tt;
   // float tb0, tb1;
 
-  CollisionResult::e cr;
+  CollisionResult cr;
 
   //These return the same results for some reason.
   cr = CollisionEquations::sat_axis_box_t_fast(v1, c1, r1, v2, c2, r2, tt, out_t0, out_t1);
-  if (cr == CollisionResult::e::Collided) {
+  if (cr == CollisionResult::Collided) {
     return true;
   }
-  else if (cr == CollisionResult::e::Stuck) {
+  else if (cr == CollisionResult::Stuck) {
     countXYZ = false;
     bStuck = true;
     return true;
@@ -305,7 +305,7 @@ bool CollisionEquations::sat_hull_hull_t(
     //Preliminary checkes before we collide
     //We must have positive indexes.
     if (a_ie0 >= 0 && a_ie1 >= 0 && b_ie0 >= 0 && b_ie1 >= 0) {
-      //  CollisionResult::e ve0, ve1;
+      //  CollisionResult ve0, ve1;
        // float vt0, vt1;
 
         //Check for stuck this is faster than the one below
@@ -373,7 +373,7 @@ void CollisionEquations::sat_hull_proj_ext(
 //    }
 //}
 
-CollisionResult::e CollisionEquations::line_plane_collision_linear(
+CollisionResult CollisionEquations::line_plane_collision_linear(
   const vec3& p1, // point 1
   const vec3& p2, // point 2
   const Plane3f& plane, //plane
@@ -381,7 +381,7 @@ CollisionResult::e CollisionEquations::line_plane_collision_linear(
 ) {
   return line_plane_collision_linear(p1, p2, plane.n, plane.d, out_t);
 }
-CollisionResult::e CollisionEquations::line_plane_collision_linear(
+CollisionResult CollisionEquations::line_plane_collision_linear(
   const vec3& p1, // point 1
   const vec3& p2, // point 2
   const vec3& plane_n,
@@ -406,7 +406,7 @@ CollisionResult::e CollisionEquations::line_plane_collision_linear(
 
   return CollisionResult::Avoided;
 }
-CollisionResult::e CollisionEquations::sphere_collide_sphere(
+CollisionResult CollisionEquations::sphere_collide_sphere(
   const vec3& v1, const vec3& p1, const float r1
   , const vec3& v2, const vec3& p2, const float r2
   , float& t, float& root_1, float& root_2
@@ -423,7 +423,7 @@ CollisionResult::e CollisionEquations::sphere_collide_sphere(
   //spheres intersect eachother
   if (pp <= rr) {
     t = dp.length();    //Distance - for stuck
-    return CollisionResult::e::Stuck;
+    return CollisionResult::Stuck;
   }
 
   float pv = dp.dot(dv);
@@ -450,7 +450,7 @@ CollisionResult::e CollisionEquations::sphere_collide_sphere(
 
   if (d < 0.0f) {
     //imaginary root
-    return CollisionResult::e::Avoided;
+    return CollisionResult::Avoided;
   }
 
   if (a == 0.0f) {
@@ -458,16 +458,16 @@ CollisionResult::e CollisionEquations::sphere_collide_sphere(
       //divisor is zero.  Return that we avoided the collision
       //to avoid blowing up.
       t = 1.0f;
-      return CollisionResult::e::Avoided;
+      return CollisionResult::Avoided;
     }
     //when a is zero we have a linear equation and can't do the quadratic equation.
     // v^2t^2 + 2pv*t + p^2 - r^2 = 0
     t = (rr - pp) / (2 * pv);
     if (t >= 0.0f && t <= 1.0f) {
-      return CollisionResult::e::Collided;
+      return CollisionResult::Collided;
     }
     else {
-      return CollisionResult::e::Avoided;
+      return CollisionResult::Avoided;
     }
   }
 
@@ -485,14 +485,14 @@ CollisionResult::e CollisionEquations::sphere_collide_sphere(
 
   if (root_1 >= 0.0f && root_1 <= 1.0f) {
     t = root_1;
-    return CollisionResult::e::Collided;
+    return CollisionResult::Collided;
   }
   if (root_2 >= 0.0f && root_2 <= 1.0f) {
     t = root_2;
-    return CollisionResult::e::Collided;
+    return CollisionResult::Collided;
   }
 
-  return CollisionResult::e::Avoided;
+  return CollisionResult::Avoided;
 }
 bool Ceq::triangleAabbTest(const vec3* vertices, const vec3& aabbMin, const vec3& aabbMax) {
   //

@@ -256,7 +256,7 @@ private:
 };
 class UiGlyph : public UiImage {
 public:
-  static std::shared_ptr<UiGlyph> UiGlyph::create(uint32_t iChar);
+  static std::shared_ptr<UiGlyph> create(uint32_t iChar);
   UiGlyph() {}
   virtual ~UiGlyph() override {}
   virtual void performLayout(std::shared_ptr<UiScreen> s, bool bForce) override;
@@ -581,7 +581,7 @@ public:
   virtual ~UiWindow() override {}
   static std::shared_ptr<UiWindow> create(std::shared_ptr<UiWindowSkin> pSkin);
   virtual void init() override;
-  virtual void update(std::shared_ptr<InputManager> pFingers);
+  virtual void update(std::shared_ptr<InputManager> pFingers) override;
   virtual void performLayout(std::shared_ptr<UiScreen> s, bool bForce) override;
   virtual bool pick(std::shared_ptr<InputManager> fingers, std::shared_ptr<UiScreen> pscreen) override;
   void enableVScrollbar();//Call this to scroll contents
@@ -666,7 +666,7 @@ public:
   std::shared_ptr<GraphicsWindow> getWindow();
 
 private:
-  std::unique_ptr<UiScreen_Internal> _pint = nullptr;
+  std::unique_ptr<UiScreen_Internal> _pint = {nullptr};
   void updateMesh();
   void updateLayout(std::shared_ptr<InputManager> pInputManager);
 };

@@ -22,13 +22,13 @@ public:
   WorldObj() {}
   virtual ~WorldObj() override {}
 
-  static std::shared_ptr<WorldObj> WorldObj::create(std::string mobFolder, uint32_t typeID, std::string friendlyName, std::string strBox, std::string strPlace);
+  static std::shared_ptr<WorldObj> create(std::string mobFolder, uint32_t typeID, std::string friendlyName, std::string strBox, std::string strPlace);
   string_t getFriendlyName() { return _strFriendlyName; }
   string_t getMobName() { return _strMobName; }
   uint32_t getTypeId() { return _iTypeId; }
   std::shared_ptr<ModelSpec> getOrLoadModel();
 
-  std::shared_ptr<ModelNode> createInstance(std::shared_ptr<World25> w, vec3& r3Pos);
+  std::shared_ptr<ModelNode> createInstance(std::shared_ptr<World25> w, const vec3& r3Pos);
 private:
   vec3 _vBoxFit;
   string_t _strMobName;

@@ -31,7 +31,7 @@ public:
   virtual ~PhysicsNode();
 
   std::shared_ptr<GridManifold> getManifold() { return _pManifold; }
-  void setTemps(vec3& vAccel, uint64_t frameId);
+  void setTemps(const vec3& vel, uint64_t frameId);
   void setTempPos(vec3& v) { _vTempPos = v; }
   void setTempVelocity(vec3& v) { _vTempVel = v; }
   //  void setTempAccelleration(vec3& v) { _vTempAcc = v; }
@@ -61,7 +61,7 @@ public:
   // CellManifold* getManifold() { return _pCellManifold; }
   Box3f* getSpeedbox() { return _pSpeedbox; }
   vec3 getVelocity() { return _vVelocity; }
-  void setVelocity(vec3& v);
+  void setVelocity(const vec3& v);
   //vec3 getAccelleration() { return _vAccel; }
   //void setAccelleration(vec3& v) { _vAccel = v; }
   void validateSanePhysics();

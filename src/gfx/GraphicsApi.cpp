@@ -1,4 +1,4 @@
-#include "../base/oglErr.h"
+#include "../base/OglErr.h"
 #include "../base/Logger.h"
 #include "../base/EngineConfig.h"
 #include "../base/Gu.h"
@@ -195,9 +195,19 @@ SDL_Window* GraphicsApi::makeSDLWindow(string_t windowTitle, int render_system, 
   title = "";
 #else
 #ifdef BR2_OS_WINDOWS
-
   //SDL_WINDOW_OPENGL | SDL_WINDOW_VULKAN;
-
+  if (bFullscreen) {
+    x = 0; y = 0;
+    w = 1920; h = 1080;
+    flags = render_system;
+  }
+  else {
+    x = 100, y = 100, w = 800, h = 600, flags = (show ? SDL_WINDOW_SHOWN : SDL_WINDOW_HIDDEN) | render_system | SDL_WINDOW_RESIZABLE;
+  }
+  title = windowTitle;
+#else
+#ifdef BR2_OS_LINUX
+  //SDL_WINDOW_OPENGL | SDL_WINDOW_VULKAN;
   if (bFullscreen) {
     x = 0; y = 0;
     w = 1920; h = 1080;
@@ -209,6 +219,7 @@ SDL_Window* GraphicsApi::makeSDLWindow(string_t windowTitle, int render_system, 
   title = windowTitle;
 #else
   OS_NOT_SUPPORTED_ERROR
+#endif
 #endif
 #endif
 

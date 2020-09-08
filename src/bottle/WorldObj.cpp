@@ -18,7 +18,7 @@ std::shared_ptr<WorldObj> WorldObj::create(std::string mobFolder, uint32_t typeI
 
   return ob;
 }
-std::shared_ptr<ModelNode> WorldObj::createInstance(std::shared_ptr<World25> pWorld, vec3& r3Pos) {
+std::shared_ptr<ModelNode> WorldObj::createInstance(std::shared_ptr<World25> pWorld, const vec3& r3Pos) {
   std::shared_ptr<ModelSpec> ms = getOrLoadModel();
   if (ms != nullptr) {
     vec3 vScale = boxFit(ms, _vBoxFit);
@@ -146,7 +146,7 @@ vec3 WorldObj::parseBoxFit(std::string strBox) {
 std::array<std::vector<PlaceMode::e>, W25SidePlace::e::Count> WorldObj::parsePlacementOptions(std::string strPlace) {
   //Muckass parse routine, but whatever
   std::array<std::vector<PlaceMode::e>, W25SidePlace::e::Count> options;
-  PlaceMode::e eMode = PlaceMode::e::None;
+  PlaceMode::e eMode = PlaceMode::e::NoPlaceMode;
   std::vector<std::string> sPlace = StringUtil::split(strPlace, std::vector<char>{','});
   W25SidePlace::e place = W25SidePlace::e::Top;
 
@@ -156,7 +156,7 @@ std::array<std::vector<PlaceMode::e>, W25SidePlace::e::Count> WorldObj::parsePla
 
     s = StringUtil::trim(s);
     if (s.length() > 0) {
-      if (s[0] == 'n') { eMode = PlaceMode::e::None; }
+      if (s[0] == 'n') { eMode = PlaceMode::e::NoPlaceMode; }
       else if (s[0] == 'o') { eMode = PlaceMode::e::Orient; }
 
       else if (s[0] == 'T') { place = W25SidePlace::e::Top; }

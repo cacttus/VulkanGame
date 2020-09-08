@@ -19,7 +19,7 @@ public:
 
   void init();
   std::unique_ptr<W25MeshConf>& getW25Config(W25Geom i) {
-    AssertOrThrow2(i < 256);
+    AssertOrThrow2((int)i < 256);
     return _pConfigs[i];
   }
   static W25Geom confBit3(int iBlockVert, int s1, int s2, int s3, float(&kernel)[27]);
@@ -122,7 +122,7 @@ public:
     AssertOrThrow2(i >= 0 && i < c_nSides);
     return _planeNormals[i];
   }
-  void raycastTris(Ray_t* ra, vec3& vOrigin, float fCellWidth, float fCellHeight);
+  void raycastTris(Ray_t* ra, const vec3& vOrigin, float fCellWidth, float fCellHeight);
   size_t getNumTotalVerts() { return _nTotalVerts; }
 
 private:

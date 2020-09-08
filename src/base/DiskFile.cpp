@@ -74,7 +74,7 @@ RetCode DiskFile::create(string_t szloc, size_t offset) {
 *    @fn openForRead()
 *    @brief Open file for read storing the pointer to the file.
 */
-RetCode DiskFile::openForRead(DiskLoc& szloc) {
+RetCode DiskFile::openForRead(const DiskLoc& szloc) {
   string_t l;
 
   if ((state != file_closed) && (state != file_created) && (state != file_empty)) {
@@ -124,7 +124,7 @@ RetCode DiskFile::openForRead(DiskLoc& szloc) {
 *    @fn openForWrite()
 *    @brief Open file for write storing state in pointer.
 */
-RetCode DiskFile::openForWrite(DiskLoc& szloc, FileWriteMode::e mode) {
+RetCode DiskFile::openForWrite(const DiskLoc& szloc, FileWriteMode::e mode) {
   string_t l;
 
   if ((state != file_closed) && (state != file_created) && (state != file_empty)) {

@@ -252,7 +252,7 @@ void WorldCellFile::writeBytes(std::vector<char>& buf, char* dat, size_t datSize
   for (size_t i = 0; i < datSize; i++) {
     buf.push_back(valBuf[i]);
   }
-  delete valBuf;
+  delete [] valBuf;
 }
 void WorldCellFile::readBytes(std::vector<char>& buf, uint32_t& __out_ iOff, char* __out_ ft, size_t outSize) {
   int rdSiz = outSize;

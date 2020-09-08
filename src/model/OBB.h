@@ -20,7 +20,7 @@ public:
   virtual ~OBB() override;
   void setInvalid() { _bInvalid = true; }
   bool getInvalid() { return  _bInvalid; }
-  void calc(mat4& mat, const Box3f* base);
+  void calc(const mat4& mat, const Box3f* base);
   // void drawForward(UtilMeshInline& mi);
   vec3* getVerts() { return _verts; }
 

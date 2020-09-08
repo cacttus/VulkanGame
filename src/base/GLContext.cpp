@@ -13,7 +13,7 @@
 #include "../base/SoundCache.h"
 #include "../base/Logger.h"
 #include "../base/SDLUtils.h"
-#include "../base/oglErr.h"
+#include "../base/OglErr.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/EngineConfig.h"
 #include "../math/MathAll.h"

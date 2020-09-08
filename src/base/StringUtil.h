@@ -31,10 +31,10 @@ public:
   static string_t lowercase(const char* _in);
   static string_t uppercase(const char* _in);
   static std::vector<string_t> split(string_t in, char del);
-  static void split(string_t in, char del, std::vector<string_t>& __out_ ret);
-  static std::vector<string_t> split(string_t in, std::vector<char>& dels);
-  static void split(string_t __in_ in, const std::vector<char>& __in_ dels, std::vector<string_t>& __out_ ret);
-  static string_t::size_type findFirstOf(string_t sin, std::vector<char>& chars);
+  static void split(const string_t in, char del, std::vector<string_t>& __out_ ret);
+  static std::vector<string_t> split(const string_t in, const std::vector<char>& dels);
+  static void split(const string_t __in_ in, const std::vector<char>& __in_ dels, std::vector<string_t>& __out_ ret);
+  static string_t::size_type findFirstOf(string_t sin, const std::vector<char>& chars);
   static bool isWspaceEx(int c);
   static bool isNewline(int c);
   static string_t stripDoubleQuotes(string_t lc);

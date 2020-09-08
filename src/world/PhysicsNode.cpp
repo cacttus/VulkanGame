@@ -28,7 +28,7 @@ PhysicsNode::~PhysicsNode() {
 void PhysicsNode::init() {
   SceneNode::init();
 }
-void PhysicsNode::setVelocity(vec3& v) {
+void PhysicsNode::setVelocity(const vec3& v) {
   _vVelocity = v;
   //Don't update anything here. we set this often.
 }
@@ -150,7 +150,7 @@ void PhysicsNode::calcSpeedBox() {
   pSpeedbox->validateBoundBox();
 }
 
-void PhysicsNode::setTemps(vec3& vVel, uint64_t frameId) {
+void PhysicsNode::setTemps(const vec3& vVel, uint64_t frameId) {
   //Last Pos
   _vHistoryPos.push_back(getPos());
   if ((int)_vHistoryPos.size() > c_vHistoryPosSize) {

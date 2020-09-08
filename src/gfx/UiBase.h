@@ -4,7 +4,7 @@
 *    @date February 17, 2018
 *    @author MetalMario971
 *
-*    © 2018
+*    ï¿½ 2018
 *
 *
 */
@@ -61,12 +61,12 @@ class uDim : public VirtualMemory {
 public:
   uDim() {}
   uDim(std::string cssSize);
-  uDim(char* cssSize);
+  uDim(const char* cssSize);
   uDim(float val, UiDimUnit::e eUnit);
   virtual ~uDim() override {}
 
   uDim& operator=(std::string str);
-  uDim& operator=(char* str);
+  uDim& operator=(const char* str);
   uDim& operator=(float f);
   uDim& operator=(int f);
   uDim& operator=(const uDim& rhs);

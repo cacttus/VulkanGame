@@ -101,7 +101,7 @@ namespace BR2 {
 #define VEC3_MAX (Vec3f(FLT_MAX,FLT_MAX,FLT_MAX))
 //////////////////////////////////////////////////////////////////////////
 
-namespace CollisionResult { typedef enum { Stuck, Avoided, Collided } e; }
+enum class CollisionResult { Stuck, Avoided, Collided };
 namespace box_point_index { typedef enum { box_nbr, box_nbl, box_ntr, box_ntl, box_fbr, box_fbl, box_ftr, box_ftl }e; }
 namespace box_plane_index { typedef enum { bp_near, bp_far, bp_left, bp_right, bp_top, bp_bottom }e; }
 //2018/1/22 changed thiss

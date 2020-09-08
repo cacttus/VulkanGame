@@ -23,8 +23,8 @@ public:
 
   virtual void init(int32_t iWidth, int32_t iHeight, std::shared_ptr<BufferRenderTarget> sharedDepth, std::shared_ptr<BufferRenderTarget> sharedPick) override;
   std::shared_ptr<BufferRenderTarget> getTarget(RenderTargetType::e eType);
-  virtual void beginRender();
-  virtual void endRender();
+  virtual void beginRender() override;
+  virtual void endRender() override;
   int getNumNonDepthTargets();
 private:
   bool _bMultisample;

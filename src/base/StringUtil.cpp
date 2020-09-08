@@ -17,7 +17,7 @@ StringUtil::StringUtil() {
 }
 StringUtil::~StringUtil() {
 }
-int32_t StringUtil::compare(const string_t a, const  string_t b) {
+int32_t StringUtil::compare(const string_t a, const string_t b) {
   return a.compare(b);
 }
 bool StringUtil::charIsLetterOrNumber(char c) {
@@ -87,7 +87,7 @@ string_t StringUtil::uppercase(const char* _in) {
   in = out;
   return in;
 }
-bool StringUtil::isWspaceEx(int c)//iswspace with newlines and unprintable chars
+bool StringUtil::isWspaceEx(int c)  //iswspace with newlines and unprintable chars
 {
   return (iswspace(c) || isNewline(c) || (c == '\0'));
 }
@@ -196,7 +196,8 @@ string_t StringUtil::getPaddedNumber(int32_t number, int32_t maxNumberOfChars, c
   if (rightAlignNumber == (bool)true) {
     snprintf(cbuf, maxNumberOfChars + 1, "%0*d", maxNumberOfChars, number);
   }
-  else {    //right pad
+  else {  
+    //right pad
     snprintf(cbuf, maxNumberOfChars + 1, "%-0*d", maxNumberOfChars, number);
   }
 
@@ -294,7 +295,6 @@ string_t StringUtil::addCommasToNumber(string_t __in_ str) {
   // we use >=1 instead of -1 because we don't want to append commas to
   // the beginning fo the string
   for (int n = (int)str.length() - 1, ix = 0; n >= 1; n--, ix++) {
-
     ret = std::string(str[n], 1) + ret;
     if (ix == 2) {
       ret = string_t(",") + ret;
@@ -331,35 +331,44 @@ bool StringUtil::isChar(char c) {
 }
 bool StringUtil::isWs(int c) {
   return (
-    (c == ' ') ||
-    (c == '\t') ||
-    (c == '\r') ||
-    (c == '\n')
-    );
+      (c == ' ') ||
+      (c == '\t') ||
+      (c == '\r') ||
+      (c == '\n'));
 }
 bool StringUtil::isWsExceptNewline(char c) {
   return (
-    (c == ' ') ||
-    (c == '\t') ||
-    (c == '\r')
-    );
+      (c == ' ') ||
+      (c == '\t') ||
+      (c == '\r'));
 }
 string_t StringUtil::getEscapedCharLiteral(char c) {
   if (c <= 8) {
     return TypeConv::intToStr(c);
   }
 
-  if (c == '\a') return "\a";
-  else if (c == '\b') return "\b";
-  else if (c == '\t') return "\t";
-  else if (c == '\n') return "\n";
-  else if (c == '\v') return "\v";
-  else if (c == '\f') return "\f";
-  else if (c == '\r') return "\r";
-  else if (c == '\"') return "\"";
-  else if (c == '\'') return "\'";
-  else if (c == '\?') return "\?";
-  else if (c == '\\') return "\\";
+  if (c == '\a')
+    return "\a";
+  else if (c == '\b')
+    return "\b";
+  else if (c == '\t')
+    return "\t";
+  else if (c == '\n')
+    return "\n";
+  else if (c == '\v')
+    return "\v";
+  else if (c == '\f')
+    return "\f";
+  else if (c == '\r')
+    return "\r";
+  else if (c == '\"')
+    return "\"";
+  else if (c == '\'')
+    return "\'";
+  else if (c == '\?')
+    return "\?";
+  else if (c == '\\')
+    return "\\";
 
   return Stz "Invalid escape char '" + c + "'";
   //if(c=='\x') return "\a";
@@ -371,12 +380,12 @@ string_t StringUtil::getEscapedCharLiteral(char c) {
 *  @fn
 *  @brief Split the string with a delim.
 */
-std::vector<string_t> StringUtil::split(string_t in, char del) {
+std::vector<string_t> StringUtil::split(const string_t in, char del) {
   std::vector<string_t> ret;
   split(in, del, ret);
   return ret;
 }
-void StringUtil::split(string_t in, char del, std::vector<string_t>& __out_ ret) {
+void StringUtil::split(const string_t in, char del, std::vector<string_t>& __out_ ret) {
   string_t tbuf = "";
   for (size_t n = 0; n < in.length(); ++n) {
     if (in[n] == del) {
@@ -389,7 +398,7 @@ void StringUtil::split(string_t in, char del, std::vector<string_t>& __out_ ret)
   if (tbuf.length())
     ret.push_back(tbuf);
 }
-std::vector<string_t> StringUtil::split(string_t in, std::vector<char>& dels) {
+std::vector<string_t> StringUtil::split(const string_t in, const std::vector<char>& dels) {
   std::vector<string_t> v;
   split(in, dels, v);
   return v;
@@ -414,7 +423,7 @@ void StringUtil::split(string_t __in_ in, const std::vector<char>& __in_ dels, s
     ret.push_back(tbuf);
   }
 }
-string_t::size_type StringUtil::findFirstOf(string_t sin, std::vector<char>& chars) {
+string_t::size_type StringUtil::findFirstOf(string_t sin, const std::vector<char>& chars) {
   string_t::size_type ret = string_t::npos;
   for (size_t i = 0; i < chars.size(); ++i) {
     ret = sin.find(chars[i]);
@@ -478,14 +487,14 @@ string_t StringUtil::format(string_t aft, ...) {
 string_t StringUtil::formatVa(string_t aft, va_list args) {
   string_t strRet = "";
   //he vsnprintf function returns the number of characters written, not counting the terminating null character.
-  int nCount = _vsnprintf(nullptr, 0, aft.c_str(), args);
+  int nCount = vsnprintf(nullptr, 0, aft.c_str(), args);
 
   if (nCount == 0) {
     //Empty, no format
   }
   else {
     std::unique_ptr<char[]> tmp(new char[nCount]);
-    _vsnprintf(tmp.get(), nCount, aft.c_str(), args);
+    vsnprintf(tmp.get(), nCount, aft.c_str(), args);
     strRet = string_t((char*)tmp.get(), nCount);
   }
 
@@ -530,12 +539,9 @@ string_t StringUtil::tabify(string_t str_to_tabify, int number_of_tabs, bool use
   return ret;
 }
 string_t StringUtil::wStrToStr(std::wstring wstr) {
-  using convert_type = std::codecvt<wchar_t, char, std::mbstate_t>;
-  std::wstring_convert<convert_type, wchar_t> converter;
-
-  //use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
-  std::string str = converter.to_bytes(wstr);
-  return str;
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  std::string narrow = converter.to_bytes(wstr);
+  return narrow;
 }
 wstring_t StringUtil::strToWStr(std::string str) {
   //oh..stackoverflow
@@ -545,4 +551,4 @@ wstring_t StringUtil::strToWStr(std::string str) {
   return wide;
 }
 
-}//ns BR2
+}  // namespace BR2

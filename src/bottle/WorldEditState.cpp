@@ -32,10 +32,10 @@ void WorldEditState::setHoverVertex(WorldCell* pc, vec3& normal, vec3& point, in
     _vHoverPt = point;
     _iHoverVertex = i;
 
-    if (GetAsyncKeyState(VK_F9) & 0x8000) {
-      int nnn = 0;
-      nnn++;
-    }
+    // if (GetAsyncKeyState(VK_F9) & 0x8000) {
+    //   int nnn = 0;
+    //   nnn++;
+    // }
 
     //Box
     Box3f* bnew = addHoverBox(pc->getBoundBoxBvh());

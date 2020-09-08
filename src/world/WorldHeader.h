@@ -16,9 +16,9 @@ namespace BR2 {
 
 //Do not change order
 namespace PhysicsGridSide { typedef enum { gL, gR, gB, gT, gA, gF, gC } e; }
-namespace PhysicsShapeType { typedef enum { None, Hull, Sphere, AABox } e; }
+namespace PhysicsShapeType { typedef enum { NoShape, Hull, Sphere, AABox } e; }
 
-enum class PathEasing { None, EaseIn, EaseOut, EaseInAndOut };
+enum class PathEasing { NoEasing, EaseIn, EaseOut, EaseInAndOut };
 
 class BoxCollision;
 class PhysicsNode;
@@ -47,7 +47,7 @@ public:
   uint64_t _frameID;    // - Checks weather this possibility was tested.
   int32_t _nStuck;
   int32_t _iType; // plane=0 edge=1 pt=2
-  CollisionResult::e _cx, _cy, _cz;
+  CollisionResult _cx, _cy, _cz;
 
   int _ax_t0;//box3 SAT axis
 

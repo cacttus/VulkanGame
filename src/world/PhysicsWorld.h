@@ -28,7 +28,7 @@ public:
   PhysicsWorld(std::shared_ptr<Scene> pscene);
   virtual ~PhysicsWorld() override;
 
-  static std::shared_ptr<PhysicsWorld> create(std::shared_ptr<Scene>, float fNodeWidth, float fNodeHeight, vec3& vUp,
+  static std::shared_ptr<PhysicsWorld> create(std::shared_ptr<Scene>, float fNodeWidth, float fNodeHeight, const vec3& vUp,
       MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
       MpInt mpNodesY, uint32_t iGridCountLimit);
 
@@ -66,14 +66,14 @@ public:
   void debugMakeSureNoDupes(const ivec3& vv);
 
   std::shared_ptr<PhysicsNode> findNode(string_t specName);
-  template < typename Tx > bool findNode(std::shared_ptr<Tx>& __out_ node) {
-    for (auto a : _mapObjects) {
-      if (a.second->findNode(node)) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // template < typename Tx > bool findNode(std::shared_ptr<Tx>& __out_ node) {
+  //   for (auto a : _mapObjects) {
+  //     if (a.second->findNode(node)) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
 private:
   float _fNodeWidth = 0;
@@ -93,7 +93,7 @@ private:
   std::shared_ptr<RenderBucket> _pRenderBucket = nullptr;
   std::shared_ptr<Scene> _pScene = nullptr;
 
-  virtual void init(float fNodeWidth, float fNodeHeight, vec3& vUp,
+  virtual void init(float fNodeWidth, float fNodeHeight,const vec3& vUp,
     MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
     MpInt mpNodesY, uint32_t iGridCountLimit);
   virtual std::shared_ptr<PhysicsGrid> loadGrid(const ivec3& pos);
@@ -113,7 +113,7 @@ private:
   bool checkMoved(vec3& p_last, vec3& p_cur, vec3& v_cur);
   void unstick_if_moved(std::shared_ptr<PhysicsNode> obA, std::shared_ptr<PhysicsNode> obB, Box3f* in_bA, Box3f* in_bB,
     vec3& velA_new, vec3& velB_new, float move_t);
-  void unstick_ob_v2(vec3& ob_in_p, vec3& ob_in_v, Box3f* boxA, Box3f* boxB,
+  void unstick_ob_v2(vec3& ob_in_p, const vec3& ob_in_v, Box3f* boxA, Box3f* boxB,
     float move_t, float ob_friction, vec3& __out_ out_new_v);
   void calc_obj_manifold(std::shared_ptr<PhysicsNode> ob);
   void bb_resolve_setup_data(std::shared_ptr<PhysicsNode> obA, std::shared_ptr<PhysicsNode> obB, vec3& v_last_a, vec3& v_last_b,

@@ -29,7 +29,7 @@ public:
   BinaryFile(string_t file_version, size_t buffer_size);
   virtual ~BinaryFile() override;
 
-  void reallocBuffer(size_t i) { _data.alloca(i); }
+  void reallocBuffer(size_t i) { _data._alloca(i); }
 
   size_t pos() { return iFilePos; }
   int8_t at();

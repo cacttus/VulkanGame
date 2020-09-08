@@ -8,7 +8,7 @@ OBB::OBB() {
 OBB::~OBB() {
 
 }
-void OBB::calc(mat4& mat, const Box3f* base) {
+void OBB::calc(const mat4& mat, const Box3f* base) {
   //calc transform.
   base->getPoints(_verts, 8);
   for (int i = 0; i < 8; ++i) {

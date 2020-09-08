@@ -142,7 +142,8 @@ std::shared_ptr<LightNodePoint> LightNodePoint::create(string_t name, bool bhasS
 }
 std::shared_ptr<LightNodePoint> LightNodePoint::create(string_t name, vec3&& pos, float radius, vec4&& color, string_t action, bool bShadowsEnabled) {
   std::shared_ptr<LightNodePoint> lp = LightNodePoint::create(name, bShadowsEnabled);
-  lp->update(0.0f, std::map<Hash32, std::shared_ptr<Animator>>());
+  std::map<Hash32, std::shared_ptr<Animator>> mp;
+  lp->update(0.0f, mp);
   lp->setPos(std::move(pos));
   lp->setLightRadius(radius);
   lp->setLightColor(std::move(color));

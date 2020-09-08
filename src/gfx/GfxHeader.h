@@ -180,6 +180,8 @@ typedef enum {
 //int32_t _charsetMax = 0x7E;    //126
 #define GFX_ASCII_FONT_RANGE_END (0xFF)
 
+
+
 typedef enum {
   GFX_ASCII_FONT_QUALITY_SMOOTH,
   GFX_ASCII_FONT_QUALITY_EXACT,
@@ -205,6 +207,7 @@ namespace UiDimUnit { typedef enum { Percent, Pixel, Auto/*, Initial*/ } e; }
 namespace UiOverflowMode { typedef enum { Show, Hide } e; }
 namespace UiDisplayMode { typedef enum { InlineWrap, Block, InlineNoWrap } e; }//Wrap: elements on same line and they wrap at the end of container, block - always wrap, inlinenowrap - inline and expand past container
 namespace UiAutoSizeMode { typedef enum { Fixed, Grow, Shrink, GrowAndShrink } e; }
+enum class DrawMode { Point, Line, Solid };
 
 //FWDDCL
 class ShaderSubProgram;

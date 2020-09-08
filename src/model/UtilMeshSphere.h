@@ -16,7 +16,7 @@ namespace BR2 {
 */
 class UtilMeshSphere : public UtilMesh {
 public:
-  UtilMeshSphere(std::shared_ptr<GLContext> ctx, float radius, vec3& vOffset, vec4& vColor, int32_t nSlices, int32_t nStacks);
+  UtilMeshSphere(std::shared_ptr<GLContext> ctx, float radius, const vec3& vOffset, const vec4& vColor, int32_t nSlices, int32_t nStacks);
   virtual ~UtilMeshSphere() override;
 
   virtual void generate() override;

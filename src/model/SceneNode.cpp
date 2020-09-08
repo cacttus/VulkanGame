@@ -47,19 +47,19 @@ void BaseSpec::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeVec3(std::move(_pBox->_max));
 }
 void BaseSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
-  fb->readString(std::move(_strName));
+  fb->readString(_strName);
   _iNameHashed = STRHASH(_strName);
-  fb->readString(std::move(_strParentName));
+  fb->readString(_strParentName);
   int32_t pt;
   fb->readInt32(pt);
-  _eParentType = (ParentType::e)pt;
-  fb->readMat4(std::move(_mBind));
+  _eParentType = (ParentType)pt;
+  fb->readMat4(_mBind);
   _mInvBind = _mBind.inverseOf();
-  fb->readMat4(std::move(_mParentInverse));
+  fb->readMat4(_mParentInverse);
 
   _pBox = new Box3f();
-  fb->readVec3(std::move(_pBox->_min));
-  fb->readVec3(std::move(_pBox->_max));
+  fb->readVec3(_pBox->_min);
+  fb->readVec3(_pBox->_max);
 }
 SceneNode::SceneNode(string_t name, std::shared_ptr<BaseSpec> ps) : TreeNode(name) {
   _pSpec = ps;
@@ -108,7 +108,7 @@ void SceneNode::setViewNormal(const vec3& p, bool normalize) {
   }
   _bTransformChanged = true;
 }
-void SceneNode::setScale(vec3& v) {
+void SceneNode::setScale(const vec3& v) {
   _vScale = v;
   _bTransformChanged = true;
 }
@@ -118,7 +118,7 @@ vec3 SceneNode::getScale() {
 bool SceneNode::getTransformChanged() {
   return _bTransformChanged;
 }
-void SceneNode::setRot(vec4&& axis_angle_radians) {
+void SceneNode::setRot(const vec4&& axis_angle_radians) {
   _vRotationNormal = axis_angle_radians.xyz();
   _fRotation = axis_angle_radians.w;
 }
@@ -157,7 +157,7 @@ Hash32 SceneNode::getSpecNameHashed() {
 vec3 SceneNode::getVelocity() {
   return _velocity;
 }
-void SceneNode::setVelocity(vec3& vel) {
+void SceneNode::setVelocity(const vec3& vel) {
   _velocity = vel;
 }
 void SceneNode::setBoneParent(std::shared_ptr<BoneNode> bn) {
@@ -319,9 +319,9 @@ void SceneNode::applyParent() {
       }
     }
     else if (
-      getSpec()->getParentType() == ParentType::e::Armature ||
-      getSpec()->getParentType() == ParentType::e::Object ||
-      getSpec()->getParentType() == ParentType::e::None) {
+      getSpec()->getParentType() == ParentType::Armature ||
+      getSpec()->getParentType() == ParentType::Object ||
+      getSpec()->getParentType() == ParentType::NoParent) {
 
       if (isSkinnedMesh()) {
         //Setting this to ident here so we do't get confused.
@@ -335,7 +335,7 @@ void SceneNode::applyParent() {
         }
       }
     }
-    else if (getSpec()->getParentType() == ParentType::e::Bone) {
+    else if (getSpec()->getParentType() == ParentType::Bone) {
       if (getBoneParent() != nullptr) {
         static int n = 0;
         if (n == 0) {

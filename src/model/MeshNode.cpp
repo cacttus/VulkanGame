@@ -228,7 +228,7 @@ void MeshNode::getMeshLocalMatrix(mat4& __out_ mat_mesh) {
     nnn++;
     mat_mesh = mat4::identity();
   }
-  if (mg->getSpec()->getParentType() == ParentType::e::Bone) {
+  if (mg->getSpec()->getParentType() == ParentType::Bone) {
     static int n = 0;
     if (n == 0) {
       mat_mesh = mg->getLocal();// * mat_model_world

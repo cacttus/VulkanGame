@@ -9,7 +9,8 @@
 
 #include "../gfx/GraphicsContext.h"
 #include "../base/SDLIncludes.h"
-#include "../base/SDLGLIncludes.h"
+//#include "../base/SDLGLIncludes.h"
+
 namespace BR2 {
 /**
 *  @class GLProfile

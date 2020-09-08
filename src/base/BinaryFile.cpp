@@ -14,7 +14,7 @@ BinaryFile::BinaryFile(string_t file_version) {
   _strFileVersion = file_version;
 }
 BinaryFile::BinaryFile(string_t file_version, size_t buffer_size) : BinaryFile(file_version) {
-  _data.alloca(buffer_size);
+  _data._alloca(buffer_size);
 }
 BinaryFile::~BinaryFile() {
   _data.dealloc();
@@ -167,7 +167,7 @@ bool BinaryFile::loadFromDisk(string_t fileLoc, size_t offset, int64_t length, b
 
   AssertOrThrow2(size <= length);
 
-  _data.alloca(length + 1);
+  _data._alloca(length + 1);
   memcpy(_data.ptr(), bufRet, length);
   FileSystem::SDLFileFree(bufRet);
 

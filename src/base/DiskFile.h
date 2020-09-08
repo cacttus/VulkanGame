@@ -29,10 +29,10 @@ public:
   virtual RetCode read(char* buf, size_t len, size_t buflen = memsize_max, size_t offset = memsize_max) override;  // read into a buffer
   virtual RetCode write(const char* bytes, size_t len, size_t offset = memsize_max) override;
 
-  RetCode openForRead(DiskLoc& szloc);
+  RetCode openForRead(const DiskLoc& szloc);
   //  RetCode read( char* buf, size_t len, size_t offset, size_t buflen=-1 ); // read from an offset into a buffer
   RetCode readTo(char* buf, const string_t& delims, size_t buflen);  // - read to a delimiter
-  RetCode openForWrite(DiskLoc& szloc, FileWriteMode::e mode = FileWriteMode::e::Truncate);
+  RetCode openForWrite(const DiskLoc& szloc, FileWriteMode::e mode = FileWriteMode::e::Truncate);
 
   RetCode writeStrWithLen(const string_t& str);  // - Write a string with [len][str..]
   RetCode writeStrText(const string_t& str);     // - Write a string with [len][str..]

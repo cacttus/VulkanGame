@@ -43,7 +43,7 @@ void Goal25MoveTo::execute(float delta) {
                 }
                 _iLastHopCount = 0;
 
-                //**SO - This is if we are using AI -
+                // *SO - This is if we are using AI -
                 //For now circumvent any path finding and just use linear movement.
                 //pWorldGrid->getShortestPath(pCurrentQuad, _pDestinationQuad, pTargetQuad, _iLastHopCount);
                 pTargetQuad = _pDestinationQuad;

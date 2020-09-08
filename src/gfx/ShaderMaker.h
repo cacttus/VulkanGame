@@ -16,12 +16,13 @@ namespace BR2 {
 */
 class ShaderMaker : public VirtualMemory {
   typedef std::map<std::shared_ptr<VertexFormat>, std::shared_ptr<ShaderBase>> ShaderMap;
+
 public:
   ShaderMaker();
   virtual ~ShaderMaker() override;
 
   void shaderBound(std::shared_ptr<ShaderBase> sb);
-  std::shared_ptr<ShaderBase> makeShader(std::vector<string_t>& vecFiles);
+  std::shared_ptr<ShaderBase> makeShader(const std::vector<string_t>& vecFiles);
 
   std::shared_ptr<ShaderUniformBlock> getUniformBlockByName(string_t& blockName);
 
@@ -77,10 +78,10 @@ protected:
   ShaderMap _pGlassShaders;
   ShaderMap _pFlatShaders;
 
-  int32_t _maxWorkGroupDims[3];//Compute Shader Only
-  int32_t _maxBufferBindings;//Compute Shader Only
-  int32_t _iMaxSsboBindingIndex;//Compute Shader Only
-  void getComputeLimits();//Compute Shader Only
+  int32_t _maxWorkGroupDims[3];   //Compute Shader Only
+  int32_t _maxBufferBindings;     //Compute Shader Only
+  int32_t _iMaxSsboBindingIndex;  //Compute Shader Only
+  void getComputeLimits();        //Compute Shader Only
 
   bool checkForErrors(std::vector<std::shared_ptr<ShaderSubProgram>>& vx, std::shared_ptr<ShaderBase> sp);
   std::shared_ptr<ShaderSubProgram> getShaderSubProgramByLocation(DiskLoc l);
@@ -103,13 +104,11 @@ protected:
   std::shared_ptr<ShaderBase> makeProgram(std::vector<std::shared_ptr<ShaderSubProgram>>& vecpsp, string_t& programName);
   bool validateSubProgram(std::shared_ptr<ShaderSubProgram> prog, std::shared_ptr<ShaderBase> psp);
   // std::vector<t_string> getProgramErrorLog(ShaderProgram* sp);
-   //GLenum getGLShaderEnum(ShaderType::e type);
+  //GLenum getGLShaderEnum(ShaderType::e type);
   void parseUniformBlocks(std::shared_ptr<ShaderBase> sb);
   std::shared_ptr<ShaderBase> getValidShaderForVertexType(ShaderMap& shaders, std::shared_ptr<VertexFormat> fmt);
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

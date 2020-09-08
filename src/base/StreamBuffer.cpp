@@ -1,9 +1,7 @@
 #include "../base/StreamBuffer.h"
 
-
 namespace BR2 {
-StreamBuffer::StreamBuffer(int32_t chunkSizeBytes) :
-  _iChunkSizeBytes(chunkSizeBytes) {
+StreamBuffer::StreamBuffer(int32_t chunkSizeBytes) : _iChunkSizeBytes(chunkSizeBytes) {
   AssertOrThrow2(_iChunkSizeBytes > 0);
   clear();
 }
@@ -14,19 +12,17 @@ void StreamBuffer::clear() {
   _iAddCountBytes = 0;
   _data.dealloc();
 }
-RetCode StreamBuffer::write(
-  const char* bytes
-  , size_t len
-  , int32_t offset_in
-) {
+RetCode StreamBuffer::write(const char* bytes, size_t len, int32_t offset_in) {
   size_t offset;
 
   AssertOrThrow2((offset_in >= 0) || (offset_in == -1));
 
-  if (offset_in < 0)
+  if (offset_in < 0) {
     offset = _iAddCountBytes;
-  else
+  }
+  else {
     offset = offset_in;
+  }
 
   //Base Add
   _iAddCountBytes += len;
@@ -36,12 +32,7 @@ RetCode StreamBuffer::write(
 
   return GR_OK;
 }
-RetCode StreamBuffer::read(
-  char* buf
-  , size_t len
-  , int64_t buflen
-  , int32_t offset //Offset in BUF.
-) {
+RetCode StreamBuffer::read(char* buf, size_t len, int64_t buflen, int32_t offset) {
   AssertOrThrow2(_data.count() >= (offset + len));
   AssertOrThrow2(buflen >= (offset + len));
 
@@ -77,7 +68,7 @@ void StreamBuffer::checkToShrink() {
   int32_t m1 = _data.count() / _iChunkSizeBytes;
   size_t m2 = _data.count() / _iAddCountBytes;
 
-  if (m1 > m2&& m2 > 0) {
+  if (m1 > m2 && m2 > 0) {
     _data.realloca(m2 * _iChunkSizeBytes);
   }
 }
@@ -105,6 +96,4 @@ void StreamBuffer::copyFrom(StreamBuffer* rhs) {
   this->_data = rhs->_data;
 }
 
-
-
-}//ns Game
+}  // namespace BR2

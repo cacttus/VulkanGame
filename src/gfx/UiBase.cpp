@@ -137,7 +137,7 @@ UiDimUnit::e UiParser::parseLayoutUnit(std::string str, bool& bSuccess) {
   }
 }
 //////////////////////////////////////////////////////////////////////////
-uDim::uDim(char* str) : uDim(std::string(str)) {
+uDim::uDim(const char* str) : uDim(std::string(str)) {
   if (str == 0) {
     UiScreen::error("Passed 0 in for a char* string to uDim");
   }
@@ -182,7 +182,7 @@ uDim& uDim::operator=(std::string str) {
   setSize(std::string(str));
   return *this;
 }
-uDim& uDim::operator=(char* str) {
+uDim& uDim::operator=(const char* str) {
   //So the error here is int sometimes gets casted as an char*
   //we should probably fix this riht?
   AssertOrThrow2(str != nullptr);

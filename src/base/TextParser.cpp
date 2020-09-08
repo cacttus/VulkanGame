@@ -26,13 +26,13 @@ char TextParser::charAt() {
 }
 char TextParser::nextChar() {
   if (_ptrState == ptr_eof) {
-    throw new std::exception("Tried to get next Character from end of file.(nextChar)");
+    BRThrowException("Tried to get next Character from end of file.(nextChar)");
   }
   return *(_ptr + 1);
 }
 char TextParser::prevChar() {
   if (_ptrState == ptr_begin) {
-    throw new Exception("Tried to get Previous character from beginning of file.", __LINE__, __FILE__);
+    BRThrowException("Tried to get Previous character from beginning of file.");
   }
   return *(_ptr - 1);
 }
@@ -40,7 +40,7 @@ char TextParser::prevChar() {
 bool TextParser::seekPastChar(char c) {
   while (charAt() != c) {
     if (_ptrState == ptr_eof) {
-      throw new Exception("Tried to get next Character from end of file. (seekPastChar)", __LINE__, __FILE__);
+      BRThrowException("Tried to get next Character from end of file. (seekPastChar)");
     }
     inc();
   }
@@ -89,7 +89,7 @@ void TextParser::seekToChars(std::vector<char> cv) {
 */
 bool TextParser::inc() {
   if (_bEof) {
-    return eof(); //throw new Exception("Tried to parse file past EOF.",__LINE__,__FILE__); 
+    return eof();  //throw new Exception("Tried to parse file past EOF.",__LINE__,__FILE__);
   }
   _ptr++;
 
@@ -113,13 +113,12 @@ void TextParser::dec() {
 
   if (charAt() == '\r' && nextChar() == '\n') {
     _linenum--;
-    _charnum = 1; //UH.. Not valid, but how to tell?  we'd have to reverse parse until the next line
+    _charnum = 1;  //UH.. Not valid, but how to tell?  we'd have to reverse parse until the next line
   }
   if (_bEof) {
     _bEof = false;
   }
   _ptr--;
-
 
   _ptrState = ptr_seek;
 }
@@ -132,7 +131,8 @@ bool TextParser::eof() {
   if (_bEof) {
     return true;
   }
-  if (_bEof = (*(_ptr) == 0)) {
+  _bEof = (*(_ptr) == 0);
+  if (_bEof) {
     _ptrState = ptr_eof;
   }
   return _bEof;
@@ -143,13 +143,13 @@ bool TextParser::eof() {
 *    eats white space
 */
 void TextParser::eatws() {
-  while (charIsWs()) { 
+  while (charIsWs()) {
     inc();
   }
 }
 /**
 *    eatBlockComment()
-*    eats a /* comment.
+*    eats a "slash-star" comment.
 */
 void TextParser::eatBlockComment() {
   if (charAt() == '/' && nextChar() == '*') {
@@ -160,14 +160,14 @@ void TextParser::eatBlockComment() {
         }
         break;
       }
-      else if (inc()) return;
+      else if (inc())
+        return;
     }
   }
   else if (nextChar() == 0) {
     throw new Exception(" [Parser] Unmatched Comment Encountered at line ", __LINE__, __FILE__);
   }
 }
-
 
 /**
 *  @fn eatBody
@@ -214,4 +214,4 @@ void TextParser::eatLine(int32_t& lineCountToAddTo) {
   }
 }
 
-}//Ns Game
+}  // namespace BR2
