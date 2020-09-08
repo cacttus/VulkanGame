@@ -23,31 +23,9 @@ target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} vulkan ${OPENGL_gl_LIBRA
 
 if(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	message("Setting GCC/CLANG options.")
-
-#`sdl-config --libs` 
-    
     #set(CPP_FLAGS_GLOBAL " -W -Wall -pedantic -LSDL2 -pthread -static-libgcc -static-libstdc++")
-	  #set(CPP_FLAGS_GLOBAL " -LSDL2 ")
-    
-    #OpenGL
     set(CPP_FLAGS_GLOBAL " -pthread ")
 
     string(APPEND CMAKE_CXX_FLAGS_DEBUG ${CPP_FLAGS_GLOBAL} " -D_DEBUG")
     string(APPEND CMAKE_CXX_FLAGS_RELEASE ${CPP_FLAGS_GLOBAL})
-    #string(APPEND CMAKE_CXX_FLAGS ${CPP_FLAGS_GLOBAL})
-    #string(APPEND CMAKE_CXX_FLAGS_DEBUG " -O0")
-	
-    #string(APPEND CMAKE_CXX_FLAGS_RELEASE " -Ofast") #-Ofast is also -O3
-    
-    #Add options after file specification
-    #add_compile_options_config(RELEASE "sdl2-config" "--cflags" "--libs")
-    #add_compile_options_config(DEBUG "sdl2-config" "--cflags" "--libs")
-    #add_compile_options(sdl2-config --cflags --libs)
-    #add_compile_options("$<$<CONFIG:DEBUG>:sdl2-config --cflags --libs>")
-    #add_compile_options("$<$<CONFIG:RELEASE>:sdl2-config --cflags --libs>")
-    
 endif()
-
-#SET(CMAKE_EXE_LINKER_FLAGS  ${CMAKE_EXE_LINKER_FLAGS} " -lGL ")
-
-#remove warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
