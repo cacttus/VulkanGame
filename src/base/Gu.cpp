@@ -375,13 +375,12 @@ static CFStringRef stdStrToCFStr(std::string st) {
 #endif
 
 void Gu::debugBreak() {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   DebugBreak();
-#else
-#ifdef BR2_OS_LINUX
+#elif defined(BR2_OS_LINUX)
   raise(SIGTRAP);
 #else
-#endif
+  OS_NOT_SUPPORTED_ERROR
 #endif
 }
 
@@ -462,7 +461,7 @@ float Gu::fade(float t) {
 }
 
 void Gu::checkMemory() {
-#ifdef _WIN32
+#if defined(BR2_OS_WINDOWS)
 #ifdef _DEBUG
   _CrtCheckMemory();
 #endif
@@ -471,7 +470,7 @@ void Gu::checkMemory() {
 
 string_t Gu::getOperatingSystemName() {
   string_t res;
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   OSVERSIONINFOEX vex;
   vex.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
   GetVersionEx((OSVERSIONINFO*)&vex);
@@ -515,26 +514,16 @@ string_t Gu::getOperatingSystemName() {
   else if (vex.wProductType == VER_NT_WORKSTATION)
     res.append(", Workstation");
 
+#elif defined(BR2_OS_LINUX)
+  res = "Linux";
 #else
-  //#error "Operating System Error"
-
+  OS_NOT_SUPPORTED_ERROR
 #endif
   //CheckOsErrorsDbg();
   return res;
 }
-
-uint32_t Gu::getCurrentThreadId() {
-  uint32_t threadId = 0;
-#ifdef BR2_OS_WINDOWS
-  //TODO: std::this_thread::get_id()
-  threadId = (uint32_t)GetCurrentThreadId();
-#else
-  //#error "Operating System Error"
-  return std::hash<std::thread::id>()(std::this_thread::get_id());
-#endif
-  return threadId;
-}
 bool Gu::isDebug() {
+  //Reusing Windows debug flag for *nix.
 #ifdef _DEBUG
   return true;
 #else

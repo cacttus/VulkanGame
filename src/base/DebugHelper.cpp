@@ -6,16 +6,17 @@
 
 #include <iostream>
 
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
 #include <DbgHelp.h>
 #include <TlHelp32.h>
 #endif
-#ifdef BR2_OS_LINUX
+
+#if defined(BR2_OS_LINUX)
 #include <execinfo.h>
 #endif
 
 namespace BR2 {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
 HANDLE hCrtLog;
 #endif
 
@@ -43,7 +44,7 @@ void DebugHelper::debugBreak() {
 }
 void DebugHelper::setCheckAlways() {
 #ifdef _DEBUG
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   std::cout << ("****SETTING CHECK ALWAYS***") << std::endl;
   int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
   //clear
@@ -61,7 +62,7 @@ void DebugHelper::setCheckAlways() {
 }
 void DebugHelper::setCheck16() {
 #ifdef _DEBUG
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   std::cout << ("****SETTING CHECK 16***") << std::endl;
   int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
   //clear
@@ -84,7 +85,7 @@ void DebugHelper::debugHeapBegin(bool bDoDebug) {
   }
 
 #ifdef _DEBUG
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   //This chekcs every block for problems
 #define VERBOSITY
   //every 16 blocks
@@ -123,7 +124,7 @@ void DebugHelper::setBreakAlloc(int allocNum) {
   if (_bDoDebug == false) {
     return;
   }
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   _CrtSetBreakAlloc(allocNum);
 #else
 #pragma warning("Heap debugging not available on Linux.")
@@ -135,7 +136,7 @@ void DebugHelper::debugHeapEnd() {
     return;
   }
 #ifdef _DEBUG
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   _CrtCheckMemory();
   //LEAK_CHECK_DF flag will call this
   _CrtDumpMemoryLeaks();
@@ -152,7 +153,7 @@ void DebugHelper::debugHeapEnd() {
 }
 void DebugHelper::checkMemory() {
 #ifdef _DEBUG
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   _CrtCheckMemory();
 #else
 #pragma warning("Heap debugging not available on Linux.")
@@ -162,7 +163,7 @@ void DebugHelper::checkMemory() {
 
 string_t DebugHelper::modList() {
   string_t ret = "";
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
 
   MODULEENTRY32 me32;
   HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
@@ -205,7 +206,7 @@ string_t DebugHelper::modList() {
 }
 std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
   std::vector<std::string> callStack;
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   //Code copied from Msdn.
   uint32_t i;
   void* stack[512];
@@ -232,10 +233,7 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
   }
 
   free(symbol);
-#else
-  //Test this --
-  Gu::debugBreak();
-
+#elif defined(BR2_OS_LINUX)
   //Linux - taken from the man pages.
   //https://linux.die.net/man/3/backtrace_symbols
   int j, nptrs;
@@ -244,8 +242,7 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
   char **strings;
 
   nptrs = backtrace(buffer, BT_BUF_SIZE);
-  printf("backtrace() returned %d addresses\n", nptrs);
-
+  
   strings = backtrace_symbols(buffer, nptrs);
   if (strings == NULL) {
     BRLogError("Could not perform linux stack trace.");

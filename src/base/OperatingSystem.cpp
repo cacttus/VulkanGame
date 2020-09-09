@@ -20,7 +20,7 @@ namespace BR2 {
 
 string_t OperatingSystem::getOperatingSystemName() {
   string_t res;
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   OSVERSIONINFOEX vex;
   vex.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
   GetVersionExW((OSVERSIONINFO*)&vex);
@@ -78,7 +78,7 @@ string_t OperatingSystem::getUserFolderPath() {
   //returns "My Documents" on windows.
   //Linux ~ or /home/(user)/
   string_t ret;
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   char lpstrPath[BRO_MAX_PATH];
   //TODO: Vista and beyond
   //SHGetKnownFolderPath
@@ -118,7 +118,7 @@ string_t OperatingSystem::getGamesFolderPath() {
 }
 void OperatingSystem::suppressError(OSErrorCode ec, bool bWriteMessage) {
   string_t strMsg = "";
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   switch (ec) {
     case OSErrorCode::FileNotFound:
       strMsg = "File Not Found";
@@ -147,14 +147,14 @@ void OperatingSystem::showErrorDialog(const string_t& str, const string_t& title
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title.c_str(), str.c_str(), NULL);
 }
 void OperatingSystem::clearAllErrors() {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   SetLastError(0);
 #else
   throw new NotImplementedException();
 #endif
 }
 int32_t OperatingSystem::getError() {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   return GetLastError();
 #else
   throw new NotImplementedException();
@@ -188,9 +188,9 @@ int32_t OperatingSystem::getError() {
 //}
 
 string_t OperatingSystem::getRuntimeEnvironmentStr() {
-#ifdef _WIN32
+#if defined(_WIN32)
   return string_t("Windows 32 Bit");
-#elif _WIN64
+#elif defined(_WIN64)
   return string_t("Windows 64 Bit");
 #elif defined(__LP32__) || defined(_LP32)
   return string_t("Linux 32 Bit");
@@ -201,33 +201,39 @@ string_t OperatingSystem::getRuntimeEnvironmentStr() {
 #endif
 }
 int OperatingSystem::strCaseCmp(const string_t& str1, const string_t& str2) {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   //win32 only
   return _stricmp(str1.c_str(), str2.c_str());
-#else
+#elif defined(BR2_OS_LINUX)
   //POSIX standard
   return strcasecmp(str1.c_str(), str2.c_str());
+#else
+  OS_METHOD_NOT_IMPLEMENTED
 #endif
 }
 void OperatingSystem::showConsole() {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   ShowWindow(GetConsoleWindow(), SW_SHOW);
-#else
+#elif defined(BR2_OS_LINUX)
   //No idea.
   BRLogWarn("Can't call 'show console' for linux.");
+#else
+  OS_METHOD_NOT_IMPLEMENTED
 #endif
 }
 void OperatingSystem::hideConsole() {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   ShowWindow(GetConsoleWindow(), SW_HIDE);
-#else
+#elif defined(BR2_OS_LINUX)
   //No Idea.
   BRLogWarn("Can't call 'hide console' for linux.");
-  //OS_METHOD_NOT_IMPLEMENTED
+//OS_METHOD_NOT_IMPLEMENTED
+#else
+  OS_METHOD_NOT_IMPLEMENTED
 #endif
 }
 string_t OperatingSystem::showOpenFolderDialog(const string_t& saved_path) {
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   WCHAR path[MAX_PATH];
 
   const char* path_param = saved_path.c_str();
@@ -260,8 +266,7 @@ string_t OperatingSystem::showOpenFolderDialog(const string_t& saved_path) {
 
     return StringUtil::wStrToStr(std::wstring(path));
   }
-#else
-#ifdef BR2_OS_LINUX
+#elif defined(BR2_OS_LINUX)
   //Must test this.
   Gu::debugBreak();
 
@@ -272,14 +277,13 @@ string_t OperatingSystem::showOpenFolderDialog(const string_t& saved_path) {
 #else
   OS_METHOD_NOT_IMPLEMENTED
 #endif
-#endif
-
 
   return "";
 }
 string_t OperatingSystem::showOpenFileDialog(const string_t& title, const string_t& filter, const string_t& defaultext, const string_t& basePath) {
+  //Note Zenity supports returning multiple strings. If windows supports this we can easily allow this to return multiple.
   string_t file = "";
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   OPENFILENAMEW ofn = {0};
   WCHAR openFileNameReturnString[MAX_PATH];  // the filename will go here from the openfile dialog
   ZeroMemory(openFileNameReturnString, MAX_PATH);
@@ -297,20 +301,50 @@ string_t OperatingSystem::showOpenFileDialog(const string_t& title, const string
     return "";
   }
   file = StringUtil::wStrToStr(openFileNameReturnString);
-#else
-#ifdef BR2_OS_LINUX
-  //Must test this.
-  Gu::debugBreak();
-  char filename[1024];
+#elif defined(BR2_OS_LINUX)
+
+  std::string args = "zenity --file-selection --separator=\"|\" ";
+  //TODO: multiple files: add --multiple
+  if (StringUtil::isNotEmpty(basePath)) {
+    args += " --filename \"" + basePath + "\" ";
+  }
+
   FILE* f = popen("zenity --file-selection", "r");
-  fgets(filename, 1024, f);
-  return filename;
+  //TODO: This needs to be a much larger buffer if we support multiple files.
+  char filename[BRO_MAX_PATH];
+  std::memset((void*)filename, 0, BRO_MAX_PATH);
+  fgets(filename, BRO_MAX_PATH, f);
+  string_t unsplit(filename);
+
+  //TODO: multiple files.
+  //std::vector<string_t> rets = StringUtil::split(unsplit, '|');
+
+  return unsplit;
 #else
   OS_METHOD_NOT_IMPLEMENTED
 #endif
-#endif
 
   return file;
+}
+
+string_t OperatingSystem::getEnvironmentVariable(const string_t& var) {
+  //Get a Windows/Linux environment variable.
+  string_t ret = "";
+#if defined(BR2_OS_WINDOWS)
+  OS_METHOD_NOT_IMPLEMENTED
+
+#elif defined(BR2_OS_LINUX)
+  const char* val = std::getenv(var.c_str());
+  if (val == nullptr) {  // invalid to assign nullptr to std::string
+    ret = "";
+  }
+  else {
+    ret = string_t(val);
+  }
+#else
+  OS_METHOD_NOT_IMPLEMENTED
+#endif
+  return ret;
 }
 
 }  // namespace BR2

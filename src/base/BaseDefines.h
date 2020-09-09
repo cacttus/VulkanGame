@@ -16,7 +16,9 @@ namespace BR2 {
 #define MUST_OVERRIDE virtual
 #define SHADOWS
 
-#define BRO_MAX_PATH 512
+//Note: Linux: this is defined in limits.h but doesn't account for actual BUFFER SIZES for wchar.
+#define BRO_MAX_PATH ((PATH_MAX) * 2)
+//std::char_traits<wchar_t>::length (dimObjPrefix);
 
 #define DEL_MEM(x) \
   do {             \

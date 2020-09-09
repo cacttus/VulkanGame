@@ -39,7 +39,7 @@ class FileSystem : public VirtualMemory {
   static void init(string_t exePath);
   static string_t getExecutableFullPath();
   static string_t getExecutableName();
-  static void setExecutablePath(string_t st) { _strExePath = st; }
+  static void setExecutablePath(string_t st);
   static string_t getExecutableDirectory();
   static string_t combinePath(string_t a, string_t b);
   static string_t formatPath(string_t p);
@@ -49,7 +49,7 @@ class FileSystem : public VirtualMemory {
   static bool pathIsAbsolute(string_t p);
   static bool createFile(const string_t& filename, bool truncate = false, bool bLog = true);
   static void createFileIfFileDoesNotExist(string_t& filename, bool bAlsoCreateDirectoryPath = true);
-  static bool createDirectorySingle(string_t& dirName);//Note: this usually fails. windwos is dubm
+  static bool createDirectorySingle(string_t& dirName, int permissions = 755);//Note: this usually fails. windwos is dubm
   static bool createDirectoryRecursive(string_t dirName);
   static bool directoryExists(string_t dirName);
   static bool fileExists(string_t filename);
@@ -67,12 +67,11 @@ class FileSystem : public VirtualMemory {
 
   static string_t getExtensionPartOfFileName(const string_t& fileName);
   static string_t getFilePartOfFileName(const string_t& fileName);
-  static string_t getPathFromPath(const string_t& name, bool bformatPath = true); // - Gets the file name with extension from a / path 
-  static string_t getFileNameFromPath(const string_t& name, bool bformatPath = true);
-  static string_t getDirectoryFromPath(const string_t& name, bool bformatPath = true);
+  static string_t getDirectoryNameFromPath(const string_t& name); //Returns the second-level directory in the path (regardless of whether it is a file or not, see C# GetDirectoryName)
+  static string_t getFileNameFromPath(const string_t& name); //Returns top level file OR directory. See C# GetFileName()
 
   static bool isFile(string_t fileOrDirPath);
-  static bool isDir(string_t fileOrDirPath);
+  static bool isDir(string_t fileOrDirPath);  
 
   static string_t getScreenshotFilename();
   static string_t replaceInvalidCharsFromFilename(const string_t& __in_ fnIn, char replaceChar = '_', bool bIgnoreSlashes = false);
@@ -86,7 +85,6 @@ class FileSystem : public VirtualMemory {
 private:
   static string_t _strExePath;
   static bool getAllFilesOrDirs(string_t dir, std::vector<string_t>& __out_ dirs, bool bFiles);
-  static string_t getFileNameOrDirectoryFromPath(const string_t& name, bool bformatPath = true);
 };
 
 }//ns Game

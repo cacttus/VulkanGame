@@ -408,7 +408,7 @@ RetCode DiskFile::readAllBytes(string_t loc, Allocator<char>& __out_ outBuf) {
 RetCode DiskFile::writeAllBytes(string_t loc, Allocator<char>& __out_ outBuf) {
   //Unnecessary to create file.  We truncate it later.
   //if (!FileSystem::fileExists(loc)) {
-  //    t_string strPath = FileSystem::getPathFromPath(loc);
+  //    t_string strPath = FileSystem::getDirectoryNameFromPath(loc);
   //    FileSystem::createDirectoryRecursive(strPath);
   //    FileSystem::createFile(loc);
   //}

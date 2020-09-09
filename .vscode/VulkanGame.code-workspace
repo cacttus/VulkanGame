@@ -5,8 +5,10 @@
 		}
   ],
   "settings": {
-      "editor.renderControlCharacters": true,
-
+    "editor.renderControlCharacters": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
     "debug.onTaskErrors": "showErrors",
     "cmake.configureOnOpen": true,
     "editor.renderWhitespace": "all",
@@ -20,6 +22,12 @@
     "terminal.integrated.automationShell.linux": "",
     "workbench.iconTheme": "material-icon-theme",
     "debug.internalConsoleOptions": "openOnSessionStart",
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "C_Cpp.clang_format_sortIncludes": false,
+    "telemetry.enableCrashReporter": false,
+    "telemetry.enableTelemetry": false,
     "files.associations": {
       "array": "cpp",
       "atomic": "cpp",

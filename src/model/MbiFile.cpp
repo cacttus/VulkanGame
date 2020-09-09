@@ -204,7 +204,7 @@ void MbiFile::save(string_t file) {
   fb->writeByte('I');
   fb->writeByte('F');
 
-  string_t dir = FileSystem::getPathFromPath(file);
+  string_t dir = FileSystem::getDirectoryNameFromPath(file);
   FileSystem::createDirectoryRecursive(dir);
   fb->writeToDisk(file);
 

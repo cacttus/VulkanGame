@@ -8,7 +8,7 @@
 #include "../base/GraphicsWindow.h"
 #include "../base/GLContext.h"
 #include "../base/FpsMeter.h"
-#include "../base/ConsoleColors.h"
+#include "../base/ColoredConsole.h"
 #include <mutex>
 #include <atomic>
 #include <fstream>
@@ -16,11 +16,6 @@
 #include <future>
 #include <algorithm>
 #include <iostream>
-
-#define SetLoggerColor_Error() ConsoleColorRed()
-#define SetLoggerColor_Info() ConsoleColorGray()
-#define SetLoggerColor_Debug() ConsoleColorCyan()
-#define SetLoggerColor_Warn() ConsoleColorYellow()
 
 namespace BR2 {
 #pragma region Logger_Internal
@@ -145,28 +140,26 @@ void Logger_Internal::processLogs_Async() {
     appended += m;
 
     if (_bLogToConsole) {
+      //TODO: we could speed up the logger by removing all these find() methods and using a flag up the call chain.
       if (m.find(" DBG ") != std::string::npos) {
-        SetLoggerColor_Debug();
+        ColoredConsole::print(m, ColoredConsole::Color::FG_CYAN);
       }
       else if (m.find(" ERR ") != std::string::npos) {
-        SetLoggerColor_Error();
+        ColoredConsole::print(m, ColoredConsole::Color::FG_RED);
       }
       else if (m.find(" WRN ") != std::string::npos) {
-        SetLoggerColor_Warn();
+        ColoredConsole::print(m, ColoredConsole::Color::FG_YELLOW);
       }
       else {
-        SetLoggerColor_Info();
+        ColoredConsole::print(m, ColoredConsole::Color::FG_WHITE);
       }
-      std::cout << m;
     }
   }
-  if (_bLogToConsole) {
-    SetLoggerColor_Info();
-  }
+
 
   if (_bLogToFile) {
     if (!FileSystem::fileExists(_logDir)) {
-      FileSystem::createDirectoryRecursive(FileSystem::getPathFromPath(_logDir));
+      FileSystem::createDirectoryRecursive(FileSystem::getDirectoryNameFromPath(_logDir));
       FileSystem::createFile(_logDir, false, false);
     }
     //  OperatingSystem::suppressError(183,"Suppressing windows dumb 'append' error 183",false);
@@ -191,7 +184,6 @@ void Logger_Internal::processLogs_Async() {
 #pragma endregion
 
 #pragma region Logger
-
 Logger::Logger(bool async, bool disabled) {
   _pint = new Logger_Internal();
   _pint->_bAsync = async;
@@ -228,7 +220,7 @@ void Logger::init(string_t cache) {
   }
 
   //*Note: do not call the #define shortcuts here.
-  logInfo(Stz(_pint->_bAsync ? "Async " : "") + "Logger Initializing " + DateTime::getDateTime().toString());
+  logInfo(Stz(_pint->_bAsync ? "Async " : "Synchronous ") + "Logger Initializing " + DateTime::getDateTime().toString());
 }
 string_t Logger::getLogPath() {
   return _pint->_logDir;

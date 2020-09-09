@@ -154,7 +154,7 @@ GLProgramBinary* ShaderCache::getBinaryFromDisk(string_t& programName) {
 void ShaderCache::saveBinaryToDisk(const string_t& programName, GLProgramBinary* bin) {
   DiskFile df;
   string_t binaryName = getBinaryNameFromProgramName(programName);
-  string_t binPath = FileSystem::getPathFromPath(binaryName);
+  string_t binPath = FileSystem::getDirectoryNameFromPath(binaryName);
 
   BRLogInfo(" Shader program Bin path = " + binPath);
 

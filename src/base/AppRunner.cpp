@@ -206,7 +206,7 @@ void AppRunner_Internal::printVideoDiagnostics() {
   }
 }
 void AppRunner_Internal::updateWindowHandleForGamehost() {
-#ifdef _WINDOWS_
+#if defined(BR2_OS_WINDOWS)
   //For the WPF app container we need to set the window handle to be the top window
   //https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.mainwindowhandle?view=netframework-4.8
   //SDL_SysWMinfo wmInfo;

@@ -17,6 +17,7 @@ namespace BR2 {
 */
 class OperatingSystem : public VirtualMemory {
 public:
+  static string_t getEnvironmentVariable(const string_t& var);
   static string_t getRuntimeEnvironmentStr();
   static int32_t getError();
   static void clearAllErrors();
@@ -30,8 +31,6 @@ public:
   static int strCaseCmp(const string_t& str1, const string_t& str2);
   static string_t showOpenFolderDialog(const string_t& baseFolder);
   static string_t showOpenFileDialog(const string_t& title, const string_t& filter, const string_t& defaultext, const string_t& basePath);
-  // static size_t getAvailableMemory();
-// static size_t getProcessMemoryUsage();
 };
 
 

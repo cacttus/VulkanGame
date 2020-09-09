@@ -18,7 +18,7 @@ DateTime::DateTime(tm *t, int ms) {
   this->_hours = t->tm_hour;
   this->_day = t->tm_mday;
   this->_month = t->tm_mon;
-  this->_year = t->tm_year;
+  this->_year = 1900 + t->tm_year;  //tm is from 1900
   this->_milliseconds = ms;
 }
 string_t DateTime::getAsString() {
@@ -55,9 +55,6 @@ DateTime DateTime::getDateTime() {
   return dt;
 }
 string_t DateTime::toString() {
-  //Test
-  Gu::debugBreak();
-
   //returns "dd/mm/yyyy hh:mm:ss" Todo: localize this (of course).
   string_t dt = dateToStr("/");
   string_t tm = timeToStr(":");
@@ -119,42 +116,39 @@ string_t DateTime::timeToStr(const string_t &delim, bool hour, bool minute, bool
 }
 
 int DateTime::hour() {
-#ifdef BR2_OS_LINUX
+#if defined(BR2_OS_WINDOWS)
+  SYSTEMTIME st;
+  GetLocalTime(&st);
+  return (int)st.wHour;
+#elif defined(BR2_OS_LINUX)
   time_t t = time(NULL);
   struct tm *tm_struct = localtime(&t);
   int hour = tm_struct->tm_hour;
   return hour;
 #endif
-#ifdef BR2_OS_WINDOWS
-  SYSTEMTIME st;
-  GetLocalTime(&st);
-  return (int)st.wHour;
-#endif
 }
 int DateTime::minute() {
-#ifdef BR2_OS_LINUX
+#if defined(BR2_OS_WINDOWS)
+  SYSTEMTIME st;
+  GetLocalTime(&st);
+  return (int)st.wMinute;
+#elif defined(BR2_OS_LINUX)
   time_t t = time(NULL);
   struct tm *tm_struct = localtime(&t);
   int min = tm_struct->tm_min;
   return min;
 #endif
-#ifdef BR2_OS_WINDOWS
-  SYSTEMTIME st;
-  GetLocalTime(&st);
-  return (int)st.wMinute;
-#endif
 }
 int DateTime::second() {
-#ifdef BR2_OS_LINUX
+#if defined(BR2_OS_WINDOWS)
+  SYSTEMTIME st;
+  GetLocalTime(&st);
+  return (int)st.wSecond;
+#elif defined(BR2_OS_LINUX)
   time_t t = time(NULL);
   struct tm *tm_struct = localtime(&t);
   int sec = tm_struct->tm_sec;
   return sec;
-#endif
-#ifdef BR2_OS_WINDOWS
-  SYSTEMTIME st;
-  GetLocalTime(&st);
-  return (int)st.wSecond;
 #endif
 }
 

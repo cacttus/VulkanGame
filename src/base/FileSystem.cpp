@@ -5,21 +5,20 @@
 #include "../base/Logger.h"
 #include "../base/StringUtil.h"
 
-
 #include "../base/DateTime.h"
 #include <fstream>
 #include <unistd.h>
 
-#ifdef BR2_OS_WINDOWS
+#include <filesystem>
+
+#if defined(BR2_OS_WINDOWS)
 #include "../ext/dirent.h"
 #include <direct.h>
-
-#else
+#elif defined(BR2_OS_LINUX)
 // Linux
 #include <dirent.h>
 #include <sys/stat.h>
-
-
+#include <errno.h>
 #endif
 
 namespace BR2 {
@@ -31,6 +30,9 @@ void FileSystem::init(string_t executablePath) {
   string_t a = FileSystem::getCurrentDirectory();
   FileSystem::setCurrentDirectory(FileSystem::getExecutableDirectory());
   string_t b = FileSystem::getCurrentDirectory();
+}
+void FileSystem::setExecutablePath(string_t st) {
+  _strExePath = st;
 }
 string_t FileSystem::getExecutableFullPath() {
   //  t_string ret;
@@ -47,17 +49,22 @@ string_t FileSystem::getExecutableFullPath() {
 }
 string_t FileSystem::getExecutableName() {
   string_t ret;
-  ret = FileSystem::getFileNameFromPath(getExecutableFullPath(), true);
+  ret = FileSystem::getFileNameFromPath(getExecutableFullPath());
   return ret;
 }
 string_t FileSystem::getExecutableDirectory() {
   string_t ret;
-  ret = FileSystem::getPathFromPath(getExecutableFullPath(), true);
+  ret = FileSystem::getDirectoryNameFromPath(getExecutableFullPath());
   return ret;
 }
 string_t FileSystem::combinePath(string_t a, string_t b) {
-  if ((a.length() == 0) || (b.length() == 0))
+#if defined(BR2_OS_LINUX)
+  string_t st = std::filesystem::path(a) / b;
+  return st;
+#else
+  if ((a.length() == 0) || (b.length() == 0)) {
     return a + b;
+  }
 
   // - Make sure path is a / path not a \\ path
   a = formatPath(a);
@@ -68,34 +75,45 @@ string_t FileSystem::combinePath(string_t a, string_t b) {
   b = StringUtil::trim(b, '/');
 
   return a + string_t("/") + b;
+#endif
 }
 bool FileSystem::createFile(const string_t &filename, bool trunc, bool bLog) {
   std::fstream pStream;
   bool exists = true;
 
   // TODO: specify in or out in case of read / write access problems.
-  pStream.open(filename.c_str(),
-               std::ios::out | (trunc ? (std::ios::app) : (std::ios::trunc)));
+  pStream.open(filename.c_str(), std::ios::out | (trunc ? (std::ios::app) : (std::ios::trunc)));
 
   if (!pStream.good()) {
     exists = false;
     string_t err = Stz " [FileSystem] Output file " + filename +
                    " could not be created with trunc=" + (int32_t)trunc;
-    if (bLog == true) { // For logger initializtion
+    if (bLog == true) {  // For logger initializtion
       BRLogError(err);
-    } else {
+    }
+    else {
       Gu::print(err);
     }
   }
 
   pStream.close();
-  // CheckOsErrorsDbg();
+
   return exists;
 }
 
 bool FileSystem::createDirectoryRecursive(string_t dirName) {
-  string_t dirCpy;
   bool bRet = true;
+#if defined(BR2_OS_LINUX)
+  //Note: this creates directories with full permissions.
+  std::error_code code;
+  bRet = std::filesystem::create_directories(dirName, code);
+  int a = code.value();
+  int b = code.default_error_condition().value();
+  if (a != b) {
+    BRLogError(code.message());
+  }
+#else
+  string_t dirCpy;
   dirCpy.assign(dirName);
   dirCpy = formatPath(dirCpy);
 
@@ -110,10 +128,10 @@ bool FileSystem::createDirectoryRecursive(string_t dirName) {
     bRet = bRet && FileSystem::createDirectorySingle(strDir);
   }
 
+#endif
   return bRet;
 }
 bool FileSystem::directoryExists(string_t dirName) {
-
   bool ret;
   DIR *dir = NULL;
 
@@ -121,7 +139,8 @@ bool FileSystem::directoryExists(string_t dirName) {
 
   if (dir == NULL) {
     ret = false;
-  } else {
+  }
+  else {
     ret = true;
   }
 
@@ -129,21 +148,15 @@ bool FileSystem::directoryExists(string_t dirName) {
 
   return ret;
 }
-bool FileSystem::createDirectorySingle(string_t &dirName) {
-  int ret = mkdir(dirName.c_str(), 0755);
-  if (ret != 0) {
-    if (ret == EEXIST) {
-      // BroLogInfo("mkdir directory already exists");
-    } else if (ret == ENOENT) {
-      // DO NOT LOG
-      // BroLogError("mkdir failed with code "+ ret);
-      return false;
-    } else {
-      // DO NOT LOG
-      // BroLogWarn("mkdir returned code ", ret);
-    }
+bool FileSystem::createDirectorySingle(string_t &dirName, int permissions) {
+  int err = 0;
+#if defined(BR2_OS_LINUX)
+  int ret = mkdir(dirName.c_str(), permissions);
+  if (ret == -1) {
+    err = errno;
   }
-  return true;
+#elif defined(BR2_OS_WINDOWS)
+  //TODO: windows permissions ..
   //#ifdef BR2_OS_WINDOWS
   //    //SECURITY_ATTRIBUTES sc;
   //    //sc.nLength = sizeof(sc);
@@ -161,63 +174,73 @@ bool FileSystem::createDirectorySingle(string_t &dirName) {
   //  }
   // use mkdir
   //#endif
-}
-string_t FileSystem::getFileNameOrDirectoryFromPath(const string_t &name,
-                                                    bool bformatPath) {
-  // - If formatPath is true then we'll convert the path to a / path.
 
-  size_t x;
-  string_t fn = "";
-  DiskLoc l2;
+  //I think windows uses the return type as the error TODO: check this.
+  err = mkdir(dirName.c_str());
+#else
+  OS_NOT_SUPPORTED_ERROR
+#endif
 
-  // Format for a / path
-  if (bformatPath) {
-    l2 = formatPath(name);
-  } else {
-    l2 = name;
+  //https://man7.org/linux/man-pages/man2/mkdir.2.html
+  if (err != 0) {
+    if (err == EEXIST) {
+      //pathname already exists (not necessarily as a directory). This includes the case where pathname is a symbolic link, dangling or not.
+    }
+    else if (err == ENOENT) {
+      //A directory component in pathname does not exist or is a dangling symbolic link.
+      //Failure.
+      return false;
+    }
+    else {
+    }
   }
 
-  if ((x = l2.rfind('/')) != string_t::npos) {
-    fn = l2.substr(x + 1, l2.length() - x + 1);
-  } else {
+  return true;
+}
+string_t FileSystem::getFileNameFromPath(const string_t &name) {
+  //Returns the TLD for the path. Either filename, or directory.
+  // Does not include the / in the directory.
+  // ex ~/files/dir would return dir
+  // - If formatPath is true then we'll convert the path to a / path.
+  string_t fn = "";
+#if defined(BR2_OS_LINUX)
+  fn = std::filesystem::path(name).filename();
+#else
+
+  DiskLoc l2;
+
+  l2 = formatPath(name);
+
+  //Index of TLD
+  size_t tld_off = l2.rfind('/');
+
+  if (tld_off != string_t::npos) {
+    fn = l2.substr(tld_off + 1, l2.length() - tld_off + 1);
+  }
+  else {
     fn = name;
   }
+#endif
   return fn;
 }
-string_t FileSystem::getFileNameFromPath(const string_t &name,
-                                         bool bformatPath) {
-  return getFileNameOrDirectoryFromPath(name, bformatPath);
-}
-string_t FileSystem::getDirectoryFromPath(const string_t &name,
-                                          bool bformatPath) {
-  return getFileNameOrDirectoryFromPath(name, bformatPath);
-}
-string_t FileSystem::getPathFromPath(const string_t &name, bool bformatPath) {
-  // - If formatPath is true then we'll convert the path to a / path.
-  // returns the path part without the filename.
-  // if the filename doesn't have an extension this method considers it a
-  // folder.
-  //
-  size_t x;
+
+string_t FileSystem::getDirectoryNameFromPath(const string_t &pathName) {
+  // Returns the path without the filename OR top level directory.
+  // See C# GetDirectoryName()
   string_t ret = "";
-  DiskLoc l2;
-  DiskLoc tmpPath = name;
+  DiskLoc formattedPath;
+  DiskLoc tmpPath = pathName;
   string_t fn;
 
-  // Format for a / path
-  if (bformatPath)
-    l2 = formatPath(name);
-  else
-    l2 = name;
-
-  fn = getFileNameFromPath(l2, false);
-
-  if (fn.rfind('.') == string_t::npos)
-    ret = l2;
-  else if ((x = l2.rfind('/')) != string_t::npos)
-    ret = l2.substr(0, x);
-  else
-    ret = l2;
+  formattedPath = formatPath(pathName);
+  fn = getFileNameFromPath(formattedPath);
+  size_t x = formattedPath.rfind('/');
+  if (x != string_t::npos) {
+    ret = formattedPath.substr(0, x);
+  }
+  else {
+    ret = formattedPath;
+  }
 
   return ret;
 }
@@ -238,17 +261,16 @@ bool FileSystem::fileExists(string_t filename) {
   struct stat buffer;
   exists = (stat(filename.c_str(), &buffer) == 0);
 
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   // We get errors when calling stat in Windows for some reason.
   SetLastError(0);
 #endif
 
   return exists;
 }
-void FileSystem::createFileIfFileDoesNotExist(string_t &filename,
-                                              bool bAlsoCreateDirectoryPath) {
-  if (bAlsoCreateDirectoryPath == TRUE) {
-    createDirectoryRecursive(getPathFromPath(filename, TRUE));
+void FileSystem::createFileIfFileDoesNotExist(string_t &filename, bool bAlsoCreateDirectoryPath) {
+  if (bAlsoCreateDirectoryPath == true) {
+    createDirectoryRecursive(getDirectoryNameFromPath(filename));
   }
 
   if (FileSystem::fileExists(filename) == false) {
@@ -269,9 +291,9 @@ time_t FileSystem::getLastModifyTime(string_t &location) {
 string_t FileSystem::getCurrentDirectory() {
   // DO NOT LOG HERE
   char buf[BRO_MAX_PATH];
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
   _getcwd(buf, BRO_MAX_PATH);
-#else
+#elif defined(BR2_OS_LINUX)
   getcwd(buf, BRO_MAX_PATH);
 #endif
 
@@ -280,9 +302,9 @@ string_t FileSystem::getCurrentDirectory() {
 }
 void FileSystem::setCurrentDirectory(string_t str) {
 // DO NOT LOG HERE
-#ifdef BR2_OR_WINDOWS
+#if defined(BR2_OR_WINDOWS)
   _chdir(str.c_str());
-#else
+#elif defined(BR2_OS_LINUX)
   chdir(str.c_str());
 #endif
 }
@@ -294,7 +316,8 @@ bool FileSystem::isFile(string_t fileOrDirPath) {
     if (s.st_mode & S_IFREG) {
       return true;
     }
-  } else {
+  }
+  else {
     // DO NOT LOG HERE
     // BroLogError("stat - failed");
   }
@@ -307,7 +330,8 @@ bool FileSystem::isDir(string_t fileOrDirPath) {
     if (s.st_mode & S_IFDIR) {
       return true;
     }
-  } else {
+  }
+  else {
     // DO NOT LOG HERE
     // BroLogError("stat - failed");
   }
@@ -323,20 +347,22 @@ bool FileSystem::getAllFilesOrDirs(string_t dir,
   dp = opendir(dir.c_str());
 
   if (dp != NULL) {
-    while ( (ep = readdir(dp)) ) {
+    while ((ep = readdir(dp))) {
       string_t name(ep->d_name);
       if (StringUtil::doesNotEqual(name, "..") &&
           StringUtil::doesNotEqual(name, ".")) {
         string_t nameFull = FileSystem::combinePath(dir, name);
         if (!bFiles && FileSystem::isDir(nameFull)) {
           dirs.push_back(nameFull);
-        } else if (bFiles && FileSystem::isFile(nameFull)) {
+        }
+        else if (bFiles && FileSystem::isFile(nameFull)) {
           dirs.push_back(nameFull);
         }
       }
     }
     closedir(dp);
-  } else {
+  }
+  else {
     BRLogError("Couldn't open the directory '" + dir + "'");
     return false;
   }
@@ -374,7 +400,6 @@ bool FileSystem::deleteDirectoryRecursive(string_t dir,
 }
 bool FileSystem::deleteDirectory(string_t dir,
                                  std::vector<string_t> &vecFileExts) {
-
   int ret = rmdir(dir.c_str());
   if (ret != 0) {
     BRLogError("Failed to delete directory.");
@@ -485,7 +510,6 @@ void FileSystem::SDLFileFree(char *&pOutData) {
 }
 int FileSystem::SDLFileRead(std::string fname, char *&pOutData,
                             int64_t &_iOutSizeBytes, bool addNull) {
-
   fname = getFilePath(fname);
 
   SDL_RWops *rw = SDL_RWFromFile(fname.c_str(), "rb");
@@ -495,7 +519,8 @@ int FileSystem::SDLFileRead(std::string fname, char *&pOutData,
   _iOutSizeBytes = SDL_RWsize(rw);
   if (addNull) {
     pOutData = new char[_iOutSizeBytes + 1];
-  } else {
+  }
+  else {
     pOutData = new char[_iOutSizeBytes];
   }
 
@@ -544,16 +569,18 @@ std::string FileSystem::getFilePath(std::string name) {
   if (pos1 != std::string::npos && pos2 != std::string::npos) {
     if (pos1 > pos2) {
       pos3 = pos1;
-    } else {
+    }
+    else {
       pos3 = pos2;
     }
-  } else if (pos1 != std::string::npos) {
+  }
+  else if (pos1 != std::string::npos) {
     pos3 = pos1;
-
-  } else if (pos2 != std::string::npos) {
+  }
+  else if (pos2 != std::string::npos) {
     pos3 = pos2;
-
-  } else {
+  }
+  else {
     // Error
     throw 0;
     return "";
@@ -565,9 +592,9 @@ std::string FileSystem::getFilePath(std::string name) {
   CFBundleRef mainBundle = CFBundleGetMainBundle();
   CFStringRef rName = Gu::stdStrToCFStr(fname);
   CFStringRef rDir =
-      CFSTR(""); // stdStrToCFStr(fdir);//CFSTR("");
-                 // It appears that the bundle doesn't use directories we supply
-                 // If it does we should change this in the futrue.
+      CFSTR("");  // stdStrToCFStr(fdir);//CFSTR("");
+                  // It appears that the bundle doesn't use directories we supply
+                  // If it does we should change this in the futrue.
 
   // CFStringFileNa
   // NULL file extension - indicates extension is in the name
@@ -614,12 +641,17 @@ FileInfo FileSystem::getFileInfo(std::string loc) {
 string_t FileSystem::getRootedPath(string_t loc) {
   // C++17 has std::filesystem::path path(loc);
   // currently not supported so we need our own.
+  string_t path = "";
+
+#if defined(BR2_OS_LINUX)
+  path = std::filesystem::absolute(loc);
+#else
 
   // Get root of current.
-  string_t path = "";
   if (!pathIsAbsolute(loc)) {
     path = combinePath(FileSystem::getCurrentDirectory(), loc);
   }
+#endif
   return path;
 }
 string_t FileSystem::getRoot(string_t in_loc) {
@@ -634,7 +666,8 @@ string_t FileSystem::getRoot(string_t in_loc) {
 
   if (pathIsAbsolute(in_loc)) {
     path = in_loc;
-  } else {
+  }
+  else {
     path = FileSystem::getCurrentDirectory();
   }
 
@@ -642,7 +675,8 @@ string_t FileSystem::getRoot(string_t in_loc) {
     if (pathIsAbsolute(path)) {
       if (isUNC(path)) {
         s = Stz path[0] + path[1];
-      } else {
+      }
+      else {
         char c = path[0];
         for (int i = 0; (i < path.length()) && (c != ':'); ++i) {
           s += c;
@@ -664,18 +698,33 @@ bool FileSystem::isUNC(string_t path) {
   return (uncFs || uncBs);
 }
 bool FileSystem::pathIsAbsolute(string_t path) {
-  // C++17 has std::filesystem::path path(loc);
-  // currently not supported so we need our own.
+#if defined(BR2_OS_WINDOWS)
+  // C++14 has std::filesystem::path path(loc);
+  // This wasn't supported (last windows build) so this legacy may be removed.
+  Gu::debugBreak();  //TEST THIS
   if (isUNC(path)) {
     return true;
   }
-
-  if ((path.length() == 0) ||
-      (path[0] == '.' || path[0] == '/' || path[0] == '\\')) {
+  if (path.length() == 0) {
     return false;
-  } else {
-    return true;
   }
+  if (path[0] == '.') {
+    return false;
+  }
+  if (path[0] == '/') {
+    return false;
+  }
+  if (path[0] == '\\') {
+    return false;
+  }
+  return true;
+#elif defined(BR2_OS_LINUX)
+  std::filesystem::path p(path);
+  bool isabs = p.is_absolute();
+  return isabs;
+#else
+  OS_NOT_SUPPORTED_ERROR
+#endif
 }
 
-} // namespace BR2
+}  // namespace BR2

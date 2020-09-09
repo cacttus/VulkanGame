@@ -72,7 +72,7 @@ void  MobFile::postLoad(bool success) {
   }
 }
 string_t MobFile::getMobDir() {
-  string_t path = FileSystem::getPathFromPath(this->_fileLoc);
+  string_t path = FileSystem::getDirectoryNameFromPath(this->_fileLoc);
   return path;
 }
 void MobFile::cacheObjectsAndComputeBoxes() {

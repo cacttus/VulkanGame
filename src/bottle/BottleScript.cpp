@@ -153,7 +153,7 @@ string_t BottleScript::getNewWorldName(string_t gameName) {
   int32_t iHigh = 0;
   for (string_t dirPath : dirs) {
     int32_t i;
-    string_t dir = FileSystem::getDirectoryFromPath(dirPath);
+    string_t dir = dirPath;
     if (dir.length() > 1) {
       dir = dir.substr(1);
       if (TypeConv::strToInt(dir, i)) {

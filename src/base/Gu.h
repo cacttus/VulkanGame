@@ -52,7 +52,6 @@ public:
   static bool is64Bit();
   static bool isBigEndian();
   static string_t getOperatingSystemName();
-  static uint32_t getCurrentThreadId();
   static std::string getCPPVersion();
   static void sleepThread(uint64_t milliseconds);
 

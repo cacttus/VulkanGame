@@ -179,7 +179,7 @@ template <typename Tx> void Allocator<Tx>::copyFrom(const Allocator<Tx> *in) {
   // should do that.
   AssertOrThrow2(in->byteSize() > _allocSize);
 
-  memmove((void *)(_pT), in->constptr(), _allocSize);
+  std::memmove((void *)(_pT), in->constptr(), _allocSize);
 }
 /**
  *   @fn copyFrom()
@@ -199,7 +199,7 @@ void Allocator<Tx>::copyFrom(const Tx *other_in, size_t in_item_count,
 
   AssertOrThrow2(other_size > my_size);
 
-  memmove((void *)(_pT + my_off), (void *)(other_in + other_off), other_size);
+  std::memmove((void *)(_pT + my_off), (void *)(other_in + other_off), other_size);
 }
 template <typename Tx>
 void Allocator<Tx>::copyTo(const Tx *other_in, size_t in_item_count,
@@ -209,10 +209,10 @@ void Allocator<Tx>::copyTo(const Tx *other_in, size_t in_item_count,
   size_t other_size = in_item_count * sizeof(Tx);
   size_t my_size = _allocSize - (my_off * tsize());
 
-  if (my_off + in_item_count > count())  //>= ??
+  if (my_off + in_item_count > count()) {
     throw 0;
-
-  memmove((void *)(other_in + other_off), (void *)(_pT + my_off), other_size);
+  }
+  std::memmove((void *)(other_in + other_off), (void *)(_pT + my_off), other_size);
 }
 /**
  *    @fn fill()
@@ -220,11 +220,15 @@ void Allocator<Tx>::copyTo(const Tx *other_in, size_t in_item_count,
  */
 template <typename Tx> void Allocator<Tx>::fill(Tx &base) {
   // memset((void*)_pT,
-  for (size_t i = 0; i < count(); ++i) *(_pT + i) = base;
+  for (size_t i = 0; i < count(); ++i) {
+    *(_pT + i) = base;
+  }
 }
 template <typename Tx> void Allocator<Tx>::fillb(Tx base) {
   // memset((void*)_pT,
-  for (size_t i = 0; i < count(); ++i) *(_pT + i) = base;
+  for (size_t i = 0; i < count(); ++i) {
+    *(_pT + i) = base;
+  }
 }
 
 /**
@@ -355,12 +359,16 @@ void Allocator<Tx>::grow(size_t add_count, size_t itemOffset) {
   Allocator<Tx> newData;
   size_t newCount;
 
-  if (itemOffset == -1) itemOffset = (size_t)count();
+  if (itemOffset == -1) {
+    itemOffset = (size_t)count();
+  }
 
   // realloc(this->count()+add_count);
   AssertOrThrow2(itemOffset <= (size_t)count());
 
-  if (add_count == 0) return;
+  if (add_count == 0) {
+    return;
+  }
 
   newCount = (int64_t)count() + add_count;
 
@@ -389,15 +397,20 @@ void Allocator<Tx>::shrink(size_t itemOffset, size_t numItemsToRemove) {
   size_t newCount;
   Allocator<Tx> newData;
 
-  if (itemOffset == -1) itemOffset = 0;
+  if (itemOffset == -1) {
+    itemOffset = 0;
+  }
 
   AssertOrThrow2(numItemsToRemove >= 0);
 
   // Avoid shrinking data past the end of the buffer.
-  if (numItemsToRemove > (size_t)count())
+  if (numItemsToRemove > (size_t)count()) {
     numItemsToRemove = (size_t)count() - itemOffset;
+  }
 
-  if (numItemsToRemove == 0) return;
+  if (numItemsToRemove == 0) {
+    return;
+  }
 
   newCount = count() - numItemsToRemove;
 
@@ -430,8 +443,12 @@ template <typename Tx> void Allocator<Tx>::inflate(
 ) {
   // Allocator<Tx> newData;
 
-  if (expandCount == 0) return;
-  if (staticAllocationCount < 0) staticAllocationCount = count();
+  if (expandCount == 0) {
+    return;
+  }
+  if (staticAllocationCount < 0) {
+    staticAllocationCount = count();
+  }
 
   AssertOrThrow2(expandCount > 0);
   AssertOrThrow2((itemOffset + expandCount) <= (size_t)count());
@@ -443,7 +460,7 @@ template <typename Tx> void Allocator<Tx>::inflate(
   Tx *pSrc = _pT + itemOffset;
 
   // We must use memmove if buffers overlap. Do not use memcpy.
-  memmove((char *)pDst, (char *)pSrc, moveSizeBytes);
+  std::memmove((char *)pDst, (char *)pSrc, moveSizeBytes);
 }
 /**
  *    @fn    deflate()
@@ -463,17 +480,23 @@ template <typename Tx> void Allocator<Tx>::deflate(
 ) {
   // Allocator<Tx> newData;
 
-  if (staticAllocationCount < 0) staticAllocationCount = count();
+  if (staticAllocationCount < 0) {
+    staticAllocationCount = count();
+  }
 
-  if (deflateCount > itemOffset)
+  if (deflateCount > itemOffset) {
     deflateCount = itemOffset;  // make sure we don't move negative. same as if
                                 // (itemOffset- deflateCount < 0)
+  }
 
-  if (deflateCount == 0) return;
+  if (deflateCount == 0) {
+    return;
+  }
 
-  if (deflateCount >= staticAllocationCount)
+  if (deflateCount >= staticAllocationCount) {
     return;  // No elements, and so nothign to copy. same as
              // if(staticAllocationCount - deflateCount <0)
+  }
 
   size_t moveSizeBytes = (staticAllocationCount - deflateCount) * tsize();
 
@@ -481,7 +504,7 @@ template <typename Tx> void Allocator<Tx>::deflate(
   Tx *pSrc = _pT + itemOffset;
 
   // We must use memmove if buffers overlap. Do not use memcpy.
-  memmove((char *)pDst, (char *)pSrc, moveSizeBytes);
+  std::memmove((char *)pDst, (char *)pSrc, moveSizeBytes);
 }
 /**
  *    @fn erase()

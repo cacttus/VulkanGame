@@ -76,7 +76,7 @@
 
 
 //Needed for Filesystem
-#ifdef BR2_OS_WINDOWS
+#if defined(BR2_OS_WINDOWS)
 typedef unsigned short mode_t;
 #endif
 
