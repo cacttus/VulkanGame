@@ -171,8 +171,9 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
     else if (lcmp(tokens[0], "BreakOnSDLError", 2)) {
       _pConfig->_bBreakOnSDLError = TypeConv::strToBool(getCleanToken(tokens, iind));
     }
-    else if (lcmp(tokens[0], "BreakOnOpenGLError", 2)) {
-      _pConfig->_bBreakOnOpenGLError = TypeConv::strToBool(getCleanToken(tokens, iind));
+    else if (lcmp(tokens[0], "BreakOnGraphicsError", 2)) {
+      //Break if there is an error in the graphics system.
+      _pConfig->_bBreakOnGraphicsError = TypeConv::strToBool(getCleanToken(tokens, iind));
     }
     else if (lcmp(tokens[0], "ShowConsole", 2)) {
       _pConfig->_bShowConsole = TypeConv::strToBool(getCleanToken(tokens, iind));
@@ -227,6 +228,9 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
       if (StringUtil::equalsi(tok, "Vulkan")) {
         _pConfig->_eRenderSystem = RenderSystem::Vulkan;
       }
+      else if (StringUtil::equalsi(tok, "OpenGL")) {
+        _pConfig->_eRenderSystem = RenderSystem::OpenGL;
+      }
       else {
         msg(Stz "Render system '" + tok + "' is invalid.");
       }
@@ -272,7 +276,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
       }
     }
     else {
-      msg(Stz "Unrecognized engine config token '" + tokens[0] + "'");
+      msg(Stz " Unrecognized engine config token '" + tokens[0] + "'");
       Gu::debugBreak();
     }
   }

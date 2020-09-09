@@ -3,6 +3,7 @@
 #include "../base/FileSystem.h"
 #include "../base/Hash.h"
 #include "../base/GLContext.h"
+#include "../base/OperatingSystem.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/ShaderBase.h"
 #include "../gfx/ShaderSubProgram.h"
@@ -158,7 +159,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeShader(const std::vector<string_t>&
       return nullptr;
     }
 
-    BRLogInfo("Load Success\r\n------------------------------\r\n");
+    BRLogInfo("Load Success" + OperatingSystem::newline() + "------------------------------" + OperatingSystem::newline());
   } catch (Exception* ex) {
     BRLogError(ex->what());
   }
@@ -219,23 +220,23 @@ bool ShaderMaker::checkForErrors(std::vector<std::shared_ptr<ShaderSubProgram>>&
 
   for (std::shared_ptr<ShaderSubProgram> subProg : vecSubProgs) {
     if (subProg->getGeneralErrors().size() > 0) {
-      errStr += subProg->getSourceLocation() + "\r\nGen. Errors\r\n, " + subProg->getSourceLocation() + "\r\n";
+      errStr += subProg->getSourceLocation() + OperatingSystem::newline() + "Gen. Errors" + OperatingSystem::newline() + ", " + subProg->getSourceLocation() + OperatingSystem::newline();
       for (string_t gErr : subProg->getGeneralErrors()) {
-        errStr += gErr + "\r\n";
+        errStr += gErr + OperatingSystem::newline();
       }
     }
     if (subProg->getCompileErrors().size() > 0) {
-      errStr += subProg->getSourceLocation() + "\r\nCompile Errors\r\n, " + subProg->getSourceLocation() + "\r\n";
+      errStr += subProg->getSourceLocation() + OperatingSystem::newline() + "Compile Errors" + OperatingSystem::newline() + ", " + subProg->getSourceLocation() + OperatingSystem::newline();
       for (string_t gErr : subProg->getCompileErrors()) {
-        errStr += gErr + "\r\n";
+        errStr += gErr + OperatingSystem::newline();
       }
     }
   }
   if (sp != nullptr) {
     if (sp->getLinkErrors().size() > 0) {
-      errStr += Stz "Link Errors:" + "\r\n";
+      errStr += Stz "Link Errors:" + OperatingSystem::newline();
       for (string_t str : sp->getLinkErrors()) {
-        errStr += str + "\r\n";
+        errStr += str + OperatingSystem::newline();
       }
     }
   }
@@ -661,7 +662,7 @@ void ShaderMaker::parseAttributes(std::shared_ptr<ShaderBase> sb) {
 
   if (err != "") {
     sb->setProgramStatus(ShaderStatus::e::Error);
-    addGeneralError(Stz "Shader " + sb->getProgramName() + "\r\n" + err);
+    addGeneralError(Stz "Shader " + sb->getProgramName() + OperatingSystem::newline() + err);
   }
 }
 bool ShaderMaker::isGoodStatus(ShaderStatus::e stat) {
@@ -804,7 +805,7 @@ void ShaderMaker::setUfBlock(string_t name, void* value, size_t copySizeBytes, b
   }
 }
 void ShaderMaker::addGeneralError(string_t str) {
-  str = Stz "error: " + str + "\r\n";
+  str = Stz "error: " + str + OperatingSystem::newline();
   _vecGeneralErrors.push_back(str);
 }
 

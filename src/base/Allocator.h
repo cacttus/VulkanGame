@@ -33,7 +33,7 @@ public:
   }  // - Get # of items allocated
 
   FORCE_INLINE size_t tsize() const { return sizeof(Tx); }
-  FORCE_INLINE void _alloca(size_t count = 0);  // - Allocate
+  FORCE_INLINE void _alloca(size_t count = 0);  // - Allocate * _ due to namespace conflict. TODO: rename to allocateMemory
   FORCE_INLINE void realloca(size_t newCount);  // - Reallocate
   FORCE_INLINE void reallocBytes(size_t newSize);
   FORCE_INLINE void grow(size_t itemCount,
@@ -112,7 +112,7 @@ template <typename Tx> FORCE_INLINE Allocator<Tx>::Allocator()
 template <typename Tx>
 FORCE_INLINE Allocator<Tx>::Allocator(size_t allocCount, Tx *ptFill)
     : _pT(NULL), _num(0), _lastNum(0), _allocSize(0), _lastSize(0) {
-  alloca(allocCount);
+  this->_alloca(allocCount);
   if (ptFill != nullptr) {
     copyFrom(ptFill, allocCount);
   }
@@ -177,7 +177,7 @@ template <typename Tx> void Allocator<Tx>::copyFrom(const Allocator<Tx> *in) {
   // Buffer Mismatch Check.
   // We COULD just truncate the copy, but this is probably safer as programmers
   // should do that.
-  AssertOrThrow2(in->byteSize() > _allocSize);
+  AssertOrThrow2(in->byteSize() >= _allocSize);
 
   std::memmove((void *)(_pT), in->constptr(), _allocSize);
 }
@@ -197,7 +197,7 @@ void Allocator<Tx>::copyFrom(const Tx *other_in, size_t in_item_count,
   size_t other_size = in_item_count * sizeof(Tx);
   size_t my_size = _allocSize - (my_off * tsize());
 
-  AssertOrThrow2(other_size > my_size);
+  AssertOrThrow2(other_size >= my_size);
 
   std::memmove((void *)(_pT + my_off), (void *)(other_in + other_off), other_size);
 }
@@ -261,7 +261,7 @@ template <typename Tx> bool Allocator<Tx>::operator!=(Allocator<Tx> &in_ptr) {
  *  @brief assigns and deep copies rhs allocator
  */
 template <typename Tx> void Allocator<Tx>::operator=(const Allocator<Tx> &rhs) {
-  alloca(rhs.count());
+  this->_alloca(rhs.count());
   copyFrom(&rhs);
 }
 /**
@@ -297,7 +297,7 @@ template <typename Tx> void Allocator<Tx>::_alloca(size_t count) {
  */
 template <typename Tx> void Allocator<Tx>::realloca(size_t newCount) {
   if (_pT == NULL) {
-    alloca(newCount);
+    this->_alloca(newCount);
     return;
   }
 
@@ -333,9 +333,7 @@ template <typename Tx> void Allocator<Tx>::dealloc() {
  */
 template <typename Tx> void Allocator<Tx>::reallocBytes(size_t newSize) {
   AssertOrThrow2(_pT);
-  AssertOrThrow2(
-      !(newSize %
-        tsize()));  //-must be aligned. Allocator allocates items not bytes
+  AssertOrThrow2(!(newSize % tsize()));  //-must be aligned. Allocator allocates items not bytes
 
   _lastSize = _allocSize;
   _lastNum = _num;

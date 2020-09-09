@@ -51,6 +51,7 @@ void SDLUtils::checkSDLErr(bool bLog, bool bBreak) {
   //Do SDL errors here as well
   const char* c;
   while ((c = SDL_GetError()) != nullptr && *c != 0) {
+    //linux : GLXInfo
     if (bLog == true) {
       BRLogError("SDL: " + c);
     }

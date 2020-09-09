@@ -330,7 +330,7 @@ MegaTex::MegaTex(string_t name, std::shared_ptr<GLContext> ct, bool bCache) : Te
 MegaTex::~MegaTex() {
 }
 std::shared_ptr<MtFont> MegaTex::getFont(std::string fn) {
-  std::string low = StringUtil::lowercase(fn);
+  std::string low = fn;
 
   Hash32 h = STRHASH(low);
   auto f = _mapTexs.find(h);
@@ -369,7 +369,7 @@ std::shared_ptr<MtTexPatch> MegaTex::getTex(std::shared_ptr<Img32> tx) {
 */
 std::shared_ptr<MtTexPatch> MegaTex::getTex(std::string img, int32_t nPatches, bool bPreloaded, bool bLoadNow) {
   AssertOrThrow2(nPatches > 0);
-  std::string imgNameLow = StringUtil::lowercase(img);
+  std::string imgNameLow = img;
 
   if (bPreloaded == false) {
     if (!FileSystem::fileExists(imgNameLow)) {
@@ -514,10 +514,6 @@ std::shared_ptr<Img32> MegaTex::compile() {
       _pMaster->copySubImageFrom(tex->node()->_b2Rect._p0, ivec2(0, 0), ivec2(tex->getWidth(), tex->getHeight()), tex->img());
       Gu::checkErrorsDbg();
 
-      if (StringUtil::contains("acme", StringUtil::lowercase(tex->imgName()))) {
-        int n = 0;
-        n++;
-      }
       //New Tex coords
       tex->uv0().x = (float)tex->node()->_b2Rect._p0.x / imgW;
       tex->uv0().y = (float)tex->node()->_b2Rect._p1.y / imgH;

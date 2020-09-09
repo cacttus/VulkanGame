@@ -186,7 +186,7 @@ bool BottleScript::loadOrCreateGame(string_t gameName) {
   _strGameName = gameName;
 
   string_t gameDir = getGameDirectory(gameName);
-  string_t gameFileDir = FileSystem::combinePath(gameDir, "game.dat");
+  string_t gameFileDir = FileSystem::combinePath(gameDir, "/game.dat");
 
   if (FileSystem::directoryExists(gameDir)) {
     //later

@@ -232,7 +232,24 @@ void OperatingSystem::hideConsole() {
   OS_METHOD_NOT_IMPLEMENTED
 #endif
 }
+
+#if defined BR2_OS_LINUX
+string_t zenityGetResult(FILE* result) {
+  //Returns the result of a Zenity file selection dialog.
+  string_t ret = "";
+  if (result) {
+    //TODO: This needs to be a much larger buffer if we support multiple files.
+    char filename[BRO_MAX_PATH];
+    std::memset((void*)filename, 0, BRO_MAX_PATH);
+    fgets(filename, BRO_MAX_PATH, result);
+    string_t unsplit(filename);
+  }
+  return ret;
+}
+#endif
+
 string_t OperatingSystem::showOpenFolderDialog(const string_t& saved_path) {
+  string_t res = "";
 #if defined(BR2_OS_WINDOWS)
   WCHAR path[MAX_PATH];
 
@@ -264,25 +281,29 @@ string_t OperatingSystem::showOpenFolderDialog(const string_t& saved_path) {
       imalloc->Release();
     }
 
-    return StringUtil::wStrToStr(std::wstring(path));
+    res = StringUtil::wStrToStr(std::wstring(path));
   }
 #elif defined(BR2_OS_LINUX)
   //Must test this.
   Gu::debugBreak();
 
-  char filename[1024];
-  FILE* f = popen("zenity --file-selection", "r");
-  fgets(filename, 1024, f);
-  return filename;
+  try {
+    FILE* f = popen("zenity --file-selection --directory", "r");
+    res = zenityGetResult(f);
+  }
+  catch (...) {
+    BRLogError("Error during zenity folder selection.");
+  }
 #else
   OS_METHOD_NOT_IMPLEMENTED
 #endif
 
-  return "";
+  return res;
 }
-string_t OperatingSystem::showOpenFileDialog(const string_t& title, const string_t& filter, const string_t& defaultext, const string_t& basePath) {
+std::vector<string_t> OperatingSystem::showOpenFileDialog(const string_t& title, const string_t& filter,
+                                                          const string_t& defaultext, const string_t& basePath, bool multiple) {
   //Note Zenity supports returning multiple strings. If windows supports this we can easily allow this to return multiple.
-  string_t file = "";
+  std::vector<string_t> ret;
 #if defined(BR2_OS_WINDOWS)
   OPENFILENAMEW ofn = {0};
   WCHAR openFileNameReturnString[MAX_PATH];  // the filename will go here from the openfile dialog
@@ -304,27 +325,30 @@ string_t OperatingSystem::showOpenFileDialog(const string_t& title, const string
 #elif defined(BR2_OS_LINUX)
 
   std::string args = "zenity --file-selection --separator=\"|\" ";
-  //TODO: multiple files: add --multiple
+  //TODO: for multiple files add --multiple
   if (StringUtil::isNotEmpty(basePath)) {
     args += " --filename \"" + basePath + "\" ";
   }
+  if (multiple) {
+    args += " --multiple ";
+  }
+  string_t res = "";
+  try {
+    FILE* f = popen(args.c_str(), "r");
 
-  FILE* f = popen("zenity --file-selection", "r");
-  //TODO: This needs to be a much larger buffer if we support multiple files.
-  char filename[BRO_MAX_PATH];
-  std::memset((void*)filename, 0, BRO_MAX_PATH);
-  fgets(filename, BRO_MAX_PATH, f);
-  string_t unsplit(filename);
-
+    res = zenityGetResult(f);
+    ret = StringUtil::split(res, '|');
+  }
+  catch (...) {
+    BRLogError("Error during zenity file selection.");
+  }
   //TODO: multiple files.
-  //std::vector<string_t> rets = StringUtil::split(unsplit, '|');
 
-  return unsplit;
 #else
   OS_METHOD_NOT_IMPLEMENTED
 #endif
 
-  return file;
+  return ret;
 }
 
 string_t OperatingSystem::getEnvironmentVariable(const string_t& var) {
@@ -345,6 +369,40 @@ string_t OperatingSystem::getEnvironmentVariable(const string_t& var) {
   OS_METHOD_NOT_IMPLEMENTED
 #endif
   return ret;
+}
+string_t OperatingSystem::newline() {
+  string_t ret = "";
+#if defined(BR2_OS_WINDOWS)
+  ret = "\r\n";
+#elif defined(BR2_OS_LINUX)
+  ret = "\n";
+#else
+  OS_METHOD_NOT_IMPLEMENTED
+#endif
+  return ret;
+}
+
+string_t OperatingSystem::executeReadOutput(const string_t& cmd) {
+  //Execute the given command and return the output in a std::string.
+  //https://www.jeremymorgan.com/tutorials/c-programming/how-to-capture-the-output-of-a-linux-command-in-c/
+  string_t data = "";
+  FILE* stream;
+  const int max_buffer = 256;
+  char buffer[max_buffer];
+  string_t cmd_mod = cmd + " 2>&1";
+
+  try {
+    stream = popen(cmd_mod.c_str(), "r");
+    if (stream) {
+      while (!feof(stream))
+        if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+      pclose(stream);
+    }
+    return data;
+  }
+  catch (...) {
+    BRLogError("Failed to execute command: '" + cmd + "'");
+  }
 }
 
 }  // namespace BR2

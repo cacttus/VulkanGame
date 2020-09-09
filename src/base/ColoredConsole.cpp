@@ -65,7 +65,7 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
     else {
       ConsoleColorWhite();
     }
-    std::cout << beg << str << end << std::endl;
+    std::cout << beg << str << end;
 
     ConsoleColorWhite();
 
@@ -101,13 +101,13 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
     }
     cc_end = cc_reset;
 
-    std::cout << cc_beg << str << cc_end << std::endl;
+    std::cout << cc_beg << str << cc_end;
 #else
     OS_NOT_SUPPORTED_ERROR
 #endif
   }
   else {
-    std::cout << str << std::endl;
+    std::cout << str;
   }
 }
 

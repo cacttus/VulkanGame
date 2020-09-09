@@ -41,8 +41,8 @@ void TextDataFile::loadAndParse(string_t& loc) {
 
   //Dump messages.
   if (_vecMessages.size() > 0) {
-    string_t str = StringUtil::join("\r\n", _vecMessages);
-    BRLogInfo("Errors:" + StringUtil::tabify(str, 2));
+    string_t str = StringUtil::join("\n", _vecMessages);
+    BRLogWarn("Errors:\n" + StringUtil::tabify(str, 2));
   }
 
   postLoad(success);

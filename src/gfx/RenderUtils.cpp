@@ -3,6 +3,7 @@
 #include "../base/GLContext.h"
 #include "../base/Allocator.h"
 #include "../base/FileSystem.h"
+#include "../base/OperatingSystem.h"
 #include "../gfx/FrustumBase.h"
 #include "../gfx/RenderUtils.h"
 #include "../gfx/ShaderBase.h"
@@ -293,11 +294,11 @@ void RenderUtils::drawFrustumShader(std::shared_ptr<CameraNode> cam, std::shared
 
 void appendLine(string_t& st, const char* c) {
   st += c;
-  st += "\r\n";
+  st += OperatingSystem::newline();
 }
 void appendLine(string_t& st, const string_t& c) {
   st += c;
-  st += "\r\n";
+  st += OperatingSystem::newline();
 }
 
 string_t RenderUtils::debugGetRenderState(bool bForceRun, bool bPrintToStdout, bool bSaveFramebufferTexture) {

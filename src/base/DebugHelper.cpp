@@ -3,6 +3,8 @@
 #include "../base/Logger.h"
 #include "../base/StringUtil.h"
 #include "../base/WindowsIncludes.h"
+#include "../base/FileSystem.h"
+#include "../base/OperatingSystem.h"
 
 #include <iostream>
 
@@ -13,6 +15,7 @@
 
 #if defined(BR2_OS_LINUX)
 #include <execinfo.h>
+#include <sstream>
 #endif
 
 namespace BR2 {
@@ -204,57 +207,102 @@ string_t DebugHelper::modList() {
 #endif
   return ret;
 }
-std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
+#if defined(BR2_OS_LINUX)
+std::vector<std::string> linux_bt_syms(void** buffer, int nptrs) {
+  //Return a string backtrace of symbols received by backtrace()
   std::vector<std::string> callStack;
-#if defined(BR2_OS_WINDOWS)
-  //Code copied from Msdn.
-  uint32_t i;
-  void* stack[512];
-  unsigned short frames;
-  SYMBOL_INFO* symbol;
-  HANDLE process;
-
-  process = GetCurrentProcess();
-  SymInitialize(process, NULL, TRUE);
-  frames = CaptureStackBackTrace(0, 100, stack, NULL);
-  symbol = (SYMBOL_INFO*)calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
-  symbol->MaxNameLen = 255;
-  symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
-
-  for (i = 0; i < frames; i++) {
-    SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
-
-    if (bIncludeFrameId) {
-      callStack.push_back(StringUtil::format("[%i] %s", frames - i - 1, symbol->Name));
-    }
-    else {
-      callStack.push_back(StringUtil::format("%s", symbol->Name));
-    }
-  }
-
-  free(symbol);
-#elif defined(BR2_OS_LINUX)
-  //Linux - taken from the man pages.
-  //https://linux.die.net/man/3/backtrace_symbols
-  int j, nptrs;
-#define BT_BUF_SIZE 100
-  void *buffer[BT_BUF_SIZE];
-  char **strings;
-
-  nptrs = backtrace(buffer, BT_BUF_SIZE);
-  
-  strings = backtrace_symbols(buffer, nptrs);
+  char** strings = backtrace_symbols(buffer, nptrs);
   if (strings == NULL) {
     BRLogError("Could not perform linux stack trace.");
   }
   else {
-    for (j = 0; j < nptrs; j++) {
+    for (int j = 0; j < nptrs; j++) {
       callStack.push_back(std::string(strings[j]));
     }
-    free(strings);
+  }
+  free(strings);
+  return callStack;
+}
+#endif
+std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
+  static bool s_callstackFailed = false;
+  std::vector<std::string> callStack;
+  
+  if (s_callstackFailed == false) {
+#if defined(BR2_OS_WINDOWS)
+    //Code copied from Msdn.
+    uint32_t i;
+    void* stack[512];
+    unsigned short frames;
+    SYMBOL_INFO* symbol;
+    HANDLE process;
+
+    process = GetCurrentProcess();
+    SymInitialize(process, NULL, TRUE);
+    frames = CaptureStackBackTrace(0, 100, stack, NULL);
+    symbol = (SYMBOL_INFO*)calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
+    symbol->MaxNameLen = 255;
+    symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+    for (i = 0; i < frames; i++) {
+      SymFromAddr(process, (DWORD64)(stack[i]), 0, symbol);
+
+      if (bIncludeFrameId) {
+        callStack.push_back(StringUtil::format("[%i] %s", frames - i - 1, symbol->Name));
+      }
+      else {
+        callStack.push_back(StringUtil::format("%s", symbol->Name));
+      }
+    }
+
+    free(symbol);
+#elif defined(BR2_OS_LINUX)
+#define BT_BUF_SIZE 1024
+    void *buffer[BT_BUF_SIZE];
+    std::memset(buffer, 0, BT_BUF_SIZE);
+    int nptrs = backtrace(buffer, BT_BUF_SIZE);
+
+    try {
+      //Check if addr2line exists.
+      static int addr_exist = -1;
+      if(addr_exist == -1){
+        addr_exist = StringUtil::isNotEmpty(OperatingSystem::executeReadOutput((Stz + "command -v addr2line"))) ? 1 : 0;
+      }
+      if (addr_exist == 1) {
+        //Use Addr2Line for stacktrace (cleaner).
+        string_t sym_addrs_line = "";
+        string_t delim = "";
+        for (int i = 0; i < nptrs; ++i) {
+          std::stringstream my_ss;
+          my_ss << std::hex << buffer[i];
+          std::string addr_sz = my_ss.str();
+          sym_addrs_line += delim + addr_sz;
+          delim = " ";
+        }
+        string_t addr_cmd = Stz + "addr2line " + "-e \"" + FileSystem::getExecutableFullPath() + "\" " + "-f -C gcc -p -s " + sym_addrs_line;
+        string_t sym_result = OperatingSystem::executeReadOutput(addr_cmd);
+        callStack = StringUtil::split(sym_result, '\n');
+        if(callStack.size()>0){
+          callStack.erase(callStack.begin());//Remove the first which is   ?? ??:0
+        }
+      }
+      else {
+        //Use bt_syms
+        callStack = linux_bt_syms(buffer, nptrs);
+      }
+    }
+    catch (...) {
+      try {
+        callStack = linux_bt_syms(buffer, nptrs);
+      }
+      catch (...) {
+        s_callstackFailed = true;
+        BRLogError("All attempts to unwind callstack failed.");
+      }
+    }
+#endif
   }
 
-#endif
   return callStack;
 }
 string_t DebugHelper::getStackTrace() {

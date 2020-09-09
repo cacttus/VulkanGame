@@ -94,7 +94,7 @@ public:
   XMLCONFIG_PROP(SaveFrameTexture);
   XMLCONFIG_PROP(SaveFrameTextureMod);
   XMLCONFIG_PROP(BreakOnSDLError);
-  XMLCONFIG_PROP(BreakOnOpenGLError);
+  XMLCONFIG_PROP(BreakOnGraphicsError);
   XMLCONFIG_PROP(ShowConsole);
   XMLCONFIG_PROP(GameHostAttached); // << Remove this
   XMLCONFIG_PROP(GameHostTimeoutMs);
@@ -146,7 +146,7 @@ public:
   bool getSaveFrameTexture() { return _bSaveFrameTexture; }
   int getSaveFrameTextureMod() { return _iSaveFrameTextureMod; }
   bool getBreakOnSDLError() { return _bBreakOnSDLError; }
-  bool getBreakOnOpenGLError() { return _bBreakOnOpenGLError; }
+  bool getBreakOnGraphicsError() { return _bBreakOnGraphicsError; }
   bool getShowConsole() { return _bShowConsole; }
   void setShowConsole(bool b) { _bShowConsole = b; }
   void setGameHostAttached(bool b) { _bGameHostAttached = b; }
@@ -213,7 +213,7 @@ private:
   bool _bSaveFrameTexture = false;
   int _iSaveFrameTextureMod = 10;
   bool _bBreakOnSDLError = false;
-  bool _bBreakOnOpenGLError = false;
+  bool _bBreakOnGraphicsError = false;
   int32_t _iNumTextQuads = 1024;
   bool _bShowConsole = false;
   bool _bEnableObjectShadows = true;

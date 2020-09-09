@@ -29,7 +29,11 @@
 #define PHY_MAX_BOUND_BOX_SIZE (10000.0)
 #define PHY_MAX_BOUND_BOX_VOLUME (PHY_MAX_BOUND_BOX_SIZE*PHY_MAX_BOUND_BOX_SIZE*PHY_MAX_BOUND_BOX_SIZE)
 
-
+//////////////////////////////////////////////////////////////////////////
+//Supported C++ versions. TODO: Test in Windows.
+#define BR2_CPP11 1
+#define BR2_CPP14 1
+#define BR2_CPP17 1
 
 //////////////////////////////////////////////////////////////////////////
 // Use STL math, also includes <algorithm> everywhere.

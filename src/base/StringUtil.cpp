@@ -4,6 +4,7 @@
 
 #include "../base/Logger.h"
 #include "../base/Gu.h"
+#include "../base/OperatingSystem.h"
 
 //For wstring conversion
 #include <locale>
@@ -459,7 +460,7 @@ string_t StringUtil::removeNewline(string_t str) {
 }
 
 string_t StringUtil::appendLine(string_t str, string_t toAppend) {
-  str = str + toAppend + "\r\n";
+  str = str + toAppend + OperatingSystem::newline();
   return str;
 }
 string_t StringUtil::generate() {

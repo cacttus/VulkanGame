@@ -1,6 +1,7 @@
 #include "../base/Logger.h"
 #include "../base/Exception.h"
 #include "../base/GLContext.h"
+#include "../base/OperatingSystem.h"
 #include "../base/Gu.h"
 #include "../base/Hash.h"
 #include "../base/Img32.h"
@@ -26,13 +27,12 @@ ObFile::ObFile() {
 ObFile::~ObFile() {
 }
 void ObFile::preLoad() {
-  _pW25Config = std::make_shared<W25Config>();//Deleted in ~World25
+  _pW25Config = std::make_shared<W25Config>();  //Deleted in ~World25
 }
 void ObFile::postLoad() {
   BRLogInfo("ObFile: Debug mode is " + (_pW25Config->getIsDebugMode() ? "Enabled" : "Disabled"));
 }
 void ObFile::pkp(std::vector<string_t>& tokens) {
-
   // - Parse the given token buffer
   if (tokens.size() > 0) {
     parseVer(tokens);
@@ -112,14 +112,12 @@ void ObFile::parseConfig(std::vector<string_t>& tokens) {
     if (!Gu::is64Bit()) {
       _pW25Config->_iGridCountLimit = TypeConv::strToUint(getCleanToken(tokens, iind));
     }
-
   }
   else if (lcmp(tokens[0], "CF_GRID_LIMIT_64BIT", 2)) {
     if (Gu::is64Bit()) {
       _pW25Config->_iGridCountLimit = TypeConv::strToUint(getCleanToken(tokens, iind));
     }
   }
-
 }
 void ObFile::parseVer(std::vector<string_t>& tokens) {
   //version
@@ -148,13 +146,12 @@ void ObFile::parseMobs(std::vector<string_t>& tokens) {
 
     std::shared_ptr<WorldObj> pObj = WorldObj::create(mobFolder, typeID, friendlyName, strBox, strPlace);
     _vecWorldObjs.push_back(pObj);
-
   }
 }
 
 void ObFile::parseSprites(std::vector<string_t>& tokens) {
   if (lcmp(tokens[0], "SPR")) {
-    int iMinArgCount = 6; // all args including SPR, and one of the images at the end
+    int iMinArgCount = 6;  // all args including SPR, and one of the images at the end
 
     if ((int)tokens.size() >= iMinArgCount) {
       int iind = 1;
@@ -166,24 +163,18 @@ void ObFile::parseSprites(std::vector<string_t>& tokens) {
       bool bRandomSel = TypeConv::strToBool(getCleanToken(tokens, iind));
       //int iSolidTileIndex = TypeConv::strToInt(getCleanToken(tokens, iind));
       //int iLiquidTileIndex = TypeConv::strToInt(getCleanToken(tokens, iind));
-     // int iMaskIndex = TypeConv::strToInt(getCleanToken(tokens, iind));
+      // int iMaskIndex = TypeConv::strToInt(getCleanToken(tokens, iind));
 
       //Parse sprite file names.
       std::vector<string_t> files;
       for (size_t i = (iMinArgCount - 1); i < tokens.size(); ++i) {
         string_t path = StringUtil::stripDoubleQuotes(tokens[i]);
 
-
-
         //Attempt to find absolute path.  If we can't find, then attempt to append path.
         if (!FileSystem::fileExists(path)) {
           path = Gu::getPackage()->makeAssetPath("sprites", path);
         }
         if (FileSystem::fileExists(path)) {
-
-          //Prevent Duplicates when we hash the name.
-          path = StringUtil::lowercase(path);
-
           files.push_back(path);
         }
         else {
@@ -213,10 +204,7 @@ void ObFile::parseSprites(std::vector<string_t>& tokens) {
       //Add sprite
       if (bVerified == true) {
         processMotion(name, files, fDuration, bLoop, bRandomSel);
-
       }
-
-
     }
     else {
       BRLogWarn("Invalid SPR - incorrect number of arguments.  Wanted " + iMinArgCount + " got " + tokens.size());
@@ -227,12 +215,11 @@ void ObFile::parseSprites(std::vector<string_t>& tokens) {
 
 void ObFile::parseTiles(std::vector<string_t>& tokens) {
   if (lcmp(tokens[0], "TIL")) {
-    int iMinArgCount = 13; // all args including TIL, and all images at the end
+    int iMinArgCount = 13;  // all args including TIL, and all images at the end
 
     if ((int)tokens.size() >= iMinArgCount) {
       _bCurSpecValid = true;
       int iind = 1;
-
 
       //Parse the args line.
       string_t name = getCleanToken(tokens, iind);
@@ -256,8 +243,12 @@ void ObFile::parseTiles(std::vector<string_t>& tokens) {
       bool bVerified = true;
 
       GridMeshLayer::e eMatterMode = GridMeshLayer::e::Invalid;
-      if (StringUtil::equals(matter, "S")) { eMatterMode = GridMeshLayer::e::Opaque; }
-      else if (StringUtil::equals(matter, "L")) { eMatterMode = GridMeshLayer::e::Transparent; }
+      if (StringUtil::equals(matter, "S")) {
+        eMatterMode = GridMeshLayer::e::Opaque;
+      }
+      else if (StringUtil::equals(matter, "L")) {
+        eMatterMode = GridMeshLayer::e::Transparent;
+      }
       else if (StringUtil::equals(matter, "G")) {
         BRLogWarn("Gas not supported, converting to liquid");
         eMatterMode = GridMeshLayer::e::Transparent;
@@ -267,7 +258,6 @@ void ObFile::parseTiles(std::vector<string_t>& tokens) {
         bVerified = false;
         Gu::debugBreak();
       }
-
 
       for (size_t iTile = 0; iTile < _vecTileSpecs.size(); ++iTile) {
         Tile25Spec* ps = _vecTileSpecs[iTile];
@@ -304,16 +294,14 @@ void ObFile::parseTiles(std::vector<string_t>& tokens) {
         Gu::debugBreak();
       }
 
-      if (index < 0 || index>255) {
+      if (index < 0 || index > 255) {
         BRLogWarn(name + ": Index cannot be larger than 255!");
         bVerified = false;
         Gu::debugBreak();
       }
       if (bVerified == true && _bCurSpecValid == true) {
         processTile(name, index, eMatterMode, pTop, pSide, pBot, cp, rarity);
-
       }
-
     }
     else {
       BRLogWarn("Invalid Tile - incorrect number of arguments, wanted " + iMinArgCount + " got " + tokens.size());
@@ -333,11 +321,11 @@ void ObFile::parseObjects(std::vector<string_t>& tokens) {
   //    string_t name = getCleanToken(tokens, iind);
   //    _pCurObjSpec->_iType = STRHASH(name);
   //    _pCurObjSpec->_strName = name;
-  //    
+  //
   //}
   //else if (lcmp(tokens[0], "OB_MOB", 2)) {
   //    string_t strMob = getCleanToken(tokens, iind);
-  //    _pCurObjSpec->_strMobName = strMob; 
+  //    _pCurObjSpec->_strMobName = strMob;
   //}
   //else if (lcmp(tokens[0], "OB_IDOV", 2)) {
   //    int iType = TypeConv::strToInt(getCleanToken(tokens, iind));
@@ -427,7 +415,7 @@ void ObFile::parseObjects(std::vector<string_t>& tokens) {
   //        _pCurObjSpec->_eDrawType = DrawType::e::Model;
   //    }
   //    else {
-  //        BRLogWarn(_pCurObjSpec->_strName, ":", tokens[0], 
+  //        BRLogWarn(_pCurObjSpec->_strName, ":", tokens[0],
   //            "  ERROR - invalid Draw type for object");
   //        _bCurSpecValid = false;
   //    }
@@ -476,7 +464,7 @@ void ObFile::parseMorphTiles(std::vector<string_t>& tokens) {
 
     _pCurMorphTile = new MorphTile(name);
   }
-  else  if (lcmp(tokens[0], "MT_TIL", 2)) {
+  else if (lcmp(tokens[0], "MT_TIL", 2)) {
     if (_bCurSpecValid == true) {
       string_t name = getCleanToken(tokens, iind);
 
@@ -492,15 +480,13 @@ void ObFile::parseMorphTiles(std::vector<string_t>& tokens) {
     }
     _pCurWalkerSpec = nullptr;
   }
-  else  if (lcmp(tokens[0], "MT_END", 1)) {
+  else if (lcmp(tokens[0], "MT_END", 1)) {
     if (_bCurSpecValid == true) {
       _vecMorphTiles.push_back(_pCurMorphTile);
-
     }
     _pCurWalkerSpec = nullptr;
     _pCurMorphTile = nullptr;
   }
-
 }
 void ObFile::parseWalkers(std::vector<string_t>& tokens) {
   int iind = 1;
@@ -581,7 +567,6 @@ void ObFile::parseWalkers(std::vector<string_t>& tokens) {
       if (lt != nullptr) {
         _pCurWalkerSpec->getLairTiles().push_back(lt);
       }
-
     }
   }
   else if (lcmp(tokens[0], "WK_HOP ", 3)) {
@@ -601,7 +586,6 @@ void ObFile::parseWalkers(std::vector<string_t>& tokens) {
       if (_pCurWalkerSpec == nullptr) {
         BRLogError(tokens[0] + ":Walker was null.");
         _bCurSpecValid = false;
-
       }
 
       if (_bCurSpecValid) {
@@ -630,7 +614,6 @@ void ObFile::parseLairs(std::vector<string_t>& tokens) {
     if (_bCurSpecValid) {
       _pCurLairSpec = new LairSpec(name);
     }
-
   }
   else if (lcmp(tokens[0], "LA_END", 1)) {
     if (_bCurSpecValid) {
@@ -693,7 +676,6 @@ void ObFile::parseLairs(std::vector<string_t>& tokens) {
       if (lt != nullptr) {
         _pCurLairSpec->getLairTiles().push_back(lt);
       }
-
     }
   }
   else if (lcmp(tokens[0], "LA_FUNC_SOLID", 5)) {
@@ -711,7 +693,6 @@ void ObFile::parseLairs(std::vector<string_t>& tokens) {
       _pCurLairSpec->getNoiseFunc()->_nOctaves = octaves;
       _pCurLairSpec->getNoiseFunc()->_fPersistence = pers;
       _pCurLairSpec->getNoiseFunc()->_fScale = scale;
-
     }
   }
   else if (lcmp(tokens[0], "LA_CLIMATE", 9)) {
@@ -732,7 +713,6 @@ void ObFile::parseLairs(std::vector<string_t>& tokens) {
 
       if (ps == nullptr) {
         BRLogError(tokens[0] + ": While parsing lair, '" + _pCurLairSpec->getName() + "' Could not find the walker spec '" + name + "'.");
-
       }
 
       if (_bCurSpecValid) {
@@ -742,8 +722,6 @@ void ObFile::parseLairs(std::vector<string_t>& tokens) {
       }
     }
   }
-
-
 }
 void ObFile::parseGetSetMotion(string_t& tok, string_t& msName, std::shared_ptr<SpriteSpec>& out_ms) {
   //   Motion25Spec* mots = getMot(msName);
@@ -765,7 +743,6 @@ std::shared_ptr<SpriteSpec> ObFile::getMot(string_t& name) {
   return nullptr;
 }
 
-
 void ObFile::processMotion(string_t name, std::vector<string_t>& files, float fDuration, bool bLoop, bool bRandomSel) {
   std::shared_ptr<SpriteSpec> ps = std::make_shared<SpriteSpec>(_pBucket, name, files, fDuration, bLoop, bRandomSel);
   _vecMotionSpecs.push_back(ps);
@@ -779,14 +756,13 @@ void ObFile::processMotion(string_t name, std::vector<string_t>& files, float fD
 //    }
 //}
 void ObFile::processTile(string_t name, int32_t index, GridMeshLayer::e eMatterMode,
-  std::shared_ptr<SpriteSpec> pTop, std::shared_ptr<SpriteSpec> pSide, std::shared_ptr<SpriteSpec> pBot, ClimateSpec& cp, float rarity) {
-
+                         std::shared_ptr<SpriteSpec> pTop, std::shared_ptr<SpriteSpec> pSide, std::shared_ptr<SpriteSpec> pBot, ClimateSpec& cp, float rarity) {
   Tile25Spec* ps = new Tile25Spec(name, index, eMatterMode, pTop, pSide, pBot, cp, rarity);
   _vecTileSpecs.push_back(ps);
 
   if (eMatterMode == GridMeshLayer::e::Opaque) {
   }
-  else if (eMatterMode == GridMeshLayer::e::Transparent/* || eMatterMode == MatterMode::e::Gas*/) {
+  else if (eMatterMode == GridMeshLayer::e::Transparent /* || eMatterMode == MatterMode::e::Gas*/) {
     if (pTop->getDefaultDuration() > 0) {
       processShiftMotionImage(pTop, true, true);
     }
@@ -817,15 +793,14 @@ void ObFile::processShiftMotionImage(std::shared_ptr<SpriteSpec> ps, bool shiftH
     std::shared_ptr<Img32> bi = nullptr;
     try {
       bi = Gu::loadImage(pFrame->getImageName());
-    }
-    catch (Exception * ex) {
-      BRLogError("Failed to Open image.:\r\n" + ex->what());
+    } catch (Exception* ex) {
+      BRLogError("Failed to Open image.:" + OperatingSystem::newline() + ex->what());
       return;
     }
 
     //  _CrtSetDbgFlag(_CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_CRT_DF);
 
-      //Remove the "loaded" frame.
+    //Remove the "loaded" frame.
     DEL_MEM(pFrame);
     ps->getFrames().clear();
 
@@ -859,7 +834,6 @@ void ObFile::processShiftMotionImage(std::shared_ptr<SpriteSpec> ps, bool shiftH
     //**IMPORTANT set this.
     ps->setIsGenerated(true);
   }
-
 }
 
 Tile25Spec* ObFile::getTileSpecByName(string_t name) {
@@ -927,11 +901,10 @@ LairTile* ObFile::parseLairTile(std::vector<string_t>& tokens, string_t specName
     _bCurSpecValid = false;
   }
 
-
   MorphTile* sp = getMorphTileGroupByName(name);
   if (sp == nullptr) {
     BRLogError(tokens[0] + ":For '" + specName + "' Morph Tile '" + name +
-      "' was not found.  Make sure that the LA_BEG comes after all tiles (TIL) and that it's defined in MT_BEG.");
+               "' was not found.  Make sure that the LA_BEG comes after all tiles (TIL) and that it's defined in MT_BEG.");
     _bCurSpecValid = false;
   }
 
@@ -988,27 +961,25 @@ uint32_t ObFile::parseNbr_uint(std::vector<string_t>& tokens, int& iind) {
   return ret;
 }
 MpVec3i ObFile::parse_mxv3(std::vector<string_t>& tokens, string_t specName, int& iind) {
-
   MpVec3i uv;
 
   uv.setMin(ivec3(parseNbr_int(tokens, iind),
-    parseNbr_int(tokens, iind),
-    parseNbr_int(tokens, iind)));
+                  parseNbr_int(tokens, iind),
+                  parseNbr_int(tokens, iind)));
 
   uv.setMax(ivec3(parseNbr_int(tokens, iind),
-    parseNbr_int(tokens, iind),
-    parseNbr_int(tokens, iind)));
+                  parseNbr_int(tokens, iind),
+                  parseNbr_int(tokens, iind)));
 
   if ((uv.getMin().x > uv.getMax().x) || (uv.getMin().y > uv.getMax().y) || (uv.getMin().z > uv.getMax().z)) {
     BRLogError(tokens[0] + " For Spec, '" + specName + "' a min component was greater than a max component '" +
-      uv.getMin().toString() + " , " + uv.getMax().toString() + "'");
+               uv.getMin().toString() + " , " + uv.getMax().toString() + "'");
     _bCurSpecValid = false;
   }
 
   return uv;
 }
 MpUint ObFile::parse_mxui2(std::vector<string_t>& tokens, string_t specName, int& iind) {
-
   MpUint ui;
 
   int32_t cMin = parseNbr_uint(tokens, iind);
@@ -1035,7 +1006,6 @@ MpUint ObFile::parse_mxui2(std::vector<string_t>& tokens, string_t specName, int
   return ui;
 }
 MpFloat ObFile::parse_mxf2(std::vector<string_t>& tokens, string_t specName, int& iind) {
-
   MpFloat ui;
 
   ui.setMin(parseNbr_float(tokens, iind));
@@ -1067,5 +1037,4 @@ WalkerSpec* ObFile::getWalkerSpecByName(string_t n) {
   return nullptr;
 }
 
-
-}//ns Game
+}  // namespace BR2

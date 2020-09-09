@@ -23,6 +23,7 @@
 #include "../base/GLContext.h"
 #include "../base/Net.h"
 #include "../base/ProjectFile.h"
+#include "../base/ColoredConsole.h"
 #include "../math/Algorithm.h"
 #include "../gfx/TexCache.h"
 #include "../gfx/RenderViewport.h"
@@ -574,11 +575,11 @@ void Gu::print(const string_t& msg) {
   print(msg.c_str());
 }
 void Gu::print(const char* msg) {
-  if (Gu::getEngineConfig() == nullptr) {
-    std::cout << msg;
+  if (_pEngineConfig == nullptr) {
+    ColoredConsole::print(std::string(msg), ColoredConsole::Color::FG_WHITE);
   }
   else if (Gu::getEngineConfig()->getShowConsole()) {
-    std::cout << msg;
+    ColoredConsole::print(std::string(msg), ColoredConsole::Color::FG_WHITE);
   }
 }
 

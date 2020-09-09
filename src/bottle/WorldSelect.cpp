@@ -36,7 +36,6 @@ void WorldSelect::gatherWorlds() {
   FileSystem::getAllDirs(gsd, _vecWorldFolders);
   for (size_t iw = 0; iw < _vecWorldFolders.size(); ++iw) {
     string_t wf = _vecWorldFolders[iw];
-    Gu::debugBreak(); // Changed getDirectoryNameFromPath -- Test this
     wf = FileSystem::getDirectoryNameFromPath(wf);
     _vecWorldFolders[iw] = wf;
   }

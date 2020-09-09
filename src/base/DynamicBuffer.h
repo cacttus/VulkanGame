@@ -153,7 +153,7 @@ void DynamicBuffer<Tx>::copyFrom(DynamicBuffer<Tx>* rhs) {
   AssertOrThrow2(rhs != NULL);
   if (this->getBuffer()->byteSize() != rhs->getBuffer()->byteSize()) {
     this->getBuffer()->dealloc();
-    this->getBuffer()->alloca(rhs->getBuffer()->count());
+    this->getBuffer()->_alloca(rhs->getBuffer()->count());
   }
   this->getBuffer()->copyFrom(rhs->getBuffer());
 }

@@ -59,6 +59,14 @@ private:
       BR2::Gu::getLogger()->logError(Stz x, __LINE__, (char* const)__FILE__, nullptr); \
     }                                                                                  \
   }
+#define BRLogWarnOnce(x)                                                              \
+  {                                                                                    \
+    static bool ___logged_ = false;                                                    \
+    if (___logged_ == false) {                                                         \
+      ___logged_ = true;                                                               \
+      BR2::Gu::getLogger()->logWarn(Stz x, __LINE__, (char* const)__FILE__); \
+    }                                                                                  \
+  }
 #define BRLogDebugOnce(x)                                                     \
   {                                                                           \
     static bool ___logged_ = false;                                           \

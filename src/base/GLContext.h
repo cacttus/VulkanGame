@@ -42,7 +42,7 @@ public:
       _iMSAABuffers + ", " + _iMSAASamples + " srgb:" + (_bSRGB?"true":"false") + " forward_compatible: " + (_bForwardCompatible? "true" : "false");
   }
 public:
-  bool _bForwardCompatible = true;
+  bool _bForwardCompatible = true;//true means do not use old GL stuff
   int _iDepthBits = 32;
   int _iMinVersion = 3;
   int _iMinSubVersion = 3;

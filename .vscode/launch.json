@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/bin/VulkanGame-0.1.0-x86_64-d",
-      "args": ["log_async=false"],
+      "args": ["log_async=false","package_loc=_debug"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],

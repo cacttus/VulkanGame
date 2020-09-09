@@ -5,6 +5,7 @@
 #include "../base/Hash.h"
 #include "../base/EngineConfig.h"
 #include "../base/Allocator.h"
+#include "../base/OperatingSystem.h"
 #include "../gfx/ShaderBase.h"
 #include "../gfx/CameraNode.h"
 #include "../gfx/ShaderSubProgram.h"
@@ -319,16 +320,16 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
    //Do not unbind so we keep the uniforms.
 }
 string_t ShaderBase::debugGetUniformValues() {
-  string_t str = "\r\n";
+  string_t str = OperatingSystem::newline();
 
   for (std::pair<Hash32, std::shared_ptr<ShaderUniform>> uf : _vecUniforms) {
-    str += "Uniform '" + uf.second->getName() + "':\r\n";
+    str += "Uniform '" + uf.second->getName() + "':" + OperatingSystem::newline();
     if (uf.second->hasBeenSet() == false) {
-      str += " was not set.\r\n";
+      str += " was not set." + OperatingSystem::newline();
       // Gu::debugBreak();
     }
     else {
-      str += " " + uf.second->debugGetUniformValueAsString() + " \r\n";
+      str += " " + uf.second->debugGetUniformValueAsString() + " " + OperatingSystem::newline();
 
     }
   }
@@ -474,7 +475,7 @@ void ShaderBase::bindSsbo(std::shared_ptr<GpuBufferData> pDat, const char* shade
       + " shader name (may be invalid) " + getProgramName()
       + " block idx " + blockIndex
       + " ssbo idx: " + shaderSsboIndex
-      + "\r\n"
+      + OperatingSystem::newline()
     );
   }
 

@@ -6,10 +6,12 @@
 #include "../base/Gu.h"
 #include "../base/FileSystem.h"
 #include "../base/DiskFile.h"
+#include "../base/SDLUtils.h"
+#include "../base/OperatingSystem.h"
 
 namespace BR2 {
 
-#pragma region BinaryFile:Methods
+#pragma region BinaryFile : Methods
 BinaryFile::BinaryFile(string_t file_version) {
   _strFileVersion = file_version;
 }
@@ -34,7 +36,7 @@ bool BinaryFile::eatWs() {
   // - Eat Whitespace (ALSO EATS \n, \r and spaces!!!)
   while (StringUtil::isWs(at())) {  // is char is alphanumeric
     if (get() == -1) {
-      return 0;    // inc pointer
+      return 0;  // inc pointer
     }
   }
 
@@ -42,9 +44,9 @@ bool BinaryFile::eatWs() {
 }
 bool BinaryFile::eatWsExceptNewline() {
   // - same as eatWs except it returns at newline.
-  while (StringUtil::isWsExceptNewline(at())) {   // is char is alphanumeric
+  while (StringUtil::isWsExceptNewline(at())) {  // is char is alphanumeric
     if (get() == -1) {
-      return 0;    // inc pointer
+      return 0;  // inc pointer
     }
   }
 
@@ -66,7 +68,8 @@ bool BinaryFile::eatTo(int8_t k) {
   // - eats until character (increments buffer pointer)
   int8_t c;
   while ((c = at()) != k) {
-    if (get() == -1) return 0; {   // inc pointer
+    if (get() == -1) return 0;
+    {  // inc pointer
     }
   }
 
@@ -85,7 +88,7 @@ string_t BinaryFile::getTok() {
     c = get();
 
     if (c == -1) {
-      return ret;//eof
+      return ret;  //eof
     }
 
     ret.append(1, c);
@@ -109,7 +112,7 @@ string_t BinaryFile::getTokSameLineOrReturnEmpty() {
     c = get();
 
     if (c == -1) {
-      return ret;//eof
+      return ret;  //eof
     }
 
     ret += c;
@@ -124,7 +127,7 @@ int8_t BinaryFile::at() {
   }
   return (int8_t)(*(getData().ptr() + iFilePos));
 }
-int8_t  BinaryFile::at(t_filepos _pos) {
+int8_t BinaryFile::at(t_filepos _pos) {
   if (eof()) {
     return -1;
   }
@@ -154,8 +157,17 @@ bool BinaryFile::loadFromDisk(string_t fileLoc, size_t offset, int64_t length, b
   int ret;
   ret = FileSystem::SDLFileRead(fileLoc, bufRet, size, bAddNull);
   if (ret != 0) {
+    string_t inf = "Failure, could not read file" + fileLoc + " returned " + ret;
+    //Dump an SDL error if present.
+    if (FileSystem::fileExists(fileLoc)) {
+      inf += OperatingSystem::newline() + " - File Exists.";
+    }
+    else {
+      inf += OperatingSystem::newline() + " - File Does not exist.";
+    }
+    BRLogError(inf);
+    SDLUtils::checkSDLErr(true, false);
     //Failure
-    BRLogError("Failure, could not read file" + fileLoc + " returned " + ret);
     Gu::debugBreak();
     return false;
     // BroThrowException("Failure, could not read file", fileLoc, " returned ", ret);
@@ -199,7 +211,7 @@ bool BinaryFile::writeToDisk(string_t fileLoc) {
 }
 #pragma endregion
 
-#pragma region BinaryFile:Read
+#pragma region BinaryFile : Read
 
 void BinaryFile::readBool(bool& val, size_t offset) {
   int8_t b;
@@ -263,7 +275,7 @@ void BinaryFile::readString(std::string& val, size_t offset) {
   if (iStringLen > 0) {
     char* buf = new char[iStringLen + 1];
     read(buf, iStringLen, iStringLen, iFilePos);
-    buf[iStringLen] = 0;//null terminate
+    buf[iStringLen] = 0;  //null terminate
     val.assign(buf);
     delete[] buf;
     iFilePos += iStringLen;
@@ -322,7 +334,7 @@ bool BinaryFile::readVersion() {
 }
 #pragma endregion
 
-#pragma region BinaryFile:Write
+#pragma region BinaryFile : Write
 void BinaryFile::writeBool(bool&& val, size_t offset) {
   int8_t b = (val > 0) ? 1 : 0;
   writeByte(std::move(b), offset);
@@ -433,5 +445,4 @@ void BinaryFile::writeVersion() {
 
 #pragma endregion
 
-
-}//ns game
+}  // namespace BR2

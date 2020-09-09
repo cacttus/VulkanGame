@@ -1,14 +1,12 @@
 #include "../base/Logger.h"
 #include "../base/Hash.h"
 #include "../base/GLContext.h"
+#include "../base/OperatingSystem.h"
 #include "../gfx/ShaderAttribute.h"
 #include "../gfx/ShaderBase.h"
 
-
 namespace BR2 {
-ShaderAttribute::ShaderAttribute(std::shared_ptr<ShaderBase> pShaderBase, int32_t attribIndex) :
-  _iGLLocation(NoAttribLocationFound)
-  , _strName("") {
+ShaderAttribute::ShaderAttribute(std::shared_ptr<ShaderBase> pShaderBase, int32_t attribIndex) : _iGLLocation(NoAttribLocationFound), _strName("") {
   parseAttribute(pShaderBase, attribIndex);
 }
 /**
@@ -24,16 +22,7 @@ void ShaderAttribute::parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, in
 
   memset(buf, 0, 512);
 
-
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetActiveAttrib(
-    pShaderBase->getGlId()
-    , attribIndex
-    , NBUFSIZ
-    , &buflen
-    , &_iGLAttribSize
-    , &_eGLAttribType
-    , buf
-  );
+  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetActiveAttrib(pShaderBase->getGlId(), attribIndex, NBUFSIZ, &buflen, &_iGLAttribSize, &_eGLAttribType, buf);
 
   AssertOrThrow2(buflen < NBUFSIZ);
 
@@ -49,10 +38,13 @@ void ShaderAttribute::parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, in
     _eUserType = parseUserType(_strName);
 
     if (_iGLLocation == NoAttribLocationFound) {
-      _strError += Stz "  Error [GLSL] Attrib " + getName() + " was not found.  \r\n  \
-                             1) It may have been optimized out.\r\n  \
-                             2) you may have forgotten to set it in addAttr()\r\n \
-                             3) the attribute may not be in the shader, so you need to remove the addAttr(). \r\n";
+      _strError += Stz "  Error [GLSL] Attrib " + getName() + " was not found.  " + OperatingSystem::newline() + "  \
+                             1) It may have been optimized out." +
+                   OperatingSystem::newline() + "  \
+                             2) you may have forgotten to set it in addAttr()" +
+                   OperatingSystem::newline() + " \
+                             3) the attribute may not be in the shader, so you need to remove the addAttr(). " +
+                   OperatingSystem::newline() + "";
 
       BRLogWarn(err);
       Gu::debugBreak();
@@ -61,11 +53,21 @@ void ShaderAttribute::parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, in
   }
 }
 bool ShaderAttribute::isOpenGLBuiltInAttrib(string_t strName) {
-  if (StringUtil::equals(strName, "gl_VertexID")) { return true; }
-  else if (StringUtil::equals(strName, "gl_InstanceID")) { return true; }
-  else if (StringUtil::equals(strName, "gl_DrawID")) { return true; }
-  else if (StringUtil::equals(strName, "gl_BaseVertex")) { return true; }
-  else if (StringUtil::equals(strName, "gl_BaseInstance")) { return true; }
+  if (StringUtil::equals(strName, "gl_VertexID")) {
+    return true;
+  }
+  else if (StringUtil::equals(strName, "gl_InstanceID")) {
+    return true;
+  }
+  else if (StringUtil::equals(strName, "gl_DrawID")) {
+    return true;
+  }
+  else if (StringUtil::equals(strName, "gl_BaseVertex")) {
+    return true;
+  }
+  else if (StringUtil::equals(strName, "gl_BaseInstance")) {
+    return true;
+  }
   return false;
 }
 VertexUserType ShaderAttribute::parseUserType(string_t& name) {
@@ -74,10 +76,10 @@ VertexUserType ShaderAttribute::parseUserType(string_t& name) {
   //Validate some errors
   string_t err = "";
   if (_strName.length() < 4) {
-    err += Stz "  Invalid attribute identifier: '" + _strName + "'\r\n";
+    err += Stz "  Invalid attribute identifier: '" + _strName + "'" + OperatingSystem::newline();
   }
   else if (_strName[0] != '_') {
-    err += Stz "  Invalid attribute identifier pattern: '" + _strName + "'\r\n";
+    err += Stz "  Invalid attribute identifier pattern: '" + _strName + "'" + OperatingSystem::newline();
   }
   else {
     string_t strValue = _strName.substr(1, 4);
@@ -86,27 +88,50 @@ VertexUserType ShaderAttribute::parseUserType(string_t& name) {
     string_t strIndex = strValue.substr(2, 2);
 
     //validate component size.
-    if (_eGLAttribType == GL_FLOAT_VEC2 && !(strVectorSize == "2")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_FLOAT_VEC3 && !(strVectorSize == "3")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_FLOAT_VEC4 && !(strVectorSize == "4")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_INT_VEC2 && !(strVectorSize == "2")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_INT_VEC3 && !(strVectorSize == "3")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_INT_VEC4 && !(strVectorSize == "4")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_BOOL_VEC2 && !(strVectorSize == "2")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_BOOL_VEC3 && !(strVectorSize == "3")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_BOOL_VEC4 && !(strVectorSize == "4")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_FLOAT_MAT2 && !(strVectorSize == "2")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_FLOAT_MAT3 && !(strVectorSize == "3")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-    else if (_eGLAttribType == GL_FLOAT_MAT4 && !(strVectorSize == "4")) { err += Stz "  Vertex component for '" + strValue + "' is invalid.\r\n"; }
-
-    if (StringUtil::isEmpty(strVectorSize)) {
-      err += Stz "  Could not match the given gl enumeration type for vertex attribute '" + _strName + "'\r\n";
+    if (_eGLAttribType == GL_FLOAT_VEC2 && !(strVectorSize == "2")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_FLOAT_VEC3 && !(strVectorSize == "3")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_FLOAT_VEC4 && !(strVectorSize == "4")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_INT_VEC2 && !(strVectorSize == "2")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_INT_VEC3 && !(strVectorSize == "3")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_INT_VEC4 && !(strVectorSize == "4")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_BOOL_VEC2 && !(strVectorSize == "2")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_BOOL_VEC3 && !(strVectorSize == "3")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_BOOL_VEC4 && !(strVectorSize == "4")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_FLOAT_MAT2 && !(strVectorSize == "2")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_FLOAT_MAT3 && !(strVectorSize == "3")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
+    }
+    else if (_eGLAttribType == GL_FLOAT_MAT4 && !(strVectorSize == "4")) {
+      err += Stz "  Vertex component for '" + strValue + "' is invalid." + OperatingSystem::newline();
     }
 
+    if (StringUtil::isEmpty(strVectorSize)) {
+      err += Stz "  Could not match the given gl enumeration type for vertex attribute '" + _strName + "'" + OperatingSystem::newline();
+    }
   }
 
   if (StringUtil::isNotEmpty(err)) {
-    BRLogError("Attribute '" + _strName + "'parse error: \r\n" + err);
+    BRLogError("Attribute '" + _strName + "'parse error: " + OperatingSystem::newline() + err);
     Gu::debugBreak();
   }
   else {
@@ -149,17 +174,9 @@ VertexUserType ShaderAttribute::parseUserType(string_t& name) {
       BRLogInfo("  Unrecognized vertex attribute '" + name + "'.");
       Gu::debugBreak();
     }
-
   }
-
 
   return ret;
 }
 
-
-
-
-
-
-
-}//ns Game
+}  // namespace BR2

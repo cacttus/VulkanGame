@@ -40,7 +40,7 @@ void GraphicsApi::updateLoop() {
     Perf::pushPerf();
     {
       if (handleSDLEvents() == true) {
-        break;//SDL_QUIT
+        break;  //SDL_QUIT
       }
 
       Gu::updateManagers();
@@ -54,9 +54,9 @@ void GraphicsApi::updateLoop() {
     Perf::endPerf();
     DebugHelper::checkMemory();
 
-    //**End of loop error -- Don't Remove** 
+    //**End of loop error -- Don't Remove**
     _pCoreContext->chkErrRt();
-    //**End of loop error -- Don't Remove** 
+    //**End of loop error -- Don't Remove**
   }
 
   DebugHelper::checkMemory();
@@ -97,81 +97,80 @@ bool GraphicsApi::handleEvents(SDL_Event* event) {
       BRLogDebug("SDL_AUDIODEVICEADDED called.");
     }
     else {
-
       string_t ze = Stz "Window input manager could not be found for window ID " + event->window.windowID + ". Known Ids:";
       string_t appz = "";
       for (auto wc : this->_contexts) {
         ze += Stz appz + SDL_GetWindowID(wc->getGraphicsWindow()->getSDLWindow());
         appz = ",";
       }
-      ze += Stz  " event=" + event->type;
+      ze += Stz " event=" + event->type;
       BRLogWarn(ze);
     }
     return true;
   }
 
   switch (event->type) {
-  case SDL_MOUSEMOTION:
-    //Don't use this.  Because of "SDL_warpMouse" which will mess stuff up.
-    break;
-  case SDL_KEYDOWN:
-    keyCode = event->key.keysym.scancode;
-    pInput->setKeyDown(keyCode);
-    Gu::getGlobalInput()->setKeyDown(keyCode);
-    break;
-  case SDL_KEYUP:
-    keyCode = event->key.keysym.scancode;
-    pInput->setKeyUp(keyCode);
-    Gu::getGlobalInput()->setKeyUp(keyCode);
-    break;
-  case SDL_MOUSEBUTTONDOWN:
-    switch (event->button.button) {
-    case SDL_BUTTON_LEFT:
-      pInput->setLmbState(ButtonState::Press);
-      Gu::getGlobalInput()->setLmbState(ButtonState::Press);
+    case SDL_MOUSEMOTION:
+      //Don't use this.  Because of "SDL_warpMouse" which will mess stuff up.
       break;
-    case SDL_BUTTON_MIDDLE:
+    case SDL_KEYDOWN:
+      keyCode = event->key.keysym.scancode;
+      pInput->setKeyDown(keyCode);
+      Gu::getGlobalInput()->setKeyDown(keyCode);
       break;
-    case SDL_BUTTON_RIGHT:
-      pInput->setRmbState(ButtonState::Press);
-      Gu::getGlobalInput()->setRmbState(ButtonState::Press);
+    case SDL_KEYUP:
+      keyCode = event->key.keysym.scancode;
+      pInput->setKeyUp(keyCode);
+      Gu::getGlobalInput()->setKeyUp(keyCode);
       break;
-    }
-    break;
-  case SDL_MOUSEBUTTONUP:
-    switch (event->button.button) {
-    case SDL_BUTTON_LEFT:
-      pInput->setLmbState(ButtonState::Release);
-      Gu::getGlobalInput()->setLmbState(ButtonState::Release);
+    case SDL_MOUSEBUTTONDOWN:
+      switch (event->button.button) {
+        case SDL_BUTTON_LEFT:
+          pInput->setLmbState(ButtonState::Press);
+          Gu::getGlobalInput()->setLmbState(ButtonState::Press);
+          break;
+        case SDL_BUTTON_MIDDLE:
+          break;
+        case SDL_BUTTON_RIGHT:
+          pInput->setRmbState(ButtonState::Press);
+          Gu::getGlobalInput()->setRmbState(ButtonState::Press);
+          break;
+      }
       break;
-    case SDL_BUTTON_MIDDLE:
+    case SDL_MOUSEBUTTONUP:
+      switch (event->button.button) {
+        case SDL_BUTTON_LEFT:
+          pInput->setLmbState(ButtonState::Release);
+          Gu::getGlobalInput()->setLmbState(ButtonState::Release);
+          break;
+        case SDL_BUTTON_MIDDLE:
+          break;
+        case SDL_BUTTON_RIGHT:
+          pInput->setRmbState(ButtonState::Release);
+          Gu::getGlobalInput()->setRmbState(ButtonState::Release);
+          break;
+      }
       break;
-    case SDL_BUTTON_RIGHT:
-      pInput->setRmbState(ButtonState::Release);
-      Gu::getGlobalInput()->setRmbState(ButtonState::Release);
+    case SDL_WINDOWEVENT:
+      switch (event->window.event) {
+        case SDL_WINDOWEVENT_CLOSE:
+          return false;
+          break;
+      }
       break;
-    }
-    break;
-  case SDL_WINDOWEVENT:
-    switch (event->window.event) {
-    case SDL_WINDOWEVENT_CLOSE:
+    case SDL_MOUSEWHEEL:
+      if (event->wheel.y != 0) {
+        int n = MathUtils::brMin(10, MathUtils::brMax(-10, event->wheel.y));
+        pInput->setMouseWheel(n);
+        Gu::getGlobalInput()->setMouseWheel(n);
+      }
+      if (event->wheel.x != 0) {
+        n++;
+      }
+      break;
+    case SDL_QUIT:
       return false;
       break;
-    }
-    break;
-  case SDL_MOUSEWHEEL:
-    if (event->wheel.y != 0) {
-      int n = MathUtils::brMin(10, MathUtils::brMax(-10, event->wheel.y));
-      pInput->setMouseWheel(n);
-      Gu::getGlobalInput()->setMouseWheel(n);
-    }
-    if (event->wheel.x != 0) {
-      n++;
-    }
-    break;
-  case SDL_QUIT:
-    return false;
-    break;
   }
 
   return true;
@@ -197,8 +196,10 @@ SDL_Window* GraphicsApi::makeSDLWindow(string_t windowTitle, int render_system, 
 #ifdef BR2_OS_WINDOWS
   //SDL_WINDOW_OPENGL | SDL_WINDOW_VULKAN;
   if (bFullscreen) {
-    x = 0; y = 0;
-    w = 1920; h = 1080;
+    x = 0;
+    y = 0;
+    w = 1920;
+    h = 1080;
     flags = render_system;
   }
   else {
@@ -209,8 +210,10 @@ SDL_Window* GraphicsApi::makeSDLWindow(string_t windowTitle, int render_system, 
 #ifdef BR2_OS_LINUX
   //SDL_WINDOW_OPENGL | SDL_WINDOW_VULKAN;
   if (bFullscreen) {
-    x = 0; y = 0;
-    w = 1920; h = 1080;
+    x = 0;
+    y = 0;
+    w = 1920;
+    h = 1080;
     flags = render_system;
   }
   else {
@@ -223,19 +226,21 @@ SDL_Window* GraphicsApi::makeSDLWindow(string_t windowTitle, int render_system, 
 #endif
 #endif
 
-    //No0te: This calls SDL_GL_LOADLIBRARY if SDL_WINDOW_OPENGL is set.
-    ret = SDL_CreateWindow(title.c_str(), x, y, w, h, flags);
-  SDLUtils::checkSDLErr();
+  //No0te: This calls SDL_GL_LOADLIBRARY if SDL_WINDOW_OPENGL is set.
+  ret = SDL_CreateWindow(title.c_str(), x, y, w, h, flags);
+  if (ret != nullptr) {
+    //On Linux SDL will set an error if unable to represent a GL/Vulkan profile, as we try different ones. Ignore them for now.
+    //Windows SDL sets an error when the context is created.
+    SDLUtils::checkSDLErr();
 
-  //Fullscreen nonsense
-  if (bFullscreen) {
-    SDL_SetWindowFullscreen(ret, SDL_WINDOW_FULLSCREEN);
+    //Fullscreen nonsense
+    if (bFullscreen) {
+      SDL_SetWindowFullscreen(ret, SDL_WINDOW_FULLSCREEN);
+    }
+    SDLUtils::checkSDLErr();
   }
-  SDLUtils::checkSDLErr();
 
   return ret;
 }
 
-
-
-}//ns Game
+}  // namespace BR2

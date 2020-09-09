@@ -9,6 +9,7 @@
 #include "../base/GLContext.h"
 #include "../base/FpsMeter.h"
 #include "../base/ColoredConsole.h"
+#include "../base/OperatingSystem.h"
 #include <mutex>
 #include <atomic>
 #include <fstream>
@@ -76,7 +77,7 @@ void Logger_Internal::log_cycle_mainThread(std::function<void()> f, bool force, 
   }
 }
 string_t Logger_Internal::addStackTrace(string_t msg) {
-  msg += "\r\n";
+  msg += OperatingSystem::newline();
   msg += DebugHelper::getStackTrace();
   return msg;
 }
@@ -108,7 +109,7 @@ void Logger_Internal::log(string_t msg, string_t header, const BR2::Exception*  
     m += Stz ", Exception: " + e->what();
   }
 
-  m += Stz "\n";
+  m += Stz OperatingSystem::newline();
 
   if (_bAsync) {
     _mtLogStackAccess.lock();

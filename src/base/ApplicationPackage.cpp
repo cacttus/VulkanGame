@@ -52,17 +52,18 @@ string_t ApplicationPackage_Internal::_strEngineConfigFileName = "";
 string_t ApplicationPackage_Internal::_strDataPath = "";
 void ApplicationPackage_Internal::makeDefaultPaths() {
   FileSystem::getExecutableDirectory();
-  _strAssetsDir = FileSystem::combinePath(FileSystem::getExecutableDirectory(), "/data/");
+  //Do not add trailing slashes "/x/" use "/x" this causes an invalid filesystem::combine
+  _strAssetsDir = FileSystem::combinePath(FileSystem::getExecutableDirectory(), "/data");
 
-  _strTextureDir = FileSystem::combinePath(_strTextureDir, "/textures/");
-  _strShadersDir = FileSystem::combinePath(_strAssetsDir, "/shaders/");
-  _strModelsTextDir = FileSystem::combinePath(_strAssetsDir, "/mob/");
-  _strModelsBinDir = FileSystem::combinePath(_strAssetsDir, "/mbi/");
-  _strSoundsFolder = FileSystem::combinePath(_strAssetsDir, "/sounds/");
-  _strFontsFolder = FileSystem::combinePath(_strAssetsDir, "/fonts/");
+  _strTextureDir = FileSystem::combinePath(_strTextureDir, "/textures");
+  _strShadersDir = FileSystem::combinePath(_strAssetsDir, "/shaders");
+  _strModelsTextDir = FileSystem::combinePath(_strAssetsDir, "/mob");
+  _strModelsBinDir = FileSystem::combinePath(_strAssetsDir, "/mbi");
+  _strSoundsFolder = FileSystem::combinePath(_strAssetsDir, "/sounds");
+  _strFontsFolder = FileSystem::combinePath(_strAssetsDir, "/fonts");
 
-  _strIconPath = FileSystem::combinePath(_strAssetsDir, "icon.png");
-  _strEnvTexturePath = FileSystem::combinePath(_strTextureDir, "env1_huge.png");
+  _strIconPath = FileSystem::combinePath(_strAssetsDir, "/icon.png");
+  _strEnvTexturePath = FileSystem::combinePath(_strTextureDir, "/env1_huge.png");
 }
 bool ApplicationPackage_Internal::loadPackedFile(std::string fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull) {
   //Open executable with fstream
@@ -113,10 +114,10 @@ std::string ApplicationPackage_Internal::parseStr(std::shared_ptr<BinaryFile> fb
   return ret;
 }
 ProjectPackageFileEntry* ApplicationPackage_Internal::getEntry(std::string fileLoc) {
-  std::string locLow = StringUtil::lowercase(FileSystem::formatPath(fileLoc));
+  std::string locLow = FileSystem::formatPath(fileLoc);
 
   for (ProjectPackageFileEntry* fe : _vecEntries) {
-    std::string feLow = StringUtil::lowercase(fe->_strLoc);
+    std::string feLow = fe->_strLoc;
     if (feLow.compare(locLow) == 0) {
       return fe;
     }
@@ -256,7 +257,7 @@ bool ApplicationPackage::getFile(std::string fileLoc, std::shared_ptr<BinaryFile
 }
 string_t ApplicationPackage::debugPrint() {
   string_t ret;
-  ret += "Files:\r\n";
+  ret += Stz "Files:" + OperatingSystem::newline();
   for (ProjectPackageFileEntry* fe : _pint->_vecEntries) {
     ret += "  Loc:" + fe->_strLoc;
     ret += "  Off:" + std::to_string(fe->_iOff);
@@ -289,14 +290,15 @@ time_t ApplicationPackage::getLastModifyTime(string_t str) {
   }
 }
 string_t ApplicationPackage::getDataPath() {
+  //TODO: how does this differ from _assetsDir?
   if (StringUtil::isEmpty(ApplicationPackage_Internal::_strDataPath)) {
-    ApplicationPackage_Internal::_strDataPath = FileSystem::combinePath(FileSystem::getExecutableDirectory(), "/data/");
+    ApplicationPackage_Internal::_strDataPath = FileSystem::combinePath(FileSystem::getExecutableDirectory(), "/data");
   }
   return ApplicationPackage_Internal::_strDataPath;
 }
 string_t ApplicationPackage::getCacheFolder() {
   if (StringUtil::isEmpty(ApplicationPackage_Internal::_strCacheFolderName)) {
-    ApplicationPackage_Internal::_strCacheFolderName = FileSystem::combinePath(getDataPath(), "/cache/");
+    ApplicationPackage_Internal::_strCacheFolderName = FileSystem::combinePath(getDataPath(), "/cache");
   }
   return ApplicationPackage_Internal::_strCacheFolderName;
 }

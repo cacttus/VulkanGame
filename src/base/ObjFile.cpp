@@ -88,7 +88,7 @@ void ObjFile::loadObjFileContents(BinaryFile& pBufferedFile) {
     }
     _iCurrentLine++;
 
-    // - Eat to the next line, that is eat \r\n
+    // - Eat to the next line, that is eat \r\n or \n
     pBufferedFile.eatLine();
   }
 }

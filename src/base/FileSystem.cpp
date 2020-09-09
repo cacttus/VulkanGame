@@ -9,7 +9,9 @@
 #include <fstream>
 #include <unistd.h>
 
+#if defined(BR2_CPP17)
 #include <filesystem>
+#endif
 
 #if defined(BR2_OS_WINDOWS)
 #include "../ext/dirent.h"
@@ -58,8 +60,18 @@ string_t FileSystem::getExecutableDirectory() {
   return ret;
 }
 string_t FileSystem::combinePath(string_t a, string_t b) {
-#if defined(BR2_OS_LINUX)
-  string_t st = std::filesystem::path(a) / b;
+#if defined(BR2_CPP17)
+  //Combining paths on Linux doesn't actually treat the RHS as a path or file if there's no /
+  std::string bfmt;
+  if (b.length() && ((b[0] != '\\') && (b[0] != '/'))) {
+    bfmt = std::string("/") + b;
+  }
+  else {
+    bfmt = b;
+  }
+  std::filesystem::path pa(a);
+  std::filesystem::path pc = pa.concat(bfmt);
+  string_t st = pc;
   return st;
 #else
   if ((a.length() == 0) || (b.length() == 0)) {
@@ -103,7 +115,7 @@ bool FileSystem::createFile(const string_t &filename, bool trunc, bool bLog) {
 
 bool FileSystem::createDirectoryRecursive(string_t dirName) {
   bool bRet = true;
-#if defined(BR2_OS_LINUX)
+#if defined(BR2_CPP17)
   //Note: this creates directories with full permissions.
   std::error_code code;
   bRet = std::filesystem::create_directories(dirName, code);
@@ -203,7 +215,7 @@ string_t FileSystem::getFileNameFromPath(const string_t &name) {
   // ex ~/files/dir would return dir
   // - If formatPath is true then we'll convert the path to a / path.
   string_t fn = "";
-#if defined(BR2_OS_LINUX)
+#if defined(BR2_CPP17)
   fn = std::filesystem::path(name).filename();
 #else
 
@@ -228,6 +240,7 @@ string_t FileSystem::getDirectoryNameFromPath(const string_t &pathName) {
   // Returns the path without the filename OR top level directory.
   // See C# GetDirectoryName()
   string_t ret = "";
+
   DiskLoc formattedPath;
   DiskLoc tmpPath = pathName;
   string_t fn;
@@ -241,7 +254,6 @@ string_t FileSystem::getDirectoryNameFromPath(const string_t &pathName) {
   else {
     ret = formattedPath;
   }
-
   return ret;
 }
 bool FileSystem::fileExists(string_t filename) {
@@ -510,11 +522,15 @@ void FileSystem::SDLFileFree(char *&pOutData) {
 }
 int FileSystem::SDLFileRead(std::string fname, char *&pOutData,
                             int64_t &_iOutSizeBytes, bool addNull) {
+  //Return 1 = failure
+  //Return 0 = success
+  //Use SDLUtils::checkSDLError() to check the error.
   fname = getFilePath(fname);
 
   SDL_RWops *rw = SDL_RWFromFile(fname.c_str(), "rb");
-  if (rw == NULL)
+  if (rw == NULL) {
     return 1;
+  }
 
   _iOutSizeBytes = SDL_RWsize(rw);
   if (addNull) {
@@ -643,10 +659,9 @@ string_t FileSystem::getRootedPath(string_t loc) {
   // currently not supported so we need our own.
   string_t path = "";
 
-#if defined(BR2_OS_LINUX)
+#if defined(BR2_CPP17)
   path = std::filesystem::absolute(loc);
 #else
-
   // Get root of current.
   if (!pathIsAbsolute(loc)) {
     path = combinePath(FileSystem::getCurrentDirectory(), loc);
@@ -698,7 +713,11 @@ bool FileSystem::isUNC(string_t path) {
   return (uncFs || uncBs);
 }
 bool FileSystem::pathIsAbsolute(string_t path) {
-#if defined(BR2_OS_WINDOWS)
+#if defined(BR2_CPP17)
+  std::filesystem::path p(path);
+  bool isabs = p.is_absolute();
+  return isabs;
+#elif defined(BR2_OS_WINDOWS)
   // C++14 has std::filesystem::path path(loc);
   // This wasn't supported (last windows build) so this legacy may be removed.
   Gu::debugBreak();  //TEST THIS
@@ -718,10 +737,6 @@ bool FileSystem::pathIsAbsolute(string_t path) {
     return false;
   }
   return true;
-#elif defined(BR2_OS_LINUX)
-  std::filesystem::path p(path);
-  bool isabs = p.is_absolute();
-  return isabs;
 #else
   OS_NOT_SUPPORTED_ERROR
 #endif

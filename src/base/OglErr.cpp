@@ -5,6 +5,7 @@
 #include "../base/DebugHelper.h"
 #include "../base/EngineConfig.h"
 #include "../base/SDLUtils.h"
+#include "../base/OperatingSystem.h"
 
 namespace BR2 {
 class OglErr_Internal {
@@ -40,7 +41,7 @@ public:
         BRLogError("GL Error: " + glErrToStr(err) + " (" + (int)err + ")");
       }
 
-      if (Gu::getEngineConfig()->getBreakOnOpenGLError() == true) {
+      if (Gu::getEngineConfig()->getBreakOnGraphicsError() == true) {
         if (bDoNotBreak == false) {
           Gu::debugBreak();
         }
@@ -133,21 +134,21 @@ public:
         string_t strSev = glDebugGetMessageSeverity(severities[iMsg]);
 
         if (doNotLog == false) {
-          strMsg = "GPU LOG\r\n ID: " + StringUtil::toHex(id, true) + "\r\n Msg: " + strMsg;
+          strMsg = "GPU LOG" + OperatingSystem::newline() + " ID: " + StringUtil::toHex(id, true) + OperatingSystem::newline() + " Msg: " + strMsg;
 
           GLenum severity = severities[iMsg];
           GLenum type = types[iMsg];
           if (type == GL_DEBUG_TYPE_ERROR) {
             string_t _strStackInfo = DebugHelper::getStackTrace();
-            BRLogError(strMsg + "\r\n" + _strStackInfo);
+            BRLogError(strMsg + OperatingSystem::newline() + _strStackInfo);
           }
           else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
             string_t _strStackInfo = DebugHelper::getStackTrace();
-            BRLogInfo(strMsg + "\r\n" + _strStackInfo);
+            BRLogInfo(strMsg + OperatingSystem::newline() + _strStackInfo);
           }
           else {
             string_t _strStackInfo = DebugHelper::getStackTrace();
-            BRLogWarn(strMsg + "\r\n" + _strStackInfo);
+            BRLogWarn(strMsg + OperatingSystem::newline() + _strStackInfo);
           }
         }
 
