@@ -23,9 +23,9 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
   int minGLVersion;
   int minGLSubversion;
   std::vector<std::shared_ptr<GLProfile>> profs;
-  int iProfile = SDL_GL_CONTEXT_PROFILE_CORE;
   bool bVsync = false;
 
+  int iProfile = SDL_GL_CONTEXT_PROFILE_CORE;
 #ifdef BR2_OS_IPHONE
   minGLVersion = 3;
   minGLSubversion = 0;
@@ -34,16 +34,19 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
   minGLVersion = c_iCurrentOpenGLVersion;
   minGLSubversion = c_iCurrentOpenGLSubVersion;
 
-  //For debugging and such we can use compatibility.  Otherwise it is probably best to use the core profile (assuming it may increase performance).
-#ifdef _DEBUG
-  //iProfile = SDL_GL_CONTEXT_PROFILE_ES; // Es - Subset of base opengl functions
-  iProfile = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;  // Deprecated Functions are NOT allowed
-                                                    //iProfile = SDL_GL_CONTEXT_PROFILE_CORE;// Deprecated functions allowed;
-#else
-  iProfile = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;  // SDL_GL_CONTEXT_PROFILE_CORE;
-#endif
-#endif
+  OpenGLProfile eConfigProfile = Gu::getEngineConfig()->openGLProfile();
 
+  iProfile = SDL_GL_CONTEXT_PROFILE_CORE;
+  if (eConfigProfile == OpenGLProfile::Compatibility) {
+    iProfile = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;
+  }
+  else if (eConfigProfile == OpenGLProfile::Core) {
+    iProfile = SDL_GL_CONTEXT_PROFILE_CORE;
+  }
+  else if (eConfigProfile == OpenGLProfile::ES) {
+    iProfile = SDL_GL_CONTEXT_PROFILE_ES;
+  }
+#endif
   //Attempt to make a big depth buffer.
   std::vector<int> depth_sizes({32, 24, 16});
 
@@ -54,14 +57,12 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
     msaa_samples = Gu::getEngineConfig()->getMsaaSamples();
   }
 
-  bool fwd_compat = (iProfile == SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);  //forward compatible context.
-
   //This is the 'optimal' context.
   if (iProfile == SDL_GL_CONTEXT_PROFILE_ES) {
     for (auto depth : depth_sizes) {
       for (int srgb = 1; srgb >= 0; --srgb) {
-        profs.push_back(std::make_shared<GLProfile>(depth, 3, 3, iProfile, bVsync, msaa_buf, msaa_samples, (bool)srgb, fwd_compat));
-        profs.push_back(std::make_shared<GLProfile>(depth, 3, 0, iProfile, bVsync, msaa_buf, msaa_samples, (bool)srgb, fwd_compat));
+        profs.push_back(std::make_shared<GLProfile>(depth, 3, 3, iProfile, bVsync, msaa_buf, msaa_samples, (bool)srgb));
+        profs.push_back(std::make_shared<GLProfile>(depth, 3, 0, iProfile, bVsync, msaa_buf, msaa_samples, (bool)srgb));
       }
     }
   }
@@ -71,7 +72,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
       for (int sub = minGLSubversion; sub >= 0; --sub) {
         for (auto depth : depth_sizes) {
           for (int srgb = 1; srgb >= 0; --srgb) {
-            profs.push_back(std::make_shared<GLProfile>(depth, ver, sub, iProfile, bVsync, msaa_buf, msaa_samples, (bool)srgb, fwd_compat));
+            profs.push_back(std::make_shared<GLProfile>(depth, ver, sub, iProfile, bVsync, msaa_buf, msaa_samples, (bool)srgb));
           }
         }
       }
@@ -109,8 +110,8 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
         }
         SDL_DestroyWindow(win);
       }
-
-    } catch (Exception* ex) {
+    }
+    catch (Exception* ex) {
       BRLogError("Error during GL context creation: " + ex->what());
     }
   }

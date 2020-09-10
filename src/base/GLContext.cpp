@@ -8,7 +8,7 @@
 #include "../base/InputManager.h"
 #include "../base/Sequencer.h"
 #include "../base/GraphicsWindow.h"
-#include "../base/Logger.h" 
+#include "../base/Logger.h"
 #include "../base/FrameSync.h"
 #include "../base/SoundCache.h"
 #include "../base/Logger.h"
@@ -68,8 +68,6 @@ GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile
         _bValid = false;
       }
       else {
-        _bForwardCompatible = profile->_bForwardCompatible;
-
         //Quick GL test.
         glUseProgram(0);
 
@@ -83,18 +81,23 @@ GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile
 }
 GLContext::~GLContext() {
   if (_context) {
-    /* SDL_GL_MakeCurrent(0, NULL); *//* doesn't do anything */
+    /* SDL_GL_MakeCurrent(0, NULL); */ /* doesn't do anything */
     SDL_GL_DeleteContext(_context);
   }
 }
 void GLContext::setPolygonMode(PolygonMode p) {
-  if (Gu::getCoreContext()->getForwardCompatible() == false) {
+  if (Gu::getCoreContext()->isForwardCompatible() == false) {
     GLenum mode = GL_FILL;
-    if (p == PolygonMode::Line) { mode = GL_LINE; }
-    else if (p == PolygonMode::Point) { mode = GL_POINT; }
-    //These must be #ifdef out because glPolygonMOde is not present in gl330 core 
+    if (p == PolygonMode::Line) {
+      mode = GL_LINE;
+    }
+    else if (p == PolygonMode::Point) {
+      mode = GL_POINT;
+    }
+    //These must be #ifdef out because glPolygonMOde is not present in gl330 core
     glPolygonMode(GL_FRONT, mode);
     glPolygonMode(GL_BACK, mode);
+    Gu::getCoreContext()->chkErrDbg();
   }
   else {
     BRLogWarnOnce("glPolygonMode not supported in compatibility mode.");
@@ -110,23 +113,23 @@ bool GLContext::chkErrDbg(bool bDoNotBreak, bool doNotLog) {
 bool GLContext::loadOpenGLFunctions() {
   bool bValid = true;
 
-#define SDLGLP(x, y, z) do{ \
-if( !(x = (y)SDL_GL_GetProcAddress(z))) \
-{ \
-BRLogError("GL Method "+ z+" not supported by your GPU, or there was another error somewhere.."); \
-bValid = false; \
-Gu::debugBreak(); \
-} \
-} while(0)
+#define SDLGLP(x, y, z)                                                                                    \
+  do {                                                                                                     \
+    if (!(x = (y)SDL_GL_GetProcAddress(z))) {                                                              \
+      BRLogError("GL Method " + z + " not supported by your GPU, or there was another error somewhere.."); \
+      bValid = false;                                                                                      \
+      Gu::debugBreak();                                                                                    \
+    }                                                                                                      \
+  } while (0)
 
-#define SDLGLP2(x, y) do{ \
-if( !(y = (x)SDL_GL_GetProcAddress(#y))) \
-{ \
-BRLogError("GL Method "+ #y+ " not supported by your GPU, or there was another error somewhere.."); \
-bValid = false; \
-Gu::debugBreak(); \
-} \
-} while(0)
+#define SDLGLP2(x, y)                                                                                       \
+  do {                                                                                                      \
+    if (!(y = (x)SDL_GL_GetProcAddress(#y))) {                                                              \
+      BRLogError("GL Method " + #y + " not supported by your GPU, or there was another error somewhere.."); \
+      bValid = false;                                                                                       \
+      Gu::debugBreak();                                                                                     \
+    }                                                                                                       \
+  } while (0)
 
   SDLGLP(glUseProgram, PFNGLUSEPROGRAMPROC, "glUseProgram");
   SDLGLP(glBindBuffer, PFNGLBINDBUFFERPROC, "glBindBuffer");
@@ -207,12 +210,10 @@ Gu::debugBreak(); \
   SDLGLP(glRenderbufferStorage, PFNGLRENDERBUFFERSTORAGEPROC, "glRenderbufferStorage");
   SDLGLP(glFramebufferRenderbuffer, PFNGLFRAMEBUFFERRENDERBUFFERPROC, "glFramebufferRenderbuffer");
 
-
-  SDLGLP(glGetUniformBlockIndex, PFNGLGETUNIFORMBLOCKINDEXPROC, "glGetUniformBlockIndex");// = nullptr;
-  SDLGLP(glUniformBlockBinding, PFNGLUNIFORMBLOCKBINDINGPROC, "glUniformBlockBinding");//= nullptr;
-  SDLGLP(glBindBufferBase, PFNGLBINDBUFFERBASEPROC, "glBindBufferBase");//        = nullptr;
+  SDLGLP(glGetUniformBlockIndex, PFNGLGETUNIFORMBLOCKINDEXPROC, "glGetUniformBlockIndex");  // = nullptr;
+  SDLGLP(glUniformBlockBinding, PFNGLUNIFORMBLOCKBINDINGPROC, "glUniformBlockBinding");     //= nullptr;
+  SDLGLP(glBindBufferBase, PFNGLBINDBUFFERBASEPROC, "glBindBufferBase");                    //        = nullptr;
   SDLGLP(glGetActiveUniform, PFNGLGETACTIVEUNIFORMPROC, "glGetActiveUniform");
-
 
   SDLGLP(glGetVertexAttribIuiv, PFNGLGETVERTEXATTRIBIUIVPROC, "glGetVertexAttribIuiv");
   SDLGLP(glGetVertexAttribfv, PFNGLGETVERTEXATTRIBFVPROC, "glGetVertexAttribfv");
@@ -224,11 +225,10 @@ Gu::debugBreak(); \
   SDLGLP(glTexImage2DMultisample, PFNGLTEXIMAGE2DMULTISAMPLEPROC, "glTexImage2DMultisample");
   SDLGLP(glBlitFramebuffer, PFNGLBLITFRAMEBUFFERPROC, "glBlitFramebuffer");
 
+  SDLGLP(glGetProgramBinary, PFNGLGETPROGRAMBINARYPROC, "glGetProgramBinary");  // = nullptr;
 
-  SDLGLP(glGetProgramBinary, PFNGLGETPROGRAMBINARYPROC, "glGetProgramBinary");// = nullptr;
-
-  SDLGLP(glIsProgram, PFNGLISPROGRAMPROC, "glIsProgram");// = nullptr;
-  SDLGLP(glProgramBinary, PFNGLPROGRAMBINARYPROC, "glProgramBinary");// = nullptr;
+  SDLGLP(glIsProgram, PFNGLISPROGRAMPROC, "glIsProgram");              // = nullptr;
+  SDLGLP(glProgramBinary, PFNGLPROGRAMBINARYPROC, "glProgramBinary");  // = nullptr;
   SDLGLP(glValidateProgram, PFNGLVALIDATEPROGRAMPROC, "glValidateProgram");
 
   SDLGLP(glGetActiveAttrib, PFNGLGETACTIVEATTRIBPROC, "glGetActiveAttrib");
@@ -255,18 +255,18 @@ Gu::debugBreak(); \
   // SDLGLP2(PFNGLSHADERSTORAGEBLOCKBINDINGPROC, glShaderStorageBlockBinding);
   // SDLGLP2(PFNGLGETPROGRAMRESOURCEINDEXPROC, glGetProgramResourceIndex);
 
-
   SDLGLP2(PFNGLCOPYIMAGESUBDATAPROC, glCopyImageSubData);
   SDLGLP2(PFNGLDELETETEXTURESEXTPROC, glDeleteTextures);
 
   return bValid;
 }
 void GLContext::setLineWidth(float w) {
-  if (getForwardCompatible()==false) {
-    BRLogWarnOnce("glLineWidth not supported in compatibility mode.");
+  if (isForwardCompatible() == false) {
+    glLineWidth(w);
+    Gu::getCoreContext()->chkErrDbg();
   }
   else {
-    glLineWidth(w);
+    BRLogWarnOnce("glLineWidth not supported in compatibility mode.");
   }
 }
 
@@ -378,19 +378,24 @@ void GLContext::popDepthTest() {
 //}
 
 void GLContext::enableCullFace(bool enable) {
-  if (enable)glEnable(GL_CULL_FACE);
-  else glDisable(GL_CULL_FACE);
+  if (enable)
+    glEnable(GL_CULL_FACE);
+  else
+    glDisable(GL_CULL_FACE);
 }
 void GLContext::enableBlend(bool enable) {
-  if (enable)glEnable(GL_BLEND);
-  else glDisable(GL_BLEND);
+  if (enable)
+    glEnable(GL_BLEND);
+  else
+    glDisable(GL_BLEND);
 }
 
 void GLContext::enableDepthTest(bool enable) {
-  if (enable)glEnable(GL_DEPTH_TEST);
-  else glDisable(GL_DEPTH_TEST);
+  if (enable)
+    glEnable(GL_DEPTH_TEST);
+  else
+    glDisable(GL_DEPTH_TEST);
 }
-
 
 void GLContext::getOpenGLVersion(int& ver, int& subver, int& shad_ver, int& shad_subver) {
   char* tmp;
@@ -440,7 +445,6 @@ void GLContext::getOpenGLVersion(int& ver, int& subver, int& shad_ver, int& shad
       BRLogWarn("Failed to get OpenGL Shade version.");
     }
   }
-
 }
 bool GLContext::checkOpenGlMinimumVersionInfo(int required_version, int required_subversion) {
   string_t rver = Stz "" + required_version + "." + required_subversion;
@@ -454,18 +458,11 @@ bool GLContext::checkOpenGlMinimumVersionInfo(int required_version, int required
     string_t vendor = string_t((char*)glGetString(GL_VENDOR));
     string_t renderer = string_t((char*)glGetString(GL_RENDERER));
 
-    BRLogInfo("\n"
-      + "   OpenGL version " + ver + "." + subver + ".\n"
-      + "   GLSL version:          " + shad_ver + "." + shad_subver + "\n"
-      + "   GPU:         " + renderer + "\n"
-      + "   GPU Vendor:  " + vendor + "\n"
-    );
+    BRLogInfo("\n" + "   OpenGL version " + ver + "." + subver + ".\n" + "   GLSL version:          " + shad_ver + "." + shad_subver + "\n" + "   GPU:         " + renderer + "\n" + "   GPU Vendor:  " + vendor + "\n");
   }
 
   return true;
 }
-
-
 
 void GLContext::loadCheckProc() {
   //Check that OpenGL initialized successfully by checking a library pointer.
@@ -516,7 +513,9 @@ void GLContext::printHelpfulDebug() {
   SDL_GL_GetAttribute(SDL_GL_ALPHA_SIZE, &tmp);
   BRLogInfo("SDL_GL_ALPHA_SIZE: " + tmp);
 }
-
+bool GLContext::isForwardCompatible() {
+  return (_profile->_iProfile == SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+}
 void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
   //Attribs
   SDL_GL_ResetAttributes();
@@ -558,7 +557,8 @@ void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
   //Only in GL 3.0 (apparently)
   //Forward compatible deprecates old funcionality for a gain in speed (apparently)
   //https://wiki.libsdl.org/SDL_GLcontextFlag#SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, debug_flag | (prof->_bForwardCompatible ? SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG : 0));
+  int forward_compat = (prof->_iProfile == SDL_GL_CONTEXT_PROFILE_CORE) ? (0) : (SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, debug_flag | forward_compat);
   SDLUtils::checkSDLErr();
 
   //Depth size is finicky. Sometimes it will only give us 16 bits. Trying to set stencil to zero MIGHT help
@@ -582,16 +582,6 @@ void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
   SDLUtils::checkSDLErr();
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, prof->_iMSAABuffers);
   SDLUtils::checkSDLErr();
-
 }
 
-
-
-
-
-
-
-
-
-
-}//ns Game
+}  // namespace BR2

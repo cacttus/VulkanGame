@@ -18,7 +18,7 @@ namespace BR2 {
 */
 struct GLProfile : public VirtualMemory {
 public:
-  GLProfile(int iDepthBits, int iMinVer, int iMinSubver, int iProfile, bool bVsync, int msaa_buffers, int msaa_samples, bool srgb, bool forward_compatible) {
+  GLProfile(int iDepthBits, int iMinVer, int iMinSubver, int iProfile, bool bVsync, int msaa_buffers, int msaa_samples, bool srgb) {
     _iDepthBits = iDepthBits;
     _iMinSubVersion = iMinSubver;
     _iMinVersion = iMinVer;
@@ -27,29 +27,34 @@ public:
     _iMSAASamples = msaa_samples;
     _iMSAABuffers = msaa_buffers;
     _bSRGB = srgb;
-    _bForwardCompatible = forward_compatible;
   }
   virtual ~GLProfile() override {}
   string_t toString() {
     string_t ret = "";
     string_t profile = "basic";
-    if (_iProfile & SDL_GL_CONTEXT_PROFILE_COMPATIBILITY) { profile = "compatibility"; }
-    else if (_iProfile & SDL_GL_CONTEXT_PROFILE_CORE) { profile = "core"; }
-    else if (_iProfile & SDL_GL_CONTEXT_PROFILE_ES) { profile = "ES"; }
+    if (_iProfile == SDL_GL_CONTEXT_PROFILE_COMPATIBILITY) {
+      profile = "compatibility";
+    }
+    else if (_iProfile == SDL_GL_CONTEXT_PROFILE_CORE) {
+      profile = "core";
+    }
+    else if (_iProfile == SDL_GL_CONTEXT_PROFILE_ES) {
+      profile = "ES";
+    }
 
-    return Stz "version: " + _iMinVersion + "." + _iMinSubVersion + 
-      " depth:" + _iDepthBits + " profile:" + profile + " vsync" + _bVsync + " msaa: " + 
-      _iMSAABuffers + ", " + _iMSAASamples + " srgb:" + (_bSRGB?"true":"false") + " forward_compatible: " + (_bForwardCompatible? "true" : "false");
+    return Stz "version: " + _iMinVersion + "." + _iMinSubVersion +
+           " depth:" + _iDepthBits + " profile:" + profile + " vsync" + _bVsync + " msaa: " +
+           _iMSAABuffers + ", " + _iMSAASamples + " srgb:" + (_bSRGB ? "true" : "false");
   }
+
 public:
-  bool _bForwardCompatible = true;//true means do not use old GL stuff
   int _iDepthBits = 32;
   int _iMinVersion = 3;
   int _iMinSubVersion = 3;
   int _iMSAASamples = 0;
   int _iMSAABuffers = 0;
-  int _iProfile = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY; // _CORE, _ES
-  bool _bVsync = true; //Automatic on IOS
+  int _iProfile = SDL_GL_CONTEXT_PROFILE_COMPATIBILITY;  // _CORE, _ES
+  bool _bVsync = true;                                   //Automatic on IOS
   bool _bSRGB = false;
 };
 
@@ -77,8 +82,8 @@ public:
   virtual void popDepthTest() override;
 
   //compatibility issues
-   void setPolygonMode(PolygonMode p) ;
-   void setLineWidth(float w);
+  void setPolygonMode(PolygonMode p);
+  void setLineWidth(float w);
 
   void enableCullFace(bool enable) override;
   void enableBlend(bool enable) override;
@@ -86,15 +91,14 @@ public:
 
   static void setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof);
 
-
   bool valid() { return _bValid; }
-  bool getForwardCompatible() { return _bForwardCompatible; }
+  bool isForwardCompatible();
+
 private:
   std::shared_ptr<GLProfile> _profile;
   bool _bValid = false;
   bool loadOpenGLFunctions();
 
-  bool _bForwardCompatible = false;
   //Render Stack.
   std::stack<GLenum> _eLastCullFaceStack;
   std::stack<GLenum> _eLastBlendStack;
@@ -111,25 +115,24 @@ private:
   int _iSupportedDepthSize;
 
 public:
-
-  PFNGLUSEPROGRAMPROC         glUseProgram = nullptr;
-  PFNGLBINDBUFFERARBPROC      glBindBuffer = nullptr;
-  PFNGLGENBUFFERSPROC         glGenBuffers = nullptr;
-  PFNGLBUFFERDATAPROC         glBufferData = nullptr;
-  PFNGLBUFFERSUBDATAPROC      glBufferSubData = nullptr;
-  PFNGLSHADERSOURCEPROC       glShaderSource = nullptr;
-  PFNGLCOMPILESHADERPROC      glCompileShader = nullptr;
-  PFNGLGETSHADERIVPROC        glGetShaderiv = nullptr;
-  PFNGLGETSHADERINFOLOGPROC   glGetShaderInfoLog = nullptr;
-  PFNGLCREATEPROGRAMPROC      glCreateProgram = nullptr;
-  PFNGLATTACHSHADERPROC       glAttachShader = nullptr;
-  PFNGLLINKPROGRAMPROC        glLinkProgram = nullptr;
-  PFNGLDETACHSHADERPROC       glDetachShader = nullptr;
-  PFNGLDELETESHADERPROC       glDeleteShader = nullptr;
-  PFNGLCREATESHADERPROC       glCreateShader = nullptr;
-  PFNGLDELETEPROGRAMPROC      glDeleteProgram = nullptr;
-  PFNGLGETPROGRAMIVPROC       glGetProgramiv = nullptr;
-  PFNGLGETPROGRAMINFOLOGPROC  glGetProgramInfoLog = nullptr;
+  PFNGLUSEPROGRAMPROC glUseProgram = nullptr;
+  PFNGLBINDBUFFERARBPROC glBindBuffer = nullptr;
+  PFNGLGENBUFFERSPROC glGenBuffers = nullptr;
+  PFNGLBUFFERDATAPROC glBufferData = nullptr;
+  PFNGLBUFFERSUBDATAPROC glBufferSubData = nullptr;
+  PFNGLSHADERSOURCEPROC glShaderSource = nullptr;
+  PFNGLCOMPILESHADERPROC glCompileShader = nullptr;
+  PFNGLGETSHADERIVPROC glGetShaderiv = nullptr;
+  PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog = nullptr;
+  PFNGLCREATEPROGRAMPROC glCreateProgram = nullptr;
+  PFNGLATTACHSHADERPROC glAttachShader = nullptr;
+  PFNGLLINKPROGRAMPROC glLinkProgram = nullptr;
+  PFNGLDETACHSHADERPROC glDetachShader = nullptr;
+  PFNGLDELETESHADERPROC glDeleteShader = nullptr;
+  PFNGLCREATESHADERPROC glCreateShader = nullptr;
+  PFNGLDELETEPROGRAMPROC glDeleteProgram = nullptr;
+  PFNGLGETPROGRAMIVPROC glGetProgramiv = nullptr;
+  PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog = nullptr;
   PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray = nullptr;
   PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer = nullptr;
   PFNGLVERTEXATTRIBIPOINTERPROC glVertexAttribIPointer = nullptr;
@@ -169,28 +172,28 @@ public:
   PFNGLUNIFORMBLOCKBINDINGPROC glUniformBlockBinding = nullptr;
   PFNGLBINDBUFFERBASEPROC glBindBufferBase = nullptr;
 
-  PFNGLUNIFORM1IPROC        glUniform1i = nullptr;
+  PFNGLUNIFORM1IPROC glUniform1i = nullptr;
 
-  PFNGLUNIFORM1IVPROC       glUniform1iv = nullptr;
-  PFNGLUNIFORM2IVPROC       glUniform2iv = nullptr;
-  PFNGLUNIFORM3IVPROC       glUniform3iv = nullptr;
-  PFNGLUNIFORM4IVPROC       glUniform4iv = nullptr;
+  PFNGLUNIFORM1IVPROC glUniform1iv = nullptr;
+  PFNGLUNIFORM2IVPROC glUniform2iv = nullptr;
+  PFNGLUNIFORM3IVPROC glUniform3iv = nullptr;
+  PFNGLUNIFORM4IVPROC glUniform4iv = nullptr;
 
-  PFNGLUNIFORM1FVPROC       glUniform1fv = nullptr;
-  PFNGLUNIFORM2FVPROC       glUniform2fv = nullptr;
-  PFNGLUNIFORM3FVPROC       glUniform3fv = nullptr;
-  PFNGLUNIFORM4FVPROC       glUniform4fv = nullptr;
+  PFNGLUNIFORM1FVPROC glUniform1fv = nullptr;
+  PFNGLUNIFORM2FVPROC glUniform2fv = nullptr;
+  PFNGLUNIFORM3FVPROC glUniform3fv = nullptr;
+  PFNGLUNIFORM4FVPROC glUniform4fv = nullptr;
 
   PFNGLUNIFORMMATRIX2FVPROC glUniformMatrix2fv = nullptr;
   PFNGLUNIFORMMATRIX3FVPROC glUniformMatrix3fv = nullptr;
   PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv = nullptr;
 
-  PFNGLUNIFORM1UIVPROC      glUniform1uiv = nullptr;
-  PFNGLUNIFORM2UIVPROC      glUniform2uiv = nullptr;
-  PFNGLUNIFORM3UIVPROC      glUniform3uiv = nullptr;
-  PFNGLUNIFORM4UIVPROC      glUniform4uiv = nullptr;
+  PFNGLUNIFORM1UIVPROC glUniform1uiv = nullptr;
+  PFNGLUNIFORM2UIVPROC glUniform2uiv = nullptr;
+  PFNGLUNIFORM3UIVPROC glUniform3uiv = nullptr;
+  PFNGLUNIFORM4UIVPROC glUniform4uiv = nullptr;
 
-  PFNGLGETVERTEXATTRIBIUIVPROC  glGetVertexAttribIuiv = nullptr;
+  PFNGLGETVERTEXATTRIBIUIVPROC glGetVertexAttribIuiv = nullptr;
   PFNGLGETVERTEXATTRIBFVPROC glGetVertexAttribfv = nullptr;
   PFNGLGETVERTEXATTRIBIVPROC glGetVertexAttribiv = nullptr;
   PFNGLGETVERTEXATTRIBIIVPROC glGetVertexAttribIiv = nullptr;
@@ -212,22 +215,19 @@ public:
 
   PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC glGetActiveUniformBlockName = nullptr;
 
-
-  PFNGLFENCESYNCPROC  glFenceSync = nullptr;
-  PFNGLISSYNCPROC     glIsSync = nullptr;
-  PFNGLGETSYNCIVPROC  glGetSynciv = nullptr;
+  PFNGLFENCESYNCPROC glFenceSync = nullptr;
+  PFNGLISSYNCPROC glIsSync = nullptr;
+  PFNGLGETSYNCIVPROC glGetSynciv = nullptr;
   PFNGLDELETESYNCPROC glDeleteSync = nullptr;
   PFNGLDISPATCHCOMPUTEPROC glDispatchCompute = nullptr;
-  PFNGLGETINTEGERI_VPROC   glGetIntegeri_v = nullptr;
+  PFNGLGETINTEGERI_VPROC glGetIntegeri_v = nullptr;
   PFNGLSHADERSTORAGEBLOCKBINDINGPROC glShaderStorageBlockBinding = nullptr;
-  PFNGLGETPROGRAMRESOURCEINDEXPROC   glGetProgramResourceIndex = nullptr;
+  PFNGLGETPROGRAMRESOURCEINDEXPROC glGetProgramResourceIndex = nullptr;
 
   PFNGLCOPYIMAGESUBDATAPROC glCopyImageSubData = nullptr;
   PFNGLDELETETEXTURESEXTPROC glDeleteTextures = nullptr;
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

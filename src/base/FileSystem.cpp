@@ -118,11 +118,15 @@ bool FileSystem::createDirectoryRecursive(string_t dirName) {
 #if defined(BR2_CPP17)
   //Note: this creates directories with full permissions.
   std::error_code code;
-  bRet = std::filesystem::create_directories(dirName, code);
+  bool fs_ret = std::filesystem::create_directories(dirName, code);
   int a = code.value();
   int b = code.default_error_condition().value();
   if (a != b) {
+    bRet = false;
     BRLogError(code.message());
+  }
+  else{
+    bRet = true;
   }
 #else
   string_t dirCpy;

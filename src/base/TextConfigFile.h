@@ -21,6 +21,7 @@ public:
   virtual ~TextConfigFile() override;
 
   bool lcmp(string_t& tok0, const char* ch, int32_t validateArgCount = -1);
+  bool lcmp(string_t& tok0, const std::string& ch, int32_t validateArgCount = -1);
   void parseErr(const string_t& str, bool bDebugBreak = false, bool bFatal = false);
   string_t getCleanToken(std::vector<string_t>& tokens, int& iind);
   string_t getCleanTokenInd(std::vector<string_t>& tokens, int iind);

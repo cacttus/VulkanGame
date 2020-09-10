@@ -412,7 +412,7 @@ void RenderPipe::saveScreenshot(std::shared_ptr<LightManager> lightman) {
 void RenderPipe::copyMsaaSamples(std::shared_ptr<FramebufferBase> msaa, std::shared_ptr<FramebufferBase> blitted) {
   //Downsize the MSAA sample buffer.
   if (_bMsaaEnabled) {
-    getContext()->glBindRenderbuffer(GL_RENDERBUFFER, NULL);
+    getContext()->glBindRenderbuffer(GL_RENDERBUFFER, (GLuint)0);
     getContext()->chkErrDbg();
 
     getContext()->glBindFramebuffer(GL_READ_FRAMEBUFFER, msaa->getGlId());

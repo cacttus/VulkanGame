@@ -9,11 +9,19 @@
 
 #include <SDL2/SDL.h>
 
-#ifndef BRO_OS_WINDOWS
+#if defined(BR2_OS_LINUX)
 //This gets the OS name
 #include <sys/utsname.h>
 //Sort of similar to windows GetLastError
 #include <sys/errno.h>
+
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/prctl.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #endif
 
 namespace BR2 {
@@ -381,28 +389,118 @@ string_t OperatingSystem::newline() {
 #endif
   return ret;
 }
-
+// void test() {
+//   //https://stackoverflow.com/questions/6171552/popen-simultaneous-read-and-write
+// 
+//   pid_t pid = 0;
+//   int inpipefd[2];
+//   int outpipefd[2];
+//   char buf[256];
+//   char msg[256];
+//   int status;
+// 
+//   //   if (pid == 0) {
+//   //     // Child
+//   //     dup2(outpipefd[0], STDIN_FILENO);
+//   //     dup2(inpipefd[1], STDOUT_FILENO);
+//   //     dup2(inpipefd[1], STDERR_FILENO);
+//   //
+//   //     //ask kernel to deliver SIGTERM in case the parent dies
+//   //     prctl(PR_SET_PDEATHSIG, SIGTERM);
+//   //
+//   //     //replace tee with your process
+//   //     execl("/bin/bash", "bash", (char*)NULL);
+//   //     // Nothing below this line should be executed by child process. If so,
+//   //     // it means that the execl function wasn't successfull, so lets exit:
+//   //     exit(1);
+//   //   }
+//   // The code below will be executed only by parent. You can write and read
+//   // from the child using pipefd descriptors, and you can send signals to
+//   // the process using its pid by kill() function. If the child process will
+//   // exit unexpectedly, the parent process will obtain SIGCHLD signal that
+//   // can be handled (e.g. you can respawn the child process).
+// 
+//   int fd1[2];  // Used to store two ends of first pipe
+//   int fd2[2];  // Used to store two ends of second pipe
+// 
+//   pid_t p;
+// 
+//   if (pipe(fd1) == -1) {
+//     fprintf(stderr, "Pipe Failed");
+//     return;
+//   }
+//   if (pipe(fd2) == -1) {
+//     fprintf(stderr, "Pipe Failed");
+//     return;
+//   }
+// 
+//   p = fork();
+// 
+//   if (p < 0) {
+//     fprintf(stderr, "fork Failed");
+//     return;
+//   }
+// 
+//   // Parent process
+//   if (p > 0) {
+//     close(fd1[0]);  // Close reading end of first pipe
+// 
+//     std::string comd = "/bin/bash -c ls /\n";
+//     // Write input string and close writing end of first
+//     // pipe.
+//     write(fd1[1], comd.c_str(), comd.length());
+//     close(fd1[1]);
+// 
+//     // Wait for child to send a string
+//     wait(NULL);
+// 
+//     close(fd2[1]);  // Close writing end of second pipe
+// 
+//     // Read string from child, print it and close
+//     // reading end.
+//     char buffer[1024];
+//     read(fd2[0], buffer, sizeof(buffer));
+//     close(fd2[0]);
+// 
+//     string_t st = buffer;
+// 
+//     //     pipe(inpipefd);
+//     //     pipe(outpipefd);
+//     //     pid = fork();
+//     //     //close unused pipe ends
+//     //     close(outpipefd[0]);
+//     //     close(inpipefd[1]);
+//     //
+//     //     write(outpipefd[1], msg, strlen(msg));
+//     //     read(inpipefd[0], buf, 256);
+// 
+//     kill(p, SIGKILL);  //send SIGKILL signal to the child process
+//     waitpid(p, &status, 0);
+//   }
+//   int n = 0;
+//   n++;
+// }
 string_t OperatingSystem::executeReadOutput(const string_t& cmd) {
-  //Execute the given command and return the output in a std::string.
-  //https://www.jeremymorgan.com/tutorials/c-programming/how-to-capture-the-output-of-a-linux-command-in-c/
+  //This works only if VSCode launches the proper terminal (some voodoo back there);
   string_t data = "";
-  FILE* stream;
-  const int max_buffer = 256;
-  char buffer[max_buffer];
-  string_t cmd_mod = cmd + " 2>&1";
+  const int MAX_BUFFER = 256;
+  char buffer[MAX_BUFFER];
+  std::memset(buffer, 0, MAX_BUFFER);
+  string_t cmd_mod = Stz cmd + " 2>&1";  //redirect stderr to stdout
 
-  try {
-    stream = popen(cmd_mod.c_str(), "r");
-    if (stream) {
-      while (!feof(stream))
-        if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
-      pclose(stream);
+  FILE* stream = popen(cmd_mod.c_str(), "r");
+  if (stream) {
+    while (fgets(buffer, MAX_BUFFER, stream) != NULL) {
+      data.append(buffer);
     }
-    return data;
+    if (ferror(stream)) {
+      std::cout << "Error executeReadOutput() " << std::endl;
+    }
+    clearerr(stream);
+    pclose(stream);
   }
-  catch (...) {
-    BRLogError("Failed to execute command: '" + cmd + "'");
-  }
+
+  return data;
 }
 
 }  // namespace BR2

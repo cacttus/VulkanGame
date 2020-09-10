@@ -5,8 +5,10 @@
 #include "../base/WindowsIncludes.h"
 #include "../base/FileSystem.h"
 #include "../base/OperatingSystem.h"
+#include "../base/EngineConfig.h"
 
 #include <iostream>
+#include <mutex>
 
 #if defined(BR2_OS_WINDOWS)
 #include <DbgHelp.h>
@@ -19,6 +21,7 @@
 #endif
 
 namespace BR2 {
+
 #if defined(BR2_OS_WINDOWS)
 HANDLE hCrtLog;
 #endif
@@ -223,11 +226,34 @@ std::vector<std::string> linux_bt_syms(void** buffer, int nptrs) {
   free(strings);
   return callStack;
 }
+std::vector<std::string> linux_bt_addr2line(void** buffer, int nptrs) {
+  //Use Addr2Line for stacktrace (cleaner).
+  std::vector<std::string> callStack;
+  string_t sym_addrs_line = "";
+  string_t delim = "";
+  for (int i = 0; i < nptrs; ++i) {
+    std::stringstream my_ss;
+    my_ss << std::hex << buffer[i];
+    std::string addr_sz = my_ss.str();
+    sym_addrs_line += delim + addr_sz;
+    delim = " ";
+  }
+  string_t addr_cmd = Stz + "addr2line " + "-e \"" + FileSystem::getExecutableFullPath() + "\" " + "-f -C gcc -p -s " + sym_addrs_line;
+  string_t sym_result = OperatingSystem::executeReadOutput(addr_cmd);
+  callStack = StringUtil::split(sym_result, '\n');
+  if (callStack.size() > 0) {
+    callStack.erase(callStack.begin());  //Remove the first which is   ?? ??:0
+  }
+  return callStack;
+}
 #endif
 std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
+  static std::mutex _stackMtx;
+  std::lock_guard<std::mutex> guard(_stackMtx);
+  
   static bool s_callstackFailed = false;
   std::vector<std::string> callStack;
-  
+
   if (s_callstackFailed == false) {
 #if defined(BR2_OS_WINDOWS)
     //Code copied from Msdn.
@@ -262,45 +288,20 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
     std::memset(buffer, 0, BT_BUF_SIZE);
     int nptrs = backtrace(buffer, BT_BUF_SIZE);
 
-    //
-    try {
-      //Check if addr2line exists.
-      static int addr_exist = 0; // set to -1 to enable more clean exceptions.
-      if(addr_exist == -1){
-        addr_exist = StringUtil::isNotEmpty(OperatingSystem::executeReadOutput((Stz + "command -v addr2line"))) ? 1 : 0;
-      }
-      if (addr_exist == 1) {
-        //Use Addr2Line for stacktrace (cleaner).
-        string_t sym_addrs_line = "";
-        string_t delim = "";
-        for (int i = 0; i < nptrs; ++i) {
-          std::stringstream my_ss;
-          my_ss << std::hex << buffer[i];
-          std::string addr_sz = my_ss.str();
-          sym_addrs_line += delim + addr_sz;
-          delim = " ";
-        }
-        string_t addr_cmd = Stz + "addr2line " + "-e \"" + FileSystem::getExecutableFullPath() + "\" " + "-f -C gcc -p -s " + sym_addrs_line;
-        string_t sym_result = OperatingSystem::executeReadOutput(addr_cmd);
-        callStack = StringUtil::split(sym_result, '\n');
-        if(callStack.size()>0){
-          callStack.erase(callStack.begin());//Remove the first which is   ?? ??:0
-        }
-      }
-      else {
-        //Use bt_syms
-        callStack = linux_bt_syms(buffer, nptrs);
-      }
+    //Check if addr2line exists.
+    static int addr_exist = -1;  // set to -1 to enable more clean exceptions.
+    if (addr_exist == -1) {
+      std::string output = OperatingSystem::executeReadOutput(Stz + "command -v addr2line");
+      addr_exist = StringUtil::isNotEmpty(output) ? 1 : 0;
     }
-    catch (...) {
-      try {
-        callStack = linux_bt_syms(buffer, nptrs);
-      }
-      catch (...) {
-        s_callstackFailed = true;
-        BRLogError("All attempts to unwind callstack failed.");
-      }
+    if (addr_exist == 1 && Gu::getEngineConfig()->getLinux_ReadableBacktrace()) {
+      callStack = linux_bt_addr2line(buffer, nptrs);
     }
+    else {
+      //Use bt_syms
+      callStack = linux_bt_syms(buffer, nptrs);
+    }
+
 #endif
   }
 

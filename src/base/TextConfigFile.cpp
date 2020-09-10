@@ -53,6 +53,9 @@ void TextConfigFile::displayError(const string_t& errMsg, bool bThrow) {
     BRThrowException(strErr);
   }
 }
+bool TextConfigFile::lcmp(string_t& tok0, const std::string& ch, int32_t validateArgCount) {
+  return lcmp(tok0, ch.c_str(), validateArgCount);
+}
 bool TextConfigFile::lcmp(string_t& tok0, const char* ch, int32_t validateArgCount) {
   bool ret;
 

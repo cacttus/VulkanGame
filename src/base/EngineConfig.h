@@ -15,27 +15,40 @@ namespace BR2 {
 class BaseProp : public VirtualMemoryShared<BaseProp> {
 public:
   string_t key() { return _key; }
+
 protected:
   string_t _key = "";
 };
 class BoolProp : BaseProp {
 public:
-  BoolProp(string_t key, bool value) { _key = key;  _value = value; }
+  BoolProp(string_t key, bool value) {
+    _key = key;
+    _value = value;
+  }
   bool value() { return _value; }
+
 private:
   bool _value;
 };
 class Int32Prop : BaseProp {
 public:
-  Int32Prop(string_t key, int32_t value) { _key = key;  _value = value; }
+  Int32Prop(string_t key, int32_t value) {
+    _key = key;
+    _value = value;
+  }
   int32_t value() { return _value; }
+
 private:
   int32_t _value;
 };
 class StringProp : BaseProp {
 public:
-  StringProp(string_t key, string_t value) { _key = key; _value = value; }
+  StringProp(string_t key, string_t value) {
+    _key = key;
+    _value = value;
+  }
   const string_t& value() { return _value; }
+
 private:
   string_t _value;
 };
@@ -65,21 +78,23 @@ class EngineConfig  ..  {
 };
 */
 
-#define XMLCONFIG_PROP(x) const std::string x = #x
+#define XMLCONFIG_PROP(x) const std::string c_##x = #x
 
 class EngineConfig_Internal;
 class EngineConfig : public XmlFile {
 public:
   EngineConfig();
   virtual ~EngineConfig();
+  XMLCONFIG_PROP(Linux_ReadableBacktrace);
   XMLCONFIG_PROP(EnableMSAA);
   XMLCONFIG_PROP(MSAASamples);
-  XMLCONFIG_PROP(EnableLogToConsole);
-  XMLCONFIG_PROP(EnableLogToFile);
+  XMLCONFIG_PROP(FontBakedCharSize);
+  XMLCONFIG_PROP(EnableConsoleLog);
+  XMLCONFIG_PROP(EnableFileLog);
   XMLCONFIG_PROP(StartFullscreen);
   XMLCONFIG_PROP(DefaultScreenWidth);
   XMLCONFIG_PROP(DefaultScreenHeight);
-  XMLCONFIG_PROP(ForceAspectRatio);   // <<<< REMOVE THIS
+  XMLCONFIG_PROP(ForceAspectRatio);  // <<<< REMOVE THIS
   XMLCONFIG_PROP(GpuDeviceName);
   XMLCONFIG_PROP(DefaultFieldOfView);
   XMLCONFIG_PROP(MaxPickDistance);
@@ -96,7 +111,7 @@ public:
   XMLCONFIG_PROP(BreakOnSDLError);
   XMLCONFIG_PROP(BreakOnGraphicsError);
   XMLCONFIG_PROP(ShowConsole);
-  XMLCONFIG_PROP(GameHostAttached); // << Remove this
+  XMLCONFIG_PROP(GameHostAttached);  // << Remove this
   XMLCONFIG_PROP(GameHostTimeoutMs);
   XMLCONFIG_PROP(GameHostPort);
   XMLCONFIG_PROP(EnableObjectShadows);
@@ -113,16 +128,16 @@ public:
   XMLCONFIG_PROP(MaxHardwareOutgoingBufferSizeBytes);
   XMLCONFIG_PROP(MaxSoftwareIncomingBufferSizeBytes);
   XMLCONFIG_PROP(MaxSoftwareOutgoingBufferSizeBytes);
-  //XMLCONFIG_PROP(RenderSystem);
-  //XMLCONFIG_PROP(WindowedAspectRatio);
-  //XMLCONFIG_PROP(GamePadType);
-  //XMLCONFIG_PROP(OpenGLProfile);
+  XMLCONFIG_PROP(RenderSystem);
+  XMLCONFIG_PROP(WindowedAspectRatio);
+  XMLCONFIG_PROP(GamePad);
+  XMLCONFIG_PROP(OpenGLProfile);
 
   void int32Prop(string_t a, std::vector<string_t>& toks, int32_t& iind);
   void boolProp(string_t a, std::vector<string_t>& toks, int32_t& iind);
   void floatProp(string_t a, std::vector<string_t>& toks, int32_t& iind);
 
-
+  bool getLinux_ReadableBacktrace() { return _bLinux_ReadableBacktrace; }
   bool getEnableMsaa() { return _bEnableMsaa; }
   void setEnableMsaa(bool b) { _bEnableMsaa = b; }
   int32_t getMsaaSamples() { return _iMsaaSamples; }
@@ -163,13 +178,13 @@ public:
   int getFullscreenWidth() { return _iFullscreenWidth; }
   int getFullscreenHeight() { return _iFullscreenHeight; }
   int getModelThumbSize() { return _iModelThumbSize; }
-  int getMaxHardwareIncomingBufferSizeBytes() { return  _iMaxHardwareIncomingBufferSizeBytes; }
-  int getMaxHardwareOutgoingBufferSizeBytes() { return  _iMaxHardwareOutgoingBufferSizeBytes; }
-  int getMaxSoftwareIncomingBufferSizeBytes() { return  _iMaxSoftwareIncomingBufferSizeBytes; }
-  int getMaxSoftwareOutgoingBufferSizeBytes() { return  _iMaxSoftwareOutgoingBufferSizeBytes; }
+  int getMaxHardwareIncomingBufferSizeBytes() { return _iMaxHardwareIncomingBufferSizeBytes; }
+  int getMaxHardwareOutgoingBufferSizeBytes() { return _iMaxHardwareOutgoingBufferSizeBytes; }
+  int getMaxSoftwareIncomingBufferSizeBytes() { return _iMaxSoftwareIncomingBufferSizeBytes; }
+  int getMaxSoftwareOutgoingBufferSizeBytes() { return _iMaxSoftwareOutgoingBufferSizeBytes; }
   RenderSystem::e getRenderSystem() { return _eRenderSystem; }
   double windowedAspectRatio() { return _windowedAspectRatio; }
-  GamePadType gamePadType() { return _eGamePadType;  }
+  GamePadType gamePadType() { return _eGamePadType; }
   OpenGLProfile openGLProfile() { return _eOpenGLProfile; }
 
 protected:
@@ -177,9 +192,8 @@ protected:
   virtual void preLoad() override;
   virtual void postLoad(bool success) override;
 
-
 private:
-  std::shared_ptr< EngineConfig_Internal> _pint = nullptr;
+  std::shared_ptr<EngineConfig_Internal> _pint = nullptr;
 
   OpenGLProfile _eOpenGLProfile = OpenGLProfile::Compatibility;
   GamePadType _eGamePadType = GamePadType::KeyboardAndMouse;
@@ -228,10 +242,11 @@ private:
   int _iMaxHardwareOutgoingBufferSizeBytes = 8192;
   int _iMaxSoftwareIncomingBufferSizeBytes = 8192;
   int _iMaxSoftwareOutgoingBufferSizeBytes = 8192;
-  bool _bGameHostAttached = false; // if we are running in an WPF engine wrapper
+  bool _bGameHostAttached = false;  // if we are running in an WPF engine wrapper
   int _iGameHostTimeoutMs = 60000;
   int _iGameHostPort = 44244;
+  bool _bLinux_ReadableBacktrace = false;
 };
-}//ns Game
+}  // namespace BR2
 
 #endif
