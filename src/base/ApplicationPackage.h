@@ -56,7 +56,7 @@ public:
   static string_t getEngineConfigFilePath();
   static string_t getDataPath();
 private:
-  std::unique_ptr<ApplicationPackage_Internal> _pint = {nullptr};
+  std::unique_ptr<ApplicationPackage_Internal> _pint;
 
 };
 

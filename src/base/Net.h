@@ -22,7 +22,7 @@ public:
   virtual ~Net() override;
   void update();
 private:
-  std::unique_ptr<Net_Internal> _pint = {nullptr};
+  std::unique_ptr<Net_Internal> _pint;
 };
 
 }//ns Game

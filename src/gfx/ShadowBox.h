@@ -38,7 +38,7 @@ public:
   GLuint getGlTexId();
 
 private:
-  std::unique_ptr<ShadowBox_Internal> _pint = {nullptr};
+  std::unique_ptr<ShadowBox_Internal> _pint;
 };
 
 }//ns Game

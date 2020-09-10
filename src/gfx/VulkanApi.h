@@ -30,7 +30,7 @@ public:
   virtual void createRenderer() {}
 
 private:
-  std::unique_ptr<VulkanApi_Internal> _pint = {nullptr};
+  std::unique_ptr<VulkanApi_Internal> _pint;
 };
 
 }  // namespace BR2

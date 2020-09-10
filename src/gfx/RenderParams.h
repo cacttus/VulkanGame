@@ -39,7 +39,7 @@ public:
   void setCamera(std::shared_ptr<CameraNode> c);
 
 private:
-  std::unique_ptr<RenderParams_Internal> _pint = {nullptr};
+  std::unique_ptr<RenderParams_Internal> _pint;
 };
 
 

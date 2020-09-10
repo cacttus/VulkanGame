@@ -11,6 +11,8 @@
 #include <codecvt>
 #include <string>
 #include <algorithm>
+//For va_list
+#include <stdarg.h>
 
 namespace BR2 {
 

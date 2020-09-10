@@ -81,7 +81,7 @@ public:
   void mixSamplesAsync(uint8_t* stream, int len);
 
 private:
-  std::unique_ptr<SoundCache_Internal> _pint = {nullptr};
+  std::unique_ptr<SoundCache_Internal> _pint;
 };
 
 }//ns Game

@@ -48,7 +48,7 @@ protected:
   size_t getPointerOffset();
 
 private:
-  std::unique_ptr<DiskFile_Internal> _internal = {nullptr};
+  std::unique_ptr<DiskFile_Internal> _internal;
 };
 
 }  // namespace BR2

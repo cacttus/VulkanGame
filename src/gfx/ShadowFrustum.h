@@ -36,7 +36,7 @@ public:
   void setChanged();
 
 private:
-  std::unique_ptr<ShadowFrustum_Internal> _pint = {nullptr};
+  std::unique_ptr<ShadowFrustum_Internal> _pint;
 };
 
 }  // namespace BR2

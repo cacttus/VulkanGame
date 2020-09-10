@@ -269,8 +269,8 @@ if (_v == nullptr) { \
     }
   }
   void makeSwapChain() {
-    VkPresentModeKHR;
-    VkSurfaceFormatKHR;
+    //VkPresentModeKHR;
+    //VkSurfaceFormatKHR;
     uint32_t formatCount;
     vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &formatCount, nullptr);
     std::vector<VkSurfaceFormatKHR> formats(formatCount);

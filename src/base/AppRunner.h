@@ -18,7 +18,7 @@ public:
   void runApp(const std::vector<string_t>& args, std::vector< std::function<bool() >> unit_tests);
 
 private:
-  std::unique_ptr<AppRunner_Internal> _pint = {nullptr};
+  std::unique_ptr<AppRunner_Internal> _pint;
 };
 
 

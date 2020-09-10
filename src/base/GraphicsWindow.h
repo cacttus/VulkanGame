@@ -50,7 +50,7 @@ public:
   void setScene(std::shared_ptr<Scene> scene);
 private:
   //There's a static_assert in clang10 that prevents assignment to pure nullptr, but initializer_list works.
-  std::unique_ptr<GraphicsWindow_Internal> _pint = {nullptr};
+  std::unique_ptr<GraphicsWindow_Internal> _pint;
 };
 
 }//ns Game

@@ -666,7 +666,7 @@ public:
   std::shared_ptr<GraphicsWindow> getWindow();
 
 private:
-  std::unique_ptr<UiScreen_Internal> _pint = {nullptr};
+  std::unique_ptr<UiScreen_Internal> _pint;
   void updateMesh();
   void updateLayout(std::shared_ptr<InputManager> pInputManager);
 };
