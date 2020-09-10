@@ -152,6 +152,9 @@ void Scene::createUi() {
   cs->height() = "auto";  // Auto?
   _pUiScreen->setCursor(cs);
   Gu::checkErrorsDbg();
+
+  //Enable debug visuals
+  setDebugMode();
 }
 std::vector<std::shared_ptr<Path>> paths;
 void Scene::update(float delta) {
