@@ -262,6 +262,7 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
     std::memset(buffer, 0, BT_BUF_SIZE);
     int nptrs = backtrace(buffer, BT_BUF_SIZE);
 
+    //
     try {
       //Check if addr2line exists.
       static int addr_exist = 0; // set to -1 to enable more clean exceptions.
