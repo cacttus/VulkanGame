@@ -1,0 +1,24 @@
+12:04:47:012 INF  Synchronous Logger Initializing 9/8/2020 12:04:47:012
+12:05:02:616 WRN  Package could not be loaded.  Folder not selected, or invalid path.
+12:05:02:617 DBG  We do not yet support packages.
+12:05:02:617 INF  Loading config from '/home/mario/git/VulkanGame/bin/dataconfig.xml'
+12:05:02:628 ERR  Engine configuration file '/home/mario/git/VulkanGame/bin/dataconfig.xml' does not exist. ../src/base/Gu.cpp:241
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR211DebugHelper12getCallStackB5cxx11Eb+0x42) [0x9d2af2]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR211DebugHelper13getStackTraceB5cxx11Ev+0x6b) [0x9d2e0b]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR215Logger_Internal13addStackTraceENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE+0x40) [0xa30770]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR215Logger_Internal19log_wedi_mainThreadENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEiPKcPKNS_9ExceptionEbNS0_8LogLevelE+0x10a) [0xa303da]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR26Logger8logErrorENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEiPKcPKNS_9ExceptionEb+0x68) [0xa31fa8]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR29ExceptionC1ENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEiPKcb+0x1a5) [0x9e3685]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR22Gu10loadConfigERKNSt7__debug6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS8_EEE+0x27a) [0xa0f21a]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR22Gu11initGlobalsERKNSt7__debug6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS8_EEE+0x18) [0xa0e668]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_ZN3BR29AppRunner6runAppERKNSt7__debug6vectorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESaIS8_EEENS2_ISt8functionIFbvEESaISF_EEE+0x105) [0x9b7975]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(main+0xee) [0xa34c8e]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7ffff77db0b3]
+/home/mario/git/VulkanGame/bin/VulkanGame-0.1.0-x86_64-d(_start+0x2e) [0x9b3d5e]
+
+12:05:47:330 INF  Synchronous Logger Initializing 9/8/2020 12:05:47:330
+12:05:48:694 WRN  Package could not be loaded.  Folder not selected, or invalid path.
+12:05:48:694 DBG  We do not yet support packages.
+12:06:09:072 INF  Synchronous Logger Initializing 9/8/2020 12:06:09:072
+12:06:10:686 WRN  Package could not be loaded.  Folder not selected, or invalid path.
+12:06:10:686 DBG  We do not yet support packages.

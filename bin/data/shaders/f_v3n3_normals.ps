@@ -1,0 +1,19 @@
+#include "glsl_version.sh"
+
+
+uniform vec4 _ufNormalColor;
+out vec4 _gColorOut;
+in float _fColorDevGS;
+void main() {
+	 _gColorOut = _ufNormalColor * _fColorDevGS;
+
+}
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,18 @@
 ~$lkan Game Demo GDD.docx
 .~lock.Vulkan Game Demo GDD.docx#
 /build/
-/bin/
+/bin/VulkanGame-*
+/bin/data/games/
+/bin/data/mbi/
+/bin/data/cache/
+/bin/data/mob/bp_backup
+/bin/.vs/bottle_x64_d/v15
+/bin/logs
+/bin/*.dll
+/bin/*.exe
+/bin/*.lib
+/bin/*.exp
+/bin/*.ilk
+/bin/*.pdb
+/bin/*.ipdb
+/bin/*.iobj

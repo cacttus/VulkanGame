@@ -4,6 +4,7 @@
 #include "../base/OglErr.h"
 #include "../base/SDLUtils.h"
 #include "../base/Img32.h"
+#include "../base/Allocator.h"
 
 
 namespace BR2 {
@@ -39,7 +40,7 @@ void SDLUtils::createSurfaceFromImage(const string_t strImage,
 }
 SDL_Surface* SDLUtils::createSurfaceFromImage(const std::shared_ptr<Img32> pImage) {
   SDL_Surface* pSurface = SDL_CreateRGBSurfaceFrom(
-    pImage->getData(), pImage->getWidth(), pImage->getHeight(),
+    pImage->getData()->ptr(), pImage->getWidth(), pImage->getHeight(),
     pImage->getBitsPerPixel(), pImage->getPitch(),
     pImage->getRMask(), pImage->getGMask(), pImage->getBMask(), pImage->getAMask());
 
