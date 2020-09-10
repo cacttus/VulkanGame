@@ -71,8 +71,8 @@ public:
   SDL_GLContext getSDLGLContext() { return _context; }
 
   //virtual void update(float delta) override;
-  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false) override;
-  virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false) override;
+  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") override;
+  virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") override;
 
   virtual void pushCullFace() override;
   virtual void popCullFace() override;

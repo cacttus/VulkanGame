@@ -35,7 +35,7 @@ struct j_in_man_st {
 	mat4 jmat;
 };
 
-// - std430 is required in order to pack the data together.  the std140 qualitifer really fucks with your data as it
+// - std430 is required in order to pack the data together.  the std140 qualitifer alters data as it
 // puts everything on a vec4 boundary, for example if you just have a float in your buffer the std140 would align to 4 floats with 3 extra bytes of information.
 layout(std430,binding = 0) buffer ssInWeightOffsets { wd_in_st wd_in[]; };
 layout(std430,binding = 1) buffer ssInJointWeights { jw_in_st jw_in[]; };

@@ -59,10 +59,6 @@ bool FrustumBase::hasBox(const Box3f* pCube) {
     d1 = Planes[i].dist(max);
     d2 = Planes[i].dist(min);
 
-    //20170518 - Swapped the <> to be >.
-    //20171208 - what the fuck was I on here?  INWARD is where normals point
-    //Normals point INWARD from teh frutum.  If the box is outside the d values should both be NEGATIVE.
-    //Changed back to <
     if (d1 < 0.0f && d2 < 0.0f) {
       return false;
     }

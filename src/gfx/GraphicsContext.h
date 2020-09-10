@@ -21,8 +21,8 @@ public:
   GraphicsContext(std::shared_ptr<GraphicsApi> api);
   virtual ~GraphicsContext() override;
 
-  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false) = 0;
-  virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false) = 0;
+  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") = 0;
+  virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") = 0;
 
   virtual void pushCullFace() = 0;
   virtual void popCullFace() = 0;

@@ -792,8 +792,6 @@ void UiElement::computeQuads(std::shared_ptr<UiScreen> pscreen, float final_r, f
 }
 
 void UiElement::applyMinMax(float& wpx, float& hpx) {
-  //TODO: so this should allow for % width/height of parent to be
-  //min/max but that's fucking confusing.  Is it needed?
   float minw = minWidth().px();
   float maxw = maxWidth().px();
   float minh = minHeight().px();

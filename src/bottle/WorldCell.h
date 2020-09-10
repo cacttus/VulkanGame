@@ -86,7 +86,6 @@ public:
   }
 
 private:
-  //DO NOT ADD MORE SHIT TO THIS CLASS
   //this = 4
   //12
   ivec3 _viPosLocal;

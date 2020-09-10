@@ -259,7 +259,7 @@ Vec3f ConvexUtils::closestPointOnHull(Vec3f& point, Vec3f* hullPoints, int32_t n
   }
   else if(nClosest==4)
   {
-      //Bilinear interpolate the shit
+      //Bilinear interpolate
       Vec3f avg;
       bilinear_interpolate(    cp[closest[0]],
                               cp[closest[1]],

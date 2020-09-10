@@ -428,7 +428,7 @@ void WorldGrid::getObjData(WorldCellFile* pFile) {
   //Fill the file with the obj data.
   pFile->getObjects().clear();
 
-  BRLogWarn("TODO: Fix the object data saving, using SceneNode serialization.");
+  BRLogTODO("TODO: Fix the object data saving, using SceneNode serialization.");
 
   //World25ObjectData* obd = nullptr;
   //for (std::shared_ptr<PhysicsNode> ob : *(getManifold()->getAll())) {

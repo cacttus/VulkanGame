@@ -39,9 +39,7 @@ void MbiFile::parseErr(string_t str, bool bDebugBreak, bool bFatal) {
   }
 }
 void MbiFile::postLoad() {
-
   //Compute Bone Boxes
-  //Debug: we'll do this every time becasue FUCK!s
   BRLogInfo("  Making Bone Boxes..");
   for (std::shared_ptr<ModelSpec> ms : _vecModels) {
     ms->cacheMeshBones();

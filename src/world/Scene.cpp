@@ -437,8 +437,9 @@ void Scene::drawTransparent(RenderParams& rp) {
   Perf::popPerf();
 }
 void Scene::drawUI(RenderParams& rp) {
-  _pUiScreen->update(getInput());
-  _pUiScreen->drawForward();
+  BRLogTODO("Commented Out GUI Routines");
+  //_pUiScreen->update(getInput());
+  //_pUiScreen->drawForward();
 }
 void Scene::draw2d() {
   //  Gu::getGui()->debugForceLayoutChanged();

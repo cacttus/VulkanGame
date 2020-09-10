@@ -180,7 +180,6 @@ string_t DebugHelper::modList() {
   DWORD procid = GetCurrentProcessId();
   hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, procid);
 
-  // - Get gay snapshot.
   if (hModuleSnap == INVALID_HANDLE_VALUE) {
     ret = "Failed to get module snapshot.";
     return ret;

@@ -17,7 +17,6 @@ string_t TextConfigFile::getCleanToken(std::vector<string_t>& tokens, int& iind)
 }
 string_t TextConfigFile::getCleanTokenInd(std::vector<string_t>& tokens, int iind) {
   string_t ret;
-  //MSVC default exception handling was fucking ignoring this.  REALLY?
   if ((size_t)iind >= tokens.size()) {
     parseErr(Stz "Token index '" + iind + "' out of range.", true, true);  //throw
   }

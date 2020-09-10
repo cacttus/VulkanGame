@@ -191,7 +191,7 @@ void MeshNode::copyJointsToGpu() {
   mat4 mtmp;
   // static bool copyLocal = false;
   for (std::shared_ptr<BoneNode> bn : _vecBoneNodesOrdered) {
-    //It's all fucked up because of blender's ordering --skin meshes
+    //This algorithm is more complex than it needs to be because of blender's ordering --skin meshes
     //should not be part of the scene graph.  Really, the bones should be part
     //of the scenegraph.
     // Here we're doing
@@ -218,8 +218,6 @@ void MeshNode::getMeshLocalMatrix(mat4& __out_ mat_mesh) {
     std::cout << std::endl;
     //actual model.
   }
-
-  //1/17/18 Node; removed model_world in order to prevent bullshit like having a unique model matrix
 
   //Add the mesh-local matrix
  // mat_mesh = mg->getLocal();

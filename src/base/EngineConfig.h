@@ -56,28 +56,8 @@ private:
 /**
 *  @class EngineConfig
 *  @brief Stores configuration options for the graphics engine.
-* TODO: this class is getting too big.  Let's create a generic property system for it.
-
-#define XMLCONFIG_PROP(x) const string_t ##x = #x
-
-class EngineConfig  ..  {
-
-  HashMap<Prop> _props;
-
-  //Define all props here.
-  XMLCONFIG_PROP(OpenGLProfile);
-
-  std::shared_ptr<Prop> getProp(string_t prop)
-  {
-    std::shared_ptr<Prop> prop = _props.find(prop);
-    if(prop==nullptr){
-      BRLogWarn("Could not find property '"+ prop +"' in '" + getFileName + "'");
-    }
-    return prop;
-  }
-};
+*  TODO: this class is getting too big. Create a property system for it.
 */
-
 #define XMLCONFIG_PROP(x) const std::string c_##x = #x
 
 class EngineConfig_Internal;
@@ -132,6 +112,10 @@ public:
   XMLCONFIG_PROP(WindowedAspectRatio);
   XMLCONFIG_PROP(GamePad);
   XMLCONFIG_PROP(OpenGLProfile);
+  XMLCONFIG_PROP(GraphicsErrorLogging_High);
+  XMLCONFIG_PROP(GraphicsErrorLogging_Medium);
+  XMLCONFIG_PROP(GraphicsErrorLogging_Low);
+  XMLCONFIG_PROP(GraphicsErrorLogging_Info);
 
   void int32Prop(string_t a, std::vector<string_t>& toks, int32_t& iind);
   void boolProp(string_t a, std::vector<string_t>& toks, int32_t& iind);
@@ -186,6 +170,10 @@ public:
   double windowedAspectRatio() { return _windowedAspectRatio; }
   GamePadType gamePadType() { return _eGamePadType; }
   OpenGLProfile openGLProfile() { return _eOpenGLProfile; }
+  bool getGraphicsErrorLogging_High() { return _bGraphicsErrorLogging_High; }
+  bool getGraphicsErrorLogging_Medium() { return _bGraphicsErrorLogging_Medium; }
+  bool getGraphicsErrorLogging_Low() { return _bGraphicsErrorLogging_Low; }
+  bool getGraphicsErrorLogging_Info() { return _bGraphicsErrorLogging_Info; }
 
 protected:
   virtual void pkp(std::vector<string_t>& tokens) override;
@@ -194,6 +182,11 @@ protected:
 
 private:
   std::shared_ptr<EngineConfig_Internal> _pint = nullptr;
+
+  bool _bGraphicsErrorLogging_High = false;
+  bool _bGraphicsErrorLogging_Medium = false;
+  bool _bGraphicsErrorLogging_Low = false;
+  bool _bGraphicsErrorLogging_Info = false;
 
   OpenGLProfile _eOpenGLProfile = OpenGLProfile::Compatibility;
   GamePadType _eGamePadType = GamePadType::KeyboardAndMouse;

@@ -229,16 +229,16 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
     }
   */
   //TODO: 
-  CullParams p;
-  std::vector<std::future<bool>> futs;
-  for (auto light_pair : b->getLights()) {
-    p.setCamera(cam);
-    std::future<bool> bf = light_pair.second->cullShadowVolumesAsync(p);
-    futs.push_back(std::move(bf));
-  }
-  for (size_t i=0; i<futs.size();++i) {
-    futs[i].wait();
-  }
+  // CullParams p;
+  // std::vector<std::future<bool>> futs;
+  // for (auto light_pair : b->getLights()) {
+  //   p.setCamera(cam);
+  //   std::future<bool> bf = light_pair.second->cullShadowVolumesAsync(p);
+  //   futs.push_back(std::move(bf));
+  // }
+  // for (size_t i=0; i<futs.size();++i) {
+  //   futs[i].wait();
+  // }
 
   _bRenderInProgress = true;
   {

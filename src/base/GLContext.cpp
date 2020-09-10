@@ -103,12 +103,12 @@ void GLContext::setPolygonMode(PolygonMode p) {
     BRLogWarnOnce("glPolygonMode not supported in compatibility mode.");
   }
 }
-bool GLContext::chkErrRt(bool bDoNotBreak, bool doNotLog) {
+bool GLContext::chkErrRt(bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
   //Enable runtime errors.
-  return OglErr::chkErrRt(shared_from_this(), bDoNotBreak, doNotLog);
+  return OglErr::chkErrRt(shared_from_this(), bDoNotBreak, doNotLog, shaderName);
 }
-bool GLContext::chkErrDbg(bool bDoNotBreak, bool doNotLog) {
-  return OglErr::chkErrDbg(shared_from_this(), bDoNotBreak, doNotLog);
+bool GLContext::chkErrDbg(bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
+  return OglErr::chkErrDbg(shared_from_this(), bDoNotBreak, doNotLog, shaderName);
 }
 bool GLContext::loadOpenGLFunctions() {
   bool bValid = true;

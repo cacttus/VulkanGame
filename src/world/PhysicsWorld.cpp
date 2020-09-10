@@ -1175,7 +1175,7 @@ void PhysicsWorld::makeOrCollectGridForPos(ivec3& cv, std::vector<std::shared_pt
 }
 std::shared_ptr<PhysicsGrid> PhysicsWorld::loadGrid(const ivec3& pos) {
   std::shared_ptr<PhysicsGrid> p = nullptr;
-  BRLogWarnCycle("TODO: implement World25::loadGrid here");
+  BRLogTODO("TODO: implement World25::loadGrid here");
   return p;
 }
 std::shared_ptr<PhysicsGrid> PhysicsWorld::getNodeForPoint(vec3& pt) {
@@ -1248,7 +1248,6 @@ void PhysicsWorld::sweepGridFrustum(std::function<void(ivec3&)> func, std::share
 
     if (checked.find(&vi) == checked.end()) {
       //TODO: fix this because we're getting stack overflows
-      //Shitty.. but what else could we do?
       checked.insert(new ivec3(vi));
 
       // if the grid right here intersects the frustum

@@ -28,12 +28,13 @@ public:
 
   void logInfo(string_t msg);
   void logInfo(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
-  void logWarn(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);    // - Log an error with exception contents.
-  void logError(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = false);  // - Log an error with exception contents.
+  void logWarn(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
+  void logError(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = false);
+  void logTODO(string_t msg, int line, const char* file);
   void logDebug(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
-  void logWarnCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);   // - Log an error with exception contents.
-  void logErrorCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);  // - Log an error with exception contents.
-  void logDebugCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);  // - Log an error with exception contents.
+  void logWarnCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);
+  void logErrorCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);
+  void logDebugCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int iCycle = 60, bool force = false);
 
   string_t getLogPath();
 
@@ -59,13 +60,13 @@ private:
       BR2::Gu::getLogger()->logError(Stz x, __LINE__, (char* const)__FILE__, nullptr); \
     }                                                                                  \
   }
-#define BRLogWarnOnce(x)                                                              \
-  {                                                                                    \
-    static bool ___logged_ = false;                                                    \
-    if (___logged_ == false) {                                                         \
-      ___logged_ = true;                                                               \
+#define BRLogWarnOnce(x)                                                     \
+  {                                                                          \
+    static bool ___logged_ = false;                                          \
+    if (___logged_ == false) {                                               \
+      ___logged_ = true;                                                     \
       BR2::Gu::getLogger()->logWarn(Stz x, __LINE__, (char* const)__FILE__); \
-    }                                                                                  \
+    }                                                                        \
   }
 #define BRLogDebugOnce(x)                                                     \
   {                                                                           \
@@ -99,5 +100,12 @@ private:
       ___logged_ = false;                                                                                 \
     }                                                                                                     \
   }
-
+#define BRLogTODO(x)                                                         \
+  {                                                                          \
+    static bool ___logged_ = false;                                          \
+    if (___logged_ == false) {                                               \
+      ___logged_ = true;                                                     \
+      BR2::Gu::getLogger()->logTODO(Stz x, __LINE__, (char* const)__FILE__); \
+    }                                                                        \
+  }
 #endif

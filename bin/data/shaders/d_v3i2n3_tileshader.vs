@@ -62,8 +62,8 @@ void main() {
       _x2Out.y += 1.0f;
     }
 
-    float fuck = float(_ufTilesW) + float(_ufTilesH) + _ufSprW + _ufSprH + float(_ufGpuSprites[0]) +  _n301.x;
-    fuck = clamp(fuck, 0, 0.00000001f);
+    float ssx = float(_ufTilesW) + float(_ufTilesH) + _ufSprW + _ufSprH + float(_ufGpuSprites[0]) +  _n301.x;
+    ssx = clamp(ssx, 0, 0.00000001f);
 
     //Debug
     #endif

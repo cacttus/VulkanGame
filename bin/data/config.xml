@@ -27,7 +27,11 @@
   <NumTextQuads value="256"/>
   <EnableRuntimeErrorChecking value="true"/>
   <BreakOnSDLError value="true"/>
-  <BreakOnGraphicsError value="false"/>
+  <BreakOnGraphicsError value="true"/>
+  <GraphicsErrorLogging_High value="false"/>
+  <GraphicsErrorLogging_Medium value="false"/>
+  <GraphicsErrorLogging_Low value="false"/>
+  <GraphicsErrorLogging_Info value="false"/>
   <ShowConsole value="true"/>
   <ModelThumbSize value="256"/>
   <MaxHardwareIncomingBufferSizeBytes value="32767"/>
@@ -35,7 +39,7 @@
   <MaxSoftwareIncomingBufferSizeBytes value="32767"/>
   <MaxSoftwareOutgoingBufferSizeBytes value="32767"/>
   <RenderSystem value="OpenGL"/>
-  <OpenGLProfile value="Compatibility"/>
+  <OpenGLProfile value="Compatibility"/><!-- Compatibility | Core -->
   <WindowedAspectRatio value="1920/1080"/>
   <GamePad value="KeyboardAndMouse"/>
   <Linux_ReadableBacktrace value="false"/>

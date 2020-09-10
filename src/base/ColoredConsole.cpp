@@ -28,7 +28,8 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
       else {
         std::cout << "Linux terminal colors unavailable." << std::endl;
       }
-    } catch (...) {
+    }
+    catch (...) {
       //Error. We are in the logger so we can't really log.
       std::cout << "Error with terminfo." << std::endl;
       Gu::debugBreak();
@@ -42,25 +43,26 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
 
   if (g_colors_supported == 1) {
 #if defined(BR2_OS_WINDOWS)
-#define ConsoleColorWhite() SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY)
-#define ConsoleColorGray() SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED)
-#define ConsoleColorRed() SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY)
-#define ConsoleColorCyan() SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY)
-#define ConsoleColorYellow() SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY)
     if (cc == ColoredConsole::Color::FG_WHITE) {
-      ConsoleColorWhite();
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY)
     }
     else if (cc == ColoredConsole::Color::FG_GRAY) {
-      ConsoleColorGray();
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED)
     }
     else if (cc == ColoredConsole::Color::FG_RED) {
-      ConsoleColorRed();
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY)
     }
     else if (cc == ColoredConsole::Color::FG_CYAN) {
-      ConsoleColorCyan();
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY)
     }
     else if (cc == ColoredConsole::Color::FG_YELLOW) {
-      ConsoleColorYellow();
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY)
+    }
+    else if (cc == ColoredConsole::Color::FG_GREEN) {
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY)
+    }
+    else if (cc == ColoredConsole::Color::FG_MAGENTA) {
+      SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_INTENSITY)
     }
     else {
       ConsoleColorWhite();
@@ -77,6 +79,8 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
     const std::string cc_cyan("\033[0;96m");
     const std::string cc_yellow("\033[0;93m");
     const std::string cc_reset("\033[0m");
+    const std::string cc_green("\033[92m");
+    const std::string cc_magenta("\033[95m");
 
     string_t cc_beg = "";
     string_t cc_end = "";
@@ -95,6 +99,12 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
     }
     else if (cc == ColoredConsole::Color::FG_YELLOW) {
       cc_beg = cc_yellow;
+    }
+    else if (cc == ColoredConsole::Color::FG_GREEN) {
+      cc_beg = cc_green;
+    }
+    else if (cc == ColoredConsole::Color::FG_MAGENTA) {
+      cc_beg = cc_magenta;
     }
     else {
       cc_beg = cc_white;

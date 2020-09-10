@@ -26,12 +26,14 @@ public:
                         Info,
                         Warn,
                         Error,
+                        TODO,
   };
   string_t _logDir;
   string_t _logFileName;
   std::atomic_bool _bAsync = false;
 
   std::vector<std::string> _toLog;
+  std::vector<LogLevel> _logLevel;
 
   std::atomic_bool _bEnabled = true;
   std::atomic_bool _bLogToFile = true;
@@ -44,7 +46,7 @@ public:
   string_t addStackTrace(string_t msg);
   void addLineFileToMsg(string_t msg, int line, const char* file);
   string_t createMessageHead(LogLevel level);
-  void log(string_t msg, string_t header, const BR2::Exception* const e);
+  void log(string_t msg, string_t header, Logger_Internal::LogLevel level, const BR2::Exception* const e);
   void processLogs_Async();
 
   void log_cycle_mainThread(std::function<void()> f, bool, int);
@@ -63,7 +65,7 @@ void Logger_Internal::log_wedi_mainThread(string_t msg, int line, const char* fi
     msg = addStackTrace(msg);
   }
 
-  log(msg, createMessageHead(level), e);
+  log(msg, createMessageHead(level), level, e);
 }
 void Logger_Internal::log_cycle_mainThread(std::function<void()> f, bool force, int iCycle) {
   if (Gu::getCoreContext() != nullptr) {
@@ -89,20 +91,26 @@ void Logger_Internal::addLineFileToMsg(string_t msg, int line, const char* file)
 string_t Logger_Internal::createMessageHead(LogLevel level) {
   string_t str;
   if (level == LogLevel::Debug) {
-    str = "DBG";
+    str = "D";
   }
   else if (level == LogLevel::Info) {
-    str = "INF";
+    str = "I";
   }
   else if (level == LogLevel::Warn) {
-    str = "WRN";
+    str = "W";
   }
   else if (level == LogLevel::Error) {
-    str = "ERR";
+    str = "E";
   }
-  return Stz "" + DateTime::getDateTime().timeToStr() + " " + str + " ";
+  else if (level == LogLevel::TODO) {
+    str = "T";
+  }
+  else {
+    str = "?";
+  }
+  return Stz "" + DateTime::getDateTime().timeToStr() + "[" + str + "]";
 }
-void Logger_Internal::log(string_t msg, string_t header, const BR2::Exception*  const e) {
+void Logger_Internal::log(string_t msg, string_t header, Logger_Internal::LogLevel level, const BR2::Exception* const e) {
   string_t m = header + " " + msg;
 
   if (e != nullptr) {
@@ -115,48 +123,56 @@ void Logger_Internal::log(string_t msg, string_t header, const BR2::Exception*  
     _mtLogStackAccess.lock();
     {
       _toLog.push_back(m);
+      _logLevel.push_back(level);
     }
     _mtLogStackAccess.unlock();
   }
   else {
     _toLog.push_back(m);
+    _logLevel.push_back(level);
     processLogs_Async();
   }
 }
 void Logger_Internal::processLogs_Async() {
   std::vector<string_t> logs;
+  std::vector<Logger_Internal::LogLevel> logLevels;
   if (_bAsync) {
     _mtLogStackAccess.lock();
     {
       logs.swap(_toLog);
+      logLevels.swap(_logLevel);
     }
     _mtLogStackAccess.unlock();
   }
   else {
     logs.swap(_toLog);
+    logLevels.swap(_logLevel);
   }
 
   string_t appended = "";
-  for (string_t m : logs) {
-    appended += m;
-
+  Logger_Internal::LogLevel level;
+  for(size_t iMsg=0; iMsg<logs.size(); ++iMsg){
+    appended += logs[iMsg];
+    level = logLevels[iMsg];
     if (_bLogToConsole) {
       //TODO: we could speed up the logger by removing all these find() methods and using a flag up the call chain.
-      if (m.find(" DBG ") != std::string::npos) {
-        ColoredConsole::print(m, ColoredConsole::Color::FG_CYAN);
+      if (level == Logger_Internal::LogLevel::Debug) {
+        ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_CYAN);
       }
-      else if (m.find(" ERR ") != std::string::npos) {
-        ColoredConsole::print(m, ColoredConsole::Color::FG_RED);
+      else if (level == Logger_Internal::LogLevel::Error) {
+        ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_RED);
       }
-      else if (m.find(" WRN ") != std::string::npos) {
-        ColoredConsole::print(m, ColoredConsole::Color::FG_YELLOW);
+      else if (level == Logger_Internal::LogLevel::Warn) {
+        ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_YELLOW);
+      }
+      else if (level == Logger_Internal::LogLevel::TODO) {
+        ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_GREEN);
       }
       else {
-        ColoredConsole::print(m, ColoredConsole::Color::FG_WHITE);
+        ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_WHITE);
       }
     }
   }
-
 
   if (_bLogToFile) {
     if (!FileSystem::fileExists(_logDir)) {
@@ -180,6 +196,7 @@ void Logger_Internal::processLogs_Async() {
   }
 
   logs.clear();
+  logLevels.clear();
 }
 
 #pragma endregion
@@ -228,6 +245,9 @@ string_t Logger::getLogPath() {
 }
 void Logger::logInfo(string_t msg) {
   logInfo(msg, -1, "", nullptr, true);
+}
+void Logger::logTODO(string_t msg, int line, const char* file) {
+  _pint->log_wedi_mainThread(msg, line, file, nullptr, true, Logger_Internal::LogLevel::TODO);
 }
 void Logger::logInfo(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Info);

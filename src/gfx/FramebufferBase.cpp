@@ -145,7 +145,7 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createTarget(std::shared_pt
 std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shared_ptr<GLContext> ctx, string_t strName, int32_t w, int32_t h, int iIndex, bool bMsaaEnabled, int32_t nMsaaSamples) {
   std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(ctx, true);
   inf->_strName = strName;
-  //**Note: index doesn't matter for depth target since we simply bind it to GL_Depth_attachment.  It confused the fuck out of me. 2/9/18
+  //**Note: index doesn't matter for depth target since we simply bind it to GL_Depth_attachment.
   inf->_iLayoutIndex = iIndex;
   if (bMsaaEnabled) {
     inf->_eTextureTarget = GL_TEXTURE_2D_MULTISAMPLE;

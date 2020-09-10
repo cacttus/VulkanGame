@@ -311,7 +311,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
         RenderUtils::debugGetRenderState();
         //GL_TRIANGLES = 0x0004
         glDrawElements(eDrawMode, iCount, GL_UNSIGNED_INT, (GLvoid*)0);
-        Gu::getCoreContext()->chkErrDbg();
+        Gu::getCoreContext()->chkErrDbg(false, false, this->getProgramName());
       }
     }
     vao->unbind();

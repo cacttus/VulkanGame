@@ -689,7 +689,7 @@ FORCE_INLINE void Box3x<Tx>::closestPoint(const Vec3x<Tx>& point, Vec3f& __out_ 
 
 
     //4 points were equally closest (cube face)
-    //Bilinear interpolate the shit
+    //Bilinear interpolate 
     Vec3f avg;
     vec3::bilinear_interpolate(cp[closest[0]],
       cp[closest[1]],

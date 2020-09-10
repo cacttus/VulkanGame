@@ -278,6 +278,18 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
     else if (lcmp(tokens[0], EngineConfig::c_Linux_ReadableBacktrace, 2)) {
       _pConfig->_bLinux_ReadableBacktrace = TypeConv::strToBool(getCleanToken(tokens, iind));
     }
+    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_High, 2)) {
+      _pConfig->_bGraphicsErrorLogging_High = TypeConv::strToBool(getCleanToken(tokens, iind));
+    }
+    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_Medium, 2)) {
+      _pConfig->_bGraphicsErrorLogging_Medium = TypeConv::strToBool(getCleanToken(tokens, iind));
+    }
+    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_Low, 2)) {
+      _pConfig->_bGraphicsErrorLogging_Low = TypeConv::strToBool(getCleanToken(tokens, iind));
+    }
+    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_Info, 2)) {
+      _pConfig->_bGraphicsErrorLogging_Info = TypeConv::strToBool(getCleanToken(tokens, iind));
+    }
     else {
       msg(Stz " Unrecognized engine config token '" + tokens[0] + "'");
       Gu::debugBreak();

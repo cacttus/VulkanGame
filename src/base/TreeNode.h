@@ -134,7 +134,7 @@ bool TreeNode::iterateDepthFirst(std::function<bool(std::shared_ptr<Tx>)> fn) {
 
   std::shared_ptr<TreeNode> trThis = getThis<TreeNode>();
 
-  //TODO: figure out a way to reference this.  Or else do some kind of reference controlled shit under the hood.
+  //TODO: figure out a way to reference this.  Or else do some kind of reference controlled  under the hood.
   std::shared_ptr<Tx> pt = std::dynamic_pointer_cast<Tx>(trThis);
   if (pt == nullptr) {
     return true;

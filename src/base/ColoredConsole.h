@@ -8,7 +8,7 @@ namespace BR2 {
 //Linux/Windows support.
 class ColoredConsole {
 public:
-  enum class Color { FG_WHITE,FG_GRAY,FG_RED,FG_CYAN,FG_YELLOW };
+  enum class Color { FG_WHITE,FG_GRAY,FG_RED,FG_CYAN,FG_YELLOW,FG_GREEN,FG_MAGENTA };
   static void print(const std::string& str, ColoredConsole::Color cc = ColoredConsole::Color::FG_WHITE);
 };
 
