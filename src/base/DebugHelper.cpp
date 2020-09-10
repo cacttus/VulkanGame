@@ -264,7 +264,7 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
 
     try {
       //Check if addr2line exists.
-      static int addr_exist = -1;
+      static int addr_exist = 0; // set to -1 to enable more clean exceptions.
       if(addr_exist == -1){
         addr_exist = StringUtil::isNotEmpty(OperatingSystem::executeReadOutput((Stz + "command -v addr2line"))) ? 1 : 0;
       }
