@@ -76,6 +76,8 @@ public:
   static string_t wStrToStr(std::wstring str);
   static wstring_t strToWStr(std::string str);
   static string_t floatToStr2d(float f);
+  static string_t slice(string_t& str, char a, char b, bool includeDelims = false, bool modify_input_sring = false);
+
 };
 #define StrLn(a,...) TStr(a,__VA_ARGS__,"\n");
 

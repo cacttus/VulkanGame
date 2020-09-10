@@ -553,5 +553,27 @@ wstring_t StringUtil::strToWStr(std::string str) {
   std::wstring wide = converter.from_bytes(str);
   return wide;
 }
+string_t StringUtil::slice(string_t& str, char a, char b, bool includeDelims, bool modify_input_sring) {
+  //Slice a string given 2 delimiters.
+  //@param modify_input_string - remove the found string from the input.
+  string_t res = "";
 
+  auto a_p = str.find(a);
+  auto b_p = str.find(b);
+
+  if (includeDelims) {
+    a_p -= 1;
+    b_p += 1;
+  }
+  if (a_p != string_t::npos && b_p != string_t::npos) {
+    if (a_p < b_p) {
+      res = str.substr(a_p + 1, b_p - (a_p + 1));
+      if (modify_input_sring) {
+        str.erase(a_p+1, (b_p-(a_p+1)));
+      }
+    }
+  }
+
+  return res;
+}
 }  // namespace BR2

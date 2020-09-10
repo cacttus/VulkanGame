@@ -89,7 +89,7 @@
     "request": "launch",
     "program": "${command:cmake.launchTargetPath}",
     "args": [
-      "log_async=false",
+      "log_async=true",
       "package_loc=_debug"
     ],
     "stopAtEntry": false,
@@ -100,7 +100,7 @@
         "value": "$PATH:${command:cmake.launchTargetDirectory}"
       }
     ],
-    "externalConsole": true,
+    "externalConsole": false,
     "MIMode": "gdb",
     "setupCommands": [
       {

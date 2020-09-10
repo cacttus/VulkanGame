@@ -6,6 +6,7 @@
 #include "../base/FileSystem.h"
 #include "../base/OperatingSystem.h"
 #include "../base/EngineConfig.h"
+#include "../base/ColoredConsole.h"
 
 #include <iostream>
 #include <mutex>
@@ -16,8 +17,11 @@
 #endif
 
 #if defined(BR2_OS_LINUX)
+//required to backtrace_symbols
 #include <execinfo.h>
 #include <sstream>
+//required to demangle names
+#include <cxxabi.h>
 #endif
 
 namespace BR2 {
@@ -211,17 +215,52 @@ string_t DebugHelper::modList() {
   return ret;
 }
 #if defined(BR2_OS_LINUX)
+
+string_t linux_bt_demangle_sym(const string_t& stringsym) {
+  string_t sym_copy = stringsym;
+  //Demangle a linux symbol and return a easy to read result.
+  string_t mangled = StringUtil::slice(sym_copy, '(', '+');
+  string_t caller_addr = StringUtil::slice(sym_copy, '+', ')');
+  string_t unmangled = "";
+  string_t call_addr = "";
+  string_t result = "";
+
+  int st;
+  char* cxx_sname = abi::__cxa_demangle(mangled.c_str(), nullptr, 0, &st);
+  if (st == 0) {
+    unmangled.assign(cxx_sname);
+    free(cxx_sname);
+    call_addr = StringUtil::slice(sym_copy, '[', ']', true);
+    result = Stz call_addr + " " + unmangled;
+  }
+  else if (st == -1) {
+    ColoredConsole::print(Stz "linux_bt_demangle_sym Error: A memory allocation failure occurred.\n");
+  }
+  else if (st == -2) {
+    //ColoredConsole::print(Stz "linux_bt_demangle_sym Error: @a mangled_name is not a valid name under the C++ ABI mangling rules.\n");
+    result = stringsym;
+  }
+  else if (st == -3) {
+    ColoredConsole::print(Stz "linux_bt_demangle_sym Error: One of the arguments is invalid. \n");
+  }
+  else {
+    ColoredConsole::print(Stz "linux_bt_demangle_sym Error: Invalid Argument\n");
+  }
+  return result;
+}
 std::vector<std::string> linux_bt_syms(void** buffer, int nptrs) {
   //Return a string backtrace of symbols received by backtrace()
   std::vector<std::string> callStack;
   char** strings = backtrace_symbols(buffer, nptrs);
-  if (strings == NULL) {
-    BRLogError("Could not perform linux stack trace.");
+
+  if (strings != NULL) {
+    for (int j = 0; j < nptrs; j++) {
+      string_t demangled_sym = linux_bt_demangle_sym(strings[j]);
+      callStack.push_back(demangled_sym);
+    }
   }
   else {
-    for (int j = 0; j < nptrs; j++) {
-      callStack.push_back(std::string(strings[j]));
-    }
+    BRLogError("Could not perform linux stack trace.");
   }
   free(strings);
   return callStack;
@@ -250,7 +289,7 @@ std::vector<std::string> linux_bt_addr2line(void** buffer, int nptrs) {
 std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
   static std::mutex _stackMtx;
   std::lock_guard<std::mutex> guard(_stackMtx);
-  
+
   static bool s_callstackFailed = false;
   std::vector<std::string> callStack;
 
@@ -288,19 +327,7 @@ std::vector<std::string> DebugHelper::getCallStack(bool bIncludeFrameId) {
     std::memset(buffer, 0, BT_BUF_SIZE);
     int nptrs = backtrace(buffer, BT_BUF_SIZE);
 
-    //Check if addr2line exists.
-    static int addr_exist = -1;  // set to -1 to enable more clean exceptions.
-    if (addr_exist == -1) {
-      std::string output = OperatingSystem::executeReadOutput(Stz + "command -v addr2line");
-      addr_exist = StringUtil::isNotEmpty(output) ? 1 : 0;
-    }
-    if (addr_exist == 1 && Gu::getEngineConfig()->getLinux_ReadableBacktrace()) {
-      callStack = linux_bt_addr2line(buffer, nptrs);
-    }
-    else {
-      //Use bt_syms
-      callStack = linux_bt_syms(buffer, nptrs);
-    }
+    callStack = linux_bt_syms(buffer, nptrs);
 
 #endif
   }
