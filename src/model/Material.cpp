@@ -7,22 +7,22 @@
 #include "../gfx/ShaderBase.h"
 #include "../gfx/Texture2DSpec.h"
 #include "../gfx/TexCache.h"
-#include "../gfx/RenderSettings.h"  
+#include "../gfx/RenderSettings.h"
 
 namespace BR2 {
-Material::Material(string_t name) {
+Material::Material(const string_t& name) {
   _strName = name;
   _v4Spec.construct(1, 1, 1, 1);
   _v4Diffuse.construct(1, 1, 1, 1);
   // _v4Ambient.construct(1, 1, 1, 1);
-  _v4Mirror.construct(1, 1, 1, 0);//last is mirror param
-  _fHardness = 50.0f; //Shininess exponent
+  _v4Mirror.construct(1, 1, 1, 0);  //last is mirror param
+  _fHardness = 50.0f;               //Shininess exponent
 }
 Material::~Material() {
   _mapTextureBindings.clear();
 }
 std::shared_ptr<Material> Material::makeCopy() {
-  std::shared_ptr<Material> ret = std::make_shared<Material>(_strName);
+  std::shared_ptr<Material> ret = std::make_shared<Material>(this->_strName);
   //ret->_pContext                 = this->_pContext                ;
   //ret->_strName                  = this->_strName                 ;
   ret->_v4Spec = this->_v4Spec;
@@ -47,7 +47,6 @@ std::shared_ptr<TextureSlot> Material::getMapByType(TextureType::e texType) {
   return nullptr;
 }
 void Material::bind(std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound, bool bBindParameters) {
-
   std::set<TextureChannel::e> channelsBound;
   for (std::pair<TextureChannel::e, std::shared_ptr<TextureSlot>> b : _mapTextureBindings) {
     TextureChannel::e channel = b.first;
@@ -71,17 +70,16 @@ void Material::bind(std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound,
   if (bBindParameters) {
     //2/1/18 mirror has a color, but we're not setting it.  (later.. maybe..)
     pShader->setUf("_ufSpecIntensity", (void*)&(_v4Spec.w));  //uniform float _ufSpecIntensity;
-    pShader->setUf("_ufSpecHardness", (void*)&_fHardness);  //uniform float _ufSpecHardness;
+    pShader->setUf("_ufSpecHardness", (void*)&_fHardness);    //uniform float _ufSpecHardness;
     pShader->setUf("_ufMirrorPower", (void*)&(_v4Mirror.w));  //uniform float _ufMirrorPower;
-    pShader->setUf("_ufSpecColor", (void*)&_v4Spec);  //uniform vec3 _ufSpecColor;
-    pShader->setUf("_ufDiffuseColor", (void*)&_v4Diffuse);  //This is now used by all shaders because of the "intensity" parameter (per blender)
+    pShader->setUf("_ufSpecColor", (void*)&_v4Spec);          //uniform vec3 _ufSpecColor;
+    pShader->setUf("_ufDiffuseColor", (void*)&_v4Diffuse);    //This is now used by all shaders because of the "intensity" parameter (per blender)
 
     if (_bEnableTransparency && Gu::getRenderSettings()->enableTransparency()) {
       pShader->setUf("_fTpAlpha", (void*)&(_fTpAlpha));
       pShader->setUf("_fTpIOR", (void*)&(_fTpIOR));
       pShader->setUf("_fTpFilter", (void*)&(_fTpFilter));
     }
-
   }
 
   std::shared_ptr<ShaderUniform> u = pShader->getUniformByName("_ufTexture0");
@@ -114,8 +112,6 @@ void Material::bind(std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound,
       nnnn++;
     }
   }
-
-
 }
 void Material::addTextureBinding(std::shared_ptr<Texture2DSpec> ptm, TextureChannel::e channel, TextureType::e etype, float influence) {
   AssertOrThrow2(ptm != NULL);
@@ -139,7 +135,6 @@ void Material::removeTextureBinding(std::shared_ptr<Texture2DSpec> ptm) {
   std::map<TextureChannel::e, std::shared_ptr<TextureSlot>>::iterator ite = _mapTextureBindings.begin();
 
   for (; ite != _mapTextureBindings.end(); ite++) {
-
     if (ite->second->_pTex == ptm) {
       if (ite->second->_pTex->getTransparent()) {
         _nTransparentTextureCount--;
@@ -153,7 +148,29 @@ void Material::removeTextureBinding(std::shared_ptr<Texture2DSpec> ptm) {
   _mapTextureBindings.erase(ite);
 }
 void Material::unbind() {
-  glBindTexture(GL_TEXTURE_2D, 0);
+  std::set<TextureChannel::e> channelsBound;
+  for (std::pair<TextureChannel::e, std::shared_ptr<TextureSlot>> b : _mapTextureBindings) {
+    TextureChannel::e channel = b.first;
+
+    if (channelsBound.find(channel) != channelsBound.end()) {
+      BRLogWarn("[Material] Multiple textures bound to channel " + channel);
+    }
+    else {
+      //TODO: set tex influence
+      if (b.second->_pTex != nullptr) {
+        b.second->_pTex->unbind(channel);
+      }
+      else {
+        BRLogError("Texture was null for material.");
+      }
+    }
+  }
+
+  // int32_t maxt = Gu::getCoreContext()->maxGLTextureUnits();
+  // for (int32_t itex = 0; itex < maxt; itex++) {
+  //   Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0 + itex);
+  //   glBindTexture(GL_TEXTURE_2D, 0);
+  // }
 }
 void Material::deserialize(std::shared_ptr<BinaryFile> fb) {
   fb->readString(_strName);
@@ -193,7 +210,6 @@ void Material::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeFloat(std::move(_fTpAlpha));
   fb->writeFloat(std::move(_fTpFilter));
   fb->writeFloat(std::move(_fTpIOR));
-
 }
 void TextureSlot::deserialize(std::shared_ptr<BinaryFile> fb) {
   fb->readUint32((uint32_t&)_iTexFileHashed);
@@ -220,7 +236,4 @@ void TextureSlot::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeInt32(std::move((int32_t)_eChannel));
 }
 
-
-
-
-}//ns game
+}  // namespace BR2

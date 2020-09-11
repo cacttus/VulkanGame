@@ -258,12 +258,11 @@ void ShaderBase::setTextureUf(uint32_t iChannel, bool bIgnoreIfNotFound) {
   //Uniform should be "_ufTexturen"
   string_t ufName = Stz "_ufTexture" + iChannel;
 
-  //TODDO: add some error checking ehre to make sure we're not trying
- //to bind too many textures more than GL_MAX_TEXTURE_UNITS
-
+  if(iChannel >= Gu::getCoreContext()->maxGLTextureUnits()){
+    BRLogWarnCycle("Too many texture channels bound to shader uniform Channels: " + iChannel + " shader: " + this->getProgramName() + " ");
+  }
   setUf(ufName, &iChannel, -1, bIgnoreIfNotFound);
 }
-
 void ShaderBase::draw(std::shared_ptr<MeshNode> mesh, int32_t iCount, GLenum eDrawMode) {
   Perf::pushPerf();
 
@@ -316,8 +315,9 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
     }
     vao->unbind();
   }
-  // unbind();
-   //Do not unbind so we keep the uniforms.
+  BRLogTODO("Allow for streamed drawing and unbind unstreamed shaders to prevent errors.");
+  // unbind(); //TODO:
+   //Do not unbind so we keep the uniforms. This is for optimization.
 }
 string_t ShaderBase::debugGetUniformValues() {
   string_t str = OperatingSystem::newline();

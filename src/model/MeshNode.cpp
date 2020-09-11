@@ -113,7 +113,7 @@ void MeshNode::createSkin() {
 
   //Fill identity buffer of skin mats
   int32_t iOrdCount = 0;
-  std::vector <mat4> idents;
+  std::vector<mat4> idents;
   for (std::pair<Hash32, std::shared_ptr<Armature>> parm : _pModelNode->getModelSpec()->getArmatureMapOrdered()) {
     for (std::pair<Hash32, std::shared_ptr<BoneSpec>> pbone : *parm.second->getBoneCacheOrdered()) {
       iOrdCount++;
@@ -131,7 +131,7 @@ void MeshNode::orderBoneNodesForGpu() {
   //Retrieve a list of all matrixes as appearing on the GPU - this si crucially ordered.
   //[arm, bone,bone, arm2, bone, bone...]
   //Armature order comes frist
- // int32_t iMaxArmId = -1;
+  // int32_t iMaxArmId = -1;
   _vecBoneNodesOrdered.resize(0);
   _vecArmaturesOrdered.resize(0);
 
@@ -147,7 +147,7 @@ void MeshNode::orderBoneNodesForGpu() {
   //Build list of bone nodes, ordered by armature, then bone id
   int32_t iMaxBoneId = -1;
   for (std::shared_ptr<ArmatureNode> parm_node : _vecArmaturesOrdered) {
-    iMaxBoneId = -1;//Reset for each armature
+    iMaxBoneId = -1;  //Reset for each armature
 
     for (std::shared_ptr<BoneNode> bn : parm_node->getBonesOrdered()) {
       _vecBoneNodesOrdered.push_back(bn);
@@ -187,7 +187,7 @@ void MeshNode::copyJointsToGpu() {
   Perf::pushPerf();
   AssertOrThrow2(_pArmJoints != nullptr);
   std::vector<mat4> mats;
-  std::vector<string_t> names; //TEST
+  std::vector<string_t> names;  //TEST
   mat4 mtmp;
   // static bool copyLocal = false;
   for (std::shared_ptr<BoneNode> bn : _vecBoneNodesOrdered) {
@@ -202,7 +202,7 @@ void MeshNode::copyJointsToGpu() {
     }
 
     mats.push_back(mtmp);
-    names.push_back(bn->getBoneSpec()->getName());//TEST
+    names.push_back(bn->getBoneSpec()->getName());  //TEST
   }
   _pArmJoints->copyDataClientServer(mats.size(), mats.data());
   Perf::popPerf();
@@ -220,7 +220,7 @@ void MeshNode::getMeshLocalMatrix(mat4& __out_ mat_mesh) {
   }
 
   //Add the mesh-local matrix
- // mat_mesh = mg->getLocal();
+  // mat_mesh = mg->getLocal();
   if (mg->getMeshSpec()->hasSkin()) {
     int nnn = 0;
     nnn++;
@@ -229,10 +229,10 @@ void MeshNode::getMeshLocalMatrix(mat4& __out_ mat_mesh) {
   if (mg->getSpec()->getParentType() == ParentType::Bone) {
     static int n = 0;
     if (n == 0) {
-      mat_mesh = mg->getLocal();// * mat_model_world
+      mat_mesh = mg->getLocal();  // * mat_model_world
     }
     if (n == 1) {
-      mat_mesh = mat4::identity();// * mat_model_world;
+      mat_mesh = mat4::identity();  // * mat_model_world;
     }
   }
   else {
@@ -282,7 +282,7 @@ void MeshNode::draw(RenderParams& rp, bool bTransparent) {
     rp.getShader()->setCameraUf(bc, &mat_mesh);
 
     //Pick ID
-    uint32_t pickid = getPickId(); // if not pickable, then PICK_ID_NOT_SET is a valid uniform.
+    uint32_t pickid = getPickId();  // if not pickable, then PICK_ID_NOT_SET is a valid uniform.
     if (_bPickable && pickid == PICK_ID_NOT_SET) {
       BRLogErrorCycle("Pick ID not set for model '" + name() + "'.");
     }
@@ -300,6 +300,11 @@ void MeshNode::draw(RenderParams& rp, bool bTransparent) {
     rp.setMesh(getThis<MeshNode>());
 
     rp.draw();
+
+    //Cleanup
+    if (_pMaterial != nullptr) {
+      _pMaterial->unbind();
+    }
   }
 }
 void MeshNode::bindSkin(std::shared_ptr<ShaderBase> shader) {
@@ -313,14 +318,13 @@ void MeshNode::bindSkin(std::shared_ptr<ShaderBase> shader) {
     shader->bindSsbo(getMeshSpec()->getWeightsGpu(), "ssInJointWeights", 1);
     //   Gu::checkErrorsDbg();
     shader->bindSsbo(_pArmJoints, "ssInSkinMatrices", 2);
-    wc = 1;//This appears only to be a conditional wc>0 
+    wc = 1;  //This appears only to be a conditional wc>0
   }
   shader->setUf("_ufWeightCount", (void*)&wc);
 }
 void MeshNode::drawForward(RenderParams& rp) {
   SceneNode::drawForward(rp);
   if (Gu::getRenderSettings()->getDebug()->getShowNormals()) {
-
     //Draw Normals
     std::shared_ptr<MeshNode> mg = getThis<MeshNode>();
     mat4 mat_mesh;
@@ -355,11 +359,14 @@ void MeshNode::drawShadow(RenderParams& rp) {
   }
 
   _pMaterial->bind(rp.getShader(), true, false);
-  rp.getShader()->draw(getThis<MeshNode>());
+  {
+    rp.getShader()->draw(getThis<MeshNode>());
+  }
+  _pMaterial->unbind();
 }
 void MeshNode::afterAddedToScene(std::shared_ptr<Scene> scene) {
   //We can't access picker here right now, just set this to "Not Set"
- //Set pick ID after we've been added to the scene.
+  //Set pick ID after we've been added to the scene.
   std::shared_ptr<Picker> picker = NodeUtils::getPicker(getThis<SceneNode>());
   if (picker) {
     _iPickId = picker->genPickId();
@@ -393,7 +400,6 @@ void MeshNode::calcBoundBox(Box3f& __out_ pBox, const vec3& obPos, float extra_p
     }
   }
   SceneNode::calcBoundBox(pBox, obPos, extra_pad);
-
 }
 void MeshNode::showNoMaterialError() {
   //Check that textured meshes actually have texture.  If they don't swap the vertex format for something we can draw
@@ -406,6 +412,4 @@ void MeshNode::showNoMaterialError() {
   //}
 }
 
-
-
-}//ns Game
+}  // namespace BR2

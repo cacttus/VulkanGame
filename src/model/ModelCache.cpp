@@ -14,7 +14,7 @@
 
 namespace BR2 {
 ModelCache::ModelCache(std::shared_ptr<GLContext> pc) : _pContext(pc) {
-  _pDefaultMaterial = std::make_shared<Material>();
+  _pDefaultMaterial = std::make_shared<Material>("Model_Default_Material");
   //default material is the initial blender params.
 }
 ModelCache::~ModelCache() {

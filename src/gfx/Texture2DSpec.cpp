@@ -18,7 +18,7 @@ Texture2DSpec::Texture2DSpec(string_t name, string_t loc, std::shared_ptr<GLCont
   _strName = name;
   load(loc, bRepeatU, bRepeatV);
 }
-Texture2DSpec::Texture2DSpec(string_t name, const std::shared_ptr<Img32>sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : _pContext(ctx) {
+Texture2DSpec::Texture2DSpec(string_t name, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : _pContext(ctx) {
   _strName = name;
   create((unsigned char*)sp->getData()->ptr(), sp->getWidth(), sp->getHeight(), false, false, false);
   setFilter(eFilter);
@@ -66,13 +66,8 @@ bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase>
   }
   return true;
 }
-void Texture2DSpec::unbind() {
-  //  if (_iChannel == 0) {
-  _pContext->glActiveTexture(GL_TEXTURE0);
-  //}
-  //else {
-  //    BroThrowNotImplementedException();
-  //}
+void Texture2DSpec::unbind(TextureChannel::e eChannel) {
+  _pContext->glActiveTexture(GL_TEXTURE0 + eChannel);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 int32_t Texture2DSpec::generateMipmapLevels() {
@@ -124,15 +119,15 @@ void Texture2DSpec::create(unsigned char* imageData, uint32_t w, uint32_t h, boo
     _pContext->chkErrRt();
   }
 
-  // Copy texture date
+  // Copy texture data
   glTexSubImage2D(
-    GL_TEXTURE_2D,
-    0, 0, 0,        //level, x, y
-    w,
-    h,
-    _eTextureFormat,                //format
-    GL_UNSIGNED_BYTE,    //type
-    (void*)imageData    //pixels
+      GL_TEXTURE_2D,
+      0, 0, 0,  //level, x, y
+      w,
+      h,
+      _eTextureFormat,   //format
+      GL_UNSIGNED_BYTE,  //type
+      (void*)imageData   //pixels
   );
 
   _pContext->chkErrRt();
@@ -194,7 +189,7 @@ void Texture2DSpec::setWrapU(TexWrap::e wrap) {
   else {
     BRThrowNotImplementedException();
   }
-  unbind();
+  unbind(TextureChannel::e::Channel0);
 }
 void Texture2DSpec::setWrapV(TexWrap::e wrap) {
   bind(TextureChannel::e::Channel0, nullptr);
@@ -207,7 +202,7 @@ void Texture2DSpec::setWrapV(TexWrap::e wrap) {
   else {
     BRThrowNotImplementedException();
   }
-  unbind();
+  unbind(TextureChannel::e::Channel0);
 }
 void Texture2DSpec::setFilter(TexFilter::e filter) {
   _eFilter = filter;
@@ -243,7 +238,7 @@ void Texture2DSpec::setFilter(TexFilter::e filter) {
   }
   _pContext->chkErrRt();
 
-  unbind();
+  unbind(TextureChannel::e::Channel0);
 }
 bool Texture2DSpec::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image) {
   return RenderUtils::getTextureDataFromGpu(image, _glId, GL_TEXTURE_2D);
@@ -287,4 +282,4 @@ void Texture2DSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
 
   create(data, iWidth, iHeight, bHasMipmaps, bRepeatU, bRepeatV);
 }
-}//ns game
+}  // namespace BR2

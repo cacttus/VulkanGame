@@ -702,8 +702,7 @@ string_t ShaderMaker::getShaderNameForId(GLuint id) {
   return "";
 }
 void ShaderMaker::shaderBound(std::shared_ptr<ShaderBase> sb) {
-  //This system is here for sanity checking of uniform bindings.
-  //It's not "necessary", but it ensures uniforms are set.
+  //Unbinding here for sanity checking of uniform bindings. It ensures uniforms are set.
   if (_pBound != nullptr && _pBound != sb) {
     _pBound->unbindAllUniforms();
   }

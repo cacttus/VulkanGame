@@ -75,7 +75,7 @@ void ForwardFramebuffer::beginRender() {
   getContext()->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _uiGlFramebufferId);
   getContext()->glBindRenderbuffer(GL_RENDERBUFFER, 0);//_depthRenderBufferId);
 
-  //Do not clear - previous deferred operation is in here. (clear happens in clearFb)
+  //Do not clear! - previous deferred operation is in here. (clear happens in clearFb)
   //**Do not clear***
   //**Do not clear***
   //**Do not clear***

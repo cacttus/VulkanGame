@@ -67,6 +67,8 @@ public:
   GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile> profile, SDL_Window* win);
   virtual ~GLContext() override;
 
+  int32_t maxGLTextureUnits();
+
   int32_t getSupportedDepthSize() { return _iSupportedDepthSize; }
   SDL_GLContext getSDLGLContext() { return _context; }
 
@@ -101,6 +103,8 @@ private:
   std::shared_ptr<GLProfile> _profile;
   bool _bValid = false;
   bool loadOpenGLFunctions();
+
+  int32_t _iMaxTexs=-1;
 
   //Render Stack.
   std::stack<GLenum> _eLastCullFaceStack;

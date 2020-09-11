@@ -600,6 +600,11 @@ string_t GLContext::getObjectLabel(GLenum type, GLuint objectId) {
   return res;
 }
 void GLContext::setObjectLabel(GLenum type, GLuint objectId, const string_t& label) {
+  if(StringUtil::isEmpty(label)){
+    //Label was empty.
+    BRLogDebug("Warning label was empty.");
+    Gu::debugBreak();
+  }
   if (objectId > 0) {
     static int _maxlenLabel = -1;
     if (_maxlenLabel == -1) {
@@ -615,6 +620,12 @@ void GLContext::setObjectLabel(GLenum type, GLuint objectId, const string_t& lab
       Gu::checkErrorsRt();
     }
   }
+}
+int32_t GLContext::maxGLTextureUnits() {
+  if (_iMaxTexs == -1) {
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_iMaxTexs);
+  }
+  return _iMaxTexs;
 }
 
 }  // namespace BR2

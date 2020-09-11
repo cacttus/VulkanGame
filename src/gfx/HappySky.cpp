@@ -86,7 +86,7 @@ void HappySky::init(std::shared_ptr<Atlas> pAtlas, float fBoxDiagonalSize2, bool
   std::shared_ptr<MeshSpec> ms = std::make_shared<MeshSpec>("Skybox_Spec",
     (void*)verts.data(), verts.size(),
     (void*)inds.data(), inds.size(), v_v3n3x2::getVertexFormat(), nullptr);
-  std::shared_ptr<Material> mt = std::make_shared<Material>();
+  std::shared_ptr<Material> mt = std::make_shared<Material>("Skybox_Material");
   mt->addTextureBinding(_pAtlas, TextureChannel::Channel0, TextureType::e::Color, 1.0f);
   ms->setMaterial(mt);
 

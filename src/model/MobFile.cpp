@@ -568,7 +568,7 @@ bool MeshSpecData::tkMaterial(MobFile* pMobFile, std::vector<string_t>& tokens) 
   }
   return true;
 }
-void MeshSpecData::parseFace(MobFile* pMobFile, string_t t0, string_t t1, string_t t2) {
+void MeshSpecData::parseFace(MobFile* pMobFile, const string_t& t0, const string_t& t1, const string_t& t2) {
   std::vector <string_t> strVec;
   int32_t iComp;
   int32_t indices[3];
@@ -967,7 +967,7 @@ void MeshSpecData::clearVertexCache() {
   }
   _mapVertexCache.clear();
 }
-void MeshSpecData::parseWeights(MobFile* mb, VertexWeightMob& vw, int32_t iArmId, string_t strWeights) {
+void MeshSpecData::parseWeights(MobFile* mb, VertexWeightMob& vw, int32_t iArmId, const string_t& strWeights) {
   size_t n = 0;
   char c;
   string_t val = "";

@@ -27,6 +27,7 @@ public:
   Box3f* getBoundBoxObject() { return _pBox; }
 
   string_t getName() { return _strName; }
+  void setName(const string_t& name) { _strName = name; }
   Hash32 getNameHashed() { return _iNameHashed; }
   //void setBasis(mat4& basis){
   //    _mBasis = basis;

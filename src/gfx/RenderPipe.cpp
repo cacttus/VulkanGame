@@ -182,6 +182,8 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
     BRLogErrorOnce("Camera Viewport was not set for renderScene");
     return;
   }
+  //Check if the user changed the window size, and reallocate all buffers if they did.
+  //  TODO: Set a fixed size then scale it correctly instead of reallocating all GBuffers every time the size changes.
   std::shared_ptr<RenderViewport> pv = cam->getViewport();
   if (pv->getWidth() != _iLastWidth || pv->getHeight() != _iLastHeight) {
     init(pv->getWidth(), pv->getHeight(), "");
@@ -279,7 +281,14 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
       }
     }
 
+   // RenderUtils::debugGetRenderState(true, true, false);
+
     //2. Forward Rendering
+    BRLogTODO("Commented out forward rendering!");
+    BRLogTODO("Commented out forward rendering!");
+    BRLogTODO("Commented out forward rendering!");
+    BRLogTODO("Commented out forward rendering!");
+    BRLogTODO("Commented out forward rendering!");
     if (pipeBits.test(PipeBit::e::Forward)) {
       beginRenderForward();
 
@@ -531,70 +540,80 @@ void RenderPipe::blitDeferredRender(std::shared_ptr<LightManager> lightman, std:
     //*The clear here isn't necessary. If we're copying all of the contents of the deferred buffer.
     // - Clear the color and depth buffers (back and front buffers not the Mrts)
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    for (std::shared_ptr<BufferRenderTarget> inf : _pMsaaDeferred->getTargets()) {
-      getContext()->glActiveTexture(inf->getTextureChannel());
-      getContext()->chkErrDbg();
-      glBindTexture(inf->getTextureTarget(), inf->getTexId());
-      getContext()->chkErrDbg();
-
-      if (inf->getTargetType() == RenderTargetType::e::Color || inf->getTargetType() == RenderTargetType::e::Shadow) {
-        //Don't set depth target.
-        _pDeferredShader->setTextureUf(inf->getLayoutIndex());
+    bindDeferredTargets(true);
+    {
+      //Set the light uniform blocks for the deferred shader.
+      _pDeferredShader->setLightUf(lightman);
+      setShadowEnv(lightman, true);
+      {
+        _pDeferredShader->draw(_pQuadMesh);
         getContext()->chkErrDbg();
       }
+      setShadowEnv(lightman, false);  //Fix this, we should be able to clear the texture units before the next operation.
     }
-
-    //Set the light uniform blocks for the deferred shader.
-    _pDeferredShader->setLightUf(lightman);
-    setShadowEnvUf(lightman);
-    _pDeferredShader->draw(_pQuadMesh);
-    getContext()->chkErrDbg();
+    bindDeferredTargets(false);
   }
   _pDeferredShader->endRaster();
 }
-void RenderPipe::setShadowEnvUf(std::shared_ptr<LightManager> lightman) {
-  //Set Shadow and Environment map Uniforms.
-  int32_t iMaxTexs = 0;
-  glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &iMaxTexs);
+void RenderPipe::bindDeferredTargets(bool bBind) {
+  //@param bBind True:Bind targets, False: Clear targets.
+  for (std::shared_ptr<BufferRenderTarget> inf : _pMsaaDeferred->getTargets()) {
+    getContext()->glActiveTexture(inf->getTextureChannel());
+    getContext()->chkErrDbg();
+    glBindTexture(inf->getTextureTarget(), bBind ? inf->getTexId() : 0);
+    getContext()->chkErrDbg();
 
-  //TEST
-  //TEST
-  //TEST
+    if (bBind && inf->getTargetType() == RenderTargetType::e::Color || inf->getTargetType() == RenderTargetType::e::Shadow) {
+      //Don't set depth target.
+      _pDeferredShader->setTextureUf(inf->getLayoutIndex());
+      getContext()->chkErrDbg();
+    }
+  }
+}
+void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet) {
+  //@param bSet - Set Shadow Textures and Uniforms, and ENV map for the GBUFFER. False: Clear texture slots.
+  //Set Shadow and Environment map Uniforms.
+  int32_t iMaxTexs = Gu::getCoreContext()->maxGLTextureUnits();
+
   //TEST
   //This is to get the lights to work again.
-  //
+  BRLogTODO("Disabling ALL Shadowboxes here...");
   bool DISABLE_ALL_SHADOW_BOXES_AND_SUCH = true;
   //TEST
-  //TEST
-  //TEST
-  //TEST
 
+  int32_t iIndex = 0;
+
+  //We loop this way because we MUST fill all texture units used by the GPU.
   std::vector<GLint> boxSamples;
   std::vector<GLint> frustSamples;
-
   int iNumGpuShadowBoxes = Gu::getEngineConfig()->getMaxCubeShadowSamples();
   int iNumGpuShadowFrustums = Gu::getEngineConfig()->getMaxFrustShadowSamples();
 
-  int32_t iIndex = 0;
-  int32_t iTextureIndex;
-
-  //We loop this way because we MUST fill all texture units in the GPU
   if (lightman->getGpuShadowBoxes().size() > iNumGpuShadowBoxes) {
     BRLogWarnCycle("More than " + iNumGpuShadowBoxes + " boxes - some shadows will not show.");
   }
   for (int iShadowBox = 0; iShadowBox < iNumGpuShadowBoxes; ++iShadowBox) {
-    iTextureIndex = _pMsaaDeferred->getNumNonDepthTargets() + iIndex;
+    //Starting after the textures in the GBuffer.
+    int32_t iTextureIndex = _pMsaaDeferred->getNumNonDepthTargets() + iIndex;
+
     if (iTextureIndex < iMaxTexs) {
       //Ok, so we are using textureSize in the pixel shader to indicate that the shadow here is "used"
-      GLuint texId = Gu::getTexCache()->getDummy1x1TextureCube();
-      if (!DISABLE_ALL_SHADOW_BOXES_AND_SUCH && iShadowBox < lightman->getGpuShadowBoxes().size()) {
-        std::shared_ptr<ShadowBox> pBox = lightman->getGpuShadowBoxes()[iShadowBox];
-        if (pBox != nullptr) {
-          texId = pBox->getGlTexId();
+      GLuint texId = 0;  // Leave to zero to clear the texture slot
+      if (bSet) {
+        if (!DISABLE_ALL_SHADOW_BOXES_AND_SUCH && iShadowBox < lightman->getGpuShadowBoxes().size()) {
+          std::shared_ptr<ShadowBox> pBox = lightman->getGpuShadowBoxes()[iShadowBox];
+          if (pBox != nullptr) {
+            texId = pBox->getGlTexId();
+          }
+          else {
+            texId = Gu::getTexCache()->getDummy1x1TextureCube();
+          }
         }
+        else {
+          texId = Gu::getTexCache()->getDummy1x1TextureCube();
+        }
+        boxSamples.push_back(iTextureIndex);
       }
-      boxSamples.push_back(iTextureIndex);
       getContext()->glActiveTexture(GL_TEXTURE0 + iTextureIndex);
       Gu::checkErrorsDbg();
       glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
@@ -605,24 +624,34 @@ void RenderPipe::setShadowEnvUf(std::shared_ptr<LightManager> lightman) {
       BRLogWarn("Deferred Step: Too many textures bound: " + iTextureIndex);
     }
   }
-  _pDeferredShader->setUf("_ufShadowBoxSamples", boxSamples.data(), (GLint)boxSamples.size());
-  Gu::checkErrorsDbg();
-
-  //We loop this way because we MUST fill all texture units in the GPU
+  if (bSet) {
+    _pDeferredShader->setUf("_ufShadowBoxSamples", boxSamples.data(), (GLint)boxSamples.size());
+    Gu::checkErrorsDbg();
+  }
+  //We loop this way because we MUST fill all texture units used by the GPU.
   if (lightman->getGpuShadowBoxes().size() > iNumGpuShadowFrustums) {
     BRLogWarnCycle("More than " + iNumGpuShadowFrustums + " frustum - some shadows will not show.");
   }
   for (int iShadowFrustum = 0; iShadowFrustum < iNumGpuShadowFrustums; ++iShadowFrustum) {
-    iTextureIndex = _pMsaaDeferred->getNumNonDepthTargets() + iIndex;
+    int32_t iTextureIndex = _pMsaaDeferred->getNumNonDepthTargets() + iIndex;
     if (iTextureIndex < iMaxTexs) {
-      GLuint texId = Gu::getTexCache()->getDummy1x1Texture2D();
-      if (!DISABLE_ALL_SHADOW_BOXES_AND_SUCH && iShadowFrustum < lightman->getGpuShadowFrustums().size()) {
-        std::shared_ptr<ShadowFrustum> pFrust = lightman->getGpuShadowFrustums()[iShadowFrustum];
-        if (pFrust != nullptr) {
-          texId = pFrust->getGlTexId();
+      GLuint texId = 0;
+      if (bSet) {
+        if (!DISABLE_ALL_SHADOW_BOXES_AND_SUCH && iShadowFrustum < lightman->getGpuShadowFrustums().size()) {
+          std::shared_ptr<ShadowFrustum> pFrust = lightman->getGpuShadowFrustums()[iShadowFrustum];
+          if (pFrust != nullptr) {
+            texId = pFrust->getGlTexId();
+          }
+          else {
+            texId = Gu::getTexCache()->getDummy1x1Texture2D();
+          }
         }
+        else {
+          texId = Gu::getTexCache()->getDummy1x1Texture2D();
+        }
+        frustSamples.push_back(iTextureIndex);
       }
-      frustSamples.push_back(iTextureIndex);
+
       getContext()->glActiveTexture(GL_TEXTURE0 + iTextureIndex);
       Gu::checkErrorsDbg();
       glBindTexture(GL_TEXTURE_2D, texId);
@@ -633,16 +662,23 @@ void RenderPipe::setShadowEnvUf(std::shared_ptr<LightManager> lightman) {
       BRLogWarn("Deferred Step: Too many textures bound: " + iTextureIndex);
     }
   }
-  _pDeferredShader->setUf("_ufShadowFrustumSamples", frustSamples.data(), (GLint)frustSamples.size());
-  Gu::checkErrorsDbg();
+  if (bSet) {
+    _pDeferredShader->setUf("_ufShadowFrustumSamples", frustSamples.data(), (GLint)frustSamples.size());
+    Gu::checkErrorsDbg();
+  }
 
   //Set Mirror Environment map.
   if (_pEnvTex != nullptr) {
-    iTextureIndex = _pMsaaDeferred->getNumNonDepthTargets() + iIndex;
+    int32_t iTextureIndex = _pMsaaDeferred->getNumNonDepthTargets() + iIndex;
     if (iTextureIndex < iMaxTexs) {
       getContext()->glActiveTexture(GL_TEXTURE0 + iTextureIndex);
-      glBindTexture(GL_TEXTURE_2D, _pEnvTex->getGlId());
-      _pDeferredShader->setUf("_ufTexEnv0", (GLvoid*)&iTextureIndex);
+      if (bSet) {
+        glBindTexture(GL_TEXTURE_2D, _pEnvTex->getGlId());
+        _pDeferredShader->setUf("_ufTexEnv0", (GLvoid*)&iTextureIndex);
+      }
+      else {
+        glBindTexture(GL_TEXTURE_2D, 0);
+      }
       iIndex++;
     }
     else {
@@ -653,6 +689,7 @@ void RenderPipe::setShadowEnvUf(std::shared_ptr<LightManager> lightman) {
     BRLogWarn("You didn't set the enviro texture.");
     Gu::debugBreak();
   }
+  Gu::checkErrorsDbg();
 }
 DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramework(ctx) {
   //Create Quick FBO
@@ -765,6 +802,7 @@ void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::sha
   }
 }
 void RenderPipe::endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::shared_ptr<CameraNode> pCam) {
+  //Blits the final deferred Color image (after our deferred rendering step) to a quad.
   //Do not bind anything - default framebuffer.
   Gu::getShaderMaker()->shaderBound(nullptr);  //Unbind and reset shader.
   getContext()->glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -781,23 +819,26 @@ void RenderPipe::endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::s
   getContext()->chkErrDbg();
   glBindTexture(GL_TEXTURE_2D, _pBlittedForward->getGlColorBufferTexId());
   getContext()->chkErrDbg();
-
-  _pForwardShader->beginRaster(pCam->getViewport());
   {
-    saveScreenshot(lightman);
-    getContext()->chkErrDbg();
+    _pForwardShader->beginRaster(pCam->getViewport());
+    {
+      saveScreenshot(lightman);
+      getContext()->chkErrDbg();
 
-    Gu::getCoreContext()->setPolygonMode(PolygonMode::Fill);
-    getContext()->chkErrDbg();
+      Gu::getCoreContext()->setPolygonMode(PolygonMode::Fill);
+      getContext()->chkErrDbg();
 
-    _pForwardShader->setTextureUf(0);
-    getContext()->chkErrDbg();
+      _pForwardShader->setTextureUf(0);
+      getContext()->chkErrDbg();
 
-    //draw a screen quad to the default OpenGL framebuffer
-    _pForwardShader->draw(_pQuadMesh);
-    getContext()->chkErrDbg();
+      //draw a screen quad to the default OpenGL framebuffer
+      _pForwardShader->draw(_pQuadMesh);
+      getContext()->chkErrDbg();
+    }
+    _pForwardShader->endRaster();
   }
-  _pForwardShader->endRaster();
+  getContext()->glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 void RenderPipe::createQuadMesh(int w, int h) {
   //    DEL_MEM(_pQuadMesh);

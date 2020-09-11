@@ -28,10 +28,11 @@ public:
 };
 class Material : public VirtualMemory {
 public:
-  Material() {}//deser
-  Material(string_t name);
+  //Material() {}//deser
+  Material(const string_t& name);
   virtual ~Material() override;
   string_t getName() { return _strName; }
+  void setName(const string_t& name) { _strName = name; }
 
   std::map<TextureChannel::e, std::shared_ptr<TextureSlot>>& getTextureSlots() { return _mapTextureBindings; }
   std::shared_ptr<TextureSlot> getMapByType(TextureType::e texType);
@@ -74,17 +75,15 @@ protected:
   //**we use them for for non-material meshes**
   vec4 _v4Spec = vec4(1, 1, 1, 0.5f);
   vec4 _v4Diffuse = vec4(1, 1, 1, 0.8f);
-  float _fHardness = (50.0f / 511.0f); //Shininess.
+  float _fHardness = (50.0f / 511.0f);  //Shininess.
   int32_t _nTransparentTextureCount = 0;
   std::map<TextureChannel::e, std::shared_ptr<TextureSlot>> _mapTextureBindings;
-  vec4 _v4Mirror = vec4(0, 0, 0, 0);//mirror power is w
+  vec4 _v4Mirror = vec4(0, 0, 0, 0);  //mirror power is w
   bool _bEnableTransparency = false;
   float _fTpAlpha = 1.0f;
-  float _fTpIOR = 1.0;//index of refraction
-  float _fTpFilter = 0.5f; //Filter for diffuse color
+  float _fTpIOR = 1.0;      //index of refraction
+  float _fTpFilter = 0.5f;  //Filter for diffuse color
 };
 
-
-
-}
+}  // namespace BR2
 #endif

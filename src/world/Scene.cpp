@@ -395,8 +395,10 @@ void Scene::drawBackgroundImage() {
     //We want depth test so we can see what's in front.
     //glEnable(GL_DEPTH_TEST);
     _pTex->bind(TextureChannel::e::Channel0, Gu::getShaderMaker()->getImageShader_F());
-
-    Gu::getShaderMaker()->getImageShader_F()->draw(_pQuadMeshBackground);
+    {
+      Gu::getShaderMaker()->getImageShader_F()->draw(_pQuadMeshBackground);
+    }
+    _pTex->unbind(TextureChannel::e::Channel0);
   }
   Gu::getShaderMaker()->getImageShader_F()->endRaster();
 }

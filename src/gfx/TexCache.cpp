@@ -28,8 +28,8 @@ const std::string TexCache::LadderWd = "./data/tx64-ladder.png";
 
 #pragma region TexFile
 TexFile::TexFile(string_t loc) {
-_loc = loc;
-_name = FileSystem::getFileNameFromPath(loc);
+  _loc = loc;
+  _name = FileSystem::getFileNameFromPath(loc);
 }
 TexFile::TexFile(string_t name, string_t loc) {
   _name = name;
@@ -41,39 +41,46 @@ TexFile::TexFile(string_t name, string_t loc) {
 TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   int iWidthHeight = 1;
   vec4 v(1, 1, 1, 1);
-
+  Vec4ub b(255, 255, 255, 255);
   Gu::getCoreContext()->chkErrRt();
 
+  _pContext->glActiveTexture(GL_TEXTURE0);
+
   glGenTextures(1, &_i1x1DummyCubeTexture);
+  glBindTexture(GL_TEXTURE_2D, 0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, _i1x1DummyCubeTexture);
   for (int i = 0; i < 6; ++i) {
     //Note values here must match ShadowBox due to glCopyTexSubImage
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT,
-      iWidthHeight, iWidthHeight, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, (void*)&v);
-  Gu::getCoreContext()->chkErrRt();
+                 iWidthHeight, iWidthHeight, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, (void*)&v);
   }
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyCubeTexture, "Dummy Cube texture");
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
   Gu::getCoreContext()->chkErrRt();
 
   glGenTextures(1, &_i1x2Dummy2DTexture);
   glBindTexture(GL_TEXTURE_2D, _i1x2Dummy2DTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
-  Gu::getCoreContext()->chkErrRt();
+  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
+  _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, iWidthHeight, iWidthHeight, GL_RGBA, GL_UNSIGNED_BYTE, (void*)&b);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x2Dummy2DTexture, "Dummy 2D Color texture");
   glBindTexture(GL_TEXTURE_2D, 0);
   Gu::getCoreContext()->chkErrRt();
 
-  v.construct(0, 0, 1, 1);//XZY Bump texture up
+  b.construct(0, 0, 255, 255);  //XZY Bump texture up
   glGenTextures(1, &_i1x1DummyBump2DTexture);
   glBindTexture(GL_TEXTURE_2D, _i1x1DummyBump2DTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
-  Gu::getCoreContext()->chkErrRt();
+  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
+  _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, iWidthHeight, iWidthHeight, GL_RGBA, GL_UNSIGNED_BYTE, (void*)&b);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyBump2DTexture, "Dummy 2D Normal texture");
   glBindTexture(GL_TEXTURE_2D, 0);
-  
   Gu::getCoreContext()->chkErrRt();
-  
 }
 TexCache::~TexCache() {
   TexMap::iterator ite = _cache.begin();
@@ -135,6 +142,4 @@ std::shared_ptr<Texture2DSpec> TexCache::addAsGeneratedImage(string_t name, cons
 //}
 #pragma endregion
 
-
-
-}//ns Game
+}  // namespace BR2

@@ -381,7 +381,7 @@ void World25::makeAtlas() {
   _pWorldAtlas->compileFiles(false);
 
   //Make material
-  _pWorldMaterial = std::make_shared<Material>();
+  _pWorldMaterial = std::make_shared<Material>("World_Material");
   _pWorldMaterial->setSpecHardness(190);
   _pWorldMaterial->setDiffuse(vec4(1, 1, 1, 1));
   _pWorldMaterial->setSpec(vec4(1, 1, 1, 0.1));

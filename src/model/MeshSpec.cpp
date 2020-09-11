@@ -862,8 +862,11 @@ void MeshSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
   bool bHasMaterial;
   fb->readBool(bHasMaterial);
   if (bHasMaterial) {
-    std::shared_ptr<Material> mat = std::make_shared<Material>();
+    std::shared_ptr<Material> mat = std::make_shared<Material>("*Unserialized_Material_Ctor*");
     mat->deserialize(fb);
+    if(StringUtil::isEmpty(mat->getName())){
+      mat->setName(this->getName() + "-unnamed-material");
+    }
     setMaterial(mat);
   }
   else {

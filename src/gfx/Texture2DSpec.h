@@ -26,7 +26,7 @@ public:
   void create(unsigned char* imageData, uint32_t w, uint32_t h, bool genMipmaps, bool bRepeatU, bool bRepeatV);
   void dispose();
   virtual bool bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound = false);
-  void unbind();
+  void unbind(TextureChannel::e eChannel);
   void calculateTextureFormat();
 
   string_t getName() { return _strName; }

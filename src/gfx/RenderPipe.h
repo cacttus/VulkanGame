@@ -11,7 +11,7 @@
 #include "../model/ModelHeader.h"
 
 namespace BR2 {
-class DOFFbo : public GLFramework{
+class DOFFbo : public GLFramework {
 public:
   GLuint _uiDOFFboId;
   GLuint _uiTexId0;
@@ -57,7 +57,7 @@ protected:
   std::shared_ptr<BufferRenderTarget> _pPick = nullptr;
   // std::shared_ptr<RenderTarget> _pPickDepth = nullptr;
 
-  std::shared_ptr<DeferredFramebuffer> _pMsaaDeferred = nullptr; //If no multisampling is enabled this is equal to the blittedFramebuffer object
+  std::shared_ptr<DeferredFramebuffer> _pMsaaDeferred = nullptr;  //If no multisampling is enabled this is equal to the blittedFramebuffer object
   std::shared_ptr<DeferredFramebuffer> _pBlittedDeferred = nullptr;
 
   std::shared_ptr<ForwardFramebuffer> _pMsaaForward = nullptr;
@@ -67,7 +67,7 @@ protected:
   std::shared_ptr<ShadowFrustum> _pShadowFrustumMaster = nullptr;
 
   std::shared_ptr<DOFFbo> _pDOFFbo = nullptr;
-  std::shared_ptr<Texture2DSpec> _pEnvTex = nullptr;//Enviro map - for mirrors (coins)
+  std::shared_ptr<Texture2DSpec> _pEnvTex = nullptr;  //Enviro map - for mirrors (coins)
 
   vec4 _vClear;
 
@@ -87,7 +87,7 @@ protected:
   void saveScreenshot(std::shared_ptr<LightManager> lightman);
   void copyMsaaSamples(std::shared_ptr<FramebufferBase> msaa, std::shared_ptr<FramebufferBase> blitted);
   void releaseFbosAndMesh();
-  void setShadowEnvUf(std::shared_ptr<LightManager> lightman);
+  void setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet);
 
   void beginRenderDeferred();
   void endRenderDeferred();
@@ -96,6 +96,7 @@ protected:
   void renderShadows(std::shared_ptr<LightManager> lightman, std::shared_ptr<CameraNode> cam);
   void beginRenderShadows();
   void endRenderShadows();
+  void bindDeferredTargets(bool bBind);
 
   void endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::shared_ptr<CameraNode> pCam);
 
@@ -104,9 +105,6 @@ protected:
   void enableDisablePipeBits();
 };
 
-
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

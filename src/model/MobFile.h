@@ -45,8 +45,8 @@ public:
   std::shared_ptr<MeshSpec> makeSpec(MobFile* mb);
 
   void resetData();
-  void setName(string_t name) { _strName = name; }
-  void setParentName(string_t name) { _strParentName = name; }
+  void setName(const string_t& name) { _strName = name; }
+  void setParentName(const string_t& name) { _strParentName = name; }
 
 private:
   string_t _strName;
@@ -91,13 +91,13 @@ private:
   //vec2 readVec2(t_string tok);
   //void loadObjFileContents(BinaryFile& pBufferedFile);
  // void parseGeom(t_string& tok);
-  void parseFace(MobFile* pMobFile, string_t t0, string_t t1, string_t t2);
+  void parseFace(MobFile* pMobFile, const string_t& t0, const string_t& t1, const string_t& t2);
   int32_t parseFaceComponent(MobFile* pMobFile, string_t& tok, int32_t& strlind, int32_t iComponent);
   void addFaceVertex(MobFile* pMobFile, int32_t iVertex, int32_t iTCoord, int32_t iNormal);
   // void addCurrentSpec();
   void copySpecFragments(std::shared_ptr<MeshSpec> pSpec);
   int32_t addNewMeshVertex(int32_t vi, int32_t xi, int32_t ni);
-  void parseWeights(MobFile* mb, VertexWeightMob& vw, int32_t iArmName, string_t strWeights);
+  void parseWeights(MobFile* mb, VertexWeightMob& vw, int32_t iArmName, const string_t& strWeights);
   // mat4 parseMat4(t_string tok);
   void makeMaterialForSpec(MobFile*, std::shared_ptr<MeshSpec> ms);
   bool tkMaterial(MobFile* pMobFile, std::vector<string_t>& tokens);

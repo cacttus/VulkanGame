@@ -48,6 +48,8 @@ void MbiFile::postLoad() {
 }
 bool MbiFile::loadAndParse(string_t file) {
   _fileLoc = file;
+  BRLogInfo(" -->Loading MBI '"+ file +"'");
+
   std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>(c_strMbiVersion);
   Gu::getPackage()->getFile(file, fb, false);
 
@@ -76,6 +78,7 @@ bool MbiFile::loadAndParse(string_t file) {
   //models
   int32_t nModels;
   fb->readInt32(nModels);
+  BRLogInfo("  -->Loading " + nModels + " model(s).");
   for (int32_t iModel = 0; iModel < nModels; ++iModel) {
     std::shared_ptr<ModelSpec> ms = std::make_shared<ModelSpec>();
     ms->deserialize(fb);
@@ -83,13 +86,14 @@ bool MbiFile::loadAndParse(string_t file) {
 
     Gu::getModelCache()->addSpec(ms);
   }
+  BRLogInfo(" -->Done.");
 
 
   //Read textures
-  BRLogInfo("  Loading textures..");
   std::map<Hash32, std::shared_ptr<Texture2DSpec>> texs;
   int32_t nTexs;
   fb->readInt32(nTexs);
+  BRLogInfo("  --> Loading " + nTexs +" texture(s).");
   Img32 img;
   for (int32_t iTex = 0; iTex < nTexs; ++iTex) {
     Hash32 hTex;
@@ -105,8 +109,10 @@ bool MbiFile::loadAndParse(string_t file) {
     }
     texs.insert(std::make_pair(hTex, pTex));
   }
+  BRLogInfo("  -->Done.");
+
   //Resolve textures.
-  BRLogInfo("  Resolving textures..");
+  BRLogInfo("  -->Resolving textures..");
   for (std::shared_ptr<ModelSpec> ms : _vecModels) {
     for (std::shared_ptr<MeshSpec> mesh : ms->getMeshes()) {
       if (mesh->getMaterial() != nullptr) {
@@ -124,6 +130,7 @@ bool MbiFile::loadAndParse(string_t file) {
       }
     }
   }
+  BRLogInfo("  -->Done.");
 
   //Footer
   fb->readByte(h0);
@@ -146,6 +153,9 @@ bool MbiFile::loadAndParse(string_t file) {
   }
 
   postLoad();
+  
+  BRLogInfo(" -->Done.");
+
 
   return true;
 }
