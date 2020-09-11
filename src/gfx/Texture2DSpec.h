@@ -58,7 +58,7 @@ private:
   float _fSizeRatio = 0.0f;
   string_t _strLocation = "";
   TexFilter::e _eFilter;
-  string_t _strName = "";
+  string_t _strName = ""; //Note:this maps to glObjectLabel
   bool _bHasMipmaps = false;
   bool _bRepeatU = false;
   bool _bRepeatV = false;

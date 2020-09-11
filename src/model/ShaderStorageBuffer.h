@@ -17,7 +17,7 @@ namespace BR2 {
 */
 class ShaderStorageBuffer : public GpuBufferData {
 public:
-  ShaderStorageBuffer(std::shared_ptr<GLContext> gc, size_t eleSize);
+  ShaderStorageBuffer(const string_t& name, std::shared_ptr<GLContext> gc, size_t eleSize);
   virtual ~ShaderStorageBuffer() override;
 
   void syncRead(void* out_data, size_t num_bytes, size_t byte_offset = 0, bool useMemoryBarrier = true);

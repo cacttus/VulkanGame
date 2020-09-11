@@ -31,9 +31,9 @@ MeshSpec::MeshSpec(string_t strName, std::shared_ptr<VertexFormat> vf, std::shar
 
   _matLocalMatrix = mat4::identity();
 }
-MeshSpec::MeshSpec(const void* pVerts, size_t vCount,
+MeshSpec::MeshSpec(string_t strName,const void* pVerts, size_t vCount,
   const void* pIndexes, size_t iCount,
-  std::shared_ptr<VertexFormat> fmt, std::shared_ptr<Material> pm) : MeshSpec("", fmt, nullptr, nullptr) {
+  std::shared_ptr<VertexFormat> fmt, std::shared_ptr<Material> pm) : MeshSpec(strName, fmt, nullptr, nullptr) {
   _pMaterial = pm;
   allocMesh(pVerts, vCount, pIndexes, iCount, nullptr);
 }
@@ -66,7 +66,7 @@ size_t MeshSpec::faceCount() { return _pVaoData->getIbo()->getNumElements() / 3;
 void MeshSpec::allocMesh(size_t nFrags, size_t nIndexes) {
   AssertOrThrow2((nIndexes % 3) == 0);
   if (_pVaoData == nullptr) {
-    _pVaoData = std::make_shared<VaoDataGeneric>(Gu::getCoreContext(), _pVertexFormat);
+    _pVaoData = std::make_shared<VaoDataGeneric>(this->getName(), Gu::getCoreContext(), _pVertexFormat);
   }
   _pVaoData->allocate(nFrags, nIndexes);
 }
@@ -74,7 +74,7 @@ void MeshSpec::allocMesh(const void* pFrags, size_t nFrags, const void* pIndexes
   t_timeval t0 = Gu::getMicroSeconds();
 
   if (_pVaoData == nullptr) {
-    _pVaoData = std::make_shared<VaoDataGeneric>(Gu::getCoreContext(), _pVertexFormat);
+    _pVaoData = std::make_shared<VaoDataGeneric>(this->getName(), Gu::getCoreContext(), _pVertexFormat);
   }
 
   _pVaoData->fillData(pFrags, nFrags, pIndexes, nIndexes);
@@ -581,8 +581,8 @@ void MeshSpec::fillWeightBuffersMob(std::shared_ptr<ModelSpec> ms) {
   GpuAnimatedMeshWeightData* weightOffsetsGpu = new GpuAnimatedMeshWeightData[nFragCount];
   GpuAnimatedMeshWeight* weightsGpu = new GpuAnimatedMeshWeight[nTotalWeights];
 
-  _pWeightOffsetsGpu = std::make_shared<ShaderStorageBuffer>(Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeightData));
-  _pWeightsGpu = std::make_shared<ShaderStorageBuffer>(Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeight));
+  _pWeightOffsetsGpu = std::make_shared<ShaderStorageBuffer>(getName() + "-weight-offsets", Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeightData));
+  _pWeightsGpu = std::make_shared<ShaderStorageBuffer>(getName() + "-weights", Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeight));
 
   std::set<int32_t> setUniqueJointOrdinals;
 
@@ -831,7 +831,7 @@ void MeshSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
     if (nWeightOffsets > 0) {
       GpuAnimatedMeshWeightData* weightOffsetsGpu = new GpuAnimatedMeshWeightData[nWeightOffsets];
       fb->read((const char*)weightOffsetsGpu, sizeof(GpuAnimatedMeshWeightData) * nWeightOffsets);
-      _pWeightOffsetsGpu = std::make_shared<ShaderStorageBuffer>(Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeightData));
+      _pWeightOffsetsGpu = std::make_shared<ShaderStorageBuffer>(this->getName() + "-weight-offsets", Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeightData));
       _pWeightOffsetsGpu->allocFill(nWeightOffsets, (void*)weightOffsetsGpu);
       delete[] weightOffsetsGpu;
     }
@@ -841,7 +841,7 @@ void MeshSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
     if (nWeights > 0) {
       GpuAnimatedMeshWeight* weightsGpu = new GpuAnimatedMeshWeight[nWeights];
       fb->read((const char*)weightsGpu, sizeof(GpuAnimatedMeshWeight) * nWeights);
-      _pWeightsGpu = std::make_shared<ShaderStorageBuffer>(Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeight));
+      _pWeightsGpu = std::make_shared<ShaderStorageBuffer>(this->getName() + "-weights", Gu::getCoreContext(), sizeof(GpuAnimatedMeshWeight));
       _pWeightsGpu->allocFill(nWeights, (void*)weightsGpu);
       delete[] weightsGpu;
     }

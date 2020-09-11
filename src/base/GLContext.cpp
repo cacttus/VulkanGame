@@ -131,6 +131,8 @@ bool GLContext::loadOpenGLFunctions() {
     }                                                                                                       \
   } while (0)
 
+  //TODO: replace SDLGLP with SDLGLP2
+
   SDLGLP(glUseProgram, PFNGLUSEPROGRAMPROC, "glUseProgram");
   SDLGLP(glBindBuffer, PFNGLBINDBUFFERPROC, "glBindBuffer");
   SDLGLP(glGenBuffers, PFNGLGENBUFFERSPROC, "glGenBuffers");
@@ -160,6 +162,10 @@ bool GLContext::loadOpenGLFunctions() {
 
   SDLGLP(glGetUniformLocation, PFNGLGETUNIFORMLOCATIONPROC, "glGetUniformLocation");
   SDLGLP(glGetDebugMessageLog, PFNGLGETDEBUGMESSAGELOGPROC, "glGetDebugMessageLog");
+  SDLGLP2(PFNGLGETOBJECTLABELPROC, glGetObjectLabel);
+  SDLGLP2(PFNGLOBJECTLABELPROC, glObjectLabel);
+  SDLGLP2(PFNGLOBJECTPTRLABELPROC, glObjectPtrLabel);
+  SDLGLP2(PFNGLGETOBJECTPTRLABELPROC, glGetObjectPtrLabel);
 
   SDLGLP(glGenVertexArrays, PFNGLGENVERTEXARRAYSPROC, "glGenVertexArrays");
   SDLGLP(glBindVertexArray, PFNGLBINDVERTEXARRAYPROC, "glBindVertexArray");
@@ -237,23 +243,14 @@ bool GLContext::loadOpenGLFunctions() {
   SDLGLP(glMapBufferRange, PFNGLMAPBUFFERRANGEPROC, "glMapBufferRange");
   SDLGLP(glGetActiveUniformBlockName, PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC, "glGetActiveUniformBlockName");
 
-  SDLGLP(glFenceSync, PFNGLFENCESYNCPROC, "glFenceSync");
-  SDLGLP(glIsSync, PFNGLISSYNCPROC, "glIsSync");
-  SDLGLP(glGetSynciv, PFNGLGETSYNCIVPROC, "glGetSynciv");
-  SDLGLP(glDeleteSync, PFNGLDELETESYNCPROC, "glDeleteSync");
-  SDLGLP(glDispatchCompute, PFNGLDISPATCHCOMPUTEPROC, "glDispatchCompute");
-  SDLGLP(glGetIntegeri_v, PFNGLGETINTEGERI_VPROC, "glGetIntegeri_v");
-  SDLGLP(glShaderStorageBlockBinding, PFNGLSHADERSTORAGEBLOCKBINDINGPROC, "glShaderStorageBlockBinding");
-  SDLGLP(glGetProgramResourceIndex, PFNGLGETPROGRAMRESOURCEINDEXPROC, "glGetProgramResourceIndex");
-
-  // SDLGLP2(PFNGLFENCESYNCPROC, glFenceSync);
-  // SDLGLP2(PFNGLISSYNCPROC, glIsSync);
-  // SDLGLP2(PFNGLGETSYNCIVPROC, glGetSynciv);
-  // SDLGLP2(PFNGLDELETESYNCPROC, glDeleteSync);
-  // SDLGLP2(PFNGLDISPATCHCOMPUTEPROC, glDispatchCompute);
-  // SDLGLP2(PFNGLGETINTEGERI_VPROC, glGetIntegeri_v);
-  // SDLGLP2(PFNGLSHADERSTORAGEBLOCKBINDINGPROC, glShaderStorageBlockBinding);
-  // SDLGLP2(PFNGLGETPROGRAMRESOURCEINDEXPROC, glGetProgramResourceIndex);
+  SDLGLP2(PFNGLFENCESYNCPROC, glFenceSync);
+  SDLGLP2(PFNGLISSYNCPROC, glIsSync);
+  SDLGLP2(PFNGLGETSYNCIVPROC, glGetSynciv);
+  SDLGLP2(PFNGLDELETESYNCPROC, glDeleteSync);
+  SDLGLP2(PFNGLDISPATCHCOMPUTEPROC, glDispatchCompute);
+  SDLGLP2(PFNGLGETINTEGERI_VPROC, glGetIntegeri_v);
+  SDLGLP2(PFNGLSHADERSTORAGEBLOCKBINDINGPROC, glShaderStorageBlockBinding);
+  SDLGLP2(PFNGLGETPROGRAMRESOURCEINDEXPROC, glGetProgramResourceIndex);
 
   SDLGLP2(PFNGLCOPYIMAGESUBDATAPROC, glCopyImageSubData);
   SDLGLP2(PFNGLDELETETEXTURESEXTPROC, glDeleteTextures);
@@ -582,6 +579,42 @@ void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
   SDLUtils::checkSDLErr();
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, prof->_iMSAABuffers);
   SDLUtils::checkSDLErr();
+}
+string_t GLContext::getObjectLabel(GLenum type, GLuint objectId) {
+  string_t res = "";
+  if (objectId > 0) {
+    const int buflen = 256;
+    char lenbuf[buflen];
+    GLsizei length = 0;
+
+    Gu::checkErrorsDbg();
+    Gu::getCoreContext()->glGetObjectLabel(type, objectId, buflen, &length, lenbuf);
+    Gu::checkErrorsRt();
+
+    res.assign(lenbuf, length);
+    res += Stz "(" + objectId + ")";
+  }
+  else {
+    res = Stz "unset(0)";
+  }
+  return res;
+}
+void GLContext::setObjectLabel(GLenum type, GLuint objectId, const string_t& label) {
+  if (objectId > 0) {
+    static int _maxlenLabel = -1;
+    if (_maxlenLabel == -1) {
+      glGetIntegerv(GL_MAX_LABEL_LENGTH, &_maxlenLabel);
+    }
+    if (label.length() >= _maxlenLabel) {
+      //This shouldn't happen.
+      Gu::debugBreak();
+    }
+    else {
+      Gu::checkErrorsDbg();
+      Gu::getCoreContext()->glObjectLabel(type, objectId, label.length(), label.c_str());
+      Gu::checkErrorsRt();
+    }
+  }
 }
 
 }  // namespace BR2

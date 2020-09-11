@@ -314,6 +314,9 @@ std::shared_ptr<ShaderBase> ShaderCache::loadBinaryToGpu(std::string programName
     return nullptr;
   }
 
+  //Save Name.
+  Gu::getCoreContext()->setObjectLabel(GL_PROGRAM, pProgram->getGlId(), pProgram->getProgramName());
+
   pProgram->unbind();
   Gu::checkErrorsRt();
 

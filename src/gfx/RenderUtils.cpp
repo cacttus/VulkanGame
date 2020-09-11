@@ -315,20 +315,23 @@ string_t RenderUtils::debugGetRenderState(bool bForceRun, bool bPrintToStdout, b
   appendLine(strState, "===================================================================");
   appendLine(strState, "  RENDERING SYSTEM STATE                                            ");
   appendLine(strState, "===================================================================");
+  Gu::getCoreContext()->chkErrRt();
 
   GLint iBlend;
   glGetIntegerv(GL_BLEND, (GLint*)&iBlend);
-  appendLine(strState, Stz " Blending:" + (iBlend ? "ENABLED" : "DISABLED"));
+  appendLine(strState, Stz " Blending: " + (iBlend ? "ENABLED" : "DISABLED"));
+  Gu::getCoreContext()->chkErrRt();
 
   GLint iCullFace;
   glGetIntegerv(GL_CULL_FACE, (GLint*)&iCullFace);
-  appendLine(strState, Stz " Culling:" + (iCullFace ? "ENABLED" : "DISABLED"));
+  appendLine(strState, Stz " Culling: " + (iCullFace ? "ENABLED" : "DISABLED"));
+  Gu::getCoreContext()->chkErrRt();
 
   GLint iDepthTest;
   glGetIntegerv(GL_DEPTH_TEST, (GLint*)&iDepthTest);
-  appendLine(strState, Stz " Depth Test:" + (iDepthTest ? "ENABLED" : "DISABLED"));
-
+  appendLine(strState, Stz " Depth Test: " + (iDepthTest ? "ENABLED" : "DISABLED"));
   Gu::getCoreContext()->chkErrRt();
+
   RenderUtils::debugGetLegacyViewAndMatrixStack(strState);
   Gu::getCoreContext()->chkErrRt();
   RenderUtils::debugGetBufferState(strState);
@@ -384,23 +387,22 @@ void RenderUtils::debugGetBufferState(string_t& strState) {
   glGetIntegerv(GL_CURRENT_PROGRAM, &iCurrentProgram);
   Gu::getCoreContext()->chkErrRt();
 
-  appendLine(strState, Stz "Bound Vertex Array Buffer Id (VBO):" + iBoundBuffer);
-  appendLine(strState, Stz "Bound Element Array Buffer Id (IBO):" + iElementArrayBufferBinding);
-  appendLine(strState, Stz "Bound Shader Storage Buffer Id (SSBO):" + iSsboBinding);
-  appendLine(strState, Stz "Bound Uniform Buffer Object Id:" + iUniformBufferBinding);
-  appendLine(strState, Stz "Bound Vertex Array Object Id:" + iVertexArrayBinding);
-  appendLine(strState, Stz "Bound Shader Program Id:" + iCurrentProgram);
+  appendLine(strState, Stz "Bound Vertex Array Buffer (VBO): " + Gu::getCoreContext()->getObjectLabel(GL_BUFFER, iBoundBuffer));
+  appendLine(strState, Stz "Bound Element Array Buffer (IBO): " + Gu::getCoreContext()->getObjectLabel(GL_BUFFER, iElementArrayBufferBinding));
+  appendLine(strState, Stz "Bound Shader Storage Buffer (SSBO): " + Gu::getCoreContext()->getObjectLabel(GL_BUFFER, iSsboBinding));
+  appendLine(strState, Stz "Bound Uniform Buffer Object: " + Gu::getCoreContext()->getObjectLabel(GL_BUFFER, iUniformBufferBinding));
+  appendLine(strState, Stz "Bound Vertex Array Object: " + Gu::getCoreContext()->getObjectLabel(GL_VERTEX_ARRAY, iVertexArrayBinding));
+  appendLine(strState, Stz "Bound Shader Program: " + Gu::getCoreContext()->getObjectLabel(GL_PROGRAM, iCurrentProgram));
   Gu::getCoreContext()->chkErrRt();
-  if (Gu::getShaderMaker()->getBound() != nullptr) {
-    appendLine(strState, Stz "Bound Shader Name:" +
-                             Gu::getShaderMaker()->getBound()->getProgramName());
+
+  if (iCurrentProgram > 0) {
     RenderUtils::debugPrintActiveUniforms(Gu::getShaderMaker()->getBound()->getGlId(), strState);
-    // appendLine(strState, Gu::getShaderMaker()->getBound()->debugGetUniformValues());
   }
   else {
     appendLine(strState, "Bound Shader Name: None");
   }
 }
+
 void RenderUtils::debugPrintActiveUniforms(int iGlProgramId, string_t& strState) {
   GLint nUniforms;
   string_t uniformName;
@@ -473,12 +475,12 @@ void RenderUtils::debugPrintActiveUniforms(int iGlProgramId, string_t& strState)
       Gu::getCoreContext()->glGetActiveUniformBlockiv(iGlProgramId, iCurrentBlockIdx, GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, (GLint*)&iBlockActiveUniformIndices);
       Gu::getCoreContext()->chkErrRt();
 
-      appendLine(strState, Stz "  Block Index:" + iCurrentBlockIdx);
-      appendLine(strState, Stz "  Block Binding:" + iBlockBinding);
-      appendLine(strState, Stz "  Block Data Size:" + iBlockDataSize);
-      appendLine(strState, Stz "  Block Name Length:" + iBlockNameLength);
-      appendLine(strState, Stz "  Block Active Uniforms:" + iBlockActiveUniforms);
-      appendLine(strState, Stz "  Block Active Uniform Indices:" + iBlockActiveUniformIndices);
+      appendLine(strState, Stz "  Block Index: " + iCurrentBlockIdx);
+      appendLine(strState, Stz "  Block Binding: " + iBlockBinding);
+      appendLine(strState, Stz "  Block Data Size: " + iBlockDataSize);
+      appendLine(strState, Stz "  Block Name Length: " + iBlockNameLength);
+      appendLine(strState, Stz "  Block Active Uniforms: " + iBlockActiveUniforms);
+      appendLine(strState, Stz "  Block Active Uniform Indices: " + iBlockActiveUniformIndices);
     }
 
     //Data
@@ -620,16 +622,13 @@ void RenderUtils::debugGetTextureState(string_t& strState) {
   GLint iMaxTextureUnits;
   GLint iMaxCombinedTextureUnits;
 
-  glGetIntegerv(GL_ACTIVE_TEXTURE, &iActiveTexture);       //Texture ID    0x84C0 is TEXTURE0
-  glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureBinding);  //Texture ID
-  glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureBindingBuffer);
+  glGetIntegerv(GL_ACTIVE_TEXTURE, &iActiveTexture);  //0x84C0 is TEXTURE0
   glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &iMaxVertexTextureUnits);
   glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &iMaxTextureUnits);
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &iMaxCombinedTextureUnits);
 
-  appendLine(strState, Stz "Active Texture ID: " + iTextureBinding);
-  appendLine(strState, Stz "Active Texture Buffer ID: " + iTextureBindingBuffer);
-  appendLine(strState, Stz "Current active texture: " + "GL_TEXTURE" + (iActiveTexture - 0x84C0));
+  appendLine(strState, Stz "Active Texture : " + "GL_TEXTURE" + TypeConv::intToStr(iActiveTexture - 0x84c0));
+  appendLine(strState, Stz "Current active texture: " + "GL_TEXTURE" + TypeConv::intToStr(iActiveTexture - 0x84C0));
   appendLine(strState, Stz "Max Texture Units: " + iMaxTextureUnits);
   appendLine(strState, Stz "Max Vertex Texture Units: " + iMaxVertexTextureUnits);
   appendLine(strState, Stz "Max Combined Texture Units: " + iMaxCombinedTextureUnits);
@@ -639,34 +638,34 @@ void RenderUtils::debugGetTextureState(string_t& strState) {
     Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0 + i);
     appendLine(strState, Stz "  Channel " + i);
     glGetIntegerv(GL_TEXTURE_BINDING_1D, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     1D: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     1D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_1D_ARRAY, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     1D_ARRAY: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     1D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_ARRAY: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE_ARRAY: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_3D, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     3D: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     3D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     BUFFER: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     BUFFER: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     CUBE_MAP: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     CUBE_MAP: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
     iTextureBinding = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     RECTANGLE: " + (int)iTextureBinding);
+    if (iTextureBinding > 0) appendLine(strState, Stz "     RECTANGLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
   }
 }
 void RenderUtils::debugGetFramebufferAttachmentState(string_t& strState) {
@@ -697,9 +696,9 @@ void RenderUtils::debugGetFramebufferAttachmentState(string_t& strState) {
   Gu::getCoreContext()->chkErrRt();
 
   appendLine(strState, Stz " # Max Color Attachments: " + maxColorAttachments);
-  appendLine(strState, Stz " Current Bound Framebuffer: " + boundFramebuffer);
-  appendLine(strState, Stz " Current Draw Framebuffer (glDrawBuffer): " + iDrawFramebufferBinding);
-  appendLine(strState, Stz " Current Read Framebuffer (glReadBuffer): " + iReadFramebufferBinding);
+  appendLine(strState, Stz " Current Bound Framebuffer: " + Gu::getCoreContext()->getObjectLabel(GL_FRAMEBUFFER, boundFramebuffer));
+  appendLine(strState, Stz " Current Draw Framebuffer (glDrawBuffer): " + Gu::getCoreContext()->getObjectLabel(GL_FRAMEBUFFER, iDrawFramebufferBinding));
+  appendLine(strState, Stz " Current Read Framebuffer (glReadBuffer): " + Gu::getCoreContext()->getObjectLabel(GL_FRAMEBUFFER, iReadFramebufferBinding));
   if (iDrawFramebufferBinding != iReadFramebufferBinding) {
     appendLine(strState, "   NOTE: Draw and Read framebuffers are bound different!");
   }
@@ -745,7 +744,7 @@ void RenderUtils::debugPrintFBOAttachment(string_t& strState, GLenum attachment)
     Gu::getCoreContext()->glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, attachment, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &attachmentName);
     Gu::getCoreContext()->chkErrRt();
     appendLine(strState, Stz "    Type: " + "GL_RENDERBUFFER");
-    appendLine(strState, Stz "    Name: " + attachmentName);
+    appendLine(strState, Stz "    Name: " + Gu::getCoreContext()->getObjectLabel(GL_RENDERBUFFER, attachmentName));
   }
   else if (attachmentType == GL_TEXTURE) {
     Gu::getCoreContext()->glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, attachment, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &attachmentName);
@@ -753,7 +752,7 @@ void RenderUtils::debugPrintFBOAttachment(string_t& strState, GLenum attachment)
     Gu::getCoreContext()->glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, attachment, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL, &mipmapLevel);
     Gu::getCoreContext()->chkErrRt();
     appendLine(strState, Stz "    Type: " + "GL_TEXTURE");
-    appendLine(strState, Stz "    Name: " + attachmentName);
+    appendLine(strState, Stz "    Name: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, attachmentName));
     appendLine(strState, Stz "    Mipmap Level: " + mipmapLevel);
   }
 }
@@ -765,8 +764,8 @@ void RenderUtils::debugGetVertexArrayState(string_t& strState) {
   glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nMaxAttribs);
   glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &iVertexArrayBinding);
 
-  appendLine(strState, Stz "# Bound Vertex Array Id (VAO):" + iVertexArrayBinding);
-  appendLine(strState, Stz "# Max Allowed Atribs:" + nMaxAttribs);
+  appendLine(strState, Stz "# Bound Vertex Array Id (VAO): " + Gu::getCoreContext()->getObjectLabel(GL_VERTEX_ARRAY, iVertexArrayBinding));
+  appendLine(strState, Stz "# Max Allowed Atribs: " + nMaxAttribs);
   appendLine(strState, Stz("---------------------------------------"));
   appendLine(strState, Stz("--Active Vertex Attribs: "));
 
@@ -814,12 +813,12 @@ void RenderUtils::debugGetVertexArrayState(string_t& strState) {
       continue;
     }
 
-    appendLine(strState, Stz "  ArrayBufferBinding:" + iArrayBufferBinding);
-    appendLine(strState, Stz "  Size:" + iAttribArraySize);
-    appendLine(strState, Stz "  Stride:" + iAttribArrayStride);
-    appendLine(strState, Stz "  Is Integer:" + (iAttribArrayInteger ? "Y" : "N"));
-    appendLine(strState, Stz "  Normalized:" + (iAttribArrayNormalized ? "Y" : "N"));
-    appendLine(strState, Stz "  Type:" + RenderUtils::openGlTypeToString(iAttribArrayType));
+    appendLine(strState, Stz "  ArrayBufferBinding: " + Gu::getCoreContext()->getObjectLabel(GL_BUFFER, iArrayBufferBinding));
+    appendLine(strState, Stz "  Size: " + iAttribArraySize);
+    appendLine(strState, Stz "  Stride: " + iAttribArrayStride);
+    appendLine(strState, Stz "  Is Integer: " + (iAttribArrayInteger ? "Y" : "N"));
+    appendLine(strState, Stz "  Normalized: " + (iAttribArrayNormalized ? "Y" : "N"));
+    appendLine(strState, Stz "  Type: " + RenderUtils::openGlTypeToString(iAttribArrayType));
 
     if (iAttrib != 0) {
       //Generic vertex attribute 0 is unique in that it has no current state,

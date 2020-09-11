@@ -28,10 +28,13 @@
   <EnableRuntimeErrorChecking value="true"/>
   <BreakOnSDLError value="true"/>
   <BreakOnGraphicsError value="true"/>
+  <!--GraphicsDebugging -->
+  
   <GraphicsErrorLogging_High value="true"/>
   <GraphicsErrorLogging_Medium value="true"/>
   <GraphicsErrorLogging_Low value="true"/>
   <GraphicsErrorLogging_Info value="true"/>
+  
   <ShowConsole value="true"/>
   <ModelThumbSize value="256"/>
   <MaxHardwareIncomingBufferSizeBytes value="32767"/>

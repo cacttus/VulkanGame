@@ -27,7 +27,7 @@ void UtilMesh::copyFromSpec(std::shared_ptr<MeshSpec> sp) {
   _pIndexes = nullptr;
 
   _pVertexFormat = sp->getVertexFormat();
-  _pVaoData = std::make_shared<VaoDataGeneric>(getContext(), _pVertexFormat);
+  _pVaoData = std::make_shared<VaoDataGeneric>("UtilMesh", getContext(), _pVertexFormat);
 
   sp->beginEdit();
   {
@@ -62,7 +62,7 @@ void UtilMesh::allocData(int nVerts, int nIndexes, std::shared_ptr<VertexFormat>
 }
 void UtilMesh::init() {
 
-  _pVaoData = std::make_shared<VaoDataGeneric>(getContext(), _pVertexFormat);
+  _pVaoData = std::make_shared<VaoDataGeneric>("Util Mesh", getContext(), _pVertexFormat);
   generate();
 }
 void UtilMesh::copyBuffersToVao() {

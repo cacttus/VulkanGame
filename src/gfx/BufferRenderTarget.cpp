@@ -3,8 +3,9 @@
 #include "../gfx/BufferRenderTarget.h"
 
 namespace BR2 {
-BufferRenderTarget::BufferRenderTarget(std::shared_ptr<GLContext> ctx, bool bShared) : RenderTarget(ctx) {
+BufferRenderTarget::BufferRenderTarget(const string_t& name, std::shared_ptr<GLContext> ctx, bool bShared) : RenderTarget(ctx) {
   _bShared = bShared;
+  _strName = name;
 }
 BufferRenderTarget::~BufferRenderTarget() {
   glDeleteTextures(1, &_iGlTexId);

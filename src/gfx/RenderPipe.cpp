@@ -77,11 +77,11 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
   //Shaders
   if (_pDeferredShader == nullptr) {
     _pDeferredShader = Gu::getShaderMaker()->makeShader(std::vector<string_t>{
-      "d_v3x2_lighting.vs", "d_v3x2_lighting.ps" });
+        "d_v3x2_lighting.vs", "d_v3x2_lighting.ps"});
   }
   if (_pForwardShader == nullptr) {
     _pForwardShader = Gu::getShaderMaker()->makeShader(std::vector<string_t>{
-      "f_v3x2_fbo.vs", "f_v3x2_fbo.ps"});
+        "f_v3x2_fbo.vs", "f_v3x2_fbo.ps"});
   }
   getContext()->glBindRenderbuffer(GL_RENDERBUFFER, 0);
   getContext()->chkErrDbg();
@@ -106,10 +106,10 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
   _pDOFFbo = nullptr;
 
   //Base FBOs
-  _pBlittedDepth = FramebufferBase::createDepthTarget(getContext(), "depth blitted", iWidth, iHeight, 0, false, 0);
+  _pBlittedDepth = FramebufferBase::createDepthTarget(getContext(), "Blitted Depth Buffer", iWidth, iHeight, 0, false, 0);
 
   //Do not cahnge "Pick" name.  This is shared.
-  _pPick = FramebufferBase::createTarget(getContext(), "Pick", GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, iWidth, iHeight, RenderTargetType::e::Pick, 0, 0, 0);//4
+  _pPick = FramebufferBase::createTarget(getContext(), "Pick MRT (Deferred)(Shared)", GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, iWidth, iHeight, RenderTargetType::e::Pick, 0, 0, 0);  //4
 
   _pBlittedDeferred = std::make_shared<DeferredFramebuffer>(getContext(), iWidth, iHeight, false, 0, _vClear);
   _pBlittedDeferred->init(iWidth, iHeight, _pBlittedDepth, _pPick);
@@ -127,9 +127,9 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
     BRLogInfo("[RenderPipe] Creating deferred MSAA lighting buffer");
     _pMsaaDepth = FramebufferBase::createDepthTarget(getContext(), "depth msaa", iWidth, iHeight, 0, _bMsaaEnabled, _nMsaaSamples);
     _pMsaaDeferred = std::make_shared<DeferredFramebuffer>(getContext(), iWidth, iHeight, _bMsaaEnabled, _nMsaaSamples, _vClear);
-    _pMsaaDeferred->init(iWidth, iHeight, _pMsaaDepth, _pPick);// Yeah I don't know if the "pick" here will work
+    _pMsaaDeferred->init(iWidth, iHeight, _pMsaaDepth, _pPick);  // Yeah I don't know if the "pick" here will work
     _pMsaaForward = std::make_shared<ForwardFramebuffer>(getContext(), iWidth, iHeight, _bMsaaEnabled, _nMsaaSamples, _vClear);
-    _pMsaaForward->init(iWidth, iHeight, _pMsaaDepth, _pPick);// Yeah I don't know if the "pick" here will work
+    _pMsaaForward->init(iWidth, iHeight, _pMsaaDepth, _pPick);  // Yeah I don't know if the "pick" here will work
   }
   else {
     BRLogInfo("[RenderPipe] Multisample not enabled.");
@@ -228,7 +228,7 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
       fut.wait();
     }
   */
-  //TODO: 
+  //TODO:
   // CullParams p;
   // std::vector<std::future<bool>> futs;
   // for (auto light_pair : b->getLights()) {
@@ -371,12 +371,18 @@ void RenderPipe::saveScreenshot(std::shared_ptr<LightManager> lightman) {
           string_t fname = FileSystem::getScreenshotFilename();
 
           string_t side;
-          if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_POSITIVE_X) side = "+X";
-          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_POSITIVE_Y) side = "+Y";
-          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_POSITIVE_Z) side = "+Z";
-          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_NEGATIVE_X) side = "-X";
-          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_NEGATIVE_Y) side = "-Y";
-          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_NEGATIVE_Z) side = "-Z";
+          if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_POSITIVE_X)
+            side = "+X";
+          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_POSITIVE_Y)
+            side = "+Y";
+          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_POSITIVE_Z)
+            side = "+Z";
+          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_NEGATIVE_X)
+            side = "-X";
+          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_NEGATIVE_Y)
+            side = "-Y";
+          else if (i + GL_TEXTURE_CUBE_MAP_POSITIVE_X == GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
+            side = "-Z";
 
           fname = fname + "_shadowbox_" + iTarget + "_side_" + side + "_.png";
           RenderUtils::saveTexture(std::move(fname), sb->getGlTexId(), GL_TEXTURE_CUBE_MAP, i);
@@ -514,7 +520,7 @@ void RenderPipe::enableDisablePipeBits() {
 void RenderPipe::blitDeferredRender(std::shared_ptr<LightManager> lightman, std::shared_ptr<CameraNode> cam) {
   //NOTE:
   //Bind the forward framebuffer (_pBlittedForward is equal to _pMsaaForward if MSAA is disabled, if it isn't we call copyMSAASamples later)
-  Gu::getShaderMaker()->shaderBound(nullptr);//Unbind and reset shader.
+  Gu::getShaderMaker()->shaderBound(nullptr);  //Unbind and reset shader.
   getContext()->glBindFramebuffer(GL_FRAMEBUFFER, _pMsaaForward->getGlId());
   getContext()->chkErrDbg();
   getContext()->glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -556,7 +562,7 @@ void RenderPipe::setShadowEnvUf(std::shared_ptr<LightManager> lightman) {
   //TEST
   //TEST
   //TEST
-  //This is to get the lights to work again.  
+  //This is to get the lights to work again.
   //
   bool DISABLE_ALL_SHADOW_BOXES_AND_SUCH = true;
   //TEST
@@ -648,12 +654,15 @@ void RenderPipe::setShadowEnvUf(std::shared_ptr<LightManager> lightman) {
     Gu::debugBreak();
   }
 }
-DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) :GLFramework(ctx) {
+DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramework(ctx) {
   //Create Quick FBO
   getContext()->glGenFramebuffers(1, &_uiDOFFboId);
   Gu::checkErrorsDbg();
   getContext()->glBindFramebuffer(GL_FRAMEBUFFER, _uiDOFFboId);
   Gu::checkErrorsDbg();
+
+  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER, _uiDOFFboId, "DOF-FBO");
+
   getContext()->glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, w);
   Gu::checkErrorsDbg();
   getContext()->glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_HEIGHT, h);
@@ -689,7 +698,7 @@ void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::sha
     }
     vec3 pos = cam->getFinalPos();
     std::shared_ptr<BufferRenderTarget> rtPos = _pMsaaDeferred->getTargetByName("Position");
-    std::shared_ptr<BufferRenderTarget> rtColor = _pMsaaForward->getTargetByName("Color");//**Note** Forward
+    std::shared_ptr<BufferRenderTarget> rtColor = _pMsaaForward->getTargetByName("Color");  //**Note** Forward
 
     //Blend color + position and store it in the color.
     pDofShader->beginRaster(cam->getViewport());
@@ -752,7 +761,7 @@ void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::sha
 }
 void RenderPipe::endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::shared_ptr<CameraNode> pCam) {
   //Do not bind anything - default framebuffer.
-  Gu::getShaderMaker()->shaderBound(nullptr);//Unbind and reset shader.
+  Gu::getShaderMaker()->shaderBound(nullptr);  //Unbind and reset shader.
   getContext()->glBindFramebuffer(GL_FRAMEBUFFER, 0);
   getContext()->chkErrDbg();
   getContext()->glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -803,8 +812,8 @@ void RenderPipe::checkDeviceCaps(int iWidth, int iHeight) {
 
   if (iMaxDrawBuffers < 1) {
     BRThrowException(Stz "[RenderPipe] Your GPU only supports " + iMaxDrawBuffers +
-      " MRTs, the system requires at least " + 1 +
-      " MRTs. Consider upgrading graphics card.");
+                     " MRTs, the system requires at least " + 1 +
+                     " MRTs. Consider upgrading graphics card.");
   }
 
   glGetIntegerv(GL_MAX_FRAMEBUFFER_WIDTH, (GLint*)&iMaxFbWidth);
@@ -812,8 +821,8 @@ void RenderPipe::checkDeviceCaps(int iWidth, int iHeight) {
 
   if (iMaxFbHeight < iHeight || iMaxFbWidth < iWidth) {
     BRThrowException(Stz "[RenderPipe] Your GPU only supports MRTs at " +
-      iMaxFbWidth + "x" + iMaxFbHeight +
-      " pixels. The system requested " + iWidth + "x" + iHeight + ".");
+                     iMaxFbWidth + "x" + iMaxFbHeight +
+                     " pixels. The system requested " + iWidth + "x" + iHeight + ".");
   }
 
   checkMultisampleParams();
@@ -826,7 +835,7 @@ void RenderPipe::checkMultisampleParams() {
   if (_bMsaaEnabled) {
     if ((int)_nMsaaSamples > iMaxSamples) {
       BRLogWarn(Stz "[RenderPipe] MSAA sample count of '" + _nMsaaSamples +
-        "' was larger than the card's maximum: '" + iMaxSamples + "'. Truncating.");
+                "' was larger than the card's maximum: '" + iMaxSamples + "'. Truncating.");
       _nMsaaSamples = iMaxSamples;
       Gu::debugBreak();
     }
@@ -866,11 +875,11 @@ std::shared_ptr<Img32> RenderPipe::getResultAsImage() {
   }
 
   //Only transparent method that's working
-// pTarget = _pBlittedDeferred->getTargetByName("Color");
-// if (RenderUtils::getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
-//     //the GL tex image must be flipped to show upriht/
-// }
+  // pTarget = _pBlittedDeferred->getTargetByName("Color");
+  // if (RenderUtils::getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
+  //     //the GL tex image must be flipped to show upriht/
+  // }
 
   return bi;
 }
-}//ns game
+}  // namespace BR2

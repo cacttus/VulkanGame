@@ -10,7 +10,7 @@
 namespace BR2 {
 TileMesh25::TileMesh25(std::shared_ptr<GLContext> c, int32_t nQuads) : _pContext(c), _nQuads(nQuads) {
 
-  _pVaoData = std::make_shared<VaoDataGeneric>(c, TileMeshVert::getVertexFormat());
+  _pVaoData = std::make_shared<VaoDataGeneric>("TileMesh25", c, TileMeshVert::getVertexFormat());
 
   allocateData();
   copyToGpu(true);

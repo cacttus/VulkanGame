@@ -17,7 +17,7 @@ namespace BR2 {
 class VaoDataGeneric;
 class TextBufferMesh : public VirtualMemory {
 public:
-  TextBufferMesh(std::shared_ptr<GLContext> pContext, int32_t count);
+  TextBufferMesh(const string_t& name, std::shared_ptr<GLContext> pContext, int32_t count);
   virtual ~TextBufferMesh() override;
 
   FORCE_INLINE int32_t getMaxQuads() { return _iMaxQuads; }
@@ -49,7 +49,8 @@ protected:
 
   int _iCurrentQuadIndex = 0;
   int32_t _iMaxQuads = 0;
-
+  string_t _strName = "";
+  
   void assignIndexes();
   void freeData();
 };

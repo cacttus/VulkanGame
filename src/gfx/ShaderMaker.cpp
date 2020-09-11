@@ -160,7 +160,8 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeShader(const std::vector<string_t>&
     }
 
     BRLogInfo("Load Success" + OperatingSystem::newline() + "------------------------------" + OperatingSystem::newline());
-  } catch (Exception* ex) {
+  }
+  catch (Exception* ex) {
     BRLogError(ex->what());
   }
 
@@ -431,6 +432,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
     _mapPrograms.insert(std::make_pair(pProgram->getNameHashed(), pProgram));
 
     BRLogInfo("Created shader " + pProgram->getProgramName());
+    Gu::getCoreContext()->setObjectLabel(GL_PROGRAM, pProgram->getGlId(), pProgram->getProgramName());
 
     _pShaderCache->saveCompiledBinaryToDisk(pProgram);
 

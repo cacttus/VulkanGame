@@ -159,18 +159,29 @@ public:
           GpuLogLevel level = GpuLogLevel::Dbg_;
           getTypeSevSourceLevel(type, severity, source, strType, strSev, strSource, level);
 
-          string_t strStackInfo = (type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : DebugHelper::getStackTrace();  //error prints stack.
-
-          string_t strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : RenderUtils::debugGetRenderState(true, false, false);
+          //Prevent infinite recursion to dump the rendering state.
+          string_t strStackInfo = "";
+          string_t strRenderState = "";
+          static bool _bPrintingGPULog = false;
+          if (_bPrintingGPULog == false) {
+            _bPrintingGPULog = true;
+            strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : RenderUtils::debugGetRenderState(true, false, false);
+            strStackInfo = (type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : DebugHelper::getStackTrace();  //error prints stack.
+            _bPrintingGPULog = false;
+          }
+          else {
+            strRenderState = " Gpu Log is currently in recursive call, no information can be displayed.";
+            strStackInfo = " Gpu Log is currently in recursive call, no information can be displayed.";
+          }
 
           strMsg = "GPU_LOG_MSG" + strId + strType + strSev + strSource + OperatingSystem::newline() +
                    shaderMsg + OperatingSystem::newline() +
                    " MSG ID: " + strId + OperatingSystem::newline() +
                    " Msg: " + strMsg + OperatingSystem::newline() +
-                   " Callstack: " + OperatingSystem::newline() + 
-                   strStackInfo + OperatingSystem::newline() + 
+                   " Callstack: " + OperatingSystem::newline() +
+                   strStackInfo + OperatingSystem::newline() +
                    strRenderState;
-          
+
           if (type == GL_DEBUG_TYPE_ERROR) {
             BRLogError(strMsg);
           }

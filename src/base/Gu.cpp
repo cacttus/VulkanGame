@@ -79,10 +79,15 @@ std::shared_ptr<Net> Gu::_pNet = nullptr;
 std::shared_ptr<InputManager> Gu::_pGlobalInput = nullptr;
 
 template <class Tx>
-std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> tt) {
-  AssertOrThrow2(tt != nullptr);
+std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> global_manager) {
+  bool b = global_manager != nullptr;
+  if(!b){
+    int n=0;
+    n++;
+  }
+  AssertOrThrow2(b);
   //**TODO: verify that the calling thread is the main thread.  Deadlocks has been causing issues.
-  return tt;
+  return global_manager;
 }
 
 std::shared_ptr<RenderSettings> Gu::getRenderSettings() { return GetExistingManager(_pRenderSettings); }

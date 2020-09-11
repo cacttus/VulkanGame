@@ -17,7 +17,7 @@ namespace BR2 {
 */
 class GpuBufferData : public VirtualMemory {
 public:
-  GpuBufferData(std::shared_ptr<GLContext>, GLenum bufferType, size_t iElementSize);
+  GpuBufferData(const string_t& mesh_name, std::shared_ptr<GLContext>, GLenum bufferType, size_t iElementSize);
   virtual ~GpuBufferData() override;
 
   void bindBuffer();
@@ -49,6 +49,8 @@ protected:
 
   size_t _iElementSize = 0; // The element size
   size_t _iNumElements = 0; // The number of elements we allocated
+
+string_t _meshName = "";
 
   bool _isMapped = false;
   bool _isBound = false;

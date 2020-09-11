@@ -16,7 +16,7 @@ namespace BR2 {
 */
 class VboData : public GpuBufferData {
 public:
-  VboData(std::shared_ptr<GLContext> ct, size_t iElementSize);
+  VboData(const string_t& mesh_name, std::shared_ptr<GLContext> ct, size_t iElementSize);
   virtual ~VboData() override;
 };
 

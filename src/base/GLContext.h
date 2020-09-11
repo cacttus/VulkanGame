@@ -74,6 +74,9 @@ public:
   virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") override;
   virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") override;
 
+  string_t getObjectLabel(GLenum type, GLuint objectId);
+  void setObjectLabel(GLenum type, GLuint objectId, const string_t& label);
+
   virtual void pushCullFace() override;
   virtual void popCullFace() override;
   virtual void pushBlend() override;
@@ -140,6 +143,10 @@ public:
   PFNGLACTIVETEXTUREPROC glActiveTexture = nullptr;
   PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation = nullptr;
   PFNGLGETDEBUGMESSAGELOGPROC glGetDebugMessageLog = nullptr;
+  PFNGLGETOBJECTLABELPROC glGetObjectLabel = nullptr;
+  PFNGLOBJECTLABELPROC glObjectLabel = nullptr;
+  PFNGLOBJECTPTRLABELPROC glObjectPtrLabel = nullptr;
+  PFNGLGETOBJECTPTRLABELPROC glGetObjectPtrLabel = nullptr;
   PFNGLGENVERTEXARRAYSPROC glGenVertexArrays = nullptr;
   PFNGLBINDVERTEXARRAYPROC glBindVertexArray = nullptr;
   PFNGLDELETEBUFFERSPROC glDeleteBuffers = nullptr;

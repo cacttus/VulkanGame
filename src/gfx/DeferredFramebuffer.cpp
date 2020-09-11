@@ -40,12 +40,13 @@ void DeferredFramebuffer::init(int32_t w, int32_t h, std::shared_ptr<BufferRende
   getContext()->glActiveTexture(GL_TEXTURE0);
   getContext()->chkErrRt();
 
+
   // - Textures
   //Don't change the names here, we reference them elsewhere *yikes*
-  addTarget("Position", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//0
-  addTarget("Color", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//1
-  addTarget("Normal", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//2
-  addTarget("Plane", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//3
+  addTarget("Position MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//0
+  addTarget("Color MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//1
+  addTarget("Normal MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//2
+  addTarget("Plane MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//3
   addTarget(sharedPick);//4
 //  sharedPick->bind(GL_COLOR_ATTACHMENT4);
 
@@ -54,6 +55,9 @@ void DeferredFramebuffer::init(int32_t w, int32_t h, std::shared_ptr<BufferRende
   // attachDepthTarget(pSharedDepthTarget);
 
   checkFramebufferComplete();
+
+  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId, "Deferred-FBO");
+
 
   getContext()->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   getContext()->chkErrRt();

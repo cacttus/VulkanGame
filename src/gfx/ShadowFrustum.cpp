@@ -39,11 +39,11 @@ public:
   int32_t _iShadowFrustumId;
   std::shared_ptr<FrustumBase> _pFrustum = nullptr;
   std::shared_ptr<RenderViewport> _pViewport = nullptr;
-  mat4 _projMatrix;    // Frustum, Proj, View - basic camera parameters
-  mat4 _viewMatrix;    //
+  mat4 _projMatrix;  // Frustum, Proj, View - basic camera parameters
+  mat4 _viewMatrix;  //
   mat4 _PVB;
   std::shared_ptr<RenderBucket> _pVisibleSet;
-  std::shared_ptr<RenderBucket> _pLastSet;//TODO: check vs current set _bShadowDirty in BvhNOde
+  std::shared_ptr<RenderBucket> _pLastSet;  //TODO: check vs current set _bShadowDirty in BvhNOde
   //bool _bMustUpdate;
 
   ShadowFrustum_Internal(std::shared_ptr<LightNodeDir> pLightSource, int32_t iFboWidth, int32_t iFboHeight);
@@ -85,18 +85,12 @@ void ShadowFrustum_Internal::updateView() {
   //Calculate geometrric frustum
   //const float tanfov90_2 = tanf(MathUtils::degToRad(90 / 2));//90 degree field of view for a box
   _pFrustum->update(
-    dir
-    , pos
-    , up
-    , ProjectionMode::e::Perspective
-  );
+      dir, pos, up, ProjectionMode::e::Perspective);
 
   //calc view matrix
   vec3 vLookAt = pos + dir;
   _viewMatrix.lookAt(
-    pos
-    , vLookAt
-    , up);
+      pos, vLookAt, up);
 
   _projMatrix = _pFrustum->getProjectionMatrix();
   vec4 vProj;
@@ -105,14 +99,15 @@ void ShadowFrustum_Internal::updateView() {
       0.5, 0.0, 0.0, 0.0,
       0.0, 0.5, 0.0, 0.0,
       0.0, 0.0, 0.5, 0.0,
-      0.5, 0.5, 0.5, 1.0 };
+      0.5, 0.5, 0.5, 1.0};
   mat4 mBias = mat4(f);
   // if(nnn==0)
-  _PVB = _projMatrix * _viewMatrix * mBias;;//= _pFrustum->getProjectionMatrix();
- // if (nnn == 1)
-  _PVB = _viewMatrix * _projMatrix * mBias;//= _pFrustum->getProjectionMatrix();
-  _PVB = mBias * _projMatrix * _viewMatrix;//= _pFrustum->getProjectionMatrix();
-  _PVB = mBias * _viewMatrix * _projMatrix;//= _pFrustum->getProjectionMatrix();
+  _PVB = _projMatrix * _viewMatrix * mBias;
+  ;                                          //= _pFrustum->getProjectionMatrix();
+                                             // if (nnn == 1)
+  _PVB = _viewMatrix * _projMatrix * mBias;  //= _pFrustum->getProjectionMatrix();
+  _PVB = mBias * _projMatrix * _viewMatrix;  //= _pFrustum->getProjectionMatrix();
+  _PVB = mBias * _viewMatrix * _projMatrix;  //= _pFrustum->getProjectionMatrix();
   static int nx = 0;
   if (nx == 1) {
     _PVB.transpose();
@@ -138,15 +133,15 @@ void ShadowFrustum_Internal::updateView() {
   //    -vh, vh
   //);
 
-//  static int n=1;
-//    if(n==0)
+  //  static int n=1;
+  //    if(n==0)
   //  _viewProjMatrix = _projMatrix * _viewMatrix;
-    //if(n==1)
-    //_viewProjMatrix = _viewMatrix * _projMatrix;
-    //if(n==2)
-    //    _viewProjMatrix = mat4(_projMatrix * _viewMatrix).transposed();
-    //if(n==3)
-    //_viewProjMatrix = mat4(_viewMatrix * _projMatrix).transposed();
+  //if(n==1)
+  //_viewProjMatrix = _viewMatrix * _projMatrix;
+  //if(n==2)
+  //    _viewProjMatrix = mat4(_projMatrix * _viewMatrix).transposed();
+  //if(n==3)
+  //_viewProjMatrix = mat4(_viewMatrix * _projMatrix).transposed();
 }
 void ShadowFrustum_Internal::cullObjectsAsync(CullParams& cp) {
   AssertOrThrow2(_pLightSource != nullptr);
@@ -155,9 +150,9 @@ void ShadowFrustum_Internal::cullObjectsAsync(CullParams& cp) {
   std::shared_ptr<PhysicsWorld> physics = NodeUtils::getPhysicsWorld(_pLightSource);
 
   _pVisibleSet->start(MathUtils::brMin(
-    cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
-    Gu::getEngineConfig()->getMaxPointLightShadowDistance() * Gu::getEngineConfig()->getMaxPointLightShadowDistance()), 
-    cp.getCamera());
+                          cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
+                          Gu::getEngineConfig()->getMaxPointLightShadowDistance() * Gu::getEngineConfig()->getMaxPointLightShadowDistance()),
+                      cp.getCamera());
 
   physics->collectVisibleNodes(_pVisibleSet);
 }
@@ -191,7 +186,7 @@ void ShadowFrustum_Internal::createFbo() {
   Gu::checkErrorsRt();
 
   glTexImage2D(GL_TEXTURE_2D, 0, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT,
-    _iFboWidthPixels, _iFboHeightPixels, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, nullptr);
+               _iFboWidthPixels, _iFboHeightPixels, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, nullptr);
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _glShadowMapId, 0);
   Gu::checkErrorsRt();
   // std::dynamic_pointer_cast<GLContext>(Gu::getGraphicsContext())->glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, glSide, _glShadowCubeMapId, 0);
@@ -215,6 +210,9 @@ void ShadowFrustum_Internal::createFbo() {
     BRThrowException("Point Light Shadow Map Framebuffer encountered an error during setup: " + status);
     Gu::checkErrorsRt();
   }
+  else {
+    std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER, _glFrameBufferId, "Shadow-Frustum-FBO");
+  }
 
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -235,19 +233,9 @@ void ShadowFrustum_Internal::copyAndBlendToShadowMap(std::shared_ptr<ShadowFrust
   //Here we can do shadowmap operations.
 
   if (pBox->getGlTexId() != 0) {
-    std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glCopyImageSubData(
-      _glShadowMapId
-      , GL_TEXTURE_2D
-      , 0
-      , 0, 0, 0 //xyZ
-      , pBox->getGlTexId()
-      , GL_TEXTURE_2D
-      , 0
-      , 0, 0, 0
-      , _iFboWidthPixels
-      , _iFboHeightPixels
-      , 0
-    );
+    std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glCopyImageSubData(_glShadowMapId, GL_TEXTURE_2D, 0, 0, 0, 0  //xyZ
+                                                                                   ,
+                                                                                   pBox->getGlTexId(), GL_TEXTURE_2D, 0, 0, 0, 0, _iFboWidthPixels, _iFboHeightPixels, 0);
     Gu::checkErrorsDbg();
   }
 }
@@ -278,11 +266,13 @@ void ShadowFrustum::init() {
 
   _pint->createFbo();
 
-  Gu::checkErrorsRt(); //Rt error check - this is called only once.
+  Gu::checkErrorsRt();  //Rt error check - this is called only once.
 }
 void ShadowFrustum::updateAndCullAsync(CullParams& cp) {
   static int n = 0;
-  if (n == 1) { return; }
+  if (n == 1) {
+    return;
+  }
   AssertOrThrow2(_pint->_pLightSource != nullptr);
 
   bool bMustUpdate = false;
@@ -311,8 +301,8 @@ void ShadowFrustum::beginRenderShadowFrustum() {
   //    glClearColor(0, 0, 0, 1);//This could be moved out of here.
   //}
   //else {
-  glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);//This could be moved out of here.
-//    }
+  glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);  //This could be moved out of here.
+                                                     //    }
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   Gu::checkErrorsDbg();
@@ -325,22 +315,21 @@ void ShadowFrustum::renderShadows(std::shared_ptr<ShadowFrustum> pShadowFrustumM
     vec3 vFinal = *_pint->_pLightSource->getFinalPosPtr();
 
     _pint->_pVisibleSet->sortAndDrawMeshes(
-      [](std::shared_ptr<VertexFormat> vf) {
-        return Gu::getShaderMaker()->getShadowShader(vf);
-      },
-      [&](std::shared_ptr<ShaderBase> sb) {
-        sb->bind();
-        sb->setUf("_ufProj", (void*)&_pint->_projMatrix, 1, false);
-        sb->setUf("_ufView", (void*)&_pint->_viewMatrix, 1, false);
-        //TODO: - technically we need to sendt he light's model matrix into the shader as well.
-        sb->setUf("_ufShadowLightPos", (void*)&vFinal, 1, false);
-      },
+        [](std::shared_ptr<VertexFormat> vf) {
+          return Gu::getShaderMaker()->getShadowShader(vf);
+        },
+        [&](std::shared_ptr<ShaderBase> sb) {
+          sb->bind();
+          sb->setUf("_ufProj", (void*)&_pint->_projMatrix, 1, false);
+          sb->setUf("_ufView", (void*)&_pint->_viewMatrix, 1, false);
+          //TODO: - technically we need to sendt he light's model matrix into the shader as well.
+          sb->setUf("_ufShadowLightPos", (void*)&vFinal, 1, false);
+        },
         [](std::shared_ptr<ShaderBase> sb, std::shared_ptr<MeshNode> bn) {
-        RenderParams rp;
-        rp.setShader(sb);
-        bn->drawShadow(rp);
-      }
-      );
+          RenderParams rp;
+          rp.setShader(sb);
+          bn->drawShadow(rp);
+        });
   }
   endRenderShadowFrustum();
   //pShadowFrustumMaster->endRenderShadowFrustum();
@@ -355,4 +344,4 @@ void ShadowFrustum::endRenderShadowFrustum() {
 }
 
 #pragma endregion
-}//ns Game
+}  // namespace BR2

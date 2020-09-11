@@ -77,7 +77,7 @@ private:
   GLuint _glId;
   time_t _compileTime;
 
-  string_t _strProgramName;
+  string_t _strProgramName;//note this maps to glObjectLabel
   Hash32 _iNameHashed;
   std::map<Hash32, std::shared_ptr<ShaderUniform>> _vecUniforms;
   std::map<Hash32, std::shared_ptr<ShaderUniformBlock>> _vecUniformBlocks; //These are shared with ShaderMaker

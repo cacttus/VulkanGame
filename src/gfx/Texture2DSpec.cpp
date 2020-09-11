@@ -175,6 +175,8 @@ void Texture2DSpec::create(unsigned char* imageData, uint32_t w, uint32_t h, boo
     _pContext->chkErrRt();
   }
 
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, getGlId(), _strName);
+
   //Unbind so we don't modify it
   glBindTexture(GL_TEXTURE_2D, 0);
 }

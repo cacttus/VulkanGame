@@ -936,7 +936,7 @@ std::shared_ptr<MeshNode> MeshUtils::createScreenQuadMesh(int w, int h) {
   inds.push_back(3);
   inds.push_back(2);
 
-  quadMesh = MeshNode::create("ScreenQuadMesh", false, std::make_shared<MeshSpec>(verts.data(), verts.size(), inds.data(), inds.size(), v_v3x2::getVertexFormat(), nullptr));
+  quadMesh = MeshNode::create("ScreenQuadMesh_Node", false, std::make_shared<MeshSpec>("ScreenQuadMesh", verts.data(), verts.size(), inds.data(), inds.size(), v_v3x2::getVertexFormat(), nullptr));
 
   return quadMesh;
 }

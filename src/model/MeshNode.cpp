@@ -121,7 +121,7 @@ void MeshNode::createSkin() {
     }
   }
 
-  _pArmJoints = std::make_shared<ShaderStorageBuffer>(Gu::getCoreContext(), sizeof(GpuAnimatedMeshSkinMatrix));
+  _pArmJoints = std::make_shared<ShaderStorageBuffer>(this->getSpec()->getName() + "-skin_matrices", Gu::getCoreContext(), sizeof(GpuAnimatedMeshSkinMatrix));
   _pArmJoints->allocate(iOrdCount);
   _pArmJoints->copyDataClientServer(iOrdCount, (void*)idents.data());
 

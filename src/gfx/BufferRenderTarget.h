@@ -18,7 +18,7 @@ namespace BR2 {
 class BufferRenderTarget : public RenderTarget {
   friend class FramebufferBase;
 public:
-  BufferRenderTarget(std::shared_ptr<GLContext> ctx, bool bShared);
+  BufferRenderTarget(const string_t& name, std::shared_ptr<GLContext> ctx, bool bShared);
   virtual ~BufferRenderTarget() override;
 
   bool getShared() { return _bShared; }

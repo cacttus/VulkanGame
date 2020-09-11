@@ -17,7 +17,7 @@ namespace BR2 {
 */
 class IboData : public GpuBufferData {
 public:
-    IboData(std::shared_ptr<GLContext> ctx, size_t iElementSize);
+    IboData(const string_t& mesh_name, std::shared_ptr<GLContext> ctx, size_t iElementSize);
     virtual ~IboData() override;
 };
 }//ns game

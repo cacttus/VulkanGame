@@ -8,11 +8,12 @@
 #include "../model/GpuBufferData.h"
 
 namespace BR2 {
-GpuBufferData::GpuBufferData(std::shared_ptr<GLContext> ct, GLenum bufferType, size_t iElementSize) :
+GpuBufferData::GpuBufferData(const string_t& mesh_name, std::shared_ptr<GLContext> ct, GLenum bufferType, size_t iElementSize) :
   _glBufferType(bufferType)
   , _iElementSize(iElementSize)
   , _pContext(ct) {
   ct->glGenBuffers(1, &_glId);
+  _meshName = mesh_name;
 }
 GpuBufferData::~GpuBufferData() {
   _pContext->glDeleteBuffers(1, &_glId);
@@ -21,6 +22,7 @@ void GpuBufferData::allocate(size_t iNumElements) {
   _iNumElements = iNumElements;
   bindBuffer();
   _pContext->glBufferData(_glBufferType, _iNumElements * _iElementSize, nullptr, GL_STATIC_DRAW);
+  _pContext->setObjectLabel(GL_BUFFER, _glId, _meshName + "-buffer");
   unbindBuffer();
   _bIsAllocated = true;
 }

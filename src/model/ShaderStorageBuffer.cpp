@@ -4,8 +4,8 @@
 
 namespace BR2 {
 
-ShaderStorageBuffer::ShaderStorageBuffer(std::shared_ptr<GLContext> gc, size_t eleSize) :
-  GpuBufferData(gc, GL_SHADER_STORAGE_BUFFER, eleSize) {
+ShaderStorageBuffer::ShaderStorageBuffer(const string_t& name, std::shared_ptr<GLContext> gc, size_t eleSize) :
+  GpuBufferData(name + "-ssbo", gc, GL_SHADER_STORAGE_BUFFER, eleSize) {
   //_eleSize = eleSize;
 }
 ShaderStorageBuffer::~ShaderStorageBuffer() {

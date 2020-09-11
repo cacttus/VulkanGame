@@ -42,7 +42,7 @@ private:
 */
 class VaoDataGeneric : public VirtualMemory {
 public:
-  VaoDataGeneric(std::shared_ptr<GLContext> ctx, std::shared_ptr<VertexFormat> vf);
+  VaoDataGeneric(const string_t& mesh_name, std::shared_ptr<GLContext> ctx, std::shared_ptr<VertexFormat> vf);
   virtual ~VaoDataGeneric() override;
 
   void copyFrom(std::shared_ptr<VaoDataGeneric> v);
@@ -60,6 +60,7 @@ private:
   std::shared_ptr<VertexFormat> _pVertexInfo = nullptr;
   std::shared_ptr<VboData> _pVboData = nullptr;
   std::shared_ptr<IboData> _pIboData = nullptr;
+  string_t _strMeshName;
 };
 
 

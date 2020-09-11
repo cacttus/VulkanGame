@@ -25,7 +25,7 @@ namespace BR2 {
 class ShadowBox_Internal {
 public:
   int64_t _iShadowBoxId;
-  std::shared_ptr<ShadowBoxSide> _pShadowBoxSide[6] = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
+  std::shared_ptr<ShadowBoxSide> _pShadowBoxSide[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
   std::shared_ptr<LightNodePoint> _pLightSource = nullptr;
   vec3 _vCachedLastPos;
   float _fCachedLastRadius;
@@ -48,19 +48,18 @@ public:
   void createFbo();
   //void updateLightMatrix();
   void smoothShadows();
-
 };
 ShadowBox_Internal::ShadowBox_Internal(std::shared_ptr<LightNodePoint> pLightSource, int32_t iFboWidth, int32_t iFboHeight) {
   _vCachedLastPos = vec3(FLT_MAX, FLT_MAX, FLT_MAX);
   _fCachedLastRadius = FLT_MAX;
   _iFboHeightPixels = iFboHeight;
   _iFboWidthPixels = iFboWidth;
-  _pLightSource = pLightSource; ;
+  _pLightSource = pLightSource;
+  ;
 
   //used for interpolating frames.
   static int64_t idGen = 0;
   _iShadowBoxId = ++idGen;
-
 }
 ShadowBox_Internal::~ShadowBox_Internal() {
   deleteFbo();
@@ -89,24 +88,22 @@ void ShadowBox_Internal::createFbo() {
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-  //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_NONE); 
+  //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_NONE);
   //THe following parameters are for depth textures only
   //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);// ** This is if you sample the depth map, however we're sampling a color buffer.
   //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
   //glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
   Gu::checkErrorsRt();
 
-
   //Note make sure these match the other FBOs
   for (int i = 0; i < 6; ++i) {
     //Note values here must match ShadowBox due to glCopyTexSubImage
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT,
-      _iFboWidthPixels, _iFboHeightPixels, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, nullptr);
+                 _iFboWidthPixels, _iFboHeightPixels, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, nullptr);
   }
   //glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_R32F, _iFboWidthPixels, _iFboHeightPixels, 0, GL_RED, GL_FLOAT, nullptr);
   //glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT24, _iFboWidthPixels, _iFboHeightPixels, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
   Gu::checkErrorsRt();
-
 
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, _glShadowCubeMapId, 0);
   Gu::checkErrorsRt();
@@ -123,7 +120,6 @@ void ShadowBox_Internal::createFbo() {
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _glDepthTextureId, 0);
   Gu::checkErrorsRt();
 
-
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   Gu::checkErrorsRt();
 
@@ -134,18 +130,19 @@ void ShadowBox_Internal::createFbo() {
   glReadBuffer(GL_NONE);
   Gu::checkErrorsRt();
 
-
   GLenum status = std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
   if (status != GL_FRAMEBUFFER_COMPLETE) {
     BRThrowException("Point Light Shadow Map Framebuffer encountered an error during setup: " + status);
     Gu::checkErrorsRt();
   }
+  else {
+    std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER, _glFrameBufferId, "ShadowBox-FBO");
+  }
 
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   Gu::checkErrorsRt();
-
 }
 void ShadowBox_Internal::deleteFbo() {
   if (_glFrameBufferId != 0) {
@@ -157,13 +154,12 @@ void ShadowBox_Internal::deleteFbo() {
   if (_glShadowCubeMapId != 0) {
     std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glDeleteTextures(1, &_glShadowCubeMapId);
   }
-
 }
 void ShadowBox_Internal::smoothShadows() {
   //if (Gu::getRenderSettings()->getSmoothShadows()) {
 
   //    std::shared_ptr<CameraNode> pCam = Gu::getCamera();
-  //                                                                                    
+  //
   //    //Create Quick FBO
   //    GLuint uiBLendFboId;
   //    std::dynamic_pointer_cast<GLContext>(Gu::getGraphicsContext())->glGenFramebuffers(1, &uiBLendFboId);
@@ -190,8 +186,6 @@ void ShadowBox_Internal::smoothShadows() {
   //    Gu::checkErrorsDbg();
   //    glBindTexture(GL_TEXTURE_2D, 0);
 
-
-
   //    //Unbind / Delete
   //    std::dynamic_pointer_cast<GLContext>(Gu::getGraphicsContext())->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   //    std::dynamic_pointer_cast<GLContext>(Gu::getGraphicsContext())->glActiveTexture(GL_TEXTURE0);
@@ -203,7 +197,6 @@ void ShadowBox_Internal::smoothShadows() {
   //    Gu::checkErrorsDbg();
   //}
 }
-
 
 #pragma endregion
 
@@ -229,7 +222,7 @@ void ShadowBox::init() {
   _pint->_screenQuadPos = Box2f(vec2(0, 0), vec2(0, 0));
   _pint->_screenQuadTCoords = Box2f(vec2(0, 0), vec2(1, 1));
 
-  Gu::checkErrorsRt(); //Rt error check - this is called only once.
+  Gu::checkErrorsRt();  //Rt error check - this is called only once.
 }
 std::future<bool> ShadowBox::updateAndCullAsync(CullParams& cp) {
   AssertOrThrow2(_pint->_pLightSource != nullptr);
@@ -244,7 +237,7 @@ std::future<bool> ShadowBox::updateAndCullAsync(CullParams& cp) {
     _pint->_bMustUpdate = true;
     _pint->_bForceUpdate = true;
   }
-  
+
   std::weak_ptr<ShadowBoxSide> sides_weak[6];
   for (size_t i = 0; i < 6; ++i) {
     sides_weak[i] = _pint->_pShadowBoxSide[i];
@@ -257,7 +250,7 @@ std::future<bool> ShadowBox::updateAndCullAsync(CullParams& cp) {
     int iStartDebug = 0;
     std::vector<std::future<bool>> futs;
     for (int iFace = iStartDebug; iFace < 6; ++iFace) {
-     std::weak_ptr<ShadowBoxSide> ss_weak = sides_weak[iFace];
+      std::weak_ptr<ShadowBoxSide> ss_weak = sides_weak[iFace];
       std::future<bool> fut_face = std::async(std::launch::async, [&ss_weak, &cp] {
         if (std::shared_ptr<ShadowBoxSide> ss = ss_weak.lock()) {
           ss->cullObjectsAsync(cp);
@@ -290,7 +283,7 @@ void ShadowBox::renderShadows(std::shared_ptr<ShadowBox> pShadowBoxMaster) {
     }
     pShadowBoxMaster->endRenderShadowBox();
 
-    // Copy and blend this into 
+    // Copy and blend this into
     pShadowBoxMaster->copyAndBlendToShadowMap(shared_from_this());
   }
   Perf::popPerf();
@@ -338,19 +331,17 @@ void ShadowBox::copyAndBlendToShadowMap(std::shared_ptr<ShadowBox> pBox) {
       Gu::checkErrorsDbg();
     }
     else {
-      std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glCopyImageSubData(
-        _pint->_glShadowCubeMapId//FROM
-        , GL_TEXTURE_CUBE_MAP //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
-        , 0
-        , 0, 0, 0 //xyZ
-        , pBox->getGlTexId()//TO
-        , GL_TEXTURE_CUBE_MAP //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
-        , 0
-        , 0, 0, 0
-        , _pint->_iFboWidthPixels
-        , _pint->_iFboHeightPixels
-        , 6
-      );
+      std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glCopyImageSubData(_pint->_glShadowCubeMapId  //FROM
+                                                                                     ,
+                                                                                     GL_TEXTURE_CUBE_MAP  //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
+                                                                                     ,
+                                                                                     0, 0, 0, 0  //xyZ
+                                                                                     ,
+                                                                                     pBox->getGlTexId()  //TO
+                                                                                     ,
+                                                                                     GL_TEXTURE_CUBE_MAP  //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
+                                                                                     ,
+                                                                                     0, 0, 0, 0, _pint->_iFboWidthPixels, _pint->_iFboHeightPixels, 6);
     }
     Gu::checkErrorsDbg();
   }
@@ -385,12 +376,12 @@ void ShadowBox::beginRenderSide(BoxSide::e side) {
   Gu::checkErrorsDbg();
 
   //Clear depth MUST BE CALLED EVERY TIME.  Man that sucked.
-//    if (GetAsyncKeyState(VK_NUMPAD7) & 0x8000) {
-  glClearColor(0, 0, 0, 1);//This could be moved out of here.
-//}
-//else {
-//    glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);//This could be moved out of here.
-//}
+  //    if (GetAsyncKeyState(VK_NUMPAD7) & 0x8000) {
+  glClearColor(0, 0, 0, 1);  //This could be moved out of here.
+                             //}
+                             //else {
+                             //    glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);//This could be moved out of here.
+                             //}
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   Gu::checkErrorsDbg();
 
@@ -416,4 +407,4 @@ void ShadowBox::endRenderShadowBox() {
 
 #pragma endregion
 
-}//ns Game
+}  // namespace BR2

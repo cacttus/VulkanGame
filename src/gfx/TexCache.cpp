@@ -4,6 +4,8 @@
 #include "../base/FileSystem.h"
 #include "../gfx/TexCache.h"
 #include "../gfx/Texture2DSpec.h"
+#include "../gfx/RenderUtils.h"
+#include "../base/GLContext.h"
 
 namespace BR2 {
 
@@ -40,25 +42,38 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   int iWidthHeight = 1;
   vec4 v(1, 1, 1, 1);
 
+  Gu::getCoreContext()->chkErrRt();
+
   glGenTextures(1, &_i1x1DummyCubeTexture);
   glBindTexture(GL_TEXTURE_CUBE_MAP, _i1x1DummyCubeTexture);
   for (int i = 0; i < 6; ++i) {
     //Note values here must match ShadowBox due to glCopyTexSubImage
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT,
       iWidthHeight, iWidthHeight, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, (void*)&v);
+  Gu::getCoreContext()->chkErrRt();
   }
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyCubeTexture, "Dummy Cube texture");
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  Gu::getCoreContext()->chkErrRt();
 
   glGenTextures(1, &_i1x2Dummy2DTexture);
   glBindTexture(GL_TEXTURE_2D, _i1x2Dummy2DTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
+  Gu::getCoreContext()->chkErrRt();
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x2Dummy2DTexture, "Dummy 2D Color texture");
   glBindTexture(GL_TEXTURE_2D, 0);
+  Gu::getCoreContext()->chkErrRt();
 
   v.construct(0, 0, 1, 1);//XZY Bump texture up
   glGenTextures(1, &_i1x1DummyBump2DTexture);
   glBindTexture(GL_TEXTURE_2D, _i1x1DummyBump2DTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
+  Gu::getCoreContext()->chkErrRt();
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyBump2DTexture, "Dummy 2D Normal texture");
   glBindTexture(GL_TEXTURE_2D, 0);
+  
+  Gu::getCoreContext()->chkErrRt();
+  
 }
 TexCache::~TexCache() {
   TexMap::iterator ite = _cache.begin();

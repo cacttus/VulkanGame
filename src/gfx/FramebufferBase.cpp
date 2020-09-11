@@ -46,7 +46,7 @@ void FramebufferBase::checkFramebufferComplete() {
   if (status != GL_FRAMEBUFFER_COMPLETE) {
     if (status == GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE) {
       BRLogError("Framebuffer is not complete.  Multisampling error.  Make sure that you enable " +
-        "multisampling on ALL textures, additionally make sure all textures have the same setting for FIXED_SAMPLE_LOCATIONS");
+                 "multisampling on ALL textures, additionally make sure all textures have the same setting for FIXED_SAMPLE_LOCATIONS");
     }
     getContext()->chkErrRt();
     BRThrowException("Failed to create framebuffer.");
@@ -66,9 +66,8 @@ void FramebufferBase::setDrawAllTargets() {
   for (int i = 0; i < c_iMaxAttachments; ++i) {
     if (i < (int)_vecTargets.size()) {
       if (_vecTargets[i]->getTargetType() == RenderTargetType::e::Color ||
-        _vecTargets[i]->getTargetType() == RenderTargetType::e::Pick ||
-        _vecTargets[i]->getTargetType() == RenderTargetType::e::Shadow
-        ) {
+          _vecTargets[i]->getTargetType() == RenderTargetType::e::Pick ||
+          _vecTargets[i]->getTargetType() == RenderTargetType::e::Shadow) {
         attachments[i] = _vecTargets[i]->getAttachment();
         iCount++;
       }
@@ -80,7 +79,6 @@ void FramebufferBase::setDrawAllTargets() {
 
   getContext()->glDrawBuffers(iCount, attachments);
   getContext()->chkErrDbg();
-
 }
 //void FramebufferBase::attachDepthTarget(std::shared_ptr<RenderTarget> pSharedDepth){
 //    if (pSharedDepth->getMsaaEnabled()) {
@@ -92,18 +90,17 @@ void FramebufferBase::setDrawAllTargets() {
 //    Gu::getGraphicsContext()->chkErrRt();
 //}
 void FramebufferBase::addTarget(string_t strName, GLenum internalFormat, GLenum texFormat,
-  GLenum dataType, int32_t w, int32_t h, RenderTargetType::e eTargetType) {
+                                GLenum dataType, int32_t w, int32_t h, RenderTargetType::e eTargetType) {
   int iIndex = (int)_vecTargets.size();
 
   std::shared_ptr<BufferRenderTarget> inf = createTarget(getContext(), strName, internalFormat, texFormat, dataType, w, h,
-    eTargetType, iIndex, _bMsaaEnabled, _nMsaaSamples);
+                                                         eTargetType, iIndex, _bMsaaEnabled, _nMsaaSamples);
   _vecTargets.push_back(inf);
 }
 void FramebufferBase::addTarget(std::shared_ptr<BufferRenderTarget> other) {
   int iIndex = (int)_vecTargets.size();
 
-  std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(getContext(), true);
-  inf->_strName = other->_strName;
+  std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(other->_strName, getContext(), true);
   inf->_iLayoutIndex = iIndex;
   inf->_eTextureTarget = other->_eTextureTarget;
   inf->_eAttachment = GL_COLOR_ATTACHMENT0 + iIndex;
@@ -117,10 +114,8 @@ void FramebufferBase::addTarget(std::shared_ptr<BufferRenderTarget> other) {
   _vecTargets.push_back(inf);
 }
 std::shared_ptr<BufferRenderTarget> FramebufferBase::createTarget(std::shared_ptr<GLContext> ctx, string_t strName, GLenum internalFormat, GLenum texFormat,
-  GLenum dataType, int32_t w, int32_t h, RenderTargetType::e eTargetType, int32_t iIndex, bool bMsaaEnabled, int32_t nMsaaSamples) {
-
-  std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(ctx, false);
-  inf->_strName = strName;
+                                                                  GLenum dataType, int32_t w, int32_t h, RenderTargetType::e eTargetType, int32_t iIndex, bool bMsaaEnabled, int32_t nMsaaSamples) {
+  std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(strName, ctx, false);
   inf->_iLayoutIndex = iIndex;
   inf->_eTextureTarget = GL_TEXTURE_2D;
   inf->_eAttachment = GL_COLOR_ATTACHMENT0 + iIndex;
@@ -137,14 +132,14 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createTarget(std::shared_pt
   }
 
   makeRenderTexture(&inf->_iGlTexId,
-    inf->_eAttachment, internalFormat, texFormat, dataType, w, h,
-    &inf->_eTextureTarget, bMsaaEnabled, nMsaaSamples);
+                    inf->_eAttachment, internalFormat, texFormat, dataType, w, h,
+                    &inf->_eTextureTarget, bMsaaEnabled, nMsaaSamples);
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
 
   return inf;
 }
 std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shared_ptr<GLContext> ctx, string_t strName, int32_t w, int32_t h, int iIndex, bool bMsaaEnabled, int32_t nMsaaSamples) {
-  std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(ctx, true);
-  inf->_strName = strName;
+  std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(strName, ctx, true);
   //**Note: index doesn't matter for depth target since we simply bind it to GL_Depth_attachment.
   inf->_iLayoutIndex = iIndex;
   if (bMsaaEnabled) {
@@ -153,7 +148,7 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shar
   else {
     inf->_eTextureTarget = GL_TEXTURE_2D;
   }
-  inf->_eAttachment = GL_DEPTH_ATTACHMENT; //GL_COLOR_ATTACHMENT0 + iLayoutIndex;
+  inf->_eAttachment = GL_DEPTH_ATTACHMENT;  //GL_COLOR_ATTACHMENT0 + iLayoutIndex;
   inf->_eTextureChannel = GL_TEXTURE0 + iIndex;
   inf->_eBlitBit = GL_DEPTH_BUFFER_BIT;
   inf->_eTargetType = RenderTargetType::e::Depth;
@@ -162,6 +157,7 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shar
 
   //This will cycle through depth formats and choose the most precise.
   RenderUtils::createDepthTexture(&inf->_iGlTexId, w, h, bMsaaEnabled, nMsaaSamples, GL_DEPTH_COMPONENT32F);
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
 
   return inf;
 }
@@ -182,15 +178,12 @@ void FramebufferBase::deleteTargets() {
 //    deleteTargets();
 //    init(w, h, pSharedDepthTarget);
 //}
-void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLenum eInternalFormat
-  , GLenum eTextureFormat, GLenum eDataType, int32_t iWidth, int32_t iHeight,
-  GLenum* eOutTarget, bool bMultisample, int32_t nSamples) {
-
+void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLenum eInternalFormat, GLenum eTextureFormat, GLenum eDataType, int32_t iWidth, int32_t iHeight,
+                                        GLenum* eOutTarget, bool bMultisample, int32_t nSamples) {
   glGenTextures(1, iTexId);
   Gu::getCoreContext()->chkErrRt();
 
   if (bMultisample) {
-
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, *iTexId);
     Gu::getCoreContext()->chkErrRt();
 
@@ -225,10 +218,9 @@ void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLen
       *eOutTarget = GL_TEXTURE_2D;
     }
   }
-  glDisable(GL_DITHER);//Dithering gets enabled for some reason
+  glDisable(GL_DITHER);  //Dithering gets enabled for some reason
 
   Gu::getCoreContext()->chkErrRt();
-
 }
 
-}//ns Game
+}  // namespace BR2
