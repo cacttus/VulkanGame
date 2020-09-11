@@ -80,12 +80,15 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   // After this window is made, more windows can be made (since we have a core context).
   std::shared_ptr<GraphicsWindow> window = _pGraphicsApi->createWindow(Stz "");  //Just avoid title
   SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
 
   initAudio();
   SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
 
   initNet();
   SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
 
   if (Gu::getEngineConfig()->getGameHostAttached()) {
     updateWindowHandleForGamehost();
@@ -95,12 +98,18 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   //Render System Static Data, which requires a prior context
   BRLogInfo("GraphicsContext - Making Vtx Formats.");
   RenderUtils::makeVertexFormats();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
 
   BRLogInfo("Creating Managers.");
   Gu::createManagers();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
 
   BRLogInfo("Creating Window");
   window->initRenderSystem();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
 }
 void AppRunner_Internal::doShowError(string_t err, Exception* e) {
   if (e != nullptr) {

@@ -197,7 +197,7 @@ typedef enum {
   ATLAS_BUILD_DIR_RIGHT    //build to the right
 }TextureAtlasBuildDirection;
 
-namespace RenderTargetType { typedef enum { Color, Depth, Alpha, Bloom, Pick, Shadow } e; }
+namespace RenderTargetType { typedef enum { Color, Depth, Alpha, Bloom, Pick, Shadow, Position } e; }
 namespace FramebufferState { typedef enum { Not_Initialized, Initialized } e; }
 //What channel teh texture effects
 namespace TextureType { typedef enum { Undefined, Color, Normal } e; }

@@ -16,6 +16,8 @@ namespace BR2 {
 */
 class ForwardFramebuffer : public FramebufferBase {
 public:
+  inline static const string_t c_strColorMRT_FW = "Color MRT (Forward)";
+
   ForwardFramebuffer(std::shared_ptr<GLContext> pc, int32_t w, int32_t h, bool bMsaa, int nMsaa, vec4& vClear);
   virtual ~ForwardFramebuffer() override;
   virtual void init(int32_t iWidth, int32_t iHeight, std::shared_ptr<BufferRenderTarget> sharedDepth, std::shared_ptr<BufferRenderTarget> sharedPick) override;
@@ -27,8 +29,6 @@ public:
   void clearFb();
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

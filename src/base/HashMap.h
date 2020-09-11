@@ -48,18 +48,18 @@ public:
 
   iterator begin() { return _map.begin(); }
   iterator end() { return _map.end(); }
-  void add(string_t key, Tx& x);//Can't be const
-  bool remove(string_t key);
-  HashMapItem<Tx> find(string_t key);
+  void add(const string_t& key, Tx& x);//Can't be const
+  bool remove(const string_t& key);
+  HashMapItem<Tx> find(const string_t& key);
   size_t size() { return _map.size(); }
   void erase(const_iterator _Where) { _map.erase(_Where); }
   void clear() { _map.clear(); }
-  bool contains(string_t key);
+  bool contains(const string_t& key);
 
 protected:
   HashMapType _map;
   virtual int32_t getNumAlgorithms() = 0;
-  virtual THashSize computeHash(string_t str, int32_t iAlgorithm) = 0;
+  virtual THashSize computeHash(const string_t& str, int32_t iAlgorithm) = 0;
 };
 template < class Tx, class THashSize >
 _HashMap<Tx, THashSize>::_HashMap() {
@@ -69,7 +69,7 @@ _HashMap<Tx, THashSize>::~_HashMap() {
   _map.clear();
 }
 template < class Tx, class THashSize >
-void _HashMap<Tx, THashSize>::add(string_t str, Tx& x) {
+void _HashMap<Tx, THashSize>::add(const string_t& str, Tx& x) {
   THashSize nHashVal;
   int i;
   for (i = 0; i < getNumAlgorithms(); ++i) {
@@ -96,7 +96,7 @@ void _HashMap<Tx, THashSize>::add(string_t str, Tx& x) {
 }
 // - Returns false if remove failed.
 template < class Tx, class THashSize >
-bool _HashMap<Tx, THashSize>::remove(string_t key) {
+bool _HashMap<Tx, THashSize>::remove(const string_t& key) {
   THashSize n = computeHash(key, 0/*key.getHashAlgorithmIndex()*/);
   bool b = _map.remove(n, true);
 
@@ -111,7 +111,7 @@ bool _HashMap<Tx, THashSize>::remove(string_t key) {
 *  @brief finds a string.  Returns a nullptr RefItem if not found.
 */
 template < class Tx, class THashSize >
-HashMapItem<Tx> _HashMap<Tx, THashSize>::find(string_t key) {
+HashMapItem<Tx> _HashMap<Tx, THashSize>::find(const string_t& key) {
   THashSize n = computeHash(key, 0/*key.getHashAlgorithmIndex()*/); //The string should in fact have a hash algorithm, in case of collisions.  We are just crossing our fingers here.
 
   typename HashMapType::iterator ite = _map.find(n);
@@ -122,7 +122,7 @@ HashMapItem<Tx> _HashMap<Tx, THashSize>::find(string_t key) {
   return HashMapItem<Tx>(&(ite->second));
 }
 template < class Tx, class THashSize >
-bool _HashMap<Tx, THashSize>::contains(string_t key) {
+bool _HashMap<Tx, THashSize>::contains(const string_t& key) {
   HashMapItem<Tx> ri = find(key);
   if (ri._val == nullptr) {
     return false;
@@ -143,7 +143,7 @@ public:
   int32_t getNumAlgorithms() override {
     return FNV_MAX_ALGORITHMS_32;
   }
-  uint32_t computeHash(string_t str, int32_t iAlgorithm) override {
+  uint32_t computeHash(const string_t& str, int32_t iAlgorithm) override {
     return Hash::computeStringHash32bit(str, iAlgorithm);
   }
 };
@@ -160,7 +160,7 @@ public:
   int32_t getNumAlgorithms() override {
     return FNV_MAX_ALGORITHMS_64;
   }
-  uint64_t computeHash(string_t str, int32_t iAlgorithm) override {
+  uint64_t computeHash(const string_t& str, int32_t iAlgorithm) override {
     return Hash::computeStringHash64bit(str, iAlgorithm);
   }
 

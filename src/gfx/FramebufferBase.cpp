@@ -24,11 +24,10 @@ FramebufferBase::FramebufferBase(std::shared_ptr<GLContext> pc, bool bMsaa, int 
 FramebufferBase::~FramebufferBase() {
   deleteTargets();
 }
-std::shared_ptr<BufferRenderTarget> FramebufferBase::getTargetByName(std::string name) {
-  for (std::shared_ptr<BufferRenderTarget> rt : _vecTargets) {
-    if (rt->getName() == name) {
-      return rt;
-    }
+std::shared_ptr<BufferRenderTarget> FramebufferBase::getTargetByName(const string_t& name) {
+  auto it = _mapTargets.find(name);
+  if (it != _mapTargets.end()) {
+    return it->second;
   }
   return nullptr;
 }
@@ -80,22 +79,14 @@ void FramebufferBase::setDrawAllTargets() {
   getContext()->glDrawBuffers(iCount, attachments);
   getContext()->chkErrDbg();
 }
-//void FramebufferBase::attachDepthTarget(std::shared_ptr<RenderTarget> pSharedDepth){
-//    if (pSharedDepth->getMsaaEnabled()) {
-//        std::dynamic_pointer_cast<GLContext>(Gu::getGraphicsContext())->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, pSharedDepth->getGlTexId(), 0);
-//    }
-//    else {
-//        std::dynamic_pointer_cast<GLContext>(Gu::getGraphicsContext())->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, pSharedDepth->getGlTexId(), 0);
-//    }
-//    Gu::getGraphicsContext()->chkErrRt();
-//}
-void FramebufferBase::addTarget(string_t strName, GLenum internalFormat, GLenum texFormat,
+void FramebufferBase::addTarget(const string_t& strName, GLenum internalFormat, GLenum texFormat,
                                 GLenum dataType, int32_t w, int32_t h, RenderTargetType::e eTargetType) {
   int iIndex = (int)_vecTargets.size();
 
   std::shared_ptr<BufferRenderTarget> inf = createTarget(getContext(), strName, internalFormat, texFormat, dataType, w, h,
                                                          eTargetType, iIndex, _bMsaaEnabled, _nMsaaSamples);
   _vecTargets.push_back(inf);
+  _mapTargets.insert(std::make_pair(strName, inf));
 }
 void FramebufferBase::addTarget(std::shared_ptr<BufferRenderTarget> other) {
   int iIndex = (int)_vecTargets.size();
@@ -112,8 +103,9 @@ void FramebufferBase::addTarget(std::shared_ptr<BufferRenderTarget> other) {
   inf->_iHeight = other->_iHeight;
 
   _vecTargets.push_back(inf);
+  _mapTargets.insert(std::make_pair(other->_strName, inf));
 }
-std::shared_ptr<BufferRenderTarget> FramebufferBase::createTarget(std::shared_ptr<GLContext> ctx, string_t strName, GLenum internalFormat, GLenum texFormat,
+std::shared_ptr<BufferRenderTarget> FramebufferBase::createTarget(std::shared_ptr<GLContext> ctx, const string_t& strName, GLenum internalFormat, GLenum texFormat,
                                                                   GLenum dataType, int32_t w, int32_t h, RenderTargetType::e eTargetType, int32_t iIndex, bool bMsaaEnabled, int32_t nMsaaSamples) {
   std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(strName, ctx, false);
   inf->_iLayoutIndex = iIndex;
@@ -138,7 +130,7 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createTarget(std::shared_pt
 
   return inf;
 }
-std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shared_ptr<GLContext> ctx, string_t strName, int32_t w, int32_t h, int iIndex, bool bMsaaEnabled, int32_t nMsaaSamples) {
+std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shared_ptr<GLContext> ctx, const string_t& strName, int32_t w, int32_t h, int iIndex, bool bMsaaEnabled, int32_t nMsaaSamples) {
   std::shared_ptr<BufferRenderTarget> inf = std::make_shared<BufferRenderTarget>(strName, ctx, true);
   //**Note: index doesn't matter for depth target since we simply bind it to GL_Depth_attachment.
   inf->_iLayoutIndex = iIndex;
@@ -172,6 +164,7 @@ void FramebufferBase::deleteTargets() {
     _vecTargets[i] = nullptr;
   }
   _vecTargets.resize(0);
+  _mapTargets.clear();
 }
 //void FramebufferBase::resizeScreenBuffers(int32_t w, int32_t h, std::shared_ptr<RenderTarget> pSharedDepthTarget)
 //{

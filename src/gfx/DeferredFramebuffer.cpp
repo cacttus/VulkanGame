@@ -43,10 +43,10 @@ void DeferredFramebuffer::init(int32_t w, int32_t h, std::shared_ptr<BufferRende
 
   // - Textures
   //Don't change the names here, we reference them elsewhere *yikes*
-  addTarget("Position MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//0
-  addTarget("Color MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//1
-  addTarget("Normal MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//2
-  addTarget("Plane MRT (Deferred)", GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//3
+  addTarget(c_strPositionMRT_DF, GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//0
+  addTarget(c_strColorMRT_DF, GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//1
+  addTarget(c_strNormalMRT_DF, GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//2
+  addTarget(c_strPlaneMRT_DF, GL_RGBA32F, GL_RGBA, GL_FLOAT, w, h, RenderTargetType::e::Color);//3
   addTarget(sharedPick);//4
 //  sharedPick->bind(GL_COLOR_ATTACHMENT4);
 

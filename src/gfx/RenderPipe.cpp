@@ -697,8 +697,13 @@ void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::sha
       return;
     }
     vec3 pos = cam->getFinalPos();
-    std::shared_ptr<BufferRenderTarget> rtPos = _pMsaaDeferred->getTargetByName("Position");
-    std::shared_ptr<BufferRenderTarget> rtColor = _pMsaaForward->getTargetByName("Color");  //**Note** Forward
+    std::shared_ptr<BufferRenderTarget> rtPos = _pMsaaDeferred->getTargetByName(DeferredFramebuffer::c_strPositionMRT_DF);
+    std::shared_ptr<BufferRenderTarget> rtColor = _pMsaaForward->getTargetByName(ForwardFramebuffer::c_strColorMRT_FW);  //**Note** Forward
+
+    if (rtPos == nullptr || rtColor == nullptr) {
+      BRLogErrorCycle("oen or more Render targets were null");
+      return;
+    }
 
     //Blend color + position and store it in the color.
     pDofShader->beginRaster(cam->getViewport());
@@ -869,13 +874,13 @@ std::shared_ptr<Img32> RenderPipe::getResultAsImage() {
   //so i'm just exporting the colors of the deferred for now
 
   std::shared_ptr<BufferRenderTarget> pTarget;
-  pTarget = _pBlittedForward->getTargetByName("Color");
+  pTarget = _pBlittedForward->getTargetByName(ForwardFramebuffer::c_strColorMRT_FW);
   if (RenderUtils::getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
     //the GL tex image must be flipped to show upriht/
   }
 
   //Only transparent method that's working
-  // pTarget = _pBlittedDeferred->getTargetByName("Color");
+  // pTarget = _pBlittedDeferred->getTargetByName(ForwardFramebuffer::c_strColorMRT);
   // if (RenderUtils::getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
   //     //the GL tex image must be flipped to show upriht/
   // }

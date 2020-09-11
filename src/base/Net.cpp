@@ -6,32 +6,34 @@
 
 #include <SDL_net.h>
 
-
 namespace BR2 {
 class Net_Internal {
 public:
   bool _bError = false;
-  TCPsocket _server_control; // the server control socket.
+  TCPsocket _server_control;  // the server control socket.
   std::vector<TCPsocket> _control_clients;
   std::shared_ptr<SyncTimer> _pTimer;
 
   void init() {
+    _pTimer = std::make_shared<SyncTimer>(true);
+    
     // create a listening TCP socket on port 44178 (server)
     IPaddress ip;
-    if (SDLNet_ResolveHost(&ip, NULL, 44178) == -1) {
+    int ret = SDLNet_ResolveHost(&ip, NULL, 44178);
+    SDLUtils::checkSDLErr(true, false);
+    if (ret == -1) {
       BRLogInfo("SDLNet_ResolveHost:" + SDLNet_GetError());
       _bError = true;
       return;
     }
 
     _server_control = SDLNet_TCP_Open(&ip);
+    SDLUtils::checkSDLErr(true, false);
     if (!_server_control) {
       BRLogInfo("SDLNet_TCP_Open:" + SDLNet_GetError());
       _bError = true;
       return;
     }
-
-    _pTimer = std::make_shared<SyncTimer>(true);
   }
 };
 Net::Net() {
@@ -73,16 +75,8 @@ void Net::update() {
           n++;
         }
       }
-
     }
-    });
+  });
 }
 
-
-
-
-
-
-
-
-}//ns Game
+}  // namespace BR2

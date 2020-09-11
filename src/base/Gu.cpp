@@ -1,6 +1,7 @@
 #include "../base/Logger.h"
 #include "../base/SDLIncludes.h"
 #include "../base/SDLGLIncludes.h"
+#include "../base/SDLUtils.h"
 #include "../base/Img32.h"
 #include "../base/Allocator.h"
 #include "../base/FileSystem.h"
@@ -81,8 +82,8 @@ std::shared_ptr<InputManager> Gu::_pGlobalInput = nullptr;
 template <class Tx>
 std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> global_manager) {
   bool b = global_manager != nullptr;
-  if(!b){
-    int n=0;
+  if (!b) {
+    int n = 0;
     n++;
   }
   AssertOrThrow2(b);
@@ -613,21 +614,44 @@ void Gu::createManagers() {
   BRLogInfo("GLContext - Building ApplicationPackage");
   _pPackage = std::make_shared<ApplicationPackage>();
   _pPackage->build(FileSystem::getExecutableFullPath());
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
+
   BRLogInfo("GLContext - Creating TexCache");
   _pTexCache = std::make_shared<TexCache>(Gu::getCoreContext());
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
+
   BRLogInfo("GLContext - Creating Sequencer");
   _pSequencer = std::make_shared<Sequencer>();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
+
   BRLogInfo("GLContext - Creating Global Input");
   _pGlobalInput = std::make_shared<InputManager>();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
+
   BRLogInfo("GLContext - Creating SoundCache");
   _pSoundCache = std::make_shared<SoundCache>();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
+
   BRLogInfo("GLContext - Creating ShaderMaker & base shaders");
   _pShaderMaker = std::make_shared<ShaderMaker>();
   _pShaderMaker->initialize();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
+
   BRLogInfo("GLContext - Model Cache");
   _pModelCache = std::make_shared<ModelCache>(Gu::getCoreContext());
-  BRLogInfo("Network");
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
+
+  BRLogInfo("GLContext - Network");
   _pNet = std::make_shared<Net>();
+  SDLUtils::checkSDLErr();
+  Gu::getCoreContext()->chkErrRt();
 }
 void Gu::updateManagers() {
   if (_pSequencer != nullptr) {

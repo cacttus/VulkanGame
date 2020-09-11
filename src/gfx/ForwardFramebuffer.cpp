@@ -54,7 +54,7 @@ void ForwardFramebuffer::init(int32_t iWidth, int32_t iHeight, std::shared_ptr<B
 
 void ForwardFramebuffer::attachColorTargets(int32_t iWidth, int32_t iHeight) {
   //VV < don't change "Color" Name
-  addTarget("Color", GL_RGBA32F, GL_RGBA, GL_FLOAT, iWidth, iHeight, RenderTargetType::e::Color);
+  addTarget(ForwardFramebuffer::c_strColorMRT_FW, GL_RGBA32F, GL_RGBA, GL_FLOAT, iWidth, iHeight, RenderTargetType::e::Color);
 }
 void ForwardFramebuffer::clearFb() {
   //Call this before we begin the defrred
