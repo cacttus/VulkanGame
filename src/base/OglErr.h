@@ -16,8 +16,8 @@ namespace BR2 {
 */
 class OglErr {
 public:
-  static bool chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "");
-  static bool chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "");
+  static bool chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly=false);
+  static bool chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly=false);
 };
 
 }  // namespace BR2

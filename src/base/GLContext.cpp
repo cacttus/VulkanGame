@@ -103,24 +103,15 @@ void GLContext::setPolygonMode(PolygonMode p) {
     BRLogWarnOnce("glPolygonMode not supported in compatibility mode.");
   }
 }
-bool GLContext::chkErrRt(bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
+bool GLContext::chkErrRt(bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   //Enable runtime errors.
-  return OglErr::chkErrRt(shared_from_this(), bDoNotBreak, doNotLog, shaderName);
+  return OglErr::chkErrRt(shared_from_this(), bDoNotBreak, doNotLog, shaderName, clearOnly);
 }
-bool GLContext::chkErrDbg(bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
-  return OglErr::chkErrDbg(shared_from_this(), bDoNotBreak, doNotLog, shaderName);
+bool GLContext::chkErrDbg(bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
+  return OglErr::chkErrDbg(shared_from_this(), bDoNotBreak, doNotLog, shaderName, clearOnly);
 }
 bool GLContext::loadOpenGLFunctions() {
   bool bValid = true;
-
-#define SDLGLP(x, y, z)                                                                                    \
-  do {                                                                                                     \
-    if (!(x = (y)SDL_GL_GetProcAddress(z))) {                                                              \
-      BRLogError("GL Method " + z + " not supported by your GPU, or there was another error somewhere.."); \
-      bValid = false;                                                                                      \
-      Gu::debugBreak();                                                                                    \
-    }                                                                                                      \
-  } while (0)
 
 #define SDLGLP2(x, y)                                                                                       \
   do {                                                                                                      \
@@ -130,119 +121,96 @@ bool GLContext::loadOpenGLFunctions() {
       Gu::debugBreak();                                                                                     \
     }                                                                                                       \
   } while (0)
-
-  //TODO: replace SDLGLP with SDLGLP2
-
-  SDLGLP(glUseProgram, PFNGLUSEPROGRAMPROC, "glUseProgram");
-  SDLGLP(glBindBuffer, PFNGLBINDBUFFERPROC, "glBindBuffer");
-  SDLGLP(glGenBuffers, PFNGLGENBUFFERSPROC, "glGenBuffers");
-  SDLGLP(glBufferData, PFNGLBUFFERDATAPROC, "glBufferData");
-  SDLGLP(glBufferSubData, PFNGLBUFFERSUBDATAPROC, "glBufferSubData");
-  SDLGLP(glShaderSource, PFNGLSHADERSOURCEPROC, "glShaderSource");
-  SDLGLP(glGetShaderInfoLog, PFNGLGETSHADERINFOLOGPROC, "glGetShaderInfoLog");
-  SDLGLP(glCreateProgram, PFNGLCREATEPROGRAMPROC, "glCreateProgram");
-  SDLGLP(glAttachShader, PFNGLATTACHSHADERPROC, "glAttachShader");
-  SDLGLP(glLinkProgram, PFNGLLINKPROGRAMPROC, "glLinkProgram");
-  SDLGLP(glDetachShader, PFNGLDETACHSHADERPROC, "glDetachShader");
-  SDLGLP(glDeleteShader, PFNGLDELETESHADERPROC, "glDeleteShader");
-  SDLGLP(glCompileShader, PFNGLCOMPILESHADERPROC, "glCompileShader");
-  SDLGLP(glCreateShader, PFNGLCREATESHADERPROC, "glCreateShader");
-  SDLGLP(glDeleteProgram, PFNGLDELETEPROGRAMPROC, "glDeleteProgram");
-
-  SDLGLP(glGetProgramiv, PFNGLGETPROGRAMIVPROC, "glGetProgramiv");
-  SDLGLP(glGetProgramInfoLog, PFNGLGETPROGRAMINFOLOGPROC, "glGetProgramInfoLog");
-  SDLGLP(glGetShaderiv, PFNGLGETSHADERIVPROC, "glGetShaderiv");
-
-  SDLGLP(glEnableVertexAttribArray, PFNGLENABLEVERTEXATTRIBARRAYPROC, "glEnableVertexAttribArray");
-  SDLGLP(glVertexAttribPointer, PFNGLVERTEXATTRIBPOINTERPROC, "glVertexAttribPointer");
-  SDLGLP(glVertexAttribIPointer, PFNGLVERTEXATTRIBIPOINTERPROC, "glVertexAttribIPointer");
-  SDLGLP(glDisableVertexAttribArray, PFNGLDISABLEVERTEXATTRIBARRAYPROC, "glDisableVertexAttribArray");
-
-  SDLGLP(glActiveTexture, PFNGLACTIVETEXTUREPROC, "glActiveTexture");
-
-  SDLGLP(glGetUniformLocation, PFNGLGETUNIFORMLOCATIONPROC, "glGetUniformLocation");
-  SDLGLP(glGetDebugMessageLog, PFNGLGETDEBUGMESSAGELOGPROC, "glGetDebugMessageLog");
+  //Quick
+  //(PFN[A-Z0-9_]*)\s+([a-zA-Z0-9_]*)\s*=\s*nullptr;
+  //SDLGLP2($1, $2)
+  SDLGLP2(PFNGLUSEPROGRAMPROC, glUseProgram);
+  SDLGLP2(PFNGLBINDBUFFERARBPROC, glBindBuffer);
+  SDLGLP2(PFNGLGENBUFFERSPROC, glGenBuffers);
+  SDLGLP2(PFNGLBUFFERDATAPROC, glBufferData);
+  SDLGLP2(PFNGLBUFFERSUBDATAPROC, glBufferSubData);
+  SDLGLP2(PFNGLSHADERSOURCEPROC, glShaderSource);
+  SDLGLP2(PFNGLCOMPILESHADERPROC, glCompileShader);
+  SDLGLP2(PFNGLGETSHADERIVPROC, glGetShaderiv);
+  SDLGLP2(PFNGLGETSHADERINFOLOGPROC, glGetShaderInfoLog);
+  SDLGLP2(PFNGLCREATEPROGRAMPROC, glCreateProgram);
+  SDLGLP2(PFNGLATTACHSHADERPROC, glAttachShader);
+  SDLGLP2(PFNGLLINKPROGRAMPROC, glLinkProgram);
+  SDLGLP2(PFNGLDETACHSHADERPROC, glDetachShader);
+  SDLGLP2(PFNGLDELETESHADERPROC, glDeleteShader);
+  SDLGLP2(PFNGLCREATESHADERPROC, glCreateShader);
+  SDLGLP2(PFNGLDELETEPROGRAMPROC, glDeleteProgram);
+  SDLGLP2(PFNGLGETPROGRAMIVPROC, glGetProgramiv);
+  SDLGLP2(PFNGLGETPROGRAMINFOLOGPROC, glGetProgramInfoLog);
+  SDLGLP2(PFNGLENABLEVERTEXATTRIBARRAYPROC, glEnableVertexAttribArray);
+  SDLGLP2(PFNGLVERTEXATTRIBPOINTERPROC, glVertexAttribPointer);
+  SDLGLP2(PFNGLVERTEXATTRIBIPOINTERPROC, glVertexAttribIPointer);
+  SDLGLP2(PFNGLDISABLEVERTEXATTRIBARRAYPROC, glDisableVertexAttribArray);
+  SDLGLP2(PFNGLACTIVETEXTUREPROC, glActiveTexture);
+  SDLGLP2(PFNGLGETUNIFORMLOCATIONPROC, glGetUniformLocation);
+  SDLGLP2(PFNGLGETDEBUGMESSAGELOGPROC, glGetDebugMessageLog);
   SDLGLP2(PFNGLGETOBJECTLABELPROC, glGetObjectLabel);
   SDLGLP2(PFNGLOBJECTLABELPROC, glObjectLabel);
   SDLGLP2(PFNGLOBJECTPTRLABELPROC, glObjectPtrLabel);
   SDLGLP2(PFNGLGETOBJECTPTRLABELPROC, glGetObjectPtrLabel);
-
-  SDLGLP(glGenVertexArrays, PFNGLGENVERTEXARRAYSPROC, "glGenVertexArrays");
-  SDLGLP(glBindVertexArray, PFNGLBINDVERTEXARRAYPROC, "glBindVertexArray");
-  SDLGLP(glDeleteBuffers, PFNGLDELETEBUFFERSPROC, "glDeleteBuffers");
-  SDLGLP(glIsBuffer, PFNGLISBUFFERPROC, "glIsBuffer");
-
-  SDLGLP(glMapBuffer, PFNGLMAPBUFFERPROC, "glMapBuffer");
-  SDLGLP(glUnmapBuffer, PFNGLUNMAPBUFFERPROC, "glUnmapBuffer");
-  SDLGLP(glGetBufferParameteriv, PFNGLGETBUFFERPARAMETERIVPROC, "glGetBufferParameteriv");
-  SDLGLP(glDeleteVertexArrays, PFNGLDELETEVERTEXARRAYSPROC, "glDeleteVertexArrays");
-
-  //** Uniforms
-  SDLGLP(glUniformMatrix2fv, PFNGLUNIFORMMATRIX2FVPROC, "glUniformMatrix2fv");
-  SDLGLP(glUniformMatrix3fv, PFNGLUNIFORMMATRIX3FVPROC, "glUniformMatrix3fv");
-  SDLGLP(glUniformMatrix4fv, PFNGLUNIFORMMATRIX4FVPROC, "glUniformMatrix4fv");
-
-  SDLGLP(glUniform1i, PFNGLUNIFORM1IPROC, "glUniform1i");
-
-  SDLGLP(glUniform1iv, PFNGLUNIFORM1IVPROC, "glUniform1iv");
-  SDLGLP(glUniform2iv, PFNGLUNIFORM2IVPROC, "glUniform2iv");
-  SDLGLP(glUniform3iv, PFNGLUNIFORM3IVPROC, "glUniform3iv");
-  SDLGLP(glUniform4iv, PFNGLUNIFORM4IVPROC, "glUniform4iv");
-
-  SDLGLP(glUniform1fv, PFNGLUNIFORM1FVPROC, "glUniform1fv");
-  SDLGLP(glUniform2fv, PFNGLUNIFORM2FVPROC, "glUniform2fv");
-  SDLGLP(glUniform3fv, PFNGLUNIFORM3FVPROC, "glUniform3fv");
-  SDLGLP(glUniform4fv, PFNGLUNIFORM4FVPROC, "glUniform4fv");
-
-  SDLGLP(glUniform1uiv, PFNGLUNIFORM1UIVPROC, "glUniform1uiv");
-  SDLGLP(glUniform2uiv, PFNGLUNIFORM2UIVPROC, "glUniform2uiv");
-  SDLGLP(glUniform3uiv, PFNGLUNIFORM3UIVPROC, "glUniform3uiv");
-  SDLGLP(glUniform4uiv, PFNGLUNIFORM4UIVPROC, "glUniform4uiv");
-
-  //Framebuffers
-  SDLGLP(glBindFramebuffer, PFNGLBINDFRAMEBUFFERPROC, "glBindFramebuffer");
-  SDLGLP(glBindRenderbuffer, PFNGLBINDRENDERBUFFERPROC, "glBindRenderbuffer");
-  SDLGLP(glGenFramebuffers, PFNGLGENFRAMEBUFFERSPROC, "glGenFramebuffers");
-  SDLGLP(glFramebufferParameteri, PFNGLFRAMEBUFFERPARAMETERIPROC, "glFramebufferParameteri");
-  SDLGLP(glDrawBuffers, PFNGLDRAWBUFFERSPROC, "glDrawBuffers");
-  SDLGLP(glFramebufferTexture2D, PFNGLFRAMEBUFFERTEXTURE2DPROC, "glFramebufferTexture2D");
-  SDLGLP(glCheckFramebufferStatus, PFNGLCHECKFRAMEBUFFERSTATUSPROC, "glCheckFramebufferStatus");
-  SDLGLP(glDeleteFramebuffers, PFNGLDELETEFRAMEBUFFERSPROC, "glDeleteFramebuffers");
-
-  SDLGLP(glTexStorage2D, PFNGLTEXSTORAGE2DPROC, "glTexStorage2D");
-  SDLGLP(glGenerateMipmap, PFNGLGENERATEMIPMAPPROC, "glGenerateMipmap");
-
-  SDLGLP(glGenRenderbuffers, PFNGLGENRENDERBUFFERSPROC, "glGenRenderbuffers");
-  SDLGLP(glRenderbufferStorage, PFNGLRENDERBUFFERSTORAGEPROC, "glRenderbufferStorage");
-  SDLGLP(glFramebufferRenderbuffer, PFNGLFRAMEBUFFERRENDERBUFFERPROC, "glFramebufferRenderbuffer");
-
-  SDLGLP(glGetUniformBlockIndex, PFNGLGETUNIFORMBLOCKINDEXPROC, "glGetUniformBlockIndex");  // = nullptr;
-  SDLGLP(glUniformBlockBinding, PFNGLUNIFORMBLOCKBINDINGPROC, "glUniformBlockBinding");     //= nullptr;
-  SDLGLP(glBindBufferBase, PFNGLBINDBUFFERBASEPROC, "glBindBufferBase");                    //        = nullptr;
-  SDLGLP(glGetActiveUniform, PFNGLGETACTIVEUNIFORMPROC, "glGetActiveUniform");
-
-  SDLGLP(glGetVertexAttribIuiv, PFNGLGETVERTEXATTRIBIUIVPROC, "glGetVertexAttribIuiv");
-  SDLGLP(glGetVertexAttribfv, PFNGLGETVERTEXATTRIBFVPROC, "glGetVertexAttribfv");
-  SDLGLP(glGetVertexAttribiv, PFNGLGETVERTEXATTRIBIVPROC, "glGetVertexAttribiv");
-  SDLGLP(glGetVertexAttribIiv, PFNGLGETVERTEXATTRIBIIVPROC, "glGetVertexAttribIiv");
-  SDLGLP(glGetFramebufferAttachmentParameteriv, PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC, "glGetFramebufferAttachmentParameteriv");
-  SDLGLP(glGetActiveUniformBlockiv, PFNGLGETACTIVEUNIFORMBLOCKIVPROC, "glGetActiveUniformBlockiv");
-
-  SDLGLP(glTexImage2DMultisample, PFNGLTEXIMAGE2DMULTISAMPLEPROC, "glTexImage2DMultisample");
-  SDLGLP(glBlitFramebuffer, PFNGLBLITFRAMEBUFFERPROC, "glBlitFramebuffer");
-
-  SDLGLP(glGetProgramBinary, PFNGLGETPROGRAMBINARYPROC, "glGetProgramBinary");  // = nullptr;
-
-  SDLGLP(glIsProgram, PFNGLISPROGRAMPROC, "glIsProgram");              // = nullptr;
-  SDLGLP(glProgramBinary, PFNGLPROGRAMBINARYPROC, "glProgramBinary");  // = nullptr;
-  SDLGLP(glValidateProgram, PFNGLVALIDATEPROGRAMPROC, "glValidateProgram");
-
-  SDLGLP(glGetActiveAttrib, PFNGLGETACTIVEATTRIBPROC, "glGetActiveAttrib");
-  SDLGLP(glGetAttribLocation, PFNGLGETATTRIBLOCATIONPROC, "glGetAttribLocation");
-  SDLGLP(glMemoryBarrier, PFNGLMEMORYBARRIERPROC, "glMemoryBarrier");
-  SDLGLP(glMapBufferRange, PFNGLMAPBUFFERRANGEPROC, "glMapBufferRange");
-  SDLGLP(glGetActiveUniformBlockName, PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC, "glGetActiveUniformBlockName");
-
+  SDLGLP2(PFNGLGENVERTEXARRAYSPROC, glGenVertexArrays);
+  SDLGLP2(PFNGLBINDVERTEXARRAYPROC, glBindVertexArray);
+  SDLGLP2(PFNGLDELETEBUFFERSPROC, glDeleteBuffers);
+  SDLGLP2(PFNGLISBUFFERPROC, glIsBuffer);
+  SDLGLP2(PFNGLMAPBUFFERPROC, glMapBuffer);
+  SDLGLP2(PFNGLUNMAPBUFFERPROC, glUnmapBuffer);
+  SDLGLP2(PFNGLGETBUFFERPARAMETERIVPROC, glGetBufferParameteriv);
+  SDLGLP2(PFNGLDELETEVERTEXARRAYSPROC, glDeleteVertexArrays);
+  SDLGLP2(PFNGLBINDFRAMEBUFFERPROC, glBindFramebuffer);
+  SDLGLP2(PFNGLGENFRAMEBUFFERSPROC, glGenFramebuffers);
+  SDLGLP2(PFNGLFRAMEBUFFERPARAMETERIPROC, glFramebufferParameteri);
+  SDLGLP2(PFNGLDRAWBUFFERSPROC, glDrawBuffers);
+  SDLGLP2(PFNGLFRAMEBUFFERTEXTURE2DPROC, glFramebufferTexture2D);
+  SDLGLP2(PFNGLCHECKFRAMEBUFFERSTATUSPROC, glCheckFramebufferStatus);
+  SDLGLP2(PFNGLDELETEFRAMEBUFFERSPROC, glDeleteFramebuffers);
+  SDLGLP2(PFNGLGETACTIVEUNIFORMPROC, glGetActiveUniform);
+  SDLGLP2(PFNGLTEXSTORAGE2DPROC, glTexStorage2D);
+  SDLGLP2(PFNGLGENERATEMIPMAPPROC, glGenerateMipmap);
+  SDLGLP2(PFNGLBINDRENDERBUFFERPROC, glBindRenderbuffer);
+  SDLGLP2(PFNGLGENRENDERBUFFERSPROC, glGenRenderbuffers);
+  SDLGLP2(PFNGLRENDERBUFFERSTORAGEPROC, glRenderbufferStorage);
+  SDLGLP2(PFNGLFRAMEBUFFERRENDERBUFFERPROC, glFramebufferRenderbuffer);
+  SDLGLP2(PFNGLGETUNIFORMBLOCKINDEXPROC, glGetUniformBlockIndex);
+  SDLGLP2(PFNGLUNIFORMBLOCKBINDINGPROC, glUniformBlockBinding);
+  SDLGLP2(PFNGLBINDBUFFERBASEPROC, glBindBufferBase);
+  SDLGLP2(PFNGLUNIFORM1IPROC, glUniform1i);
+  SDLGLP2(PFNGLUNIFORM1IVPROC, glUniform1iv);
+  SDLGLP2(PFNGLUNIFORM2IVPROC, glUniform2iv);
+  SDLGLP2(PFNGLUNIFORM3IVPROC, glUniform3iv);
+  SDLGLP2(PFNGLUNIFORM4IVPROC, glUniform4iv);
+  SDLGLP2(PFNGLUNIFORM1FVPROC, glUniform1fv);
+  SDLGLP2(PFNGLUNIFORM2FVPROC, glUniform2fv);
+  SDLGLP2(PFNGLUNIFORM3FVPROC, glUniform3fv);
+  SDLGLP2(PFNGLUNIFORM4FVPROC, glUniform4fv);
+  SDLGLP2(PFNGLUNIFORMMATRIX2FVPROC, glUniformMatrix2fv);
+  SDLGLP2(PFNGLUNIFORMMATRIX3FVPROC, glUniformMatrix3fv);
+  SDLGLP2(PFNGLUNIFORMMATRIX4FVPROC, glUniformMatrix4fv);
+  SDLGLP2(PFNGLUNIFORM1UIVPROC, glUniform1uiv);
+  SDLGLP2(PFNGLUNIFORM2UIVPROC, glUniform2uiv);
+  SDLGLP2(PFNGLUNIFORM3UIVPROC, glUniform3uiv);
+  SDLGLP2(PFNGLUNIFORM4UIVPROC, glUniform4uiv);
+  SDLGLP2(PFNGLGETVERTEXATTRIBIUIVPROC, glGetVertexAttribIuiv);
+  SDLGLP2(PFNGLGETVERTEXATTRIBFVPROC, glGetVertexAttribfv);
+  SDLGLP2(PFNGLGETVERTEXATTRIBIVPROC, glGetVertexAttribiv);
+  SDLGLP2(PFNGLGETVERTEXATTRIBIIVPROC, glGetVertexAttribIiv);
+  SDLGLP2(PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC, glGetFramebufferAttachmentParameteriv);
+  SDLGLP2(PFNGLGETACTIVEUNIFORMBLOCKIVPROC, glGetActiveUniformBlockiv);
+  SDLGLP2(PFNGLTEXIMAGE2DMULTISAMPLEPROC, glTexImage2DMultisample);
+  SDLGLP2(PFNGLBLITFRAMEBUFFERPROC, glBlitFramebuffer);
+  SDLGLP2(PFNGLGETPROGRAMBINARYPROC, glGetProgramBinary);
+  SDLGLP2(PFNGLISPROGRAMPROC, glIsProgram);
+  SDLGLP2(PFNGLPROGRAMBINARYPROC, glProgramBinary);
+  SDLGLP2(PFNGLVALIDATEPROGRAMPROC, glValidateProgram);
+  SDLGLP2(PFNGLGETACTIVEATTRIBPROC, glGetActiveAttrib);
+  SDLGLP2(PFNGLGETATTRIBLOCATIONPROC, glGetAttribLocation);
+  SDLGLP2(PFNGLMEMORYBARRIERPROC, glMemoryBarrier);
+  SDLGLP2(PFNGLMAPBUFFERRANGEPROC, glMapBufferRange);
+  SDLGLP2(PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC, glGetActiveUniformBlockName);
   SDLGLP2(PFNGLFENCESYNCPROC, glFenceSync);
   SDLGLP2(PFNGLISSYNCPROC, glIsSync);
   SDLGLP2(PFNGLGETSYNCIVPROC, glGetSynciv);
@@ -251,9 +219,16 @@ bool GLContext::loadOpenGLFunctions() {
   SDLGLP2(PFNGLGETINTEGERI_VPROC, glGetIntegeri_v);
   SDLGLP2(PFNGLSHADERSTORAGEBLOCKBINDINGPROC, glShaderStorageBlockBinding);
   SDLGLP2(PFNGLGETPROGRAMRESOURCEINDEXPROC, glGetProgramResourceIndex);
-
+  SDLGLP2(PFNGLGETSAMPLERPARAMETERFVPROC, glGetSamplerParameterfv);
+  SDLGLP2(PFNGLGETSAMPLERPARAMETERIIVPROC, glGetSamplerParameterIiv);
+  SDLGLP2(PFNGLGETSAMPLERPARAMETERIUIVPROC, glGetSamplerParameterIuiv);
+  SDLGLP2(PFNGLGETSAMPLERPARAMETERIUIVPROC, glGetSamplerParameteruiv);
+  SDLGLP2(PFNGLGETSAMPLERPARAMETERIVPROC, glGetSamplerParameteriv);
+  SDLGLP2(PFNGLGETSAMPLERPARAMETERIVPROC, glGetSamplerParameteriv);
   SDLGLP2(PFNGLCOPYIMAGESUBDATAPROC, glCopyImageSubData);
   SDLGLP2(PFNGLDELETETEXTURESEXTPROC, glDeleteTextures);
+  SDLGLP2(PFNGLGETTEXPARAMETERIIVPROC, glGetTexParameteriv);
+  SDLGLP2(PFNGLGETTEXPARAMETERIUIVPROC, glGetTexParameteruiv);
 
   return bValid;
 }
@@ -600,7 +575,7 @@ string_t GLContext::getObjectLabel(GLenum type, GLuint objectId) {
   return res;
 }
 void GLContext::setObjectLabel(GLenum type, GLuint objectId, const string_t& label) {
-  if(StringUtil::isEmpty(label)){
+  if (StringUtil::isEmpty(label)) {
     //Label was empty.
     BRLogDebug("Warning label was empty.");
     Gu::debugBreak();
@@ -626,6 +601,42 @@ int32_t GLContext::maxGLTextureUnits() {
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_iMaxTexs);
   }
   return _iMaxTexs;
+}
+
+GLenum GLContext::getTextureTarget(GLuint textureId) {
+  //Returns the binding for a texture, there IS glGetTextureParameteriv with GL_TEXTURE_TARGET which is an extension apparently.
+
+  //Check/handle any errors that may exist.
+  Gu::checkErrorsRt();
+  GLenum ret = (GLenum)0;
+
+  std::function<GLenum(GLuint, GLenum)> TEX_CHECKTARGET_RT = [](GLuint texid, GLenum ttx) {
+    for (int i = 0; i < 100; ++i) {
+      if (glGetError() == GL_NO_ERROR) {
+        break;
+      }
+    }
+    glBindTexture(ttx, texid);
+    if (glGetError() == GL_NO_ERROR) {
+      Gu::checkErrorsRt(true);
+      return ttx;
+    }
+    return (GLenum)0;
+  };
+  //from https://www.khronos.org/opengl/wiki/Texture
+  if ((ret = TEX_CHECKTARGET_RT(textureId,      GL_TEXTURE_1D)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_3D)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_RECTANGLE)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_BUFFER)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D_ARRAY)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_ARRAY)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP_ARRAY)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE)) != (GLenum)0) return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE_ARRAY)) != (GLenum)0) return ret;
+
+  return ret;
 }
 
 }  // namespace BR2

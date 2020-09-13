@@ -73,8 +73,8 @@ public:
   SDL_GLContext getSDLGLContext() { return _context; }
 
   //virtual void update(float delta) override;
-  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") override;
-  virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "") override;
+  virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "", bool clearOnly = false) override;
+  virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "", bool clearOnly = false) override;
 
   string_t getObjectLabel(GLenum type, GLuint objectId);
   void setObjectLabel(GLenum type, GLuint objectId, const string_t& label);
@@ -90,6 +90,8 @@ public:
   void setPolygonMode(PolygonMode p);
   void setLineWidth(float w);
 
+  GLenum getTextureTarget(GLuint textureId);
+
   void enableCullFace(bool enable) override;
   void enableBlend(bool enable) override;
   void enableDepthTest(bool enable) override;
@@ -104,7 +106,7 @@ private:
   bool _bValid = false;
   bool loadOpenGLFunctions();
 
-  int32_t _iMaxTexs=-1;
+  int32_t _iMaxTexs = -1;
 
   //Render Stack.
   std::stack<GLenum> _eLastCullFaceStack;
@@ -159,7 +161,6 @@ public:
   PFNGLUNMAPBUFFERPROC glUnmapBuffer = nullptr;
   PFNGLGETBUFFERPARAMETERIVPROC glGetBufferParameteriv = nullptr;
   PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays = nullptr;
-
   PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer = nullptr;
   PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers = nullptr;
   PFNGLFRAMEBUFFERPARAMETERIPROC glFramebufferParameteri = nullptr;
@@ -167,65 +168,49 @@ public:
   PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D = nullptr;
   PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus = nullptr;
   PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers = nullptr;
-
   PFNGLGETACTIVEUNIFORMPROC glGetActiveUniform = nullptr;
-
   PFNGLTEXSTORAGE2DPROC glTexStorage2D = nullptr;
   PFNGLGENERATEMIPMAPPROC glGenerateMipmap = nullptr;
-
-  //Render Buffers
   PFNGLBINDRENDERBUFFERPROC glBindRenderbuffer = nullptr;
   PFNGLGENRENDERBUFFERSPROC glGenRenderbuffers = nullptr;
   PFNGLRENDERBUFFERSTORAGEPROC glRenderbufferStorage = nullptr;
   PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer = nullptr;
-
   PFNGLGETUNIFORMBLOCKINDEXPROC glGetUniformBlockIndex = nullptr;
   PFNGLUNIFORMBLOCKBINDINGPROC glUniformBlockBinding = nullptr;
   PFNGLBINDBUFFERBASEPROC glBindBufferBase = nullptr;
-
   PFNGLUNIFORM1IPROC glUniform1i = nullptr;
-
   PFNGLUNIFORM1IVPROC glUniform1iv = nullptr;
   PFNGLUNIFORM2IVPROC glUniform2iv = nullptr;
   PFNGLUNIFORM3IVPROC glUniform3iv = nullptr;
   PFNGLUNIFORM4IVPROC glUniform4iv = nullptr;
-
   PFNGLUNIFORM1FVPROC glUniform1fv = nullptr;
   PFNGLUNIFORM2FVPROC glUniform2fv = nullptr;
   PFNGLUNIFORM3FVPROC glUniform3fv = nullptr;
   PFNGLUNIFORM4FVPROC glUniform4fv = nullptr;
-
   PFNGLUNIFORMMATRIX2FVPROC glUniformMatrix2fv = nullptr;
   PFNGLUNIFORMMATRIX3FVPROC glUniformMatrix3fv = nullptr;
   PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv = nullptr;
-
   PFNGLUNIFORM1UIVPROC glUniform1uiv = nullptr;
   PFNGLUNIFORM2UIVPROC glUniform2uiv = nullptr;
   PFNGLUNIFORM3UIVPROC glUniform3uiv = nullptr;
   PFNGLUNIFORM4UIVPROC glUniform4uiv = nullptr;
-
   PFNGLGETVERTEXATTRIBIUIVPROC glGetVertexAttribIuiv = nullptr;
   PFNGLGETVERTEXATTRIBFVPROC glGetVertexAttribfv = nullptr;
   PFNGLGETVERTEXATTRIBIVPROC glGetVertexAttribiv = nullptr;
   PFNGLGETVERTEXATTRIBIIVPROC glGetVertexAttribIiv = nullptr;
   PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC glGetFramebufferAttachmentParameteriv = nullptr;
   PFNGLGETACTIVEUNIFORMBLOCKIVPROC glGetActiveUniformBlockiv = nullptr;
-
   PFNGLTEXIMAGE2DMULTISAMPLEPROC glTexImage2DMultisample = nullptr;
   PFNGLBLITFRAMEBUFFERPROC glBlitFramebuffer = nullptr;
-
   PFNGLGETPROGRAMBINARYPROC glGetProgramBinary = nullptr;
   PFNGLISPROGRAMPROC glIsProgram = nullptr;
   PFNGLPROGRAMBINARYPROC glProgramBinary = nullptr;
   PFNGLVALIDATEPROGRAMPROC glValidateProgram = nullptr;
-
   PFNGLGETACTIVEATTRIBPROC glGetActiveAttrib = nullptr;
   PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation = nullptr;
   PFNGLMEMORYBARRIERPROC glMemoryBarrier = nullptr;
   PFNGLMAPBUFFERRANGEPROC glMapBufferRange = nullptr;
-
   PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC glGetActiveUniformBlockName = nullptr;
-
   PFNGLFENCESYNCPROC glFenceSync = nullptr;
   PFNGLISSYNCPROC glIsSync = nullptr;
   PFNGLGETSYNCIVPROC glGetSynciv = nullptr;
@@ -234,9 +219,15 @@ public:
   PFNGLGETINTEGERI_VPROC glGetIntegeri_v = nullptr;
   PFNGLSHADERSTORAGEBLOCKBINDINGPROC glShaderStorageBlockBinding = nullptr;
   PFNGLGETPROGRAMRESOURCEINDEXPROC glGetProgramResourceIndex = nullptr;
-
+  PFNGLGETSAMPLERPARAMETERFVPROC glGetSamplerParameterfv = nullptr;
+  PFNGLGETSAMPLERPARAMETERIIVPROC glGetSamplerParameterIiv = nullptr;
+  PFNGLGETSAMPLERPARAMETERIUIVPROC glGetSamplerParameterIuiv = nullptr;
+  PFNGLGETSAMPLERPARAMETERIUIVPROC glGetSamplerParameteruiv = nullptr;
+  PFNGLGETSAMPLERPARAMETERIVPROC glGetSamplerParameteriv = nullptr;
   PFNGLCOPYIMAGESUBDATAPROC glCopyImageSubData = nullptr;
   PFNGLDELETETEXTURESEXTPROC glDeleteTextures = nullptr;
+  PFNGLGETTEXPARAMETERIIVPROC glGetTexParameteriv = nullptr;
+  PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameteruiv = nullptr;
 };
 
 }  // namespace BR2

@@ -118,8 +118,8 @@ void Gu::setGraphicsApi(std::shared_ptr<GraphicsApi> api) {
   AssertOrThrow2(api != nullptr);
   _pGraphicsApi = api;
 }
-void Gu::checkErrorsDbg() { Gu::getCoreContext()->chkErrDbg(); }
-void Gu::checkErrorsRt() { Gu::getCoreContext()->chkErrRt(); }
+void Gu::checkErrorsDbg(bool ignore) { Gu::getCoreContext()->chkErrDbg(false, false, "", ignore); }
+void Gu::checkErrorsRt(bool ignore) { Gu::getCoreContext()->chkErrRt(false, false, "", ignore); }
 bool Gu::is64Bit() {
   if (sizeof(size_t) == 8) {
     return true;

@@ -26,7 +26,10 @@ public:
   bool loadAndParse(string_t file);
   void save(string_t file);
 private:
-  const string_t c_strMbiVersion = "0.03";
+/*
+0.4 - Added texture binding.
+*/
+  const string_t c_strMbiVersion = "0.04";
   std::vector<std::shared_ptr<ModelSpec>> _vecModels;
   std::shared_ptr<BinaryFile> _pFile = nullptr;
   string_t _fileLoc;

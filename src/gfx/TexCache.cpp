@@ -52,7 +52,7 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   for (int i = 0; i < 6; ++i) {
     //Note values here must match ShadowBox due to glCopyTexSubImage
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT,
-                 iWidthHeight, iWidthHeight, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_TYPE, (void*)&v);
+                 iWidthHeight, iWidthHeight, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_DATATYPE, (void*)&v);
   }
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyCubeTexture, "Dummy Cube texture");
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -81,6 +81,10 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyBump2DTexture, "Dummy 2D Normal texture");
   glBindTexture(GL_TEXTURE_2D, 0);
   Gu::getCoreContext()->chkErrRt();
+
+
+  RenderUtils::debugGetRenderState(true,true,false);
+
 }
 TexCache::~TexCache() {
   TexMap::iterator ite = _cache.begin();
@@ -120,8 +124,8 @@ std::shared_ptr<Texture2DSpec> TexCache::getOrLoad(TexFile tc, bool bIsGenerated
 
   return ret;
 }
-std::shared_ptr<Texture2DSpec> TexCache::addAsGeneratedImage(string_t name, const std::shared_ptr<Img32> ss) {
-  std::shared_ptr<Texture2DSpec> pRet = std::make_shared<Texture2DSpec>(name, ss, _pContext);
+std::shared_ptr<Texture2DSpec> TexCache::addGeneratedImage(string_t name, const std::shared_ptr<Img32> ss) {
+  std::shared_ptr<Texture2DSpec> pRet = std::make_shared<Texture2DSpec>(name, TextureFormat::Image4ub, ss, _pContext);
   add(name, pRet);
 
   return pRet;

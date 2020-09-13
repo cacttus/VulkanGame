@@ -44,8 +44,8 @@ public:
   static void setPackage(std::shared_ptr<ApplicationPackage> x) { _pPackage = x; }
   static void setGraphicsApi(std::shared_ptr<GraphicsApi> api);
 
-  static void checkErrorsDbg();
-  static void checkErrorsRt();
+  static void checkErrorsDbg(bool ignore=false);
+  static void checkErrorsRt(bool ignore=false);
   static void debugBreak();
   static void checkMemory();
   static bool isDebug();

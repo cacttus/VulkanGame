@@ -59,7 +59,11 @@ namespace ProjectionMode { typedef enum { Perspective, Orthographic }e; }
 //      GL_RGBA16F, GL_RGBA, GL_FLOAT
 #define SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT GL_RGBA16F
 #define SHADOW_CUBE_MAP_TEX_FORMAT GL_RGBA
-#define SHADOW_CUBE_MAP_TEX_TYPE GL_FLOAT
+#define SHADOW_CUBE_MAP_TEX_DATATYPE GL_FLOAT
+
+#define SHADOW_FRUSTUM_TEX_INTERNAL_FORMAT GL_RGBA16F
+#define SHADOW_FRUSTUM_TEX_FORMAT GL_RGBA
+#define SHADOW_FRUSTUM_TEX_DATATYPE GL_FLOAT
 
 // - Maximum distnace the frustum can project to.
 // The frustum must be guaranteed to never project beyond this number

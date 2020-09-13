@@ -33,6 +33,8 @@
 //Enable_Shared_from_this, shared_ptr, unique_ptr
 #include <memory>
 
+#include <optional>
+
 //For memcpy / memmove
 #include <cstring>
 

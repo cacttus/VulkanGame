@@ -88,11 +88,12 @@ std::vector<std::shared_ptr<Img32>> MtTexPatch::parseImagePatch(std::string file
     BRLogError("Error parsing image patch for file " + file);
   }
 
-  if (false) {
+  bool b=false;
+  if (b) {
     //save images (and master
     Gu::saveImage("./data/cache/saved_9P_master.png", master);
     for (int n = 0; n < ret.size(); ++n) {
-      std::shared_ptr<Texture2DSpec> tex = std::make_shared<Texture2DSpec>(getName(), ret[n], Gu::getCoreContext(), TexFilter::e::Nearest);
+      std::shared_ptr<Texture2DSpec> tex = std::make_shared<Texture2DSpec>(getName(), TextureFormat::Image4ub, ret[n], Gu::getCoreContext(), TexFilter::e::Nearest);
       RenderUtils::saveTexture(std::move(Stz"./data/cache/saved_9P_" + n + ".png"), tex->getGlId(), GL_TEXTURE_2D);
     }
   }
@@ -324,7 +325,7 @@ float MtFont::fontSizeToFontScale(float fs) {
 #pragma endregion
 
 #pragma region MegaTex
-MegaTex::MegaTex(string_t name, std::shared_ptr<GLContext> ct, bool bCache) : Texture2DSpec(name, ct) {
+MegaTex::MegaTex(string_t name, std::shared_ptr<GLContext> ct, bool bCache) : Texture2DSpec(name, TextureFormat::Image4ub, ct) {
   _bCache = bCache;
 }
 MegaTex::~MegaTex() {
@@ -535,7 +536,7 @@ std::shared_ptr<Img32> MegaTex::compile() {
 
   //Now finally create
   BRLogDebug("MegaTex - Creating GPU Texture.");
-  create(_pMaster->getData()->ptr(), iImageSize, iImageSize, false, false, false);
+  create(TextureFormat::Image4ub, _pMaster->getData()->ptr(), iImageSize, iImageSize, false, false, false);
   setFilter(TexFilter::e::Nearest);
 
   _eState = MegaTexCompileState::Compiled;

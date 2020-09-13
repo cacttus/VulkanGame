@@ -100,12 +100,13 @@ private:
       ___logged_ = false;                                                                                 \
     }                                                                                                     \
   }
+  #define BR_LogImportantStr std::string("*\n*\n*\n*\n*\n")
 #define BRLogTODO(x)                                                         \
   {                                                                          \
     static bool ___logged_ = false;                                          \
     if (___logged_ == false) {                                               \
       ___logged_ = true;                                                     \
-      BR2::Gu::getLogger()->logTODO(Stz x, __LINE__, (char* const)__FILE__); \
+      BR2::Gu::getLogger()->logTODO(Stz BR_LogImportantStr + "* " + x + BR_LogImportantStr, __LINE__, (char* const)__FILE__); \
     }                                                                        \
   }
 #endif

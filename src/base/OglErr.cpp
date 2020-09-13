@@ -34,12 +34,12 @@ public:
     }
     return " *GL Error code not recognized.";
   }
-  static bool handleErrors(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
-    SDLUtils::checkSDLErr(doNotLog);
+  static bool handleErrors(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
+    SDLUtils::checkSDLErr(doNotLog || !clearOnly, clearOnly);
 
-    printAndFlushGpuLog(ctx, true, bDoNotBreak, doNotLog, shaderName);
+    printAndFlushGpuLog(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
 
-    return checkOglErr(ctx, bShowNote, bDoNotBreak, doNotLog, shaderName);
+    return checkOglErr(ctx, bShowNote, bDoNotBreak || clearOnly, doNotLog || !clearOnly, shaderName);
   }
   static bool checkOglErr(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
     bool bError = false;
@@ -66,9 +66,9 @@ public:
 
     return bError;
   }
-  static void printAndFlushGpuLog(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
-    //Enable this in engine.cpp
-    //   glEnable(GL_DEBUG_OUTPUT);
+  static void printAndFlushGpuLog(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog,
+                                  const string_t& shaderName, bool clearOnly) {
+    //Enable this in engine.cpp glEnable(GL_DEBUG_OUTPUT);
     if (ctx == nullptr) {
       BRLogWarn("Context not initialized (context isseu");
       return;
@@ -83,10 +83,8 @@ public:
 
     static GLint maxMsgLen = -1;
     if (maxMsgLen == -1) {
-      //avoid doing this every call.
       glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH, &maxMsgLen);
     }
-
     if (maxMsgLen <= 0) {
       BRLogError("GL_MAX_DEBUG_MESSAGE_LENGTH returned 0.");
       maxMsgLen = -2;
@@ -106,10 +104,13 @@ public:
       std::vector<GLuint> ids(numMsgs);
       std::vector<GLsizei> lengths(numMsgs);
 
-      numFound = ctx->glGetDebugMessageLog(
-          numMsgs, (GLsizei)msgData.size(), &sources[0], &types[0], &ids[0], &severities[0], &lengths[0], &msgData[0]);
+      numFound = ctx->glGetDebugMessageLog(numMsgs, (GLsizei)msgData.size(), &sources[0], &types[0],
+                                           &ids[0], &severities[0], &lengths[0], &msgData[0]);
       if (numFound == 0) {
         return;
+      }
+      if (clearOnly) {
+        continue;  //clear messages.
       }
 
       sources.resize(numFound);
@@ -124,110 +125,114 @@ public:
       std::vector<GLchar>::iterator currPos = msgData.begin();
       for (size_t iMsg = 0; iMsg < lengths.size(); ++iMsg) {
         int id = ids[iMsg];
-        if (skipNVIDIA(id)) {
-          return;
-        }
-        string_t strMsg = std::string(currPos, currPos + lengths[iMsg] - 1);
-        string_t shaderMsg = "";
-
-        if (StringUtil::isNotEmpty(shaderName)) {
-          shaderMsg = " -> shader: " + shaderName;
-        }
-        if (doNotLog == false) {
+        if (!skipNVIDIA(id) && !skipATI(id)) {
+          string_t strMsg = std::string(currPos, currPos + lengths[iMsg] - 1);
           GLenum severity = severities[iMsg];
           GLenum type = types[iMsg];
           GLenum source = sources[iMsg];
-          string_t strId = Stz "[" + StringUtil::toHex(id, true) + "]";
-
-          //Skip if the config.xml has turned off this kind of logging.
-          if (severity == GL_DEBUG_SEVERITY_HIGH && graphicsLogHigh == false) {
-            continue;
-          }
-          else if (severity == GL_DEBUG_SEVERITY_MEDIUM && graphicsLogMed == false) {
-            continue;
-          }
-          else if (severity == GL_DEBUG_SEVERITY_LOW && graphicsLogLow == false) {
-            continue;
-          }
-          else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION && graphicsLogInfo == false) {
-            continue;
-          }
-
-          string_t strSev = "";
-          string_t strType = "";
-          string_t strSource = "";
-          GpuLogLevel level = GpuLogLevel::Dbg_;
-          getTypeSevSourceLevel(type, severity, source, strType, strSev, strSource, level);
-
-          //Prevent infinite recursion to dump the rendering state.
-          string_t strStackInfo = "";
-          string_t strRenderState = "";
-          static bool _bPrintingGPULog = false;
-          if (_bPrintingGPULog == false) {
-            _bPrintingGPULog = true;
-            strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : RenderUtils::debugGetRenderState(true, false, false);
-            strStackInfo = (type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : DebugHelper::getStackTrace();  //error prints stack.
-            _bPrintingGPULog = false;
-          }
-          else {
-            strRenderState = " Gpu Log is currently in recursive call, no information can be displayed.";
-            strStackInfo = " Gpu Log is currently in recursive call, no information can be displayed.";
-          }
-
-          strMsg = "GPU_LOG_MSG" + strId + strType + strSev + strSource + OperatingSystem::newline() +
-                   shaderMsg + OperatingSystem::newline() +
-                   " MSG ID: " + strId + OperatingSystem::newline() +
-                   " Msg: " + strMsg + OperatingSystem::newline() +
-                   " Callstack: " + OperatingSystem::newline() +
-                   strStackInfo + OperatingSystem::newline() +
-                   strRenderState;
-
-          if (type == GL_DEBUG_TYPE_ERROR) {
-            BRLogError(strMsg);
-          }
-          else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
-            BRLogInfo(strMsg);
-          }
-          else {
-            BRLogWarn(strMsg);
-          }
+          logGPUMessageText(strMsg, id, shaderName, doNotLog, severity, type, source, graphicsLogHigh, graphicsLogMed, graphicsLogLow, graphicsLogInfo);
         }
-
         currPos = currPos + lengths[iMsg];
       }
     } while (numFound > 0);
   }
+  static void logGPUMessageText(const string_t& cstrMsg, int msgId, const string_t& shaderName, bool doNotLog, GLenum severity,
+                                GLenum type, GLenum source, bool graphicsLogHigh, bool graphicsLogMed, bool graphicsLogLow, bool graphicsLogInfo) {
+    string_t msg = "";
+    string_t shaderMsg = "";
+
+    if (StringUtil::isNotEmpty(shaderName)) {
+      shaderMsg = " -> shader: " + shaderName;
+    }
+    if (doNotLog == false) {
+      string_t strId = Stz "[id=" + StringUtil::toHex(msgId, true) + "]";
+
+      //Skip if the config.xml has turned off this kind of logging.
+      if (severity == GL_DEBUG_SEVERITY_HIGH && graphicsLogHigh == false) {
+        return;
+      }
+      else if (severity == GL_DEBUG_SEVERITY_MEDIUM && graphicsLogMed == false) {
+        return;
+      }
+      else if (severity == GL_DEBUG_SEVERITY_LOW && graphicsLogLow == false) {
+        return;
+      }
+      else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION && graphicsLogInfo == false) {
+        return;
+      }
+
+      string_t strSev = "";
+      string_t strType = "";
+      string_t strSource = "";
+      GpuLogLevel level = GpuLogLevel::Dbg_;
+      getTypeSevSourceLevel(type, severity, source, strType, strSev, strSource, level);
+
+      //Prevent infinite recursion to dump the rendering state.
+      string_t strStackInfo = "";
+      string_t strRenderState = "";
+      static bool _bPrintingGPULog = false;
+      if (_bPrintingGPULog == false) {
+        _bPrintingGPULog = true;
+        strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : RenderUtils::debugGetRenderState(true, false, false);
+        strStackInfo = (type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : DebugHelper::getStackTrace();  //error prints stack.
+        _bPrintingGPULog = false;
+      }
+      else {
+        strRenderState = " RenderState: Gpu Log is currently in recursive call, no information can be displayed.";
+        strStackInfo = " Stack: Gpu Log is currently in recursive call, no information can be displayed.";
+      }
+
+      msg = Stz "GPU_LOG_MSG" + strId + strType + strSev + strSource + OperatingSystem::newline() +
+               shaderMsg + OperatingSystem::newline() +
+               " MSG ID: " + strId + OperatingSystem::newline() +
+               " Msg: " + cstrMsg + OperatingSystem::newline() +
+               " Callstack: " + OperatingSystem::newline() +
+               strStackInfo + OperatingSystem::newline() +
+               strRenderState;
+
+      if (type == GL_DEBUG_TYPE_ERROR) {
+        BRLogError(msg);
+      }
+      else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+        BRLogInfo(msg);
+      }
+      else {
+        BRLogWarn(msg);
+      }
+    }
+  }
   static bool skipNVIDIA(int id) {
-    //GTX670 Driver
-    //NVidia - annoying messages / infos
-    if (id == 0x00020071) {
-      return true;
-    }  // GL_DYANMIC_DRAW or GL_STATIC_DRAW memory usgae
-    else if (id == 0x00020084) {
-      return true;
-    }  // Texture state usage warning: Texture 0 is base level inconsistent. Check texture size.
-    // else if (id == 0x00020061) {
-    //   return true;
-    // }  // Framebuffer detailed info: The driver allocated storage for renderbuffer 1.
-    // else if (id == 0x00020004) {
-    //   return true;
-    // }  // Usage warning: Generic vertex attribute array ... uses a pointer with a small value (...). Is this intended to be used as an offset into a buffer object?
-    // else if (id == 0x00020072) {
-    //   return true;
-    // }  // Buffer performance warning: Buffer object ... (bound to ..., usage hint is GL_STATIC_DRAW) is being copied/moved from VIDEO memory to HOST memory.
-    // else if (id == 0x00020074) {
-    //   return true;
-    // }  // Buffer usage warning: Analysis of buffer object ... (bound to ...) usage indicates that the GPU is the primary producer and consumer of data for this buffer object.  The usage hint s upplied with this buffer object, GL_STATIC_DRAW, is inconsistent with this usage pattern.  Try using GL_STREAM_COPY_ARB, GL_STATIC_COPY_ARB, or GL_DYNAMIC_COPY_ARB instead.
-    // else if (id == 0x00020070) {
-    //   return true;
-    // }  // Total VBO Usage in the system... (Useful information)
-    // else if (id == 0x00020043) {
-    //   return true;
-    // }  // A non-Fullscreen clear caused a fallback from CSAA to MSAA; - probolem in clearing cube shadow buffers
-    //Other (mom's house) driver
-    // else if (id == 0x07) {
-    //   return true;
-    // }  // glLineWidth Deprecated (other driver)
+    //NVidia - redundant messages / infos
+    return id == 0x00020071     // GL_DYANMIC_DRAW or GL_STATIC_DRAW memory usgae
+           || id == 0x00020084  // Texture state usage warning: Texture 0 is base level inconsistent. Check texture size.
+                                // else if (id == 0x00020061) {
+                                //   return true;
+                                // }  // Framebuffer detailed info: The driver allocated storage for renderbuffer 1.
+                                // else if (id == 0x00020004) {
+                                //   return true;
+                                // }  // Usage warning: Generic vertex attribute array ... uses a pointer with a small value (...). Is this intended to be used as an offset into a buffer object?
+                                // else if (id == 0x00020072) {
+                                //   return true;
+                                // }  // Buffer performance warning: Buffer object ... (bound to ..., usage hint is GL_STATIC_DRAW) is being copied/moved from VIDEO memory to HOST memory.
+                                // else if (id == 0x00020074) {
+                                //   return true;
+                                // }  // Buffer usage warning: Analysis of buffer object ... (bound to ...) usage indicates that the GPU is the primary producer and consumer of data for this buffer object.  The usage hint s upplied with this buffer object, GL_STATIC_DRAW, is inconsistent with this usage pattern.  Try using GL_STREAM_COPY_ARB, GL_STATIC_COPY_ARB, or GL_DYNAMIC_COPY_ARB instead.
+                                // else if (id == 0x00020070) {
+                                //   return true;
+                                // }  // Total VBO Usage in the system... (Useful information)
+                                // else if (id == 0x00020043) {
+                                //   return true;
+                                // }  // A non-Fullscreen clear caused a fallback from CSAA to MSAA; - probolem in clearing cube shadow buffers
+                                //Other (mom's house) driver
+                                // else if (id == 0x07) {
+                                //   return true;
+                                // }  // glLineWidth Deprecated (other driver)
+
+        ;
+
+    return false;
+  }
+  static bool skipATI(int id) {
     return false;
   }
   static void getTypeSevSourceLevel(GLenum type, GLenum severity, GLenum source, string_t& strType, string_t& strSev, string_t& strSource, GpuLogLevel& level) {
@@ -294,15 +299,15 @@ public:
     }
   }
 };
-bool OglErr::chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
+bool OglErr::chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   if (Gu::getEngineConfig()->getEnableRuntimeErrorChecking() == true) {
-    return OglErr_Internal::handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName);
+    return OglErr_Internal::handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;
 }
-bool OglErr::chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
+bool OglErr::chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   if (Gu::getEngineConfig()->getEnableDebugErrorChecking() == true) {
-    return OglErr_Internal::handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName);
+    return OglErr_Internal::handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;
 }

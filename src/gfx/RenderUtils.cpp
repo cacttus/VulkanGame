@@ -310,6 +310,13 @@ string_t RenderUtils::debugGetRenderState(bool bForceRun, bool bPrintToStdout, b
   }
   string_t strState = "";
 
+  static bool _bGettingRenderState = false;
+
+  if (_bGettingRenderState == true) {
+    return "Render State tried to be called recursively.";  // Prevent recursive calls.
+  }
+  _bGettingRenderState = true;
+
   // Gd::verifyRenderThread();//We must be in render thread
 
   appendLine(strState, "===================================================================");
@@ -353,6 +360,8 @@ string_t RenderUtils::debugGetRenderState(bool bForceRun, bool bPrintToStdout, b
     string_t fname = FileSystem::getScreenshotFilename();
     saveFramebufferAsPng(std::move(fname));
   }
+
+  _bGettingRenderState = false;
 
   return strState;
 }
@@ -613,11 +622,12 @@ void RenderUtils::debugGetAttribState(string_t& strState) {
   //}
 }
 void RenderUtils::debugGetTextureState(string_t& strState) {
-  appendLine(strState, ("----------------------------------"));
-  appendLine(strState, ("--TEXTURE STATE"));
+  Gu::checkErrorsRt();
+  appendLine(strState, Stz "=========================================");
+  appendLine(strState, Stz "             TEXTURE STATE               ");
+  appendLine(strState, Stz "=========================================");
   GLint iActiveTexture;
   GLint iTextureBindingBuffer;
-  GLint iTextureBinding;  //Texture ID
   GLint iMaxVertexTextureUnits;
   GLint iMaxTextureUnits;
   GLint iMaxCombinedTextureUnits;
@@ -626,46 +636,117 @@ void RenderUtils::debugGetTextureState(string_t& strState) {
   glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &iMaxVertexTextureUnits);
   glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &iMaxTextureUnits);
   glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &iMaxCombinedTextureUnits);
-
+  Gu::checkErrorsRt();
   appendLine(strState, Stz "Active Texture : " + "GL_TEXTURE" + TypeConv::intToStr(iActiveTexture - 0x84c0));
   appendLine(strState, Stz "Current active texture: " + "GL_TEXTURE" + TypeConv::intToStr(iActiveTexture - 0x84C0));
   appendLine(strState, Stz "Max Texture Units: " + iMaxTextureUnits);
   appendLine(strState, Stz "Max Vertex Texture Units: " + iMaxVertexTextureUnits);
   appendLine(strState, Stz "Max Combined Texture Units: " + iMaxCombinedTextureUnits);
   appendLine(strState, Stz "Below are the bound textures Per Texture Channel:");
+
+  appendLine(strState, Stz "----------------All Textures----------------");
+
+  Gu::checkErrorsRt();
+
+  //Get the max id (not sure if this works.)
+  GLuint maxId = 0;
+  glGenTextures(1, &maxId);
+  glDeleteTextures(1, &maxId);
+  Gu::checkErrorsRt();
+
+  //Show all registered texture parameters
+  for (GLuint iTexId = 0; iTexId < maxId; ++iTexId) {
+    if (!glIsTexture(iTexId)) {
+      continue;
+    }
+    Gu::checkErrorsRt();
+
+    string_t texName = Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTexId);
+    Gu::checkErrorsRt();
+
+    GLenum tex_target = Gu::getCoreContext()->getTextureTarget(iTexId);
+    Gu::checkErrorsRt();
+
+    if (tex_target == (GLenum)0) {
+      appendLine(strState, Stz "  " + texName + " - Texture Target information was not handled.");
+    }
+    else {
+      int value = 0;
+      GLint iSavedTextureId = 0;
+      glGetIntegerv(tex_target, &iSavedTextureId);
+      glBindTexture(tex_target, iTexId);
+      {
+//Quick stringify openGL parameter names and their values.
+#define GL_VVAL std::string("(" + TypeConv::intToStr(value) + ")")
+#define GL_VPERR std::string("GL Enum " + (GL_VVAL) + " not found.")
+#define GL_VP0(dx, dy) ((value == dx) ? (std::string(#dx)) : (dy))
+#define GL_TEXPARM(xx, vp)                                          \
+  glGetTexParameteriv(tex_target, xx, &value);                      \
+  appendLine(strState, Stz "    " + std::string(#xx) + " = " + vp); \
+  Gu::checkErrorsRt();
+
+        appendLine(strState, Stz " " + texName + " - ");
+        value = (int)tex_target;
+        appendLine(strState, Stz "  Binding: " + GL_VP0(GL_TEXTURE_1D, GL_VP0(GL_TEXTURE_2D, GL_VP0(GL_TEXTURE_3D, GL_VP0(GL_TEXTURE_RECTANGLE, GL_VP0(GL_TEXTURE_BUFFER, GL_VP0(GL_TEXTURE_CUBE_MAP, GL_VP0(GL_TEXTURE_1D_ARRAY, GL_VP0(GL_TEXTURE_2D_ARRAY, GL_VP0(GL_TEXTURE_CUBE_MAP_ARRAY, GL_VP0(GL_TEXTURE_2D_MULTISAMPLE, GL_VP0(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, GL_VPERR))))))))))));
+        GL_TEXPARM(GL_TEXTURE_MAG_FILTER, GL_VP0(GL_NEAREST, GL_VP0(GL_LINEAR, GL_VPERR)))
+        GL_TEXPARM(GL_TEXTURE_MIN_FILTER, GL_VP0(GL_NEAREST, GL_VP0(GL_LINEAR, GL_VP0(GL_NEAREST_MIPMAP_NEAREST, GL_VP0(GL_LINEAR_MIPMAP_NEAREST, GL_VP0(GL_NEAREST_MIPMAP_LINEAR, GL_VP0(GL_LINEAR_MIPMAP_LINEAR, GL_VPERR)))))))
+        GL_TEXPARM(GL_TEXTURE_MIN_LOD, TypeConv::intToStr(value));
+        GL_TEXPARM(GL_TEXTURE_MAX_LOD, TypeConv::intToStr(value));
+        GL_TEXPARM(GL_TEXTURE_BASE_LEVEL, TypeConv::intToStr(value));
+        GL_TEXPARM(GL_TEXTURE_MAX_LEVEL, TypeConv::intToStr(value));
+        GL_TEXPARM(GL_TEXTURE_WRAP_S, GL_VP0(GL_CLAMP_TO_BORDER, GL_VP0(GL_CLAMP_TO_EDGE, GL_VP0(GL_MIRRORED_REPEAT, GL_VP0(GL_MIRROR_CLAMP_TO_EDGE, GL_VP0(GL_REPEAT, GL_VP0(GL_CLAMP_TO_BORDER, GL_VPERR)))))));
+        GL_TEXPARM(GL_TEXTURE_WRAP_T, GL_VP0(GL_CLAMP_TO_BORDER, GL_VP0(GL_CLAMP_TO_EDGE, GL_VP0(GL_MIRRORED_REPEAT, GL_VP0(GL_MIRROR_CLAMP_TO_EDGE, GL_VP0(GL_REPEAT, GL_VP0(GL_CLAMP_TO_BORDER, GL_VPERR)))))));
+        GL_TEXPARM(GL_TEXTURE_WRAP_R, GL_VP0(GL_CLAMP_TO_BORDER, GL_VP0(GL_CLAMP_TO_EDGE, GL_VP0(GL_MIRRORED_REPEAT, GL_VP0(GL_MIRROR_CLAMP_TO_EDGE, GL_VP0(GL_REPEAT, GL_VP0(GL_CLAMP_TO_BORDER, GL_VPERR)))))));
+        GL_TEXPARM(GL_TEXTURE_BORDER_COLOR, TypeConv::intToStr(value));
+        GL_TEXPARM(GL_TEXTURE_PRIORITY, TypeConv::intToStr(value));
+        GL_TEXPARM(GL_TEXTURE_RESIDENT, GL_VP0(GL_TRUE, GL_VP0(GL_FALSE, GL_VPERR)));
+        GL_TEXPARM(GL_TEXTURE_COMPARE_MODE, GL_VP0(GL_COMPARE_R_TO_TEXTURE, GL_VP0(GL_NONE, GL_VPERR)));
+        GL_TEXPARM(GL_TEXTURE_COMPARE_FUNC, GL_VP0(GL_LEQUAL, GL_VP0(GL_GEQUAL, GL_VP0(GL_LESS, GL_VP0(GL_GREATER, GL_VP0(GL_EQUAL, GL_VP0(GL_NOTEQUAL, GL_VP0(GL_ALWAYS, GL_VP0(GL_NEVER, GL_VPERR)))))))));
+        GL_TEXPARM(GL_DEPTH_TEXTURE_MODE, GL_VP0(GL_LUMINANCE, GL_VP0(GL_INTENSITY, GL_VP0(GL_ALPHA, GL_VPERR))));
+        GL_TEXPARM(GL_GENERATE_MIPMAP, GL_VP0(GL_TRUE, GL_VP0(GL_FALSE, GL_VPERR)));
+      }
+
+      //Restore
+      glBindTexture(tex_target, iSavedTextureId);
+    }
+  }
+
+  appendLine(strState, Stz "----------------Bound Textures----------------");
+
   // - Get bound texture units.
   for (int i = 0; i < iMaxVertexTextureUnits; ++i) {
+    GLint iTextureId = 0;  //Texture ID
     Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0 + i);
     appendLine(strState, Stz "  Channel " + i);
-    glGetIntegerv(GL_TEXTURE_BINDING_1D, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     1D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_1D_ARRAY, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     1D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     2D_MULTISAMPLE_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_3D, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     3D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     BUFFER: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     CUBE_MAP: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
-    iTextureBinding = 0;
-    glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &iTextureBinding);
-    if (iTextureBinding > 0) appendLine(strState, Stz "     RECTANGLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureBinding));
+    glGetIntegerv(GL_TEXTURE_BINDING_1D, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     1D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_1D_ARRAY, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     1D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     2D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     2D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     2D_MULTISAMPLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     2D_MULTISAMPLE_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_3D, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     3D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     BUFFER: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     CUBE_MAP: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    iTextureId = 0;
+    glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &iTextureId);
+    if (iTextureId > 0) appendLine(strState, Stz "     RECTANGLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
   }
 }
 void RenderUtils::debugGetFramebufferAttachmentState(string_t& strState) {

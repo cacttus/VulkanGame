@@ -43,7 +43,7 @@ public:
   virtual ~TexCache() override;
   std::shared_ptr<Texture2DSpec> getOrLoad(TexFile tc, bool bIsGenerated = false, bool bRepeatU = false, bool bRepeatV = false);
   bool add(string_t name, std::shared_ptr<Texture2DSpec> ss, bool bErrorIfFound = true);
-  std::shared_ptr<Texture2DSpec> addAsGeneratedImage(string_t name, const std::shared_ptr<Img32> ss);
+  std::shared_ptr<Texture2DSpec> addGeneratedImage(string_t name, const std::shared_ptr<Img32> ss);
   GLuint getDummy1x1TextureCube() { return _i1x1DummyCubeTexture; }
   GLuint getDummy1x1Texture2D() { return _i1x2Dummy2DTexture; }
   GLuint getDummy1x1NormalTexture2D() { return _i1x1DummyBump2DTexture; }

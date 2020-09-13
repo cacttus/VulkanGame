@@ -285,10 +285,6 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
 
     //2. Forward Rendering
     BRLogTODO("Commented out forward rendering!");
-    BRLogTODO("Commented out forward rendering!");
-    BRLogTODO("Commented out forward rendering!");
-    BRLogTODO("Commented out forward rendering!");
-    BRLogTODO("Commented out forward rendering!");
     if (pipeBits.test(PipeBit::e::Forward)) {
       beginRenderForward();
 
