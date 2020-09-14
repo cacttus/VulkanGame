@@ -64,11 +64,11 @@ target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} vulkan OpenGL::OpenGL SD
 if(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     #set(CPP_FLAGS_GLOBAL " -W -Wall -pedantic -LSDL2 -pthread -static-libgcc -static-libstdc++")
     #-pthread required for std::thread
-    set(CPP_FLAGS_GLOBAL " -pthread ") 
+    set(CPP_FLAGS_GLOBAL " -pthread -msse3 ") 
     # thE DEBUG flag -D_GLIBCXX_DEBUG is from this link - it enables string visualization in vscode. https://github.com/Microsoft/vscode-cpptools/issues/201
     string(APPEND CMAKE_CXX_FLAGS_DEBUG ${CPP_FLAGS_GLOBAL} " -D_DEBUG -D_GLIBCXX_DEBUG ")
-    string(APPEND CMAKE_CXX_FLAGS_RELEASE ${CPP_FLAGS_GLOBAL})
-
+    string(APPEND CMAKE_CXX_FLAGS_RELEASE ${CPP_FLAGS_GLOBAL} " -ftree-vectorize ")
+# -ftree-vectorize = variable vectorization.
     #-rdynamic is required to place all symbols in the table for backtracing unmangled names.
     #-rdynamic is already added in cmake here..
     #string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG "")

@@ -65,8 +65,8 @@ bool TypeConv::strToInt(const string_t& s, int32_t& out) {
   }
   return true;
 }
-int32_t TypeConv::strToInt(const string_t& s) {
-  int32_t ret;
+int_fast32_t TypeConv::strToInt(const string_t& s) {
+  int_fast32_t ret;
   try {
     ret = std::stoi(s);
   } catch (const std::invalid_argument& ia) {
@@ -87,10 +87,10 @@ float TypeConv::strToFloat(const string_t& s) {
   }
   return ret;
 }
-uint32_t TypeConv::strToUint(const string_t& s) {
-  uint32_t ret;
+uint_fast32_t TypeConv::strToUint(const string_t& s) {
+  uint_fast32_t ret;
   try {
-    ret = (uint32_t)std::stoi(s);
+    ret = (uint_fast32_t)std::stoi(s);
   } catch (const std::invalid_argument& ia) {
     BRLogError("strToUint: Invalid argument " + s + "'. ex: " + ia.what());
 
@@ -111,10 +111,10 @@ double TypeConv::strToDouble(const string_t& s) {
   return ret;
 }
 
-int8_t TypeConv::strToByte(const string_t& s) {
-  int32_t i = strToInt(s);
-  return (t_byte)i;
-}
+// int8_t TypeConv::strToByte(const string_t& s) {
+//   int32_t i = strToInt(s);
+//   return (t_byte)i;
+// }
 
 //int32_t strToInt( t_string& s, bool bFailed ){
 //    char* endPtr;
@@ -140,19 +140,19 @@ double TypeConv::strToDouble(const string_t& s, bool bFailed) {
 
 //////////////////////////////////////////////////////////////////////////
 //ToStr
-string_t TypeConv::intToStr(const int32_t i) {
+// string_t TypeConv::int32ToStr(const int_fast32_t i) {
+//   string_t ret = string_t(std::to_string(i));
+//   return ret;
+// }
+// string_t TypeConv::uint32ToStr(const uint_fast32_t i) {
+//   string_t ret = string_t(std::to_string(i));
+//   return ret;
+// }
+string_t TypeConv::intToStr(int_fast64_t i) {
   string_t ret = string_t(std::to_string(i));
   return ret;
 }
-string_t TypeConv::intToStr(const uint32_t i) {
-  string_t ret = string_t(std::to_string(i));
-  return ret;
-}
-string_t TypeConv::intToStr(const int64_t i) {
-  string_t ret = string_t(std::to_string(i));
-  return ret;
-}
-string_t TypeConv::intToStr(const uint64_t i) {
+string_t TypeConv::uintToStr(uint_fast64_t i) {
   string_t ret = string_t(std::to_string(i));
   return ret;
 }
@@ -168,22 +168,22 @@ string_t TypeConv::sizetToStr(const size_t i) {
   string_t ret = string_t(std::to_string(i));
   return ret;
 }
-string_t TypeConv::longToStr(const long& i) {
-  string_t ret = string_t(std::to_string(i));
-  return ret;
-}
-string_t TypeConv::ulongToStr(const unsigned long& i) {
-  string_t ret = string_t(std::to_string(i));
-  return ret;
-}
-string_t TypeConv::int64ToStr(const int64_t& i) {
-  string_t ret = string_t(std::to_string(i));
-  return ret;
-}
-string_t TypeConv::uint64ToStr(const uint64_t& i) {
-  string_t ret = string_t(std::to_string(i));
-  return ret;
-}
+// string_t TypeConv::longToStr(const long& i) {
+//   string_t ret = string_t(std::to_string(i));
+//   return ret;
+// }
+// string_t TypeConv::ulongToStr(const unsigned long& i) {
+//   string_t ret = string_t(std::to_string(i));
+//   return ret;
+// }
+// string_t TypeConv::int64ToStr(const int_fast64_t& i) {
+//   string_t ret = string_t(std::to_string(i));
+//   return ret;
+// }
+// string_t TypeConv::uint64ToStr(const uint_fast64_t& i) {
+//   string_t ret = string_t(std::to_string(i));
+//   return ret;
+// }
 
 string_t TypeConv::wstrToStr(wchar_t* wstr) {
   string_t ret;
@@ -205,7 +205,7 @@ string_t TypeConv::wstrToStr(wchar_t* wstr) {
 //    return t_string((char*)buf);
 //}
 
-string_t TypeConv::intToStr(const int32_t i, const char* const fmt) {
+string_t TypeConv::intToStr(const int_fast64_t i, const char* const fmt) {
   int32_t cpy = i;
   char buf[32];
   snprintf((char*)buf, 32, fmt, i);

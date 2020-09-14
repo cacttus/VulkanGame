@@ -25,14 +25,14 @@ string_t DateTime::getAsString() {
   string_t ret = DateTime::getDateTime().toString();
   return ret;
 }
-DateTime DateTime::fromMilliseconds(uint64_t in_ms) {
+DateTime DateTime::fromMilliseconds(uint_fast64_t in_ms) {
   //Test
   Gu::debugBreak();
 
-  uint32_t hh = in_ms % (60 * 60 * 60 * 1000) / (60 * 60 * 1000);
-  uint32_t mm = in_ms % (60 * 60 * 1000) / (60 * 1000);
-  uint32_t ss = in_ms % (60 * 1000) / (1000);
-  uint32_t ms = in_ms % (1000);
+  uint_fast32_t hh = in_ms % (60 * 60 * 60 * 1000) / (60 * 60 * 1000);
+  uint_fast32_t mm = in_ms % (60 * 60 * 1000) / (60 * 1000);
+  uint_fast32_t ss = in_ms % (60 * 1000) / (1000);
+  uint_fast32_t ms = in_ms % (1000);
 
   tm tt;
   tt.tm_hour = hh;

@@ -265,7 +265,7 @@ mat4 ObjFile::parseMat4(BinaryFile& bf) {
   // - Parse csv matrix string.
   string_t mat_str = bf.getTok();
   mat4 mOut;
-  mat4::parse(mat_str, mOut);
+  mat4::parse(mat_str.c_str(), mOut);
   return mOut;
 }
 

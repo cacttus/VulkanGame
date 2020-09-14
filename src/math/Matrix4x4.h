@@ -20,18 +20,16 @@ namespace BR2 {
 *  64 Bytes
 *  8 byte aligned
 */
-class Matrix4x4 : public PureMemory {
+class Matrix4x4 {
 public:
   float
-      _m11,
-      _m12, _m13, _m14,
+      _m11, _m12, _m13, _m14,
       _m21, _m22, _m23, _m24,
       _m31, _m32, _m33, _m34,
       _m41, _m42, _m43, _m44;
 
   FORCE_INLINE Matrix4x4();
   FORCE_INLINE Matrix4x4(float* mat);
-  FORCE_INLINE NOT_VIRTUAL ~Matrix4x4() DOES_NOT_OVERRIDE {}
 
   FORCE_INLINE float& Mat(size_t i) { return (float&)*((float*)(this) + i); }
   const FORCE_INLINE float& Mat(size_t i) const { return (float&)*((float*)(this) + i); }
@@ -127,7 +125,7 @@ public:
 
   FORCE_INLINE void decompose(vec4& pos, mat4& rot, vec4& scale) const;
   FORCE_INLINE void decompose(vec4& pos, vec4& rot, vec4& scale, bool bDegreeRotation = false) const;
-};
+} CACHE_ALIGN_16 ;
 
 FORCE_INLINE Matrix4x4::Matrix4x4() {
 }

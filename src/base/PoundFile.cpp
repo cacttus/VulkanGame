@@ -205,7 +205,7 @@ void PoundFile::showMessageOnFailure(bool b) {
 
 mat4 PoundFile::parseMat4(string_t tok) {
   mat4 m;
-  mat4::parse(tok, m);
+  mat4::parse(tok.c_str(), m);
   return m;
 }
 bool PoundFile::parsePrs(string_t tok, vec3& pos, vec4& rot, vec3& scl) {

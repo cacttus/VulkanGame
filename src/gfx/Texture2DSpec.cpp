@@ -17,6 +17,7 @@ Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<G
 }
 Texture2DSpec::Texture2DSpec(string_t name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV) : _pContext(ctx) {
   _strName = name;
+  _eFormat = TextureFormat::Image4ub;
   loadPng(loc, bRepeatU, bRepeatV);
 }
 Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : _pContext(ctx) {

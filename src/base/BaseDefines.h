@@ -17,7 +17,7 @@ namespace BR2 {
 #define SHADOWS
 
 //Note: Linux: this is defined in limits.h but doesn't account for actual BUFFER SIZES for wchar.
-#define BRO_MAX_PATH ((PATH_MAX) * 2)
+#define BRO_MAX_PATH ((PATH_MAX)*2)
 //std::char_traits<wchar_t>::length (dimObjPrefix);
 
 #define DEL_MEM(x) \
@@ -43,6 +43,16 @@ namespace BR2 {
 #define OVERRIDE override
 #define NOT_VIRTUAL
 #define FORCE_INLINE inline
+#define CONST_EXPR constexpr
+#ifdef BR2_OS_WINDOWS
+#define CACHE_ALIGN_16 __declspec(align(16))
+#elif defined(BR2_OS_LINUX)
+#define CACHE_ALIGN_16 __attribute__ ((aligned(16)))
+#else
+#define CACHE_ALIGN CACHE_ALIGN_16
+
+OS_METHOD_NOT_IMPLEMENTED
+#endif
 #define STATIC static
 #ifndef __inout_
 #define __inout_

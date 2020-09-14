@@ -16,7 +16,7 @@ namespace BR2 {
 *  @brief 4 Component Generic vector
 */
 template < class Tx >
-class Vec4x : public PureMemory {
+class Vec4x {
 public:
   Tx x, y, z, w;
 
@@ -30,7 +30,6 @@ public:
   FORCE_INLINE Vec4x<Tx>(const Vec4i& rhs);
   FORCE_INLINE Vec4x<Tx>(const Vec4ui& rhs);
   FORCE_INLINE Vec4x<Tx>(const Vec4f& rhs);
-  FORCE_INLINE NOT_VIRTUAL ~Vec4x<Tx>() DOES_NOT_OVERRIDE {}
 
   //Aliases
   FORCE_INLINE Tx& r() { return x; }
@@ -157,7 +156,7 @@ public:
     }
   };
 
-};
+} CACHE_ALIGN_16 ;
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 template < class Tx >

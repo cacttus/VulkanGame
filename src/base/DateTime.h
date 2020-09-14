@@ -61,8 +61,8 @@ public:
   static int hour();                                         // - Get the current hour.
   static int minute();                                       // - Get the current minute.
   static int second();                                       // - Get the current second.
-  static string_t getTimeString(int64_t milliseconds = -1);  //time as string. hh:mm:ss:uuuu
-  static DateTime fromMilliseconds(uint64_t milliseconds);   //time as string. hh:mm:ss:uuuu
+  static string_t getTimeString(int_fast64_t milliseconds = -1);  //time as string. hh:mm:ss:uuuu
+  static DateTime fromMilliseconds(uint_fast64_t milliseconds);   //time as string. hh:mm:ss:uuuu
 };
 
 }  // namespace BR2
