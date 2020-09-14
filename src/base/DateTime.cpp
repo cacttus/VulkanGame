@@ -63,12 +63,12 @@ string_t DateTime::toString() {
 }
 string_t DateTime::dateToStr(const string_t &delim) {
   string_t ret;
-  if (this->_day >= 0) {
-    ret += TypeConv::intToStr(this->_day);
-    ret += delim;
-  }
   if (this->_month >= 0) {
     ret += TypeConv::intToStr(this->_month);
+    ret += delim;
+  }
+  if (this->_day >= 0) {
+    ret += TypeConv::intToStr(this->_day);
     ret += delim;
   }
   if (this->_year >= 0) {

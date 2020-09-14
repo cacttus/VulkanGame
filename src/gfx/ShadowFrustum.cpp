@@ -159,10 +159,12 @@ void ShadowFrustum_Internal::cullObjectsAsync(CullParams& cp) {
 void ShadowFrustum_Internal::createFbo() {
   deleteFbo();
 
+  string_t label = "ShadowMap_Frustum";
+
   RenderUtils::debugGetRenderState();
   // Create the depth buffer
   GLenum depth = RenderUtils::getSupportedDepthSize();
-  RenderUtils::createDepthTexture(&_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
+  RenderUtils::createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
 
   //Bind framebuffer and attach depth texture.
   Gu::getCoreContext()->glGenFramebuffers(1, &_glFrameBufferId);
@@ -171,7 +173,8 @@ void ShadowFrustum_Internal::createFbo() {
   Gu::checkErrorsRt();
 
   // Create the cube map
-  glGenTextures(1, &_glShadowMapId);
+  Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
+  Gu::getCoreContext()->glGenTextures(1, &_glShadowMapId);
   glBindTexture(GL_TEXTURE_2D, _glShadowMapId);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -192,6 +195,10 @@ void ShadowFrustum_Internal::createFbo() {
   //                 0, 0, 0, _iFboWidthPixels, _iFboHeightPixels,
   //                 SHADOW_FRUSTUM_TEX_FORMAT, SHADOW_FRUSTUM_TEX_DATATYPE,
   //                 nullptr);
+
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _glShadowMapId, label);
+
+  //GL_FRAMEBUFFER_SRGB
   glTexImage2D(GL_TEXTURE_2D, 0, SHADOW_FRUSTUM_TEX_INTERNAL_FORMAT,
                _iFboWidthPixels, _iFboHeightPixels, 0, SHADOW_FRUSTUM_TEX_FORMAT, SHADOW_FRUSTUM_TEX_DATATYPE, nullptr);
   Gu::getCoreContext()->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _glShadowMapId, 0);
@@ -239,8 +246,8 @@ void ShadowFrustum_Internal::copyAndBlendToShadowMap(std::shared_ptr<ShadowFrust
 
   if (pBox->getGlTexId() != 0) {
     Gu::getCoreContext()->glCopyImageSubData(_glShadowMapId, GL_TEXTURE_2D, 0, 0, 0, 0  //xyZ
-                                                                                   ,
-                                                                                   pBox->getGlTexId(), GL_TEXTURE_2D, 0, 0, 0, 0, _iFboWidthPixels, _iFboHeightPixels, 0);
+                                             ,
+                                             pBox->getGlTexId(), GL_TEXTURE_2D, 0, 0, 0, 0, _iFboWidthPixels, _iFboHeightPixels, 0);
     Gu::checkErrorsDbg();
   }
 }

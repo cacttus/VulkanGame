@@ -35,6 +35,9 @@
 
 #include <optional>
 
+//int_fast32_t
+//#include <typeinfo>
+
 //For memcpy / memmove
 #include <cstring>
 

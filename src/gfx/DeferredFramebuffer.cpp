@@ -14,7 +14,7 @@
 namespace BR2 {
 DeferredFramebuffer::DeferredFramebuffer(std::shared_ptr<GLContext> pc, uint32_t iWidth, uint32_t iHeight, bool bMultisample,
   uint32_t nSamples, vec4& vClear) :
-  FramebufferBase(pc, bMultisample, nSamples, vClear) {
+  FramebufferBase("Deferred_FBO",pc, bMultisample, nSamples, vClear) {
   _bMultisample = bMultisample;
   _nMsaaSamples = nSamples;
 
@@ -56,7 +56,7 @@ void DeferredFramebuffer::init(int32_t w, int32_t h, std::shared_ptr<BufferRende
 
   checkFramebufferComplete();
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId, "Deferred-FBO");
+  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId, this->getLabel());
 
 
   getContext()->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

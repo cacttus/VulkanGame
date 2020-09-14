@@ -54,10 +54,8 @@ string_t ShaderSubProgram::getHumanReadableErrorString() const {
   }
   return str;
 }
-void ShaderSubProgram::debugPrintShaderSource() const {
-  string_t str = "\n";
-  str += Stz "Source For: " + _sourceLocation;
-  str += "\n";
+string_t ShaderSubProgram::debugGetFullShaderSource() const {
+  string_t str = "";
   for (size_t iLine = 0; iLine < _sourceLines.size(); ++iLine) {
     str += string_t(StringUtil::getZeroPaddedNumber((int32_t)iLine + 0, 4));
     str += " ";
@@ -68,6 +66,13 @@ void ShaderSubProgram::debugPrintShaderSource() const {
     }
     str += string_t("\n");
   }
+  return str;
+}
+void ShaderSubProgram::debugPrintShaderSource() const {
+  string_t str = "\n";
+  str += Stz "Source For: " + _sourceLocation;
+  str += "\n";
+  str += debugGetFullShaderSource();
   BRLogDebug(str);
 }
 ShaderType::e ShaderSubProgram::getShaderTypeByFileLocation(DiskLoc& loc) {

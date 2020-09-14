@@ -71,10 +71,12 @@ ShadowBox_Internal::~ShadowBox_Internal() {
 void ShadowBox_Internal::createFbo() {
   deleteFbo();
 
+  string_t label = "ShadowMap_Cube";
+
   RenderUtils::debugGetRenderState();
   // Create the depth buffer
   GLenum depth = RenderUtils::getSupportedDepthSize();
-  RenderUtils::createDepthTexture(&_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
+  RenderUtils::createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
 
   //Bind framebuffer and attach depth texture.
   Gu::getCoreContext()->glGenFramebuffers(1, &_glFrameBufferId);
@@ -83,7 +85,8 @@ void ShadowBox_Internal::createFbo() {
   Gu::checkErrorsRt();
 
   // Create the cube map
-  glGenTextures(1, &_glShadowCubeMapId);
+  Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
+  Gu::getCoreContext()->glGenTextures(1, &_glShadowCubeMapId);
   glBindTexture(GL_TEXTURE_CUBE_MAP, _glShadowCubeMapId);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -101,7 +104,7 @@ void ShadowBox_Internal::createFbo() {
   //   When using glTexStorage2D instead of glTexImage2D, you should call glTexStorage2D once with the target
   //    GL_TEXTURE_CUBE_MAP, then make calls to glTexSubImage2D to upload data for each face.
   //int num_Mipmaps = Texture2DSpec::generateMipmapLevels(_iFboWidthPixels, _iFboHeightPixels);
-//  Gu::getCoreContext()->glTexStorage2D(GL_TEXTURE_CUBE_MAP, num_Mipmaps, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT, _iFboWidthPixels, _iFboHeightPixels);
+  //  Gu::getCoreContext()->glTexStorage2D(GL_TEXTURE_CUBE_MAP, num_Mipmaps, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT, _iFboWidthPixels, _iFboHeightPixels);
   //Note make sure these match the other FBOs
   for (int i = 0; i < 6; ++i) {
     //Note values here must match ShadowBox due to glCopyTexSubImage
@@ -113,6 +116,7 @@ void ShadowBox_Internal::createFbo() {
     //                 nullptr);
   }
   Gu::checkErrorsRt();
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _glShadowCubeMapId, label);
 
   Gu::getCoreContext()->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X, _glShadowCubeMapId, 0);
   Gu::checkErrorsRt();
@@ -130,6 +134,7 @@ void ShadowBox_Internal::createFbo() {
   Gu::checkErrorsRt();
 
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);  //Renderbuffer is currently bound.
   Gu::checkErrorsRt();
 
   // Disable writes to the color buffer
@@ -341,16 +346,16 @@ void ShadowBox::copyAndBlendToShadowMap(std::shared_ptr<ShadowBox> pBox) {
     }
     else {
       Gu::getCoreContext()->glCopyImageSubData(_pint->_glShadowCubeMapId  //FROM
-                                                                                     ,
-                                                                                     GL_TEXTURE_CUBE_MAP  //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
-                                                                                     ,
-                                                                                     0, 0, 0, 0  //xyZ
-                                                                                     ,
-                                                                                     pBox->getGlTexId()  //TO
-                                                                                     ,
-                                                                                     GL_TEXTURE_CUBE_MAP  //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
-                                                                                     ,
-                                                                                     0, 0, 0, 0, _pint->_iFboWidthPixels, _pint->_iFboHeightPixels, 6);
+                                               ,
+                                               GL_TEXTURE_CUBE_MAP  //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
+                                               ,
+                                               0, 0, 0, 0  //xyZ
+                                               ,
+                                               pBox->getGlTexId()  //TO
+                                               ,
+                                               GL_TEXTURE_CUBE_MAP  //GL_TEXTURE_CUBE_MAP_POSITIVE_X+iFace
+                                               ,
+                                               0, 0, 0, 0, _pint->_iFboWidthPixels, _pint->_iFboHeightPixels, 6);
     }
     Gu::checkErrorsDbg();
   }

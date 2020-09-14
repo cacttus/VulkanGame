@@ -20,20 +20,20 @@ StringUtil::StringUtil() {
 }
 StringUtil::~StringUtil() {
 }
-int32_t StringUtil::compare(const string_t a, const string_t b) {
+int32_t StringUtil::compare(const string_t& a, const string_t& b) {
   return a.compare(b);
 }
 bool StringUtil::charIsLetterOrNumber(char c) {
   int r = isalnum(c);
   return r != 0;
 }
-bool StringUtil::isEmpty(const string_t str) {
+bool StringUtil::isEmpty(const string_t& str) {
   return str.compare(string_t("")) == 0;
 }
-bool StringUtil::isNotEmpty(const string_t str) {
+bool StringUtil::isNotEmpty(const string_t& str) {
   return !StringUtil::isEmpty(str);
 }
-char* StringUtil::getBufferCopy(const string_t str) {
+char* StringUtil::getBufferCopy(const string_t& str) {
   char* buf = new char[str.length() + 1];
   memcpy(buf, str.c_str(), str.length());
   buf[str.length()] = 0;
@@ -61,7 +61,7 @@ string_t StringUtil::createStringFromChars(char* c1, ...) {
   return str;
 }
 // - Returns the Lowercase.
-string_t StringUtil::uppercase(const string_t in) {
+string_t StringUtil::uppercase(const string_t& in) {
   string_t out = "";
   for (size_t n = 0; n < in.length(); ++n) {
     out += toupper(in[n]);
@@ -70,7 +70,7 @@ string_t StringUtil::uppercase(const string_t in) {
   return out;
 }
 // - Returns the Lowercase.
-string_t StringUtil::lowercase(const string_t in) {
+string_t StringUtil::lowercase(const string_t& in) {
   string_t str2(in);
   std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
   return str2;
@@ -97,7 +97,7 @@ bool StringUtil::isWspaceEx(int c)  //iswspace with newlines and unprintable cha
 bool StringUtil::isNewline(int c) {
   return ((c == '\r') || (c == '\n'));
 }
-string_t StringUtil::trimBeg(string_t s) {
+string_t StringUtil::trimBeg(const string_t& s) {
   string_t e = s;
   while (e.length() && isWspaceEx(e.at(0))) {
     if (e.length() == 1) {
@@ -110,7 +110,7 @@ string_t StringUtil::trimBeg(string_t s) {
   }
   return e;
 }
-string_t StringUtil::trimEnd(string_t s) {
+string_t StringUtil::trimEnd(const string_t& s) {
   string_t e = s;
   while (e.length() && isWspaceEx(e.at(e.length() - 1))) {
     if (e.length() == 1) {
@@ -123,20 +123,20 @@ string_t StringUtil::trimEnd(string_t s) {
   }
   return e;
 }
-string_t StringUtil::trim(string_t s) {
+string_t StringUtil::trim(const string_t& s) {
   string_t e;
   e = StringUtil::trimBeg(s);
   e = StringUtil::trimEnd(e);
 
   return e;
 }
-string_t StringUtil::stripDoubleQuotes(string_t lc) {
+string_t StringUtil::stripDoubleQuotes(const string_t& lc) {
   return stripAllChars(lc, '\"');
 }
-string_t StringUtil::trimDoubleQuotes(string_t lc) {
+string_t StringUtil::trimDoubleQuotes(const string_t& lc) {
   return trim(lc, '\"');
 }
-string_t StringUtil::stripAllChars(string_t lc, char ch) {
+string_t StringUtil::stripAllChars(const string_t& lc, char ch) {
   string_t x = lc;
   string_t::size_type last = 0;
   string_t::size_type off = 0;
@@ -218,7 +218,7 @@ string_t StringUtil::getPaddedNumber(int32_t number, int32_t maxNumberOfChars, c
   }
   return ret;
 }
-string_t StringUtil::repeat(string_t strToRepeat, int32_t nRepeats) {
+string_t StringUtil::repeat(const string_t& strToRepeat, int32_t nRepeats) {
   string_t ret;
   for (int32_t i = 0; i < nRepeats; ++i) {
     ret.append(strToRepeat);
@@ -231,13 +231,13 @@ string_t StringUtil::empty() {
 string_t StringUtil::emptyString() {
   return string_t("");
 }
-bool StringUtil::equals(string_t a, string_t b) {
+bool StringUtil::equals(const string_t& a, const string_t& b) {
   return StringUtil::compare(a, b) == 0;
 }
-bool StringUtil::doesNotEqual(string_t a, string_t b) {
+bool StringUtil::doesNotEqual(const string_t& a, const string_t& b) {
   return !StringUtil::equals(a, b);
 }
-bool StringUtil::equalsi(string_t a, string_t b) {
+bool StringUtil::equalsi(const string_t& a, const string_t& b) {
   if (a.length() != b.length()) {
     return false;
   }
@@ -248,7 +248,7 @@ bool StringUtil::equalsi(string_t a, string_t b) {
   }
   return true;
 }
-string_t StringUtil::replaceAll(string_t str, char charToRemove, char charToAdd) {
+string_t StringUtil::replaceAll(const string_t& str, char charToRemove, char charToAdd) {
   string_t::size_type x = 0;
   string_t ret = str;
   string_t ch;
@@ -259,7 +259,7 @@ string_t StringUtil::replaceAll(string_t str, char charToRemove, char charToAdd)
   }
   return ret;
 }
-string_t StringUtil::replaceAll(string_t str, string_t strToRemove, string_t strToAdd) {
+string_t StringUtil::replaceAll(const string_t& str, const string_t& strToRemove, const string_t& strToAdd) {
   string_t::size_type x = 0;
   string_t ret = str;
   while ((x = ret.find(strToRemove, x)) != string_t::npos) {
@@ -268,27 +268,27 @@ string_t StringUtil::replaceAll(string_t str, string_t strToRemove, string_t str
   }
   return ret;
 }
-string_t StringUtil::trim(string_t astr, char trimch) {
+string_t StringUtil::trim(const string_t& astr, char trimch) {
   string_t str = astr;
   str = trimBeg(str, trimch);
   str = trimEnd(str, trimch);
   return str;
 }
-string_t StringUtil::trimBeg(string_t astr, char trimch) {
+string_t StringUtil::trimBeg(const string_t& astr, char trimch) {
   string_t str = astr;
   while (str.length() && str.at(0) == trimch) {
     str = str.substr(1, str.length() - 1);
   }
   return str;
 }
-string_t StringUtil::trimEnd(string_t astr, char trimch) {
+string_t StringUtil::trimEnd(const string_t& astr, char trimch) {
   string_t str = astr;
   while (str.length() && str.at(str.length() - 1) == trimch) {
     str = str.substr(0, str.length() - 1);
   }
   return str;
 }
-string_t StringUtil::addCommasToNumber(string_t __in_ str) {
+string_t StringUtil::addCommasToNumber(const string_t& __in_ str) {
   string_t ret;
 
   if (str.length() <= 3)
@@ -325,7 +325,7 @@ string_t StringUtil::toDec(int value) {
   ss << std::hex << value;
   return ss.str();
 }
-bool StringUtil::isDelim(char c, string_t delims) {
+bool StringUtil::isDelim(char c, const string_t& delims) {
   return (delims.find(c) != string_t::npos);
 }
 bool StringUtil::isChar(char c) {
@@ -383,12 +383,12 @@ string_t StringUtil::getEscapedCharLiteral(char c) {
 *  @fn
 *  @brief Split the string with a delim.
 */
-std::vector<string_t> StringUtil::split(const string_t in, char del) {
+std::vector<string_t> StringUtil::split(const string_t& in, char del) {
   std::vector<string_t> ret;
   split(in, del, ret);
   return ret;
 }
-void StringUtil::split(const string_t in, char del, std::vector<string_t>& __out_ ret) {
+void StringUtil::split(const string_t& in, char del, std::vector<string_t>& __out_ ret) {
   string_t tbuf = "";
   for (size_t n = 0; n < in.length(); ++n) {
     if (in[n] == del) {
@@ -401,12 +401,12 @@ void StringUtil::split(const string_t in, char del, std::vector<string_t>& __out
   if (tbuf.length())
     ret.push_back(tbuf);
 }
-std::vector<string_t> StringUtil::split(const string_t in, const std::vector<char>& dels) {
+std::vector<string_t> StringUtil::split(const string_t& in, const std::vector<char>& dels) {
   std::vector<string_t> v;
   split(in, dels, v);
   return v;
 }
-void StringUtil::split(string_t __in_ in, const std::vector<char>& __in_ dels, std::vector<string_t>& __out_ ret) {
+void StringUtil::split(const string_t& __in_ in, const std::vector<char>& __in_ dels, std::vector<string_t>& __out_ ret) {
   string_t tbuf = "";
   //std::vector<t_string> ret;
   bool bDel;
@@ -426,7 +426,7 @@ void StringUtil::split(string_t __in_ in, const std::vector<char>& __in_ dels, s
     ret.push_back(tbuf);
   }
 }
-string_t::size_type StringUtil::findFirstOf(string_t sin, const std::vector<char>& chars) {
+string_t::size_type StringUtil::findFirstOf(const string_t& sin, const std::vector<char>& chars) {
   string_t::size_type ret = string_t::npos;
   for (size_t i = 0; i < chars.size(); ++i) {
     ret = sin.find(chars[i]);
@@ -436,7 +436,7 @@ string_t::size_type StringUtil::findFirstOf(string_t sin, const std::vector<char
   }
   return ret;
 }
-string_t StringUtil::removeNewline(string_t str) {
+string_t StringUtil::removeNewline(const string_t& str) {
   string_t out = str;
 
   if (out.length() == 0) {
@@ -461,7 +461,7 @@ string_t StringUtil::removeNewline(string_t str) {
   return out;
 }
 
-string_t StringUtil::appendLine(string_t str, string_t toAppend) {
+string_t StringUtil::appendLine(string_t& str, const string_t& toAppend) {
   str = str + toAppend + OperatingSystem::newline();
   return str;
 }
@@ -476,10 +476,10 @@ string_t StringUtil::generate() {
   }
   return ret;
 }
-bool StringUtil::contains(string_t a, string_t b) {
+bool StringUtil::contains(const string_t& a, const string_t& b) {
   return a.find(b) != std::string::npos;
 }
-string_t StringUtil::format(string_t aft, ...) {
+string_t StringUtil::format(const string_t& aft, ...) {
   string_t strRet;
   va_list args;
   va_start(args, aft);
@@ -487,7 +487,7 @@ string_t StringUtil::format(string_t aft, ...) {
   va_end(args);
   return strRet;
 }
-string_t StringUtil::formatVa(string_t aft, va_list args) {
+string_t StringUtil::formatVa(const string_t& aft, va_list args) {
   string_t strRet = "";
   //he vsnprintf function returns the number of characters written, not counting the terminating null character.
   int nCount = vsnprintf(nullptr, 0, aft.c_str(), args);
@@ -503,7 +503,7 @@ string_t StringUtil::formatVa(string_t aft, va_list args) {
 
   return strRet;
 }
-string_t StringUtil::join(string_t delim, std::vector<string_t>& strings) {
+string_t StringUtil::join(const string_t& delim, std::vector<string_t>& strings) {
   string_t ret = "";
   string_t del = "";
 
@@ -520,7 +520,7 @@ string_t StringUtil::join(string_t delim, std::vector<string_t>& strings) {
 *   @param use_spaces - Use space instead of tab (\t)
 *   @param tab_newlines - Tab the string on newlines.  If False only the beginning of the string is tabified (kind of useless).
 */
-string_t StringUtil::tabify(string_t str_to_tabify, int number_of_tabs, bool use_spaces, bool tab_newlines, LineBreak lineBreak) {
+string_t StringUtil::tabify(const string_t& str_to_tabify, int number_of_tabs, bool use_spaces, bool tab_newlines, LineBreak lineBreak) {
   string_t ret = str_to_tabify;
 
   string_t linebreak = "";

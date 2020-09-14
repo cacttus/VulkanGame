@@ -38,7 +38,7 @@ public:
 
   static void saveTexture(string_t&& strLoc, GLuint iGLTexId, GLenum eTexTarget, int iCubeMapSide = -1);  // Saves a GL texture by ID to the file path.
   static void saveFramebufferAsPng(string_t&& strLoc, GLuint iFBOId = 0);                                 // Saves a GL texture by ID to the file path.
-  static void createDepthTexture(GLuint* __out_ texId, int32_t w, int32_t h, bool bMsaaEnabled, int32_t nMsaaSamples, GLenum eRequestedDepth);
+  static void createDepthTexture(const string_t& owner, GLuint* __out_ texId, int32_t w, int32_t h, bool bMsaaEnabled, int32_t nMsaaSamples, GLenum eRequestedDepth);
   //static void createDepthTexture(GLuint& __out_ texId, int w, int h, GLenum depthSize);
   static void getCompatibleDepthComponent(GLenum eRequestedDepth, std::function<void(GLenum)> func);
 

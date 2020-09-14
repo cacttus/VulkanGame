@@ -173,7 +173,7 @@ void ShaderMaker::deleteShader(std::shared_ptr<ShaderBase> ps) {
     if (it != _mapPrograms.end()) {
       _mapPrograms.erase(it);
     }
-    // delete ps;
+    // delete ps; automatic via shared_ptr
   }
 }
 void ShaderMaker::fullyQualifyFiles(std::vector<string_t>& vecFiles) {
@@ -368,7 +368,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
   }
 
   for (std::shared_ptr<ShaderSubProgram> subProg : pProgram->getSubPrograms()) {  //size_t i = 0; i<pProgram->_vecSubPrograms.size(); ++i) {
-    std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glAttachShader(pProgram->getGlId(), subProg->getGlId());
+    Gu::getCoreContext()->glAttachShader(pProgram->getGlId(), subProg->getGlId());
     GLuint err = glGetError();
 
     if (err != GL_NO_ERROR) {
@@ -390,7 +390,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
   }
 
   // - Link the program.
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glLinkProgram(pProgram->getGlId());
+  Gu::getCoreContext()->glLinkProgram(pProgram->getGlId());
   pProgram->setProgramStatus(ShaderStatus::Linked);
 
   // - Add all remaining errors from the GL
@@ -403,7 +403,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
 
   // - Try to use it to see if we get an error, if so exit out.
   //Do not use Gd::BindSHader here -- this might fail.
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glUseProgram(pProgram->getGlId());
+  Gu::getCoreContext()->glUseProgram(pProgram->getGlId());
   GLenum ex = glGetError();
   if (ex != GL_NO_ERROR) {
     string_t str = "";

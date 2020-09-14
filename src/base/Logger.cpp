@@ -151,7 +151,7 @@ void Logger_Internal::processLogs_Async() {
 
   string_t appended = "";
   Logger_Internal::LogLevel level;
-  for(size_t iMsg=0; iMsg<logs.size(); ++iMsg){
+  for (size_t iMsg = 0; iMsg < logs.size(); ++iMsg) {
     appended += logs[iMsg];
     level = logLevels[iMsg];
     if (_bLogToConsole) {
@@ -213,7 +213,7 @@ Logger::~Logger() {
   _pint = nullptr;
 }
 void Logger::init(string_t cache) {
-  _pint->_logFileName = "Log.txt";
+  _pint->_logFileName = Stz "Log_" + DateTime::getDateTime().dateToStr(".") + "_" + DateTime::getDateTime().timeToStr(".") + ".txt";
   string_t cache_rooted = FileSystem::getRootedPath(cache);
   _pint->_logDir = FileSystem::combinePath(cache_rooted, _pint->_logFileName);
 

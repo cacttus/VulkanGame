@@ -16,10 +16,11 @@
 #include "../model/VaoDataGeneric.h"
 
 namespace BR2 {
-FramebufferBase::FramebufferBase(std::shared_ptr<GLContext> pc, bool bMsaa, int nMsaa, vec4& vClear) : GLFramework(pc) {
+FramebufferBase::FramebufferBase(const string_t& label, std::shared_ptr<GLContext> pc, bool bMsaa, int nMsaa, vec4& vClear) : GLFramework(pc) {
   _vClear = vClear;
   _bMsaaEnabled = bMsaa;
   _nMsaaSamples = nMsaa;
+  _label = label;
 }
 FramebufferBase::~FramebufferBase() {
   deleteTargets();
@@ -148,7 +149,7 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shar
   inf->_iHeight = h;
 
   //This will cycle through depth formats and choose the most precise.
-  RenderUtils::createDepthTexture(&inf->_iGlTexId, w, h, bMsaaEnabled, nMsaaSamples, GL_DEPTH_COMPONENT32F);
+  RenderUtils::createDepthTexture(strName, &inf->_iGlTexId, w, h, bMsaaEnabled, nMsaaSamples, GL_DEPTH_COMPONENT32F);
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
 
   return inf;
@@ -173,7 +174,7 @@ void FramebufferBase::deleteTargets() {
 //}
 void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLenum eInternalFormat, GLenum eTextureFormat, GLenum eDataType, int32_t iWidth, int32_t iHeight,
                                         GLenum* eOutTarget, bool bMultisample, int32_t nSamples) {
-  glGenTextures(1, iTexId);
+  Gu::getCoreContext()->glGenTextures(1, iTexId);
   Gu::getCoreContext()->chkErrRt();
 
   if (bMultisample) {

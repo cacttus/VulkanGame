@@ -119,7 +119,7 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
   // Bind texture
   _pContext->glActiveTexture(GL_TEXTURE0);
   _pContext->chkErrRt();
-  glGenTextures(1, &_glId);
+  _pContext->glGenTextures(1, &_glId);
   _pContext->chkErrRt();
   glBindTexture(_eGLTextureBinding, _glId);
   _pContext->chkErrRt();

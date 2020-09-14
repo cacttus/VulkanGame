@@ -9,13 +9,12 @@
 #include "../gfx/ShaderSubProgram.h"
 #include "../gfx/GraphicsContext.h"
 
-
 namespace BR2 {
 ShaderCompiler::ShaderCompiler(std::shared_ptr<GLContext> ct, string_t fileDir) : _fileDir(fileDir), _pContext(ct) {
 }
 /**
-*    @fn fileToArray()
-*    @brief I believe this turns a file into an array of lines.
+*  @fn fileToArray()
+*  @brief I believe this turns a file into an array of lines.
 */
 void ShaderCompiler::loadSource(std::shared_ptr<ShaderSubProgram> pSubProg) {
   AssertOrThrow2(pSubProg != NULL);
@@ -24,14 +23,14 @@ void ShaderCompiler::loadSource(std::shared_ptr<ShaderSubProgram> pSubProg) {
   pSubProg->setStatus(ShaderStatus::Uninitialized);
   pSubProg->getSourceLines().clear();
 
-  time_t greatestModifyTime = 0;//TIME_T_MIN;
+  time_t greatestModifyTime = 0;  //TIME_T_MIN;
 
   // - First try to load the srouce
   try {
     BRLogDebug("Loading source for Shader " + pSubProg->getSourceLocation());
-    loadSource_r(pSubProg, pSubProg->getSourceLocation(), pSubProg->getSourceLines(), greatestModifyTime);
+    loadSource_r(pSubProg, pSubProg->getSourceLocation(), pSubProg->getSourceLines(), greatestModifyTime, 0);
   }
-  catch (Exception * e) {
+  catch (Exception* e) {
     //pSubProg->debugPrintShaderSource();
     _loadStatus = ShaderStatus::CompileError;
     _error = e->what();
@@ -47,11 +46,8 @@ void ShaderCompiler::loadSource(std::shared_ptr<ShaderSubProgram> pSubProg) {
 
   pSubProg->setStatus(ShaderStatus::e::Loaded);
 }
-void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg,const  string_t& location, std::vector<string_t>& lines, time_t& greatestModifyTime) {
-  //char* data;
+void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg, const string_t& location, std::vector<string_t>& lines, time_t& greatestModifyTime, int_fast32_t iIncludeLevel) {
   time_t modTime;
-
-  // data = NULL;
 
   if (pSubProg->getStatus() != ShaderStatus::e::Uninitialized && !ShaderMaker::isGoodStatus(pSubProg->getStatus())) {
     pSubProg->getGeneralErrors().push_back("Subprogram was not in good state.");
@@ -63,34 +59,38 @@ void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg,con
     Gu::debugBreak();
     BRThrowException("Could not find shader file or #include file, " + location);
   }
-  // - Store the greater modify time for shader cache.
+
+  // Store the greater modify time for shader cache.
   modTime = Gu::getPackage()->getLastModifyTime((string_t)location);
   greatestModifyTime = MathUtils::brMax(modTime, greatestModifyTime);
 
-  // - Load all source bytes
+  // Load all source bytes
   std::shared_ptr<BinaryFile> bf = std::make_shared<BinaryFile>(c_strShaderFileVersion);
-  //Allocator<char> data;
   loadSourceData(location, bf);
 
-  // - If we screwed up. return
   if (_loadStatus != ShaderStatus::Uninitialized) {
     return;
   }
 
+  // Helps Identify files.
+  string_t nameHdr = Stz "// ----------- BEGIN " + FileSystem::getFileNameFromPath(location);
+  addSourceLineAt(0, lines, nameHdr);
+
   // Parse Lines
   parseSourceIntoLines(bf, lines);
 
-  //Helps Identify files.
-  string_t slashslash = "//-------------------------------------------------";
-  string_t nameHdr = Stz "//           " + FileSystem::getFileNameFromPath(location);
-  addSourceLineAt(0, lines, slashslash);
-  addSourceLineAt(0, lines, nameHdr);
-  addSourceLineAt(0, lines, slashslash);
+  string_t nameHdr2 = Stz "// ----------- END " + FileSystem::getFileNameFromPath(location);
+  addSourceLineAt(lines.size(), lines, nameHdr2);
 
+  //Indent
+  //This is probably not good to do (would mess with # directives).
+  // string_t indent = StringUtil::repeat("  ", iIncludeLevel);
+  // for (size_t iLine = 0; iLine < lines.size(); ++iLine) {
+  //   lines[iLine] = indent + lines[iLine];
+  // }
 
   // Recursively do includes
-  searchIncludes(pSubProg, lines, greatestModifyTime);
-
+  searchIncludes(pSubProg, lines, greatestModifyTime, iIncludeLevel);
 }
 void ShaderCompiler::addSourceLineAt(size_t pos, std::vector<string_t>& vec, string_t line) {
   string_t linemod = line;
@@ -100,11 +100,11 @@ void ShaderCompiler::addSourceLineAt(size_t pos, std::vector<string_t>& vec, str
   vec.insert(vec.begin() + pos, linemod);
 }
 /**
-*    @fn
-*    @brief Includes files.
+*  @fn searchIncludes
+*  @brief Includes files.
 */
-void ShaderCompiler::searchIncludes(std::shared_ptr<ShaderSubProgram> subProg, std::vector<string_t>& lines, time_t& greatestModifyTime) {
-  IncludeVec _includes;    //map of include offsets in the data to their source locations.
+void ShaderCompiler::searchIncludes(std::shared_ptr<ShaderSubProgram> subProg, std::vector<string_t>& lines, time_t& greatestModifyTime, int_fast32_t iIncludeLevel) {
+  IncludeVec _includes;  //map of include offsets in the data to their source locations.
   string_t locStr;
   std::vector<string_t> includeLines;
   IncludeVec::iterator ite2;
@@ -113,16 +113,15 @@ void ShaderCompiler::searchIncludes(std::shared_ptr<ShaderSubProgram> subProg, s
   _includes = getIncludes(lines);
   IncludeVec::iterator ite = _includes.begin();
 
+  uint_fast32_t added_incl_off = 0;
   // - Recursively parse all includes
-  //TODO: is there a trap here to make sure we don't recur forever?
   for (; ite != _includes.end(); ++ite) {
     includeOff = ite->lineNo;
     locStr = *(ite->str);
     locStr = FileSystem::combinePath(_fileDir, locStr);
     includeLines.clear();
 
-    loadSource_r(subProg, locStr, includeLines, greatestModifyTime);
-
+    loadSource_r(subProg, locStr, includeLines, greatestModifyTime, iIncludeLevel + 1);
 
     lines.insert(lines.begin() + includeOff, includeLines.begin(), includeLines.end());
 
@@ -132,20 +131,21 @@ void ShaderCompiler::searchIncludes(std::shared_ptr<ShaderSubProgram> subProg, s
       ite2->lineNo += includeLines.size();
     }
 
-    delete ite->str;    //delete the allocated string
+    delete ite->str;  //delete the allocated string
   }
-
 }
 /**
-*    @fn
+*    @fn getIncludes
 *    @brief Compiles all includes in the source lines into a map of include to its line number
 */
 ShaderCompiler::IncludeVec ShaderCompiler::getIncludes(std::vector<string_t>& lines) {
-  IncludeVec _includes;    //map of include offsets in the data to their source locations.
+  IncludeVec _includes;  //map of include offsets in the data to their source locations.
   string_t locStr;
 
   for (size_t i = 0; i < lines.size(); ++i) {
-    locStr = lines[i].substr(0, 8);
+    //We're trimming now because we're indenting the files. NOTE this may be invalid 9/2020
+    locStr = StringUtil::trim(lines[i]);
+    locStr = locStr.substr(0, 8);
     locStr = StringUtil::trim(locStr);
     //this check is to make sure there is no space or comments before the include.
     if (locStr.compare("#include") != 0) {
@@ -155,7 +155,7 @@ ShaderCompiler::IncludeVec ShaderCompiler::getIncludes(std::vector<string_t>& li
     // - Expand the include
     // - Expand the include
     // - Expand the include
-    locStr = lines[i];
+    locStr = StringUtil::trim(lines[i]);
     lines.erase(lines.begin() + i);
     i--;
 
@@ -183,7 +183,6 @@ ShaderCompiler::IncludeVec ShaderCompiler::getIncludes(std::vector<string_t>& li
       for (; ite != _includes.end(); ite++)
         delete ite->str;
       BRThrowException("Compile Error -->\"Not enough arguments for include directive. \"");
-
     }
 
     vs[1] = StringUtil::trim(vs[1]);
@@ -209,14 +208,16 @@ void ShaderCompiler::loadSourceData(const string_t& location, std::shared_ptr<Bi
 
   Gu::getPackage()->getFile(location, sourceData, true);
   //  sourceData.fread(location, true);
-    //DiskFile::readAllBytes(location, sourceData);
-
+  //DiskFile::readAllBytes(location, sourceData);
 }
+/**
+ * @param data [in] The binary data.
+ * @param out_lines [inout] The source file lines.
+ */
 void ShaderCompiler::parseSourceIntoLines(std::shared_ptr<BinaryFile> data, std::vector<string_t>& out_lines) {
-
   // - Parse file into lines
   string_t strTemp;
-  char* c = data->getData().ptr(), * d;
+  char *c = data->getData().ptr(), *d;
   int len;
   int temp_filesize = 0;
   int filesize = (int)data->getData().count();
@@ -231,7 +232,7 @@ void ShaderCompiler::parseSourceIntoLines(std::shared_ptr<BinaryFile> data, std:
     }
 
     d = c;
-    len = 0;    // - Reuse of len.  It is not the length now but an index.
+    len = 0;  // - Reuse of len.  It is not the length now but an index.
     while (((temp_filesize + len) < filesize) && ((int)(*d)) && ((int)(*d) != ('\n')) && ((int)(*d) != ('\r'))) {
       strTemp += (*d);
       d++;
@@ -262,26 +263,25 @@ void ShaderCompiler::parseSourceIntoLines(std::shared_ptr<BinaryFile> data, std:
       c++;
     }
     temp_filesize += len;
-
   }
 }
 /**
-*    @fn compile
-*    @brief Compile a shader.
-*    @remarks Compiles a shader.
+*  @fn compile
+*  @brief Compile a shader.
+*  @remarks Compiles a shader.
 */
 void ShaderCompiler::compile(std::shared_ptr<ShaderSubProgram> pSubProg) {
   BRLogInfo("Compiling shader " + pSubProg->getSourceLocation());
 
   //DOWNCAST:
- // GLstd::shared_ptr<ShaderSubProgram> shader = dynamic_cast<GLstd::shared_ptr<ShaderSubProgram>>(pSubProg);
+  // GLstd::shared_ptr<ShaderSubProgram> shader = dynamic_cast<GLstd::shared_ptr<ShaderSubProgram>>(pSubProg);
   GLint b;
 
   if (pSubProg->getStatus() != ShaderStatus::e::Loaded) {
     BRThrowException("Shader was in an invalid state when trying to compile.");
   }
 
-  GLchar** arg = new char* [pSubProg->getSourceLines().size()];
+  GLchar** arg = new char*[pSubProg->getSourceLines().size()];
   for (size_t i = 0; i < pSubProg->getSourceLines().size(); ++i) {
     if (pSubProg->getSourceLines()[i].size()) {
       arg[i] = new char[pSubProg->getSourceLines()[i].size()];
@@ -349,12 +349,4 @@ std::vector<string_t> ShaderCompiler::getErrorList(const std::shared_ptr<ShaderS
   return ret;
 }
 
-
-
-
-
-
-
-
-
-}//ns Game
+}  // namespace BR2

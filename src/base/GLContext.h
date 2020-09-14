@@ -79,6 +79,8 @@ public:
   string_t getObjectLabel(GLenum type, GLuint objectId);
   void setObjectLabel(GLenum type, GLuint objectId, const string_t& label);
 
+  void glGenTextures(GLsizei count, GLuint* ids);
+
   virtual void pushCullFace() override;
   virtual void popCullFace() override;
   virtual void pushBlend() override;

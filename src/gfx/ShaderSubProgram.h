@@ -16,7 +16,6 @@ namespace BR2 {
 */
 class ShaderSubProgram : public VirtualMemory {
 public:
-
   ShaderSubProgram();
   virtual ~ShaderSubProgram() override;
 
@@ -31,13 +30,14 @@ public:
   string_t getSourceLocation() { return _sourceLocation; }
   string_t getHumanReadableErrorString() const;
   void debugPrintShaderSource() const;
+  string_t debugGetFullShaderSource() const;
 
   ShaderType::e getShaderType() { return _eType; }
 
   std::vector<string_t>& getCompileErrors() { return _compileErrors; }
   std::vector<string_t>& getGeneralErrors() { return _generalErrors; }
   std::vector<string_t>& getSourceLines() { return _sourceLines; }
-  
+
 private:
   GLuint _glId = 0;
   time_t _compileTime = 0;
@@ -54,8 +54,6 @@ private:
   GLenum getGLShaderEnum(ShaderType::e type);
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

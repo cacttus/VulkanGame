@@ -46,7 +46,7 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
 
   _pContext->glActiveTexture(GL_TEXTURE0);
 
-  glGenTextures(1, &_i1x1DummyCubeTexture);
+  _pContext->glGenTextures(1, &_i1x1DummyCubeTexture);
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, _i1x1DummyCubeTexture);
   for (int i = 0; i < 6; ++i) {
@@ -59,7 +59,7 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   glBindTexture(GL_TEXTURE_2D, 0);
   Gu::getCoreContext()->chkErrRt();
 
-  glGenTextures(1, &_i1x2Dummy2DTexture);
+  _pContext->glGenTextures(1, &_i1x2Dummy2DTexture);
   glBindTexture(GL_TEXTURE_2D, _i1x2Dummy2DTexture);
   //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
   _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
@@ -71,7 +71,7 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   Gu::getCoreContext()->chkErrRt();
 
   b.construct(0, 0, 255, 255);  //XZY Bump texture up
-  glGenTextures(1, &_i1x1DummyBump2DTexture);
+  _pContext->glGenTextures(1, &_i1x1DummyBump2DTexture);
   glBindTexture(GL_TEXTURE_2D, _i1x1DummyBump2DTexture);
   //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
   _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);

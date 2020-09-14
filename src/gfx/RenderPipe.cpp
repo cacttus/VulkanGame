@@ -704,7 +704,7 @@ DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramewo
   Gu::checkErrorsDbg();
 
   //Texurev
-  glGenTextures(1, &_uiTexId0);
+  Gu::getCoreContext()->glGenTextures(1, &_uiTexId0);
   glBindTexture(GL_TEXTURE_2D, _uiTexId0);
   Gu::checkErrorsDbg();
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, nullptr);
@@ -713,6 +713,7 @@ DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramewo
   Gu::checkErrorsDbg();
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   Gu::checkErrorsDbg();
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _uiTexId0, "DOF FBO");
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 DOFFbo::~DOFFbo() {

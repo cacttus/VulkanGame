@@ -9,7 +9,7 @@
 
 namespace BR2 {
 ForwardFramebuffer::ForwardFramebuffer(std::shared_ptr<GLContext> pc, int32_t w, int32_t h, bool bMsaa, int nMsaa, vec4& vClear) :
-  FramebufferBase(pc, bMsaa, nMsaa, vClear) {
+  FramebufferBase("Forward_Framebuffer", pc, bMsaa, nMsaa, vClear) {
 }
 ForwardFramebuffer::~ForwardFramebuffer() {
 }
@@ -39,7 +39,7 @@ void ForwardFramebuffer::init(int32_t iWidth, int32_t iHeight, std::shared_ptr<B
 
   checkFramebufferComplete();
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId, "Forward-FBO");
+  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId,  this->getLabel());
 
 
   //Return to default.

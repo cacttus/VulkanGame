@@ -650,7 +650,7 @@ void RenderUtils::debugGetTextureState(string_t& strState) {
 
   //Get the max id (not sure if this works.)
   GLuint maxId = 0;
-  glGenTextures(1, &maxId);
+  Gu::getCoreContext()->glGenTextures(1, &maxId);
   glDeleteTextures(1, &maxId);
   Gu::checkErrorsRt();
 
@@ -992,19 +992,23 @@ void RenderUtils::saveFramebufferAsPng(string_t&& strLoc, GLuint iFBOId) {
 //    //**This might fail on phones - change to depth component 24
 //    glTexImage2D(GL_TEXTURE_2D, 0, depthSize, w, h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 //}
-void RenderUtils::createDepthTexture(GLuint* __out_ texId, int32_t w, int32_t h, bool bMsaaEnabled, int32_t nMsaaSamples, GLenum eRequestedDepth) {
+void RenderUtils::createDepthTexture(const string_t& owner, GLuint* __out_ texId, int32_t w, int32_t h, bool bMsaaEnabled, int32_t nMsaaSamples, GLenum eRequestedDepth) {
+  //Creates a depth texture, or multisample depth texture on texture channel 0
   //This will query the device to make sure the depth format is supported.
   Gu::getCoreContext()->chkErrRt();
   GLenum texTarget;
 
+  string_t label = owner + "_DepthTexture";
+
   if (bMsaaEnabled) {
     texTarget = GL_TEXTURE_2D_MULTISAMPLE;
+    label += "_Multisample";
   }
   else {
     texTarget = GL_TEXTURE_2D;
   }
-
-  glGenTextures(1, texId);
+  Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
+  Gu::getCoreContext()->glGenTextures(1, texId);
   Gu::getCoreContext()->chkErrRt();
   glBindTexture(texTarget, *texId);
   //THe following parameters are for depth textures only
@@ -1026,6 +1030,8 @@ void RenderUtils::createDepthTexture(GLuint* __out_ texId, int32_t w, int32_t h,
     Gu::getCoreContext()->chkErrRt();
   }
 
+  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, *texId, label);
+
   getCompatibleDepthComponent(eRequestedDepth, [&](GLenum eDepth) {
     if (bMsaaEnabled) {
       Gu::getCoreContext()->glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, nMsaaSamples, eDepth, w, h, GL_TRUE);
@@ -1037,6 +1043,8 @@ void RenderUtils::createDepthTexture(GLuint* __out_ texId, int32_t w, int32_t h,
     }
   });
 
+  Gu::checkErrorsRt();
+  glBindTexture(texTarget, 0);
   Gu::checkErrorsRt();
 }
 

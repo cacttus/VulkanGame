@@ -638,5 +638,8 @@ GLenum GLContext::getTextureTarget(GLuint textureId) {
 
   return ret;
 }
+void GLContext::glGenTextures(GLsizei count, GLuint* ids){
+  ::glGenTextures(1, ids);
+}
 
 }  // namespace BR2
