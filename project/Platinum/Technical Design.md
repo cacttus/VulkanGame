@@ -11,7 +11,11 @@ Prototype requirements.
 ## Art & Style
 
 * "Gumball" hodgepodge. Animated, real-life, pixilated, 3D.
-![alt text](https://serebii.net/pokearth/maps/sinnoh-pt/64.png)
+
+![Poke](https://serebii.net/pokearth/maps/sinnoh-pt/64.png)
+
+![Poke](https://cdn.bulbagarden.net/upload/4/48/Twinleaf_Town_Pt.png)
+
 * Fixed style elements
   * 3D Elements
     * Land 
