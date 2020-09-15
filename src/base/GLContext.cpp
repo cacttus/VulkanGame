@@ -430,7 +430,10 @@ bool GLContext::checkOpenGlMinimumVersionInfo(int required_version, int required
     string_t vendor = string_t((char*)glGetString(GL_VENDOR));
     string_t renderer = string_t((char*)glGetString(GL_RENDERER));
 
-    BRLogInfo("\n" + "   OpenGL version " + ver + "." + subver + ".\n" + "   GLSL version:          " + shad_ver + "." + shad_subver + "\n" + "   GPU:         " + renderer + "\n" + "   GPU Vendor:  " + vendor + "\n");
+    BRLogInfo("\n" + "   OpenGL version " + ver + "." + subver + ".\n" +
+              "   GLSL version:          " + shad_ver + "." + shad_subver + "\n" +
+              "   GPU:         " + renderer + "\n" +
+              "   GPU Vendor:  " + vendor + "\n");
   }
 
   return true;
@@ -441,10 +444,8 @@ void GLContext::loadCheckProc() {
   PFNGLUSEPROGRAMPROC proc = (PFNGLUSEPROGRAMPROC)SDL_GL_GetProcAddress("glUseProgram");
   if (proc == nullptr) {
     string_t exep;
-    exep += "glUseProgram was not found in your graphics driver.  There can be a few reasons for this:\n";
-    exep += ("  1. Your primary graphics card is not correct.  You can set your primary graphics card in Windows.\n");
-    exep += ("  2. Your graphics card is outdated.  Consider upgrading.\n");
-    exep += ("  3. Your Operating System isn't Windows 7 or above.\n");
+    exep += "glUseProgram was not found.\n";
+    exep += ("  OpenGL not installed, or bad graphics driver.\n");
     BRThrowException(exep);
   }
 }
@@ -570,7 +571,7 @@ string_t GLContext::getObjectLabel(GLenum type, GLuint objectId) {
     res += Stz "(" + objectId + ")";
   }
   else {
-    res = Stz "unset(0)";
+    res = Stz "No Label " + "(" + objectId + ")";
   }
   return res;
 }
@@ -624,21 +625,32 @@ GLenum GLContext::getTextureTarget(GLuint textureId) {
     return (GLenum)0;
   };
   //from https://www.khronos.org/opengl/wiki/Texture
-  if ((ret = TEX_CHECKTARGET_RT(textureId,      GL_TEXTURE_1D)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_3D)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_RECTANGLE)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_BUFFER)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D_ARRAY)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_ARRAY)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP_ARRAY)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE)) != (GLenum)0) return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE_ARRAY)) != (GLenum)0) return ret;
+  if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_3D)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_RECTANGLE)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_BUFFER)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D_ARRAY)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_ARRAY)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP_ARRAY)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE)) != (GLenum)0)
+    return ret;
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE_ARRAY)) != (GLenum)0)
+    return ret;
 
   return ret;
 }
-void GLContext::glGenTextures(GLsizei count, GLuint* ids){
+void GLContext::glGenTextures(GLsizei count, GLuint* ids) {
   ::glGenTextures(1, ids);
 }
 

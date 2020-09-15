@@ -200,7 +200,8 @@ void ShadowFrustum_Internal::createFbo() {
 
   //GL_FRAMEBUFFER_SRGB
   glTexImage2D(GL_TEXTURE_2D, 0, SHADOW_FRUSTUM_TEX_INTERNAL_FORMAT,
-               _iFboWidthPixels, _iFboHeightPixels, 0, SHADOW_FRUSTUM_TEX_FORMAT, SHADOW_FRUSTUM_TEX_DATATYPE, nullptr);
+               _iFboWidthPixels, _iFboHeightPixels, 0, 
+               SHADOW_FRUSTUM_TEX_FORMAT, SHADOW_FRUSTUM_TEX_DATATYPE, nullptr);
   Gu::getCoreContext()->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _glShadowMapId, 0);
   Gu::checkErrorsRt();
   Gu::getCoreContext()->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _glDepthTextureId, 0);

@@ -106,10 +106,11 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
   _pDOFFbo = nullptr;
 
   //Base FBOs
-  _pBlittedDepth = FramebufferBase::createDepthTarget(getContext(), "Blitted Depth Buffer", iWidth, iHeight, 0, false, 0);
+  _pBlittedDepth = FramebufferBase::createDepthTarget(getContext(), "RenderPipe: Blitted Depth Buffer", iWidth, iHeight, 0, false, 0);
 
   //Do not cahnge "Pick" name.  This is shared.
-  _pPick = FramebufferBase::createTarget(getContext(), "Pick MRT (Deferred)(Shared)", GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, iWidth, iHeight, RenderTargetType::e::Pick, 0, 0, 0);  //4
+  _pPick = FramebufferBase::createTarget(getContext(), "RenderPipe: Pick MRT (Deferred)(Shared)", GL_R32UI,
+                                         GL_RED_INTEGER, GL_UNSIGNED_INT, iWidth, iHeight, RenderTargetType::e::Pick, 0, 0, 0);  //4
 
   _pBlittedDeferred = std::make_shared<DeferredFramebuffer>(getContext(), iWidth, iHeight, false, 0, _vClear);
   _pBlittedDeferred->init(iWidth, iHeight, _pBlittedDepth, _pPick);
@@ -125,7 +126,7 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
   //Multisample
   if (_bMsaaEnabled == true) {
     BRLogInfo("[RenderPipe] Creating deferred MSAA lighting buffer");
-    _pMsaaDepth = FramebufferBase::createDepthTarget(getContext(), "depth msaa", iWidth, iHeight, 0, _bMsaaEnabled, _nMsaaSamples);
+    _pMsaaDepth = FramebufferBase::createDepthTarget(getContext(), "RenderPipe: Depth MSAA", iWidth, iHeight, 0, _bMsaaEnabled, _nMsaaSamples);
     _pMsaaDeferred = std::make_shared<DeferredFramebuffer>(getContext(), iWidth, iHeight, _bMsaaEnabled, _nMsaaSamples, _vClear);
     _pMsaaDeferred->init(iWidth, iHeight, _pMsaaDepth, _pPick);  // Yeah I don't know if the "pick" here will work
     _pMsaaForward = std::make_shared<ForwardFramebuffer>(getContext(), iWidth, iHeight, _bMsaaEnabled, _nMsaaSamples, _vClear);
@@ -281,7 +282,7 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
       }
     }
 
-   // RenderUtils::debugGetRenderState(true, true, false);
+    // RenderUtils::debugGetRenderState(true, true, false);
 
     //2. Forward Rendering
     BRLogTODO("Commented out forward rendering!");
