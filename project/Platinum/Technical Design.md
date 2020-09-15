@@ -23,7 +23,7 @@ Prototype requirements.
   * 2D Elements
     * Characters (pixilated, 2D)
     * Ground texture tiles
-
+  
 ## Graphics
 
 * Isometric
@@ -61,6 +61,7 @@ Built into the game itself
 ## API(s)
 
 * SDL 2 & OpenGL 4.6
+* Vulkan (TBD)
 
 ## Platforms
 
