@@ -7,6 +7,7 @@
 #include "../gfx/Atlas.h"
 #include "../gfx/Texture2DSpec.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 #include "../gfx/ShaderBase.h"
 #include "../model/MeshNode.h"
 #include "../model/MeshSpec.h"
@@ -82,7 +83,7 @@ void W25GridMesh::draw(RenderParams& rp, int& iDbgNumTrisDrawn) {
   if (getMesh() != nullptr) {
     if (false) {
       std::shared_ptr<VaoDataGeneric> vao = getMesh()->getMeshSpec()->getVaoData();
-      RenderUtils::debugGetRenderState(false, true);
+      OpenGLUtils::debugGetRenderState(false, true);
       W25MeshVert* test_read = new W25MeshVert[vao->getVbo()->getNumElements()];
       vao->getVbo()->copyDataServerClient(vao->getVbo()->getNumElements(), test_read);
       delete[] test_read;

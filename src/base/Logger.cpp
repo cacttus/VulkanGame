@@ -44,8 +44,7 @@ public:
   std::atomic_bool _kill;
 
   string_t addStackTrace(string_t msg);
-  void addLineFileToMsg(string_t msg, int line, const char* file);
-  string_t createMessageHead(LogLevel level);
+  string_t createMessageHead(LogLevel level, const char* file, int line);
   void log(string_t msg, string_t header, Logger_Internal::LogLevel level, const BR2::Exception* const e);
   void processLogs_Async();
 
@@ -57,15 +56,11 @@ void Logger_Internal::log_wedi_mainThread(string_t msg, int line, const char* fi
     return;
   }
 
-  if (line >= 0) {
-    addLineFileToMsg(msg, line, file);
-  }
-
   if (hideStackTrace == false) {
     msg = addStackTrace(msg);
   }
 
-  log(msg, createMessageHead(level), level, e);
+  log(msg, createMessageHead(level, file, line), level, e);
 }
 void Logger_Internal::log_cycle_mainThread(std::function<void()> f, bool force, int iCycle) {
   if (Gu::getCoreContext() != nullptr) {
@@ -83,32 +78,37 @@ string_t Logger_Internal::addStackTrace(string_t msg) {
   msg += DebugHelper::getStackTrace();
   return msg;
 }
-void Logger_Internal::addLineFileToMsg(string_t msg, int line, const char* file) {
-  if (_bSuppressLineFileDisplay == false) {
-    msg = msg + "  (" + FileSystem::getFileNameFromPath(file) + " : " + line + ")";
-  }
-}
-string_t Logger_Internal::createMessageHead(LogLevel level) {
-  string_t str;
+string_t Logger_Internal::createMessageHead(LogLevel level, const char* file, int line) {
+  string_t logtype;
   if (level == LogLevel::Debug) {
-    str = "D";
+    logtype = "D";
   }
   else if (level == LogLevel::Info) {
-    str = "I";
+    logtype = "I";
   }
   else if (level == LogLevel::Warn) {
-    str = "W";
+    logtype = "W";
   }
   else if (level == LogLevel::Error) {
-    str = "E";
+    logtype = "E";
   }
   else if (level == LogLevel::TODO) {
-    str = "T";
+    logtype = "T";
   }
   else {
-    str = "?";
+    logtype = "?";
   }
-  return Stz "" + DateTime::getDateTime().timeToStr() + "[" + str + "]";
+  string_t file_line = "";
+  if (_bSuppressLineFileDisplay == false) {
+    if (file != nullptr) {
+      file_line += file;
+    }
+    if (line >= 0) {
+      file_line += ":" + TypeConv::intToStr(line);
+    }
+  }
+
+  return Stz "" + DateTime::getDateTime().timeToStr() + "[" + logtype + "]" + "[" + file_line + "]";
 }
 void Logger_Internal::log(string_t msg, string_t header, Logger_Internal::LogLevel level, const BR2::Exception* const e) {
   string_t m = header + " " + msg;

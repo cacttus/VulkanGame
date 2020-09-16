@@ -27,6 +27,15 @@ void EngineConfig::int32Prop(string_t prop_key, std::vector<string_t>& tokens, i
 }
 void EngineConfig::pkp(std::vector<string_t>& tokens) {
   int iind = 1;
+// 
+#define XMLCONFIG_READ_BOOL(x)                                          \
+  else if (lcmp(tokens[0], EngineConfig::c_##x, 2)) {                        \
+    _pConfig->_b##x = TypeConv::strToBool(getCleanToken(tokens, iind)); \
+  }
+#define XMLCONFIG_READ_INT32(x)                                          \
+  else if (lcmp(tokens[0], EngineConfig::c_##x, 2)) {                        \
+    _pConfig->_i32##x = TypeConv::strToInt(getCleanToken(tokens, iind)); \
+  }
 
   std::shared_ptr<EngineConfig> _pConfig = getThis<EngineConfig>();
 
@@ -36,29 +45,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
     //int32Prop(EngineConfig::MaxPointLights, tokens, iind);
     //int32Prop(EngineConfig::MaxDirLights, tokens, iind);
 
-    if (lcmp(tokens[0], EngineConfig::c_MaxPointLights, 2)) {
-      _pConfig->_iMaxPointLights = TypeConv::strToInt(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_MaxDirLights, 2)) {
-      _pConfig->_iMaxDirLights = TypeConv::strToInt(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_MaxCubeShadowSamples, 2)) {
-      _pConfig->_iMaxCubeShadowSamples = TypeConv::strToInt(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_MaxFrustShadowSamples, 2)) {
-      _pConfig->_iMaxFrustShadowSamples = TypeConv::strToInt(getCleanToken(tokens, iind));
-    }
-
-    else if (lcmp(tokens[0], EngineConfig::c_StartFullscreen, 2)) {
-      _pConfig->_bStartFullscreen = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_DefaultScreenWidth, 2)) {
-      _pConfig->_iDefaultScreenWidth = TypeConv::strToUint(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_DefaultScreenHeight, 2)) {
-      _pConfig->_iDefaultScreenHeight = TypeConv::strToUint(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_EnableRuntimeErrorChecking, 2)) {
+    if (lcmp(tokens[0], EngineConfig::c_EnableRuntimeErrorChecking, 2)) {
       _pConfig->_bEnableRuntimeErrorChecking = TypeConv::strToBool(getCleanToken(tokens, iind));
       if (Gu::isDebug()) {
         msg("Runtime error checking is turned on by default in debug build.");
@@ -69,21 +56,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
       _pConfig->_bEnableRuntimeErrorChecking = true;
 #endif
     }
-    else if (lcmp(tokens[0], EngineConfig::c_EnableFileLog, 2)) {
-      _pConfig->_bEnableLogToFile = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_EnableConsoleLog, 2)) {
-      _pConfig->_bEnableLogToFile = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_GameHostTimeoutMs, 2)) {
-      _pConfig->_iGameHostTimeoutMs = TypeConv::strToInt(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_GameHostPort, 2)) {
-      _pConfig->_iGameHostPort = TypeConv::strToInt(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_ForceAspectRatio, 2)) {
-      _pConfig->_bForceAspectRatio = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
+
     else if (lcmp(tokens[0], EngineConfig::c_GpuDeviceName, 2)) {
       _pConfig->_strGpuDeviceName = getCleanToken(tokens, iind);
     }
@@ -117,12 +90,6 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
         _pConfig->_iBakedCharSize = 64;
       }
     }
-    else if (lcmp(tokens[0], EngineConfig::c_EnableObjectShadows, 2)) {
-      _pConfig->_bEnableObjectShadows = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_EnableTerrainShadows, 2)) {
-      _pConfig->_bEnableTerrainShadows = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
     else if (lcmp(tokens[0], EngineConfig::c_ShadowMapResolution, 2)) {
       _pConfig->_iShadowMapResolution = TypeConv::strToInt(getCleanToken(tokens, iind));
       if (Alg::isPow2((int32_t)_pConfig->_iShadowMapResolution) == false) {
@@ -144,9 +111,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
         _pConfig->_fMaxPointLightShadowDistance = 2000.0f;
       }
     }
-    else if (lcmp(tokens[0], EngineConfig::c_EnableMSAA, 2)) {
-      _pConfig->_bEnableMsaa = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
+
     else if (lcmp(tokens[0], EngineConfig::c_MSAASamples, 2)) {
       _pConfig->_iMsaaSamples = TypeConv::strToInt(getCleanToken(tokens, iind));
       if (_pConfig->_iMsaaSamples < 0) {
@@ -164,16 +129,6 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
         msg(tokens[0] + " Too large.  Set to 16384.");
         _pConfig->_iNumTextQuads = 16384;
       }
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_BreakOnSDLError, 2)) {
-      _pConfig->_bBreakOnSDLError = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_BreakOnGraphicsError, 2)) {
-      //Break if there is an error in the graphics system.
-      _pConfig->_bBreakOnGraphicsError = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_ShowConsole, 2)) {
-      _pConfig->_bShowConsole = TypeConv::strToBool(getCleanToken(tokens, iind));
     }
     else if (lcmp(tokens[0], EngineConfig::c_ModelThumbSize, 2)) {
       _pConfig->_iModelThumbSize = TypeConv::strToInt(getCleanToken(tokens, iind));
@@ -275,28 +230,40 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
         Gu::debugBreak();
       }
     }
-    else if (lcmp(tokens[0], EngineConfig::c_Linux_ReadableBacktrace, 2)) {
-      _pConfig->_bLinux_ReadableBacktrace = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_High, 2)) {
-      _pConfig->_bGraphicsErrorLogging_High = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_Medium, 2)) {
-      _pConfig->_bGraphicsErrorLogging_Medium = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_Low, 2)) {
-      _pConfig->_bGraphicsErrorLogging_Low = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
-    else if (lcmp(tokens[0], EngineConfig::c_GraphicsErrorLogging_Info, 2)) {
-      _pConfig->_bGraphicsErrorLogging_Info = TypeConv::strToBool(getCleanToken(tokens, iind));
-    }
+
+    XMLCONFIG_READ_BOOL(Linux_ReadableBacktrace)
+    XMLCONFIG_READ_BOOL(GraphicsErrorLogging_High)
+    XMLCONFIG_READ_BOOL(GraphicsErrorLogging_Medium)
+    XMLCONFIG_READ_BOOL(GraphicsErrorLogging_Low)
+    XMLCONFIG_READ_BOOL(GraphicsErrorLogging_Info)
+    XMLCONFIG_READ_BOOL(VsyncEnabled)
+    XMLCONFIG_READ_BOOL(StartFullscreen)
+    XMLCONFIG_READ_BOOL(EnableFileLog)
+    XMLCONFIG_READ_BOOL(EnableConsoleLog)
+    XMLCONFIG_READ_BOOL(ForceAspectRatio)
+    XMLCONFIG_READ_BOOL(EnableObjectShadows)
+    XMLCONFIG_READ_BOOL(EnableTerrainShadows)
+    XMLCONFIG_READ_BOOL(EnableMSAA)
+    XMLCONFIG_READ_BOOL(BreakOnSDLError)
+    XMLCONFIG_READ_BOOL(BreakOnGraphicsError)
+    XMLCONFIG_READ_BOOL(ShowConsole)
+
+    XMLCONFIG_READ_INT32(MaxPointLights)
+    XMLCONFIG_READ_INT32(MaxDirLights)
+    XMLCONFIG_READ_INT32(MaxCubeShadowSamples)
+    XMLCONFIG_READ_INT32(MaxFrustShadowSamples)
+    XMLCONFIG_READ_INT32(DefaultScreenWidth)
+    XMLCONFIG_READ_INT32(DefaultScreenHeight)
+    XMLCONFIG_READ_INT32(GameHostTimeoutMs)
+    XMLCONFIG_READ_INT32(GameHostPort)
+
     else {
       msg(Stz " Unrecognized engine config token '" + tokens[0] + "'");
       Gu::debugBreak();
     }
   }
-  catch (Exception* ex) {
-    BRLogErrorEx("Failed to parse '" + (tokens.size() > 0 ? tokens[0] : "<invalid>") + "'in the engine configuration file ", ex);
+  catch (const Exception& ex) {
+    BRLogErrorEx("Failed to parse '" + (tokens.size() > 0 ? tokens[0] : "<invalid>") + "'in the engine configuration file ", &ex);
   }
 }
 void EngineConfig::preLoad() {

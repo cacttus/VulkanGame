@@ -21,7 +21,7 @@ public:
   VulkanApi();
   virtual ~VulkanApi() override;
 
-  virtual std::shared_ptr<GraphicsWindow> createWindow(string_t title) override;
+  virtual std::shared_ptr<GraphicsWindow> createWindow(const string_t& title) override;
   virtual void makeCurrent(SDL_Window* win) override;
   virtual void getDrawableSize(SDL_Window* win, int* w, int* h) override;
   virtual void swapBuffers(SDL_Window* win) override;

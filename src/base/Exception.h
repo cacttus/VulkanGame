@@ -10,9 +10,10 @@
 #include "../base/MachineTypes.h"
 
 namespace BR2 {
+//TODO: override std::exception
 class Exception {
 public:
-  Exception(string_t c, int line, const char* file, bool bLogError = true);
+  Exception(string_t c, int line, const char* file, bool bLogError);
   string_t what() const;
 
 private:

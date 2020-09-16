@@ -196,7 +196,9 @@ int32_t ConvexUtils::convexConvexTest(
   if (is_box) {
     return boxBoxConvex(pt_h1, pf_h1, v_h1, v_n_h1, pt_h2, pf_h2, v_h2, v_n_h2, t_out, p_h1_i_out, p_h2_i_out);
   }
-  else throw new NotImplementedException();
+  else{ 
+    BRThrowNotImplementedException();
+  }
 
   return 0;
 }

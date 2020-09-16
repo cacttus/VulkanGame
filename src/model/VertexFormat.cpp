@@ -146,7 +146,7 @@ std::shared_ptr<VertexComponent> VertexFormat::getComponentForUserType(VertexUse
 //    //Fill the components dummy
 //    AssertOrThrow2(_vecComponents.size() > 0);
 //
-//    RenderUtils::debugGetRenderState(false, true);
+//    OpenGLUtils::debugGetRenderState(false, true);
 //
 //    for (size_t i = 0; i<_vecComponents.size(); ++i) {
 //        std::shared_ptr<VertexComponent> comp = _vecComponents[i];
@@ -181,7 +181,7 @@ std::shared_ptr<VertexComponent> VertexFormat::getComponentForUserType(VertexUse
 //
 //        iOff += _vecComponents[i]->_iSizeBytes;
 //    }
-//    RenderUtils::debugGetRenderState(false, true);
+//    OpenGLUtils::debugGetRenderState(false, true);
 //}
 GLenum VertexFormat::computeAttributeType(GLenum type, GLuint count) {
   //We bh

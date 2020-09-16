@@ -13,6 +13,7 @@
 #include "../gfx/ShaderBase.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 #include "../gfx/RenderTarget.h"
 #include "../gfx/BufferRenderTarget.h"
 #include "../gfx/LightManager.h"
@@ -57,7 +58,7 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
   releaseFbosAndMesh();
 
   // - Setup Framebuffers.
-  _bMsaaEnabled = Gu::getEngineConfig()->getEnableMsaa();
+  _bMsaaEnabled = Gu::getEngineConfig()->getEnableMSAA();
   _nMsaaSamples = Gu::getEngineConfig()->getMsaaSamples();
   _iLastWidth = iWidth;
   _iLastHeight = iHeight;
@@ -282,7 +283,7 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
       }
     }
 
-    // RenderUtils::debugGetRenderState(true, true, false);
+    // OpenGLUtils::debugGetRenderState(true, true, false);
 
     //2. Forward Rendering
     BRLogTODO("Commented out forward rendering!");
@@ -914,7 +915,7 @@ std::shared_ptr<Img32> RenderPipe::getResultAsImage() {
 
   std::shared_ptr<BufferRenderTarget> pTarget;
   pTarget = _pBlittedForward->getTargetByName(ForwardFramebuffer::c_strColorMRT_FW);
-  if (RenderUtils::getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
+  if (OpenGLUtils::getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
     //the GL tex image must be flipped to show upriht/
   }
 

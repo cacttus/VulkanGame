@@ -14,7 +14,7 @@
 
 #include "../model/VaoDataGeneric.h"
 #include "../model/VertexFormat.h"
-#include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
 //static int g_debugNumconst = 0;
@@ -89,7 +89,7 @@ void VaoShader::enableAttributesForShader(std::shared_ptr<ShaderBase> pShader, s
     if (comp == nullptr) {
       errStr += Stz "  Error: Could not match vertex attribute '" + attr->getName() + "'\r\n";
       errStr += Stz "     UserType:'" + VertexFormat::getUserTypeName(attr->getUserType()) + "'\r\n";
-      errStr += Stz "     GL Type:'" + RenderUtils::openGlTypeToString(attr->getGlAttributeType()) + "'\r\n";
+      errStr += Stz "     GL Type:'" + OpenGLUtils::openGlTypeToString(attr->getGlAttributeType()) + "'\r\n";
       errStr += Stz "     GL Location:" + attr->getGlLocation() + ".\r\n";
       errStr += Stz "\r\n";
     }
@@ -135,7 +135,7 @@ void VaoShader::enableAttributesForShader(std::shared_ptr<ShaderBase> pShader, s
     Gu::debugBreak();
   }
 
-  RenderUtils::debugGetRenderState(false, true);
+  OpenGLUtils::debugGetRenderState(false, true);
 }
 ///////////////////////////////////////////////////////////////////
 

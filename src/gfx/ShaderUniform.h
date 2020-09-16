@@ -31,7 +31,7 @@ public:
   void bindUniformFast();
   bool hasBeenSet() { return _bHasBeenSet; }
 
-  string_t debugGetUniformValueAsString();
+  string_t debugGetUniformValueAsString(bool raw);
 
   void unbind() {
     //Again, not necessary, but it ensures that we set the uniforms
@@ -51,7 +51,8 @@ private:
   GLint _glLocation = 0;    // locatino of uniform.
   GLenum _glType = GL_ZERO;    //GL enumerated type
   bool _bIgnoreVariable = false; //Prevents check throw if we didn't set data.
-  Allocator<char>* _pStorage = nullptr; //Temporary holding for uniform data.
+  //Allocator<char>* _pStorage = nullptr; //Temporary holding for uniform data.
+  std::vector<char> _pStorage ; //Temporary holding for uniform data.
   GLint _iLastCount = 0;
   size_t _iComponentSize = 0;
   size_t _iComponentCount = 0;

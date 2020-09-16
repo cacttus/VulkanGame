@@ -19,76 +19,75 @@ public:
   bool _exists;
   std::string _originalPath;
   std::string _rootedPath;
-  time_t _accssed;//Last read time
-  time_t _modified;//Last write time
-  time_t _status;//Last status change time
-  mode_t _protection; // should be mode_t
-  int64_t _size; //size in bytes
+  time_t _accssed;     //Last read time
+  time_t _modified;    //Last write time
+  time_t _status;      //Last status change time
+  mode_t _protection;  // should be mode_t
+  int64_t _size;       //size in bytes
   FileInfo() {}
   virtual ~FileInfo() {}
 };
 /**
-*    @class FileSystem
-*    @brief Filesystem functions.
-*       In the future a lot of this can be refactored with C++17's std::filesystem
+*  @class FileSystem
+*  @brief Filesystem functions.
+*     In the future a lot of this can be refactored with C++17's std::filesystem
 */
 class FileSystem : public VirtualMemory {
-  public:
+public:
   FileSystem();
   virtual ~FileSystem() override;
-  static void init(string_t exePath);
+  static void init(const string_t& exePath);
   static string_t getExecutableFullPath();
   static string_t getExecutableName();
-  static void setExecutablePath(string_t st);
+  static void setExecutablePath(const string_t& st);
   static string_t getExecutableDirectory();
-  static string_t combinePath(string_t a, string_t b);
-  static string_t formatPath(string_t p);
-  static bool isUNC(string_t p);
-  static string_t getRoot(string_t p);
-  static string_t getRootedPath(string_t p);
-  static bool pathIsAbsolute(string_t p);
+  static string_t combinePath(const string_t& a, const string_t& b);
+  static string_t formatPath(const string_t& p);
+  static bool isUNC(const string_t& p);
+  static string_t getRoot(const string_t& p);
+  static string_t getRootedPath(const string_t& p);
+  static bool pathIsAbsolute(const string_t& p);
   static bool createFile(const string_t& filename, bool truncate = false, bool bLog = true);
-  static void createFileIfFileDoesNotExist(string_t& filename, bool bAlsoCreateDirectoryPath = true);
-  static bool createDirectorySingle(string_t& dirName, int permissions = 755);//Note: this usually fails. windwos is dubm
-  static bool createDirectoryRecursive(string_t dirName);
-  static bool directoryExists(string_t dirName);
-  static bool fileExists(string_t filename);
-  static bool getAllFiles(string_t dir, std::vector<string_t>& __out_ files);
-  static bool getAllDirs(string_t dir, std::vector<string_t>& __out_ dirs);
+  static void createFileIfFileDoesNotExist(const string_t& filename, bool bAlsoCreateDirectoryPath = true);
+  static bool createDirectorySingle(const string_t& dirName, int permissions = 755);  //Note: this usually fails. windwos is dubm
+  static bool createDirectoryRecursive(const string_t& dirName);
+  static bool directoryExists(const string_t& dirName);
+  static bool fileExists(const string_t& filename);
+  static bool getAllFiles(const string_t& dir, std::vector<string_t>& __out_ files);
+  static bool getAllDirs(const string_t& dir, std::vector<string_t>& __out_ dirs);
 
-  static time_t getLastModifyTime(string_t& location);
+  static time_t getLastModifyTime(const string_t& location);
   static string_t getCurrentDirectory();
-  static void setCurrentDirectory(string_t str);
+  static void setCurrentDirectory(const string_t& str);
 
-  static bool deleteFile(string_t filename);
-  static bool deleteAllFiles(string_t dir, std::vector<string_t>& vecFileExts);
-  static bool deleteDirectory(string_t dirname, std::vector<string_t>& vecFileExts);
-  static bool deleteDirectoryRecursive(string_t dirName, std::vector<string_t>& vecFileExts);
+  static bool deleteFile(const string_t& filename);
+  static bool deleteAllFiles(const string_t& dir, std::vector<string_t>& vecFileExts);
+  static bool deleteDirectory(const string_t& dirname, std::vector<string_t>& vecFileExts);
+  static bool deleteDirectoryRecursive(const string_t& dirName, std::vector<string_t>& vecFileExts);
 
   static string_t getExtensionPartOfFileName(const string_t& fileName);
   static string_t getFilePartOfFileName(const string_t& fileName);
-  static string_t getDirectoryNameFromPath(const string_t& name); //Returns the second-level directory in the path (regardless of whether it is a file or not, see C# GetDirectoryName)
-  static string_t getFileNameFromPath(const string_t& name); //Returns top level file OR directory. See C# GetFileName()
+  static string_t getDirectoryNameFromPath(const string_t& name);  //Returns the second-level directory in the path (regardless of whether it is a file or not, see C# GetDirectoryName)
+  static string_t getFileNameFromPath(const string_t& name);       //Returns top level file OR directory. See C# GetFileName()
 
-  static bool isFile(string_t fileOrDirPath);
-  static bool isDir(string_t fileOrDirPath);  
+  static bool isFile(const string_t& fileOrDirPath);
+  static bool isDir(const string_t& fileOrDirPath);
 
   static string_t getScreenshotFilename();
   static string_t replaceInvalidCharsFromFilename(const string_t& __in_ fnIn, char replaceChar = '_', bool bIgnoreSlashes = false);
 
   static void SDLFileFree(char*& pOutData);
-  static int SDLFileRead(std::string fname, char*& pOutData, int64_t& _iOutSizeBytes, bool addNull = false);
-  static int SDLFileWrite(std::string fname, char* pData, size_t _iDataSizeBytes);
-  static std::string getFilePath(std::string name);
+  static int SDLFileRead(const string_t& fname, char*& pOutData, int64_t& _iOutSizeBytes, bool addNull = false);
+  static int SDLFileWrite(const string_t& fname, char* pData, size_t _iDataSizeBytes);
+  static string_t getFilePath(const string_t& name);
 
-  static FileInfo getFileInfo(std::string loc);
+  static FileInfo getFileInfo(const string_t& loc);
+
 private:
   static string_t _strExePath;
-  static bool getAllFilesOrDirs(string_t dir, std::vector<string_t>& __out_ dirs, bool bFiles);
+  static bool getAllFilesOrDirs(const string_t& dir, std::vector<string_t>& __out_ dirs, bool bFiles);
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

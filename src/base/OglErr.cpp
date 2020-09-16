@@ -7,6 +7,8 @@
 #include "../base/SDLUtils.h"
 #include "../base/OperatingSystem.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
+#include <atomic>
 
 namespace BR2 {
 class OglErr_Internal {
@@ -34,14 +36,17 @@ public:
     }
     return " *GL Error code not recognized.";
   }
-  static bool handleErrors(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
+  bool _bPrintingGPULog = false;
+  GLint _maxMsgLen = -1;
+
+  bool handleErrors(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
     SDLUtils::checkSDLErr(doNotLog || !clearOnly, clearOnly);
 
     printAndFlushGpuLog(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
 
     return checkOglErr(ctx, bShowNote, bDoNotBreak || clearOnly, doNotLog || !clearOnly, shaderName);
   }
-  static bool checkOglErr(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
+  bool checkOglErr(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName) {
     bool bError = false;
 
     //GPU Log -
@@ -53,6 +58,7 @@ public:
         if (StringUtil::isNotEmpty(shaderName)) {
           errmsg += OperatingSystem::newline() + " -> shader: " + shaderName;
         }
+        errmsg += OpenGLUtils::debugGetRenderState();
         BRLogError(errmsg);
       }
 
@@ -66,7 +72,19 @@ public:
 
     return bError;
   }
-  static void printAndFlushGpuLog(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog,
+  void printAndFlushGpuLog(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog,
+                           const string_t& shaderName, bool clearOnly) {
+    if (_bPrintingGPULog) {
+      //Prevent recursion.
+      return;
+    }
+    _bPrintingGPULog = true;
+    {
+      printAndFlushGpuLog_Notrap(ctx, bShowNote, bDoNotBreak, doNotLog, shaderName, clearOnly);
+    }
+    _bPrintingGPULog = false;
+  }
+  void printAndFlushGpuLog_Notrap(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog,
                                   const string_t& shaderName, bool clearOnly) {
     //Enable this in engine.cpp glEnable(GL_DEBUG_OUTPUT);
     if (ctx == nullptr) {
@@ -81,13 +99,12 @@ public:
     GLuint numMsgs = 64;
     GLuint numFound;
 
-    static GLint maxMsgLen = -1;
-    if (maxMsgLen == -1) {
-      glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH, &maxMsgLen);
+    if (_maxMsgLen == -1) {
+      glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH, &_maxMsgLen);
     }
-    if (maxMsgLen <= 0) {
+    if (_maxMsgLen <= 0) {
       BRLogError("GL_MAX_DEBUG_MESSAGE_LENGTH returned 0.");
-      maxMsgLen = -2;
+      _maxMsgLen = -2;
       return;
     }
 
@@ -97,7 +114,7 @@ public:
     bool graphicsLogInfo = Gu::getEngineConfig()->getGraphicsErrorLogging_Info();
 
     do {
-      std::vector<GLchar> msgData(numMsgs * maxMsgLen);
+      std::vector<GLchar> msgData(numMsgs * _maxMsgLen);
       std::vector<GLenum> sources(numMsgs);
       std::vector<GLenum> types(numMsgs);
       std::vector<GLenum> severities(numMsgs);
@@ -136,8 +153,8 @@ public:
       }
     } while (numFound > 0);
   }
-  static void logGPUMessageText(const string_t& cstrMsg, int msgId, const string_t& shaderName, bool doNotLog, GLenum severity,
-                                GLenum type, GLenum source, bool graphicsLogHigh, bool graphicsLogMed, bool graphicsLogLow, bool graphicsLogInfo) {
+  void logGPUMessageText(const string_t& cstrMsg, int msgId, const string_t& shaderName, bool doNotLog, GLenum severity,
+                         GLenum type, GLenum source, bool graphicsLogHigh, bool graphicsLogMed, bool graphicsLogLow, bool graphicsLogInfo) {
     string_t msg = "";
     string_t shaderMsg = "";
 
@@ -173,8 +190,10 @@ public:
       static bool _bPrintingGPULog = false;
       if (_bPrintingGPULog == false) {
         _bPrintingGPULog = true;
-        strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : RenderUtils::debugGetRenderState(true, false, false);
-        strStackInfo = (type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : DebugHelper::getStackTrace();  //error prints stack.
+        //This isn't necessary. We can just add it above. what's happening is calling renderstate() resets the glError.
+        // Also the GL Error automatically resets.
+        strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : OpenGLUtils::debugGetRenderState(true, false, false);
+        strStackInfo = "";//(type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : DebugHelper::getStackTrace();  //error prints stack.
         _bPrintingGPULog = false;
       }
       else {
@@ -183,12 +202,11 @@ public:
       }
 
       msg = Stz "GPU_LOG_MSG" + strId + strType + strSev + strSource + OperatingSystem::newline() +
-               shaderMsg + OperatingSystem::newline() +
-               " MSG ID: " + strId + OperatingSystem::newline() +
-               " Msg: " + cstrMsg + OperatingSystem::newline() +
-               " Callstack: " + OperatingSystem::newline() +
-               strStackInfo + OperatingSystem::newline() +
-               strRenderState;
+            shaderMsg + OperatingSystem::newline() +
+            " MSG ID: " + strId + OperatingSystem::newline() +
+            " Msg: " + cstrMsg + OperatingSystem::newline() +
+            " Render: " + OperatingSystem::newline() + strStackInfo + OperatingSystem::newline() +
+            strRenderState;
 
       if (type == GL_DEBUG_TYPE_ERROR) {
         BRLogError(msg);
@@ -201,7 +219,7 @@ public:
       }
     }
   }
-  static bool skipNVIDIA(int id) {
+  FORCE_INLINE bool skipNVIDIA(int id) {
     //NVidia - redundant messages / infos
     return id == 0x00020071     // GL_DYANMIC_DRAW or GL_STATIC_DRAW memory usgae
            || id == 0x00020084  // Texture state usage warning: Texture 0 is base level inconsistent. Check texture size.
@@ -299,17 +317,29 @@ public:
     }
   }
 };
+
+///
+///
+///
+///
+
 bool OglErr::chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   if (Gu::getEngineConfig()->getEnableRuntimeErrorChecking() == true) {
-    return OglErr_Internal::handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
+    return _pint->handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;
 }
 bool OglErr::chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   if (Gu::getEngineConfig()->getEnableDebugErrorChecking() == true) {
-    return OglErr_Internal::handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
+    return _pint->handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;
+}
+OglErr::OglErr() {
+  _pint = std::make_unique<OglErr_Internal>();
+}
+OglErr::~OglErr() {
+  _pint = nullptr;
 }
 
 }  // namespace BR2

@@ -469,7 +469,7 @@ void WorldGrid::beginGenAsync(std::function<void()> func) {
   _genFuture = std::async(std::launch::async, [that, func] {
     try {
       func();
-    } catch (Exception* ex) {
+    } catch (Exception ex) {
       //Thread was killed
       if (that->getKilled()) {
         BRLogInfo("Grid generation cancelled.");
@@ -508,7 +508,7 @@ void WorldGrid::checkKilled() {
   if (_bKilled && getIsGenerating()) {
     //*** THIS IS NOT AN ERROR**
     //*** THIS IS NOT AN ERROR**
-    throw new Exception("Grid generation was cancelled.", __LINE__, __FILE__, false);
+    throw Exception("Grid generation was cancelled.", __LINE__, __FILE__, false);
     //*** THIS IS NOT AN ERROR**
     //*** THIS IS NOT AN ERROR**
   }

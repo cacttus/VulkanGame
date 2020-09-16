@@ -15,11 +15,7 @@ OpenGLApi::~OpenGLApi() {
 }
 void OpenGLApi::cleanup() {
 }
-
-std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
-  //Create GL Context.
-  std::shared_ptr<GraphicsWindow> pRet = nullptr;
-
+std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
   int minGLVersion;
   int minGLSubversion;
   std::vector<std::shared_ptr<GLProfile>> profs;
@@ -52,10 +48,11 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
 
   int msaa_buf = 0;
   int msaa_samples = 0;
-  if (Gu::getEngineConfig()->getEnableMsaa()) {
+  if (Gu::getEngineConfig()->getEnableMSAA()) {
     msaa_buf = 1;
     msaa_samples = Gu::getEngineConfig()->getMsaaSamples();
   }
+  bVsync = Gu::getEngineConfig()->getVsyncEnabled();
 
   //This is the 'optimal' context.
   if (iProfile == SDL_GL_CONTEXT_PROFILE_ES) {
@@ -79,40 +76,28 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
     }
   }
 
-  for (std::shared_ptr<GLProfile> prof : profs) {
-    //in general you can't change the value of SDL_GL_CONTEXT_PROFILE_MASK without first destroying all windows created with the previous setting.
-    BRLogInfo("Profile: " + prof->toString());
-    try {
-      SDL_Init(SDL_INIT_VIDEO);
+  return profs;
+}
 
-      //This must be called before creating the window because this sets SDL's PixelFormatDescritpro
-      GLContext::setWindowAndOpenGLFlags(prof);
-      SDLUtils::checkSDLErr();
+std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const string_t& title) {
+  //Create GL Context.
+  std::shared_ptr<GraphicsWindow> pRet = nullptr;
 
-      //This fails on Linux for invalid profiles, but succeeds on windows.
-      SDL_Window* win = makeSDLWindow(title, SDL_WINDOW_OPENGL, false);
-      if (win != nullptr) {
-        std::shared_ptr<GLContext> context = std::make_shared<GLContext>(getThis<GraphicsApi>(), prof, win);
-        if (context->valid()) {
-          pRet = context->getGraphicsWindow();
-          if (pRet != nullptr) {
-            SDL_GL_SetSwapInterval(prof->_bVsync ? 1 : 0);  //Vsync is automatic on IOS
-            SDLUtils::checkSDLErr();
-
-            SDL_ShowWindow(win);
-            SDLUtils::checkSDLErr();
-
-            //Context created successfully
-            setMainContext(context);
-            getContexts().push_back(context);
-            break;
-          }
-        }
-        SDL_DestroyWindow(win);
-      }
+  if (_pDefaultCompatibleProfile) {
+    //Try to make window from the profile we used for a previous window.
+    if ((pRet = createWindowFromProfile(_pDefaultCompatibleProfile, title)) == nullptr) {
+      BRLogError("Couldn't create a window from the default window profile.");
     }
-    catch (Exception* ex) {
-      BRLogError("Error during GL context creation: " + ex->what());
+  }
+
+  if (pRet == nullptr) {
+    auto profs = getProfiles();
+    for (std::shared_ptr<GLProfile> prof : profs) {
+      //in general you can't change the value of SDL_GL_CONTEXT_PROFILE_MASK without first destroying all windows created with the previous setting.
+      pRet = createWindowFromProfile(prof, title);
+      if (pRet != nullptr) {
+        break;
+      }
     }
   }
 
@@ -120,6 +105,50 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(std::string title) {
     BRThrowException("Failed to create OpenGL context.  See errors in log.");
   }
 
+  return pRet;
+}
+std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_ptr<GLProfile> prof, const string_t& title) {
+  // Create an OPENGL enabled window from a spec profile.
+  // @return An OpenGL enabled graphics window of the given profile, or nullptr if the profile wasn't compatible.
+  AssertOrThrow2(prof != nullptr);
+  BRLogInfo("Profile: " + prof->toString());
+  std::shared_ptr<GraphicsWindow> pRet = nullptr;
+  try {
+    SDL_Init(SDL_INIT_VIDEO);
+
+    //This must be called before creating the window because this sets SDL's PixelFormatDescritpro
+    GLContext::setWindowAndOpenGLFlags(prof);
+    SDLUtils::checkSDLErr();
+
+    //This fails on Linux for invalid profiles, but succeeds on windows.
+    SDL_Window* win = makeSDLWindow(title, SDL_WINDOW_OPENGL, false);
+    if (win != nullptr) {
+      std::shared_ptr<GLContext> context = std::make_shared<GLContext>(getThis<GraphicsApi>(), prof, win);
+      if (context->valid()) {
+        pRet = context->getGraphicsWindow();
+        if (pRet != nullptr) {
+          SDL_GL_SetSwapInterval(prof->_bVsync ? 1 : 0);  //Vsync is automatic on IOS
+          SDLUtils::checkSDLErr();
+
+          SDL_ShowWindow(win);
+          SDLUtils::checkSDLErr();
+
+          _pDefaultCompatibleProfile = prof;
+
+          //Context created successfully
+          setMainContext(context);
+          getContexts().push_back(context);
+        }
+      }
+      else {
+        SDL_DestroyWindow(win);
+      }
+    }
+  }
+  catch (const Exception& ex) {
+    BRLogError("Error during GL context creation: " + ex.what());
+    pRet = nullptr;
+  }
   return pRet;
 }
 void OpenGLApi::makeCurrent(SDL_Window* win) {
@@ -130,6 +159,10 @@ void OpenGLApi::getDrawableSize(SDL_Window* win, int* w, int* h) {
 }
 void OpenGLApi::swapBuffers(SDL_Window* win) {
   SDL_GL_SwapWindow(win);
+}
+void OpenGLApi::destroyWindow(std::shared_ptr<GraphicsWindow> win) {
+  //SDL_GL_DeleteContext automatically happens in the window's context.
+  GraphicsApi::destroyWindow(win);
 }
 
 }  // namespace BR2

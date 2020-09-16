@@ -1,6 +1,7 @@
 #include "../base/DebugHelper.h"
 #include "../base/AppRunner.h"
 #include "../base/Gu.h"
+#include "../base/Logger.h"
 
 //unit test includes
 #include "../world/CSharpScript.h"
@@ -42,7 +43,7 @@ void glmTest() {
     t_timeval a = Gu::getMilliSeconds();
     vec4 v2(0, 0, 0, 0);
     for (size_t i = 0; i < count; ++i) {
-      vec4 v(1,0,0,0);
+      vec4 v(1, 0, 0, 0);
       mat4 m;
       m.setIdentity();
       v2 = (v2 + (m * v)) / 2.0f;
@@ -51,8 +52,15 @@ void glmTest() {
   }
 }
 
+#define MSSFFFILE(x) BR_SRC_FLINE
+#define BOOBAR MSSFFFILE(3)
+
 int main(int argc, char **argv) {
- // glmTest();
+  // glmTest();
+  std::cout << __FILE__ << " " << __LINE__ << std::endl;
+  std::cout << BR_SRC_FNAME << " " << BR_SRC_FLINE << std::endl;
+  std::cout << BOOBAR << std::endl;
+  std::cout << BRTestFL() << std::endl;
 
   DebugHelper::debugHeapBegin(false);
   {

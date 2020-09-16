@@ -793,8 +793,8 @@ void ObFile::processShiftMotionImage(std::shared_ptr<SpriteSpec> ps, bool shiftH
     std::shared_ptr<Img32> bi = nullptr;
     try {
       bi = Gu::loadImage(pFrame->getImageName());
-    } catch (Exception* ex) {
-      BRLogError("Failed to Open image.:" + OperatingSystem::newline() + ex->what());
+    } catch (const Exception&  ex) {
+      BRLogError("Failed to Open image.:" + OperatingSystem::newline() + ex.what());
       return;
     }
 

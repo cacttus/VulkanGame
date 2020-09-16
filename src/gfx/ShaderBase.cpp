@@ -14,6 +14,7 @@
 #include "../gfx/ShaderAttribute.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 #include "../gfx/LightManager.h"
 #include "../gfx/LightNode.h"
 #include "../gfx/RenderViewport.h"
@@ -45,7 +46,6 @@ ShaderBase::~ShaderBase() {
     BRLogError("Could not get graphics context in dtor.");
     Gu::debugBreak();
   }
-
 }
 void ShaderBase::init() {
   _glId = std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glCreateProgram();
@@ -277,9 +277,9 @@ void ShaderBase::draw(std::shared_ptr<MeshNode> mesh, int32_t iCount, GLenum eDr
 }
 void ShaderBase::draw(std::shared_ptr<VaoDataGeneric> vao, int32_t iCount, GLenum eDrawMode) {
   std::shared_ptr<VaoShader> vs = nullptr;
-  RenderUtils::debugGetRenderState();
+  OpenGLUtils::debugGetRenderState();
   vs = vao->getOrCreateVaoForShader(shared_from_this());
-  RenderUtils::debugGetRenderState();
+  OpenGLUtils::debugGetRenderState();
   draw(vs, iCount, eDrawMode);
 }
 void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDrawMode) {
@@ -290,7 +290,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
   AssertOrThrow2(vao != nullptr);
   Gu::getCoreContext()->chkErrDbg();
 
-  RenderUtils::debugGetRenderState();
+  OpenGLUtils::debugGetRenderState();
   bind();
   {
     Gu::getCoreContext()->chkErrDbg();
@@ -299,7 +299,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
     Gu::getCoreContext()->chkErrDbg();
     verifyBound();
 
-    RenderUtils::debugGetRenderState();
+    OpenGLUtils::debugGetRenderState();
 
     vao->bind();
     {
@@ -307,7 +307,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
         iCount = (int32_t)vao->getIbo()->getNumElements();
       }
       if (iCount > 0) {
-        RenderUtils::debugGetRenderState();
+        OpenGLUtils::debugGetRenderState();
         //GL_TRIANGLES = 0x0004
         glDrawElements(eDrawMode, iCount, GL_UNSIGNED_INT, (GLvoid*)0);
         Gu::getCoreContext()->chkErrDbg(false, false, this->getProgramName());
@@ -329,7 +329,7 @@ string_t ShaderBase::debugGetUniformValues() {
       // Gu::debugBreak();
     }
     else {
-      str += " " + uf.second->debugGetUniformValueAsString() + " " + OperatingSystem::newline();
+      str += " " + uf.second->debugGetUniformValueAsString(true) + " " + OperatingSystem::newline();
 
     }
   }

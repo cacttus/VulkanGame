@@ -161,8 +161,8 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeShader(const std::vector<string_t>&
 
     BRLogInfo("Load Success" + OperatingSystem::newline() + "------------------------------" + OperatingSystem::newline());
   }
-  catch (Exception* ex) {
-    BRLogError(ex->what());
+  catch (const Exception&  ex) {
+    BRLogError(ex.what());
   }
 
   return pShader;

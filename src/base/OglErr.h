@@ -8,16 +8,21 @@
 #define __OGLERR_1479868789525442042_H__
 
 #include "../base/BaseHeader.h"
-
 namespace BR2 {
 /**
 *  @class oglErr
 *  @brief Handles OpenGL Errors.
 */
+class OglErr_Internal;
 class OglErr {
 public:
-  static bool chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly=false);
-  static bool chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly=false);
+  OglErr();
+  virtual ~OglErr();
+  bool chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly = false);
+  bool chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly = false);
+
+private:
+  std::unique_ptr<OglErr_Internal> _pint;
 };
 
 }  // namespace BR2

@@ -16,7 +16,6 @@ namespace BR2 {
 *  @brief Handles the OpenGL API.
 */
 class OpenGLApi : public GraphicsApi {
-
 public:
   OpenGLApi();
   virtual ~OpenGLApi() override;
@@ -24,17 +23,19 @@ public:
   const int c_iCurrentOpenGLVersion = 4;
   const int c_iCurrentOpenGLSubVersion = 5;
 
-  virtual std::shared_ptr<GraphicsWindow> createWindow(std::string title) override;
+  virtual std::shared_ptr<GraphicsWindow> createWindow(const string_t&  title) override;
   virtual void makeCurrent(SDL_Window* win) override;
   virtual void getDrawableSize(SDL_Window* win, int* w, int* h) override;
-  virtual void swapBuffers(SDL_Window* win)  override;
+  virtual void swapBuffers(SDL_Window* win) override;
   virtual void cleanup() override;
+  virtual void destroyWindow(std::shared_ptr<GraphicsWindow> win) override;
+
+private:
+  std::vector<std::shared_ptr<GLProfile>> getProfiles();
+  std::shared_ptr<GraphicsWindow> createWindowFromProfile(std::shared_ptr<GLProfile> prof, const string_t& title);
+  std::shared_ptr<GLProfile> _pDefaultCompatibleProfile = nullptr;
 };
 
-
-
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

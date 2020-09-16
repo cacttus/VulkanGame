@@ -228,8 +228,8 @@ std::shared_ptr<Img32> Atlas::composeImage(bool bCache) {
       copyLoc.x = (iImage % _vGridSize.x) * _vSpriteSize.x;
       copyLoc.y = (iImage / _vGridSize.y) * _vSpriteSize.y;
     }
-    catch (Exception * ex) {
-      BRLogError("Failed to Open image.:\r\n" + ex->what());
+    catch (const Exception&  ex) {
+      BRLogError("Failed to Open image.:\r\n" + ex.what());
     }
 
     try {
@@ -240,8 +240,8 @@ std::shared_ptr<Img32> Atlas::composeImage(bool bCache) {
         ite->second->_viGridPos.y = (iImage / _vGridSize.y);
       }
     }
-    catch (BR2::Exception * ex) {
-      BRLogError("Failed to Copy Sub-Image during texture composition.:\r\n" + ex->what());
+    catch (const Exception&  ex) {
+      BRLogError("Failed to Copy Sub-Image during texture composition.:\r\n" + ex.what());
     }
 
     pCopy = nullptr;

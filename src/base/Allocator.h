@@ -235,10 +235,8 @@ template <typename Tx> void Allocator<Tx>::fillb(Tx base) {
  *    @fn operator[]
  */
 template <typename Tx> Tx &Allocator<Tx>::operator[](size_t index) {
-  DebugValidate(index < count());  // Exception(" [MM] Allocator Index out of
-                                   // range.",__LINE__,__FILE__);
+  DebugValidate(index < count());  
   DebugValidate(isAllocated());
-
   return (Tx &)(*(_pT + index));
 }
 /**

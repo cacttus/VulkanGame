@@ -23,7 +23,8 @@ namespace BR2 {
 class Matrix4x4 {
 public:
   float
-      _m11, _m12, _m13, _m14,
+      _m11,
+      _m12, _m13, _m14,
       _m21, _m22, _m23, _m24,
       _m31, _m32, _m33, _m34,
       _m41, _m42, _m43, _m44;
@@ -45,7 +46,7 @@ public:
     return Matrix4x4(m);
   }
 
-  FORCE_INLINE STATIC void copy(Matrix4x4* to, Matrix4x4* from);
+  FORCE_INLINE void copyTo(Matrix4x4& to);
   FORCE_INLINE void values(float* m);
   FORCE_INLINE Matrix4x4& setTranslation(float x, float y, float z);
   FORCE_INLINE Matrix4x4 operator+(const Matrix4x4& m) const;
@@ -125,7 +126,7 @@ public:
 
   FORCE_INLINE void decompose(vec4& pos, mat4& rot, vec4& scale) const;
   FORCE_INLINE void decompose(vec4& pos, vec4& rot, vec4& scale, bool bDegreeRotation = false) const;
-} CACHE_ALIGN_16 ;
+} CACHE_ALIGN_16;
 
 FORCE_INLINE Matrix4x4::Matrix4x4() {
 }
@@ -136,11 +137,23 @@ FORCE_INLINE Matrix4x4::Matrix4x4(float* mat) {
     Mat(i) = mat[i];
   }
 }
-FORCE_INLINE void Matrix4x4::copy(Matrix4x4* to, Matrix4x4* from) {
-  if (!(to && from)) {
-    throw new Exception("runtime assertion", __LINE__, __FILE__);
-  }
-  memcpy((void*)to, (void*)from, sizeof(Matrix4x4));
+FORCE_INLINE void Matrix4x4::copyTo(Matrix4x4& __out_ to) {
+  to._m11 = this->_m11;
+  to._m21 = this->_m21;
+  to._m31 = this->_m31;
+  to._m41 = this->_m41;
+  to._m12 = this->_m12;
+  to._m22 = this->_m22;
+  to._m32 = this->_m32;
+  to._m42 = this->_m42;
+  to._m13 = this->_m13;
+  to._m23 = this->_m23;
+  to._m33 = this->_m33;
+  to._m43 = this->_m43;
+  to._m14 = this->_m14;
+  to._m24 = this->_m24;
+  to._m34 = this->_m34;
+  to._m44 = this->_m44;
 }
 FORCE_INLINE void Matrix4x4::values(float* m) {
   int x = 0;

@@ -158,14 +158,14 @@ void OperatingSystem::clearAllErrors() {
 #if defined(BR2_OS_WINDOWS)
   SetLastError(0);
 #else
-  throw new NotImplementedException();
+  BRThrowNotImplementedException();
 #endif
 }
 int32_t OperatingSystem::getError() {
 #if defined(BR2_OS_WINDOWS)
   return GetLastError();
 #else
-  throw new NotImplementedException();
+  BRThrowNotImplementedException();
 #endif
 }
 
@@ -205,7 +205,7 @@ string_t OperatingSystem::getRuntimeEnvironmentStr() {
 #elif defined(__LP64__) || defined(_LP64)
   return string_t("Linux 64 Bit");
 #else
-  throw new NotImplementedException();
+  BRThrowNotImplementedException();
 #endif
 }
 int OperatingSystem::strCaseCmp(const string_t& str1, const string_t& str2) {

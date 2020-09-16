@@ -39,7 +39,7 @@ public:
   std::shared_ptr<GraphicsApi> _pGraphicsApi = nullptr;
 
   void initSDLAndCreateGraphicsApi();
-  void doShowError(string_t err, Exception* e);
+  void doShowError(string_t err, const Exception * const e) const;
   void attachToGameHost();
   void printVideoDiagnostics();
   void updateWindowHandleForGamehost();
@@ -77,7 +77,7 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
 
   //Unfortunately we need a window for a graphics context.  We need contexts to init the managers.
   // This default window must come here.  We initialize the rendering system later.
-  // After this window is made, more windows can be made (since we have a core context).
+  // After this window is made, more windows can be made since we have a core context.
   std::shared_ptr<GraphicsWindow> window = _pGraphicsApi->createWindow(Stz "");  //Just avoid title
   SDLUtils::checkSDLErr();
   Gu::getCoreContext()->chkErrRt();
@@ -106,12 +106,18 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   SDLUtils::checkSDLErr();
   Gu::getCoreContext()->chkErrRt();
 
-  BRLogInfo("Creating Window");
+  BRLogInfo("Creating Window Renderer");
   window->initRenderSystem();
   SDLUtils::checkSDLErr();
   Gu::getCoreContext()->chkErrRt();
+  //
+  //   BRLogInfo("Creating Window 2");
+  //   std::shared_ptr<GraphicsWindow> window2 = _pGraphicsApi->createWindow(Stz "Window 2");  //Just avoid title
+  //   window2->initRenderSystem();
+  //   SDLUtils::checkSDLErr();
+  //   Gu::getCoreContext()->chkErrRt();
 }
-void AppRunner_Internal::doShowError(string_t err, Exception* e) {
+void AppRunner_Internal::doShowError(string_t err, const Exception *  const e ) const {
   if (e != nullptr) {
     OperatingSystem::showErrorDialog(e->what() + err, Stz "Error");
   }
@@ -252,8 +258,8 @@ void AppRunner_Internal::runGameLoopTryCatch() {
   try {
     _pGraphicsApi->updateLoop();
   }
-  catch (Exception* e) {
-    doShowError("Runtime Error", e);
+  catch (const Exception&  e) {
+    doShowError("Runtime Error", &e);
   }
   catch (...) {
     doShowError("Runtime Error, Unhandled exception.", nullptr);

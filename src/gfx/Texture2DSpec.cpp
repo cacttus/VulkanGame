@@ -9,6 +9,7 @@
 #include "../gfx/ShaderBase.h"
 #include "../gfx/Texture2DSpec.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
 Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : _pContext(ct) {
@@ -266,7 +267,7 @@ void Texture2DSpec::setFilter(TexFilter::e filter) {
   unbind(TextureChannel::e::Channel0);
 }
 bool Texture2DSpec::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image) {
-  return RenderUtils::getTextureDataFromGpu(image, _glId, _eGLTextureBinding);
+  return OpenGLUtils::getTextureDataFromGpu(image, _glId, _eGLTextureBinding);
 }
 void Texture2DSpec::serialize(std::shared_ptr<BinaryFile> fb) {
   std::shared_ptr<Img32> img = std::make_shared<Img32>();

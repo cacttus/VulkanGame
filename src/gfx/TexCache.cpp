@@ -6,6 +6,7 @@
 #include "../gfx/Texture2DSpec.h"
 #include "../gfx/RenderUtils.h"
 #include "../base/GLContext.h"
+#include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
 
@@ -83,7 +84,7 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   Gu::getCoreContext()->chkErrRt();
 
 
-  RenderUtils::debugGetRenderState(true,true,false);
+  OpenGLUtils::debugGetRenderState(true,true,false);
 
 }
 TexCache::~TexCache() {

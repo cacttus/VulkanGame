@@ -10,6 +10,7 @@
 #include "../gfx/RenderViewport.h"
 #include "../gfx/LightManager.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 #include "../gfx/ShadowBox.h"
 #include "../gfx/LightNode.h"
 #include "../gfx/ShaderBase.h"
@@ -161,10 +162,10 @@ void ShadowFrustum_Internal::createFbo() {
 
   string_t label = "ShadowMap_Frustum";
 
-  RenderUtils::debugGetRenderState();
+  OpenGLUtils::debugGetRenderState();
   // Create the depth buffer
-  GLenum depth = RenderUtils::getSupportedDepthSize();
-  RenderUtils::createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
+  GLenum depth = OpenGLUtils::getSupportedDepthSize();
+  OpenGLUtils::createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
 
   //Bind framebuffer and attach depth texture.
   Gu::getCoreContext()->glGenFramebuffers(1, &_glFrameBufferId);

@@ -14,11 +14,37 @@ namespace BR2 {
 //We can use either SDL's defines, or use the defines in the expected OS headers
 // BR2_OS_WINDOWS, BR2_OS_ANDROID, BR2_OS_LINUX, BR2_OS_IOS, BR2_OS_OSX
 #define MUST_OVERRIDE virtual
-#define SHADOWS
+
+/************************************************************************/
+/* FILES                                                                */
+/************************************************************************/
+constexpr const char* BR_GET_FILENAME(const char* path) {
+    const char* file = path;
+    while (*path) {
+        if (*path++ == '/') {
+            file = path;
+        }
+    }
+    return file;
+}
+//#if defined(BR2_OS_WINDOWS)
+//#define BR_SRC_FNAME __FILE__
+//#define BR_SRC_FLINE __LINE__
+//#elif defined(BR2_OS_LINUX)
+#define BR_SRC_FNAME (BR_GET_FILENAME(__FILE__))
+#define BR_SRC_FLINE (__LINE__)
+//#else
+//  OS_METHOD_NOT_IMPLEMENTED;
+//#endif
 
 //Note: Linux: this is defined in limits.h but doesn't account for actual BUFFER SIZES for wchar.
 #define BRO_MAX_PATH ((PATH_MAX)*2)
 //std::char_traits<wchar_t>::length (dimObjPrefix);
+
+/************************************************************************/
+/* FILES                                                                */
+/************************************************************************/
+
 
 #define DEL_MEM(x) \
   do {             \

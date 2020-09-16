@@ -10,6 +10,7 @@
 #include "../gfx/RenderPipe.h"
 #include "../gfx/RenderViewport.h"
 #include "../gfx/CameraNode.h"
+#include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
 Picker::Picker(std::shared_ptr<GLContext> pc, std::shared_ptr<RenderPipe> rp) : GLFramework(pc) {
@@ -36,7 +37,7 @@ void Picker::updatePickedPixel(int32_t x, int32_t y) {
   //    return;
   //}
 
-  RenderUtils::debugGetRenderState();
+  OpenGLUtils::debugGetRenderState();
 
   getContext()->glBindFramebuffer(GL_READ_FRAMEBUFFER, _pRenderPipe->getBlittedDeferred()->getFramebufferId());
   Gu::checkErrorsDbg();
@@ -45,7 +46,7 @@ void Picker::updatePickedPixel(int32_t x, int32_t y) {
 
   Gu::checkErrorsDbg();
 
-  RenderUtils::debugGetRenderState();
+  OpenGLUtils::debugGetRenderState();
 
   samplePixelId(x, y, _uiLastSelectedPixelId);
 
@@ -72,7 +73,7 @@ void Picker::samplePixelId(int32_t x, int32_t y, uint32_t& __out_ selectedId) {
   //https://www.khronos.org/opengles/sdk/docs/man/xhtml/glReadPixels.xml
   //If the currently bound framebuffer is not the default framebuffer object, color components 
   // are read from the color image attached to the GL_COLOR_ATTACHMENT0 attachment point.
-  RenderUtils::debugGetRenderState();
+  OpenGLUtils::debugGetRenderState();
 
   int32_t iHeight = getContext()->getActiveCamera()->getViewport()->getHeight();
 

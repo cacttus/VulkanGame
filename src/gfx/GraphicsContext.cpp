@@ -42,7 +42,7 @@ std::shared_ptr<GraphicsWindow> GraphicsContext::getGraphicsWindow() {
     try {
       _pWindow = GraphicsWindow::create(_pGraphicsApi, getThis<GLContext>(), _pSDLWindow);
     }
-    catch (Exception * ex) {
+    catch (const Exception&  ex) {
       _pWindow = nullptr;
       BRLogError("Error creating graphics window from graphics context.");
     }

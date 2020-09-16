@@ -1,7 +1,7 @@
 ﻿---
 BasedOnStyle: Google
 FixNamespaceComments: 'true'
-ReflowComments: 'false'
+ReflowComments: 'true'
 AllowAllParametersOfDeclarationOnNextLine: 'false'
 AccessModifierOffset: '-2'
 AlwaysBreakTemplateDeclarations: 'No'

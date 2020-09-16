@@ -14,6 +14,7 @@
 #include "../base/Stopwatch.h"
 
 namespace BR2 {
+enum class ManagerType { ShaderMaker };
 /**
 *  @class Gu
 *  @brief Global Utilities.
@@ -35,6 +36,13 @@ public:
   static std::shared_ptr<Net> getNet();
   static std::shared_ptr<GLContext> getCoreContext();
 
+  static bool isManagerConstructed(ManagerType m) {
+    if (m == ManagerType::ShaderMaker) {
+      return _pShaderMaker != nullptr;
+    }
+    BRThrowNotImplementedException();
+  }
+
   static void createLogger(string_t logfile_dir, const std::vector<string_t>& args);
   static bool checkArg(const std::vector<string_t>& args, string_t key, string_t value);
   static void initGlobals(const std::vector<std::string>& args);
@@ -44,8 +52,8 @@ public:
   static void setPackage(std::shared_ptr<ApplicationPackage> x) { _pPackage = x; }
   static void setGraphicsApi(std::shared_ptr<GraphicsApi> api);
 
-  static void checkErrorsDbg(bool ignore=false);
-  static void checkErrorsRt(bool ignore=false);
+  static void checkErrorsDbg(bool ignore = false);
+  static void checkErrorsRt(bool ignore = false);
   static void debugBreak();
   static void checkMemory();
   static bool isDebug();
@@ -55,8 +63,8 @@ public:
   static std::string getCPPVersion();
   static void sleepThread(uint64_t milliseconds);
 
-  static t_timeval  getMicroSeconds();
-  static t_timeval  getMilliSeconds();
+  static t_timeval getMicroSeconds();
+  static t_timeval getMilliSeconds();
 
   static std::shared_ptr<Img32> loadImage(std::string path);
   static bool saveImage(std::string path, std::shared_ptr<Img32> spec);
@@ -64,17 +72,16 @@ public:
   static int loadSound(std::string path, int& iChannels, int& iSampleRate, int16_t*& pData, int& nSamples, int& iDataLenBytes);
 
   static void inlineDrawBoxCont(const Box3f* b);
-  static void guiQuad2d(Box2f& pq, std::shared_ptr<RenderViewport> vp);//Transforms a quad for the matrix-less 
+  static void guiQuad2d(Box2f& pq, std::shared_ptr<RenderViewport> vp);  //Transforms a quad for the matrix-less
   static float fade(float t);
 
   static void print(char msg);
   static void print(const char* msg);
   static void print(const string_t& msg);
 
-
   static std::vector<string_t> argsToVectorOfString(int argc, char** argv, char delimiter = '=');
 
-  template < typename Tx >
+  template <typename Tx>
   static bool addIfDoesNotContain(std::vector<Tx>& vec, Tx& rhs) {
     for (size_t i = 0; i < vec.size(); ++i) {
       if (vec[i] == rhs) {
@@ -91,7 +98,6 @@ public:
       eValue = (Tx)0;
     }
   }
-
 
 private:
   static void loadConfig(const std::vector<std::string>& args);
@@ -114,10 +120,6 @@ private:
 #define Graphics Gu::getCoreContext()
 #define Config Gu::getEngineConfig()
 
-
-
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

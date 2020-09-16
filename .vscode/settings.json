@@ -6,7 +6,7 @@
   },
   "debug.onTaskErrors": "showErrors",
   "editor.renderWhitespace": "all",
-  "workbench.colorTheme": "Default Light+",
+  "workbench.colorTheme": "Default Light+", //Monokai, Quiet Light, Default Light+, Visual Studio Dark, Solarized Dark, Solarized Light, Tomorrow Night Blue
   "editor.comments.ignoreEmptyLines": false,
   "editor.copyWithSyntaxHighlighting": false,
   "editor.definitionLinkOpensInPeek": true,
@@ -20,6 +20,9 @@
   "C_Cpp.clang_format_sortIncludes": false,
   "telemetry.enableCrashReporter": false,
   "telemetry.enableTelemetry": false,
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "editor.gotoLocation.multipleDefinitions": "goto",
   "files.associations": {
     "array": "cpp",
     "atomic": "cpp",

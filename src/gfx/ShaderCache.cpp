@@ -101,9 +101,6 @@ GLProgramBinary* ShaderCache::getBinaryFromDisk(string_t& programName) {
   string_t binaryName = getBinaryNameFromProgramName(programName);
 
   time_t compTime;
-  //doesn't matter
-  //if(sizeof(time_t)!=8)
-  //    throw new Game::Exception("Could not save bin.  Time was not 64 bits.");
 
   if (!FileSystem::fileExists(binaryName)) {
     BRLogDebug(string_t("Program binary not found: ") + binaryName);
@@ -129,19 +126,15 @@ GLProgramBinary* ShaderCache::getBinaryFromDisk(string_t& programName) {
       pbin->_compileTime = compTime;
 
       df.read((char*)pbin->_binaryData, pbin->_binaryLength);
-
-      //This won't work.  DiskFIle is random access and doesn't keep track of how many byte it read.
-      //if(!df.checkEOF())
-      //    throw new Game::Exception("Failure in reading shader binary cache file. There was a file integrity error somewhere",__LINE__,__FILE__);
       df.close();
 
       _vecBinaries.push_back(pbin);
     }
   }
-  catch (Exception * ex) {
+  catch (const Exception&  ex) {
     //fail silently
 
-    BRLogError("Failed to load program binary " + binaryName + ex->what());
+    BRLogError("Failed to load program binary " + binaryName + ex.what());
     if (pbin) {
       delete pbin;
     }
@@ -168,8 +161,8 @@ void ShaderCache::saveBinaryToDisk(const string_t& programName, GLProgramBinary*
     df.write((char*)bin->_binaryData, bin->_binaryLength);
     df.close();
   }
-  catch (Exception * ex) {
-    BRLogError("Failed to save program binary " + binaryName + ex->what());
+  catch (const Exception& ex) {
+    BRLogError("Failed to save program binary " + binaryName + ex.what());
   }
 
 }
@@ -237,9 +230,9 @@ std::shared_ptr<ShaderBase> ShaderCache::tryLoadCachedBinary(std::string program
           deleteBinaryFromDisk(programName);
         }
       }
-      catch (Exception * e) {
+      catch (const Exception&  e) {
         BRLogWarn("[ShaderCache] Loading program binary returned warnings/errors:\r\n");
-        BRLogWarn(e->what());
+        BRLogWarn(e.what());
         deleteBinaryFromDisk(programName);
       }
 

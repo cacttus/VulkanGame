@@ -150,7 +150,7 @@ RetCode DiskFile::openForWrite(const DiskLoc& szloc, FileWriteMode::e mode) {
     appOrTrunc = std::ios::app;
   }
   else {
-    throw new NotImplementedException();
+    BRThrowNotImplementedException();
   }
 
   // - Open File
@@ -288,15 +288,11 @@ RetCode DiskFile::read(char* buf, size_t len, size_t buflen, size_t offset) {
 RetCode DiskFile::readTo(char* buf, const string_t& delims, size_t buflen) {
   AssertOrThrow2(state == file_opened_read);
 
-#ifdef _DEBUG
   AssertOrThrow2(delims.length() > 0);
-#else
-  if (delims.length() == 0)
-    throw new Exception("DiskFile::readTo, no delimiters.", __LINE__, __FILE__);
-#endif
 
-  if (checkEOF())
+  if (checkEOF()) {
     return FILE_EOF;
+  }
 
   char lastRead;
   size_t count = 0;
@@ -367,7 +363,7 @@ RetCode DiskFile::getReadStream(std::fstream& newStream) {
   //CheckOsErrorsDbg();
   if (!newStream.good()) {
     newStream.close();
-    return FILE_OPENFAILED;  //throw new Exception(Game::EX_FILE_OPEN_FAILED,"FILE_OPEN_FAILED",__LINE__,__FILE__);
+    return FILE_OPENFAILED;
   }
 
   size_t size;

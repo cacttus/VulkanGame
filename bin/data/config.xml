@@ -46,6 +46,7 @@
   <WindowedAspectRatio value="1920/1080"/>
   <GamePad value="KeyboardAndMouse"/>
   <Linux_ReadableBacktrace value="false"/>
+    <VsyncEnabled value="false"/>
 
 
 </config>

@@ -9,9 +9,9 @@
 
 #include "../gfx/GraphicsContext.h"
 #include "../base/SDLIncludes.h"
-//#include "../base/SDLGLIncludes.h"
 
 namespace BR2 {
+class OglErr;
 /**
 *  @class GLProfile
 *  @brief OpenGL pixel format, profile.
@@ -78,7 +78,8 @@ public:
 
   string_t getObjectLabel(GLenum type, GLuint objectId);
   void setObjectLabel(GLenum type, GLuint objectId, const string_t& label);
-
+  
+  //We can thunk most OpenGL methods right here if needed.
   void glGenTextures(GLsizei count, GLuint* ids);
 
   virtual void pushCullFace() override;
@@ -124,6 +125,7 @@ private:
   void printHelpfulDebug();
 
   int _iSupportedDepthSize;
+  std::unique_ptr<OglErr> _pOglErr;
 
 public:
   PFNGLUSEPROGRAMPROC glUseProgram = nullptr;

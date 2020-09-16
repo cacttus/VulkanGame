@@ -415,7 +415,7 @@ VulkanApi::VulkanApi() {
 VulkanApi::~VulkanApi() {
   _pint = nullptr;
 }
-std::shared_ptr<GraphicsWindow> VulkanApi::createWindow(string_t title) {
+std::shared_ptr<GraphicsWindow> VulkanApi::createWindow(const string_t& title) {
   SDL_Window* win = makeSDLWindow(title, SDL_WINDOW_VULKAN, false);
 
    //loadCaps();

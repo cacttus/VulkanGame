@@ -30,10 +30,10 @@ void ShaderCompiler::loadSource(std::shared_ptr<ShaderSubProgram> pSubProg) {
     BRLogDebug("Loading source for Shader " + pSubProg->getSourceLocation());
     loadSource_r(pSubProg, pSubProg->getSourceLocation(), pSubProg->getSourceLines(), greatestModifyTime, 0);
   }
-  catch (Exception* e) {
+  catch (const Exception& e) {
     //pSubProg->debugPrintShaderSource();
     _loadStatus = ShaderStatus::CompileError;
-    _error = e->what();
+    _error = e.what();
   }
 
   // - If shader is not uninitialized there was an error during loading.

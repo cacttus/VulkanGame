@@ -58,7 +58,7 @@ GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile
       printHelpfulDebug();
 
       if (profile->_iMSAABuffers == 0) {
-        Gu::getEngineConfig()->setEnableMsaa(false);
+        Gu::getEngineConfig()->setEnableMSAA(false);
         BRLogWarn("This configuration did not support MSAA.");
       }
 
@@ -74,6 +74,9 @@ GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile
         //Check that OpenGL initialized successfully
         loadCheckProc();
 
+        //Create opengl error handler
+        _pOglErr = std::make_unique<OglErr>();
+
         _bValid = true;
       }
     }
@@ -81,6 +84,7 @@ GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile
 }
 GLContext::~GLContext() {
   if (_context) {
+    _pOglErr = nullptr;
     /* SDL_GL_MakeCurrent(0, NULL); */ /* doesn't do anything */
     SDL_GL_DeleteContext(_context);
   }
@@ -105,10 +109,10 @@ void GLContext::setPolygonMode(PolygonMode p) {
 }
 bool GLContext::chkErrRt(bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   //Enable runtime errors.
-  return OglErr::chkErrRt(shared_from_this(), bDoNotBreak, doNotLog, shaderName, clearOnly);
+  return _pOglErr->chkErrRt(shared_from_this(), bDoNotBreak, doNotLog, shaderName, clearOnly);
 }
 bool GLContext::chkErrDbg(bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
-  return OglErr::chkErrDbg(shared_from_this(), bDoNotBreak, doNotLog, shaderName, clearOnly);
+  return _pOglErr->chkErrDbg(shared_from_this(), bDoNotBreak, doNotLog, shaderName, clearOnly);
 }
 bool GLContext::loadOpenGLFunctions() {
   bool bValid = true;
@@ -564,7 +568,7 @@ string_t GLContext::getObjectLabel(GLenum type, GLuint objectId) {
     GLsizei length = 0;
 
     Gu::checkErrorsDbg();
-    Gu::getCoreContext()->glGetObjectLabel(type, objectId, buflen, &length, lenbuf);
+    this->glGetObjectLabel(type, objectId, buflen, &length, lenbuf);
     Gu::checkErrorsRt();
 
     res.assign(lenbuf, length);
@@ -592,7 +596,7 @@ void GLContext::setObjectLabel(GLenum type, GLuint objectId, const string_t& lab
     }
     else {
       Gu::checkErrorsDbg();
-      Gu::getCoreContext()->glObjectLabel(type, objectId, label.length(), label.c_str());
+      this->glObjectLabel(type, objectId, label.length(), label.c_str());
       Gu::checkErrorsRt();
     }
   }
@@ -619,34 +623,46 @@ GLenum GLContext::getTextureTarget(GLuint textureId) {
     }
     glBindTexture(ttx, texid);
     if (glGetError() == GL_NO_ERROR) {
+      //We call this in order to also ignore potential GPU logs.
       Gu::checkErrorsRt(true);
       return ttx;
     }
     return (GLenum)0;
   };
   //from https://www.khronos.org/opengl/wiki/Texture
-  if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D)) != (GLenum)0)
+  if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_3D)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_3D)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_RECTANGLE)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_RECTANGLE)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_BUFFER)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_BUFFER)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D_ARRAY)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D_ARRAY)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_ARRAY)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_ARRAY)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP_ARRAY)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP_ARRAY)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE)) != (GLenum)0) {
     return ret;
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE_ARRAY)) != (GLenum)0)
+  }
+  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE_ARRAY)) != (GLenum)0) {
     return ret;
+  }
 
   return ret;
 }

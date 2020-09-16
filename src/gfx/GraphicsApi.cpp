@@ -177,13 +177,14 @@ bool GraphicsApi::handleEvents(SDL_Event* event) {
 }
 void GraphicsApi::destroyWindow(std::shared_ptr<GraphicsWindow> w) {
   w = nullptr;
+  
   SDL_DestroyWindow(w->getSDLWindow());
   //std::vector<std::shared_ptr<GraphicsWindow>>::iterator it = std::find(_pvecWindows.begin(), _pvecWindows.end(), w);
   //if (it != _pvecWindows.end()) {
   //  _pvecWindows.erase(it);
   //}
 }
-SDL_Window* GraphicsApi::makeSDLWindow(string_t windowTitle, int render_system, bool show) {
+SDL_Window* GraphicsApi::makeSDLWindow(const string_t& windowTitle, int render_system, bool show) {
   string_t title;
   bool bFullscreen = false;
   SDL_Window* ret = nullptr;

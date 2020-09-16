@@ -78,7 +78,7 @@ void TextParser::seekToChars(std::vector<char> cv) {
     }
 
     if (_ptrState == ptr_eof) {
-      throw new Exception("Tried to get next Character from end of file. (seekToChar)", __LINE__, __FILE__);
+      BRThrowException("Tried to get next Character from end of file. (seekToChar)");
     }
     inc();
   }
@@ -89,7 +89,7 @@ void TextParser::seekToChars(std::vector<char> cv) {
 */
 bool TextParser::inc() {
   if (_bEof) {
-    return eof();  //throw new Exception("Tried to parse file past EOF.",__LINE__,__FILE__);
+    return eof();  
   }
   _ptr++;
 
@@ -108,7 +108,7 @@ bool TextParser::inc() {
 */
 void TextParser::dec() {
   if (_ptrState == ptr_begin) {
-    throw new Exception("Tried to decrement the pointer at the beginning of the file.", __LINE__, __FILE__);
+    BRThrowException("Tried to decrement the pointer at the beginning of the file.");
   }
 
   if (charAt() == '\r' && nextChar() == '\n') {
@@ -165,7 +165,7 @@ void TextParser::eatBlockComment() {
     }
   }
   else if (nextChar() == 0) {
-    throw new Exception(" [Parser] Unmatched Comment Encountered at line ", __LINE__, __FILE__);
+    BRThrowException(" [Parser] Unmatched Comment Encountered at line ");
   }
 }
 
@@ -186,7 +186,7 @@ void TextParser::eatBody() {
     }
   }
   else if (nextChar() == 0) {
-    throw new Exception("Unmatched Comment Encountered at line ", __LINE__, __FILE__);
+    BRThrowException("Unmatched Comment Encountered at line ");
   }
 }
 

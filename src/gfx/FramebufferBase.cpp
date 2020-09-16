@@ -8,6 +8,7 @@
 #include "../gfx/CameraNode.h"
 #include "../gfx/ShaderBase.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 #include "../gfx/BufferRenderTarget.h"
 #include "../model/ModelHeader.h"
 #include "../model/VertexFormat.h"
@@ -149,7 +150,7 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shar
   inf->_iHeight = h;
 
   //This will cycle through depth formats and choose the most precise.
-  RenderUtils::createDepthTexture(strName, &inf->_iGlTexId, w, h, bMsaaEnabled, nMsaaSamples, GL_DEPTH_COMPONENT32F);
+  OpenGLUtils::createDepthTexture(strName, &inf->_iGlTexId, w, h, bMsaaEnabled, nMsaaSamples, GL_DEPTH_COMPONENT32F);
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
 
   return inf;
