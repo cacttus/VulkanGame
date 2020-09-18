@@ -4,7 +4,7 @@ FixNamespaceComments: 'true'
 ReflowComments: 'true'
 AllowAllParametersOfDeclarationOnNextLine: 'false'
 AccessModifierOffset: '-2'
-AlwaysBreakTemplateDeclarations: 'No'
+AlwaysBreakTemplateDeclarations: 'false'
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: 'false'

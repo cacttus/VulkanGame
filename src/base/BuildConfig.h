@@ -2,14 +2,15 @@
 *  @file BuildConfig.h
 *  @date April 3, 2016
 *  @author MetalMario971
-*    Contains all Build based defines.
+*  Contains all Build based defines.
+*  Do not include any external headers in this file.
 */
 #pragma once
 #ifndef __BUILDCONFIG_14597134672299218799_H__
 #define __BUILDCONFIG_14597134672299218799_H__
 
 //////////////////////////////////////////////////////////////////////////
-/// Only put *#define* in this file!  Nothing else please.
+/// Only put *#define* in this file!
 /// This header must come before all other header files.
 //////////////////////////////////////////////////////////////////////////
 

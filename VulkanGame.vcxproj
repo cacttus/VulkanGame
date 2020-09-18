@@ -491,6 +491,10 @@
     <ClCompile Include="src\world\Scene.cpp" />
     <ClCompile Include="src\world\Script.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
+    <None Include="README.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0D38EE0E-3375-49FF-84EA-9CC4488BA6ED}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -554,7 +558,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>.\bin\</OutDir>
     <TargetName>VulkanGame_x64d</TargetName>
-    <IncludePath>.\ext\SDL2_net-2.0.1\include;.\ext\SDL2-2.0.12\include;.\ext\LunarG\VulkanSDK\1.1.114.0\Include;$(IncludePath)</IncludePath>
+    <IncludePath>.\ext\SDL2_net-2.0.1\include;.\ext\SDL2-2.0.12\include;.\ext\LunarG\VulkanSDK\1.1.114.0\Include;.\ext\OpenGL\include;$(IncludePath)</IncludePath>
     <IntDir>.\tmp\vulkangame\debug64</IntDir>
     <LibraryPath>.\ext\LunarG\VulkanSDK\1.1.114.0\Lib;.\ext\SDL2_net-2.0.1\lib\x64;.\ext\SDL2-2.0.12\lib\x64;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>

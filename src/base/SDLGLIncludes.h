@@ -7,9 +7,13 @@
 #ifndef __SDLGLINCLUDES_15825791622018333782_H__
 #define __SDLGLINCLUDES_15825791622018333782_H__
 
+#include "../base/BuildConfig.h"
+
+//#define NO_SDL_GLEXT --TODO: for linux we should define this.
 #include <SDL_opengl.h>
-//#include <SDL_opengl_glext.h>
-#include <GL/glext.h>
+#if defined (BR2_OS_LINUX)
+  #include <GL/glext.h>  
+#endif
 
 
 #endif

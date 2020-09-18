@@ -26,7 +26,7 @@
  */
 
 /**
- *  \def NO_SDL_GLEXT
+ *  \def 
  *
  *  Define this if you have your own version of glext.h and want to disable the
  *  version included in SDL_opengl.h.

@@ -27,13 +27,13 @@ void EngineConfig::int32Prop(string_t prop_key, std::vector<string_t>& tokens, i
 }
 void EngineConfig::pkp(std::vector<string_t>& tokens) {
   int iind = 1;
-// 
+//
 #define XMLCONFIG_READ_BOOL(x)                                          \
-  else if (lcmp(tokens[0], EngineConfig::c_##x, 2)) {                        \
+  else if (lcmp(tokens[0], EngineConfig::c_##x, 2)) {                   \
     _pConfig->_b##x = TypeConv::strToBool(getCleanToken(tokens, iind)); \
   }
 #define XMLCONFIG_READ_INT32(x)                                          \
-  else if (lcmp(tokens[0], EngineConfig::c_##x, 2)) {                        \
+  else if (lcmp(tokens[0], EngineConfig::c_##x, 2)) {                    \
     _pConfig->_i32##x = TypeConv::strToInt(getCleanToken(tokens, iind)); \
   }
 
@@ -269,6 +269,8 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
 void EngineConfig::preLoad() {
 }
 void EngineConfig::postLoad(bool success) {
+  int n = 0;
+  n++;
 }
 
 }  // namespace BR2

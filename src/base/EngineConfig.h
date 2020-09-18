@@ -72,6 +72,7 @@ public:                                  \
                                          \
 private:                                 \
   bool _b##_x = _def;
+
 #define XMLCONFIG_PROP_BOOL_G(_x, _def) \
 public:                                 \
   const std::string c_##_x = #_x;       \
@@ -79,18 +80,20 @@ public:                                 \
                                         \
 private:                                \
   bool _b##_x = _def;
+
 #define XMLCONFIG_PROP_INT32_GS(_x, _def)        \
 public:                                          \
   const std::string c_##_x = #_x;                \
-  bool get##_x() { return _i32##_x; }            \
+  int_fast32_t get##_x() { return _i32##_x; }            \
   void set##_x(int_fast32_t v) { _i32##_x = v; } \
                                                  \
 private:                                         \
   int_fast32_t _i32##_x = _def;
+
 #define XMLCONFIG_PROP_INT32_G(_x, _def) \
 public:                                  \
   const std::string c_##_x = #_x;        \
-  bool get##_x() { return _i32##_x; }    \
+  int_fast32_t get##_x() { return _i32##_x; }    \
                                          \
 private:                                 \
   int_fast32_t _i32##_x = _def;
@@ -208,8 +211,8 @@ private:
   ColorSpace::e _eColorSpace = ColorSpace::e::SRGB;
   int _iBakedCharSize = 64;
   int _iFontBitmapSize = 2048;
-  int _iFullscreenWidth = 0;
-  int _iFullscreenHeight = 0;
+  int _iFullscreenWidth = 1920;
+  int _iFullscreenHeight = 1080;
   RenderSystem::e _eRenderSystem = RenderSystem::OpenGL;
   int32_t _iMsaaSamples = 4;
   int _iSaveFrameTextureMod = 10;
