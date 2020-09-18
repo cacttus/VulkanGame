@@ -21,7 +21,7 @@
       //"miDebuggerPath": "/usr/bin/gdb",
       //"miDebuggerArgs": "",
       "sourceFileMap": { 
-        "/build/glibc-YYA7BZ": "C:/Users/nguye/AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc/LocalState/rootfs/usr/src/glibc" 
+        "/build/glibc-YYA7BZ/**": "C:/Users/nguye/AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc/LocalState/rootfs/usr/src/glibc" 
       },
       "setupCommands": [
         {

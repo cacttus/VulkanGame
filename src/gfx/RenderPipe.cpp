@@ -558,7 +558,7 @@ void RenderPipe::bindDeferredTargets(bool bBind) {
   for (std::shared_ptr<BufferRenderTarget> inf : _pMsaaDeferred->getTargets()) {
     getContext()->glActiveTexture(inf->getTextureChannel());
     getContext()->chkErrDbg();
-    glBindTexture(inf->getTextureTarget(), bBind ? inf->getTexId() : 0);
+    getContext()->glBindTexture(inf->getTextureTarget(), bBind ? inf->getTexId() : 0);
     getContext()->chkErrDbg();
 
     if (bBind && inf->getTargetType() == RenderTargetType::e::Color || inf->getTargetType() == RenderTargetType::e::Shadow) {
@@ -614,7 +614,7 @@ void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet)
       }
       getContext()->glActiveTexture(GL_TEXTURE0 + iTextureIndex);
       Gu::checkErrorsDbg();
-      glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
+      getContext()->glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
       Gu::checkErrorsDbg();
       iIndex++;
     }
@@ -652,7 +652,7 @@ void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet)
 
       getContext()->glActiveTexture(GL_TEXTURE0 + iTextureIndex);
       Gu::checkErrorsDbg();
-      glBindTexture(GL_TEXTURE_2D, texId);
+      getContext()->glBindTexture(GL_TEXTURE_2D, texId);
       Gu::checkErrorsDbg();
       iIndex++;
     }
@@ -671,11 +671,11 @@ void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet)
     if (iTextureIndex < iMaxTexs) {
       getContext()->glActiveTexture(GL_TEXTURE0 + iTextureIndex);
       if (bSet) {
-        glBindTexture(GL_TEXTURE_2D, _pEnvTex->getGlId());
+        getContext()->glBindTexture(GL_TEXTURE_2D, _pEnvTex->getGlId());
         _pDeferredShader->setUf("_ufTexEnv0", (GLvoid*)&iTextureIndex);
       }
       else {
-        glBindTexture(GL_TEXTURE_2D, 0);
+        getContext()->glBindTexture(GL_TEXTURE_2D, 0);
       }
       iIndex++;
     }
@@ -707,7 +707,7 @@ DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramewo
 
   //Texurev
   Gu::getCoreContext()->glGenTextures(1, &_uiTexId0);
-  glBindTexture(GL_TEXTURE_2D, _uiTexId0);
+  getContext()->glBindTexture(GL_TEXTURE_2D, _uiTexId0);
   Gu::checkErrorsDbg();
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, nullptr);
   Gu::checkErrorsDbg();
@@ -716,11 +716,11 @@ DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramewo
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   Gu::checkErrorsDbg();
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _uiTexId0, "DOF FBO");
-  glBindTexture(GL_TEXTURE_2D, 0);
+  getContext()->glBindTexture(GL_TEXTURE_2D, 0);
 }
 DOFFbo::~DOFFbo() {
   getContext()->glDeleteFramebuffers(1, &_uiDOFFboId);
-  glDeleteTextures(1, &_uiTexId0);
+  getContext()->glDeleteTextures(1, &_uiTexId0);
 }
 void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::shared_ptr<CameraNode> cam) {
   //If MSAA is enabled downsize the MSAA buffer to the _pBlittedForward buffer so we can execute post processing.
@@ -747,13 +747,13 @@ void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::sha
       //This could be removed if we used Texture2DSpec for the RenderTarget texturs..
       GLuint i0;
       getContext()->glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, rtPos->getGlTexId());
+      getContext()->glBindTexture(GL_TEXTURE_2D, rtPos->getGlTexId());
       i0 = 0;
       pDofShader->setUf("_ufTextureId_i0", (GLvoid*)&i0);
 
       //This could be removed if we used Texture2DSpec for the RenderTarget texturs..
       getContext()->glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, rtColor->getGlTexId());
+      getContext()->glBindTexture(GL_TEXTURE_2D, rtColor->getGlTexId());
       i0 = 1;
       pDofShader->setUf("_ufTextureId_i1", (GLvoid*)&i0);
 
@@ -778,7 +778,7 @@ void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::sha
 
       //Bind the previously rendered color to the color buffer so we can pingpong it back.
       getContext()->glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, _pDOFFbo->_uiTexId0);
+      getContext()->glBindTexture(GL_TEXTURE_2D, _pDOFFbo->_uiTexId0);
 
       i0 = 1;
       pDofShader->setUf("_ufTextureId_i1", (GLvoid*)&i0);
@@ -795,9 +795,9 @@ void RenderPipe::postProcessDOF(std::shared_ptr<LightManager> lightman, std::sha
     //Unbind / Delete
     getContext()->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     getContext()->glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    getContext()->glBindTexture(GL_TEXTURE_2D, 0);
     getContext()->glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    getContext()->glBindTexture(GL_TEXTURE_2D, 0);
   }
 }
 void RenderPipe::endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::shared_ptr<CameraNode> pCam) {
@@ -816,7 +816,7 @@ void RenderPipe::endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::s
 
   getContext()->glActiveTexture(GL_TEXTURE0);
   getContext()->chkErrDbg();
-  glBindTexture(GL_TEXTURE_2D, _pBlittedForward->getGlColorBufferTexId());
+  getContext()->glBindTexture(GL_TEXTURE_2D, _pBlittedForward->getGlColorBufferTexId());
   getContext()->chkErrDbg();
   {
     _pForwardShader->beginRaster(pCam->getViewport());
@@ -837,7 +837,7 @@ void RenderPipe::endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::s
     _pForwardShader->endRaster();
   }
   getContext()->glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  getContext()->glBindTexture(GL_TEXTURE_2D, 0);
 }
 void RenderPipe::createQuadMesh(int w, int h) {
   //    DEL_MEM(_pQuadMesh);

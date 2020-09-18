@@ -27,7 +27,7 @@ void OpenGLUtils::resetRenderState() {
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&iMaxTextures);
     for (int iTex = 0; iTex < iMaxTextures; iTex++) {
       Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0 + iTex);
-      glBindTexture(GL_TEXTURE_2D, 0);
+      Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     //  VaoData::debugDisableAllAttribArrays();
@@ -84,7 +84,7 @@ void OpenGLUtils::createDepthTexture(const string_t& owner, GLuint* __out_ texId
   Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
   Gu::getCoreContext()->glGenTextures(1, texId);
   Gu::getCoreContext()->chkErrRt();
-  glBindTexture(texTarget, *texId);
+  Gu::getCoreContext()->glBindTexture(texTarget, *texId);
   //THe following parameters are for depth textures only
   Gu::getCoreContext()->chkErrRt();
 
@@ -108,7 +108,7 @@ void OpenGLUtils::createDepthTexture(const string_t& owner, GLuint* __out_ texId
 
   getCompatibleDepthComponent(eRequestedDepth, [&](GLenum eDepth) {
     if (bMsaaEnabled) {
-      Gu::getCoreContext()->glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, nMsaaSamples, eDepth, w, h, GL_TRUE);
+      Gu::getCoreContext()->glTexImage2DMultisample(texTarget, nMsaaSamples, eDepth, w, h, GL_TRUE);
       Gu::checkErrorsRt();
     }
     else {
@@ -118,7 +118,7 @@ void OpenGLUtils::createDepthTexture(const string_t& owner, GLuint* __out_ texId
   });
 
   Gu::checkErrorsRt();
-  glBindTexture(texTarget, 0);
+  Gu::getCoreContext()->glBindTexture(texTarget, 0);
   Gu::checkErrorsRt();
 }
 
@@ -705,14 +705,24 @@ void OpenGLUtils::debugGetTextureState(string_t& strState) {
   Gu::checkErrorsRt();
   GLuint maxId = 0;
   Gu::getCoreContext()->glGenTextures(1, &maxId);
-  glDeleteTextures(1, &maxId);
+  Gu::getCoreContext()->glDeleteTextures(1, &maxId);
   Gu::checkErrorsRt();
   //Show all registered texture parameters
-  for (GLuint iTexId = 0; iTexId < maxId; ++iTexId) {
-    OpenGLUtils::debugPrintTextureInfo(strState, iTexId);
+   for (GLuint iTexId = 0; iTexId < maxId; ++iTexId) {
+     OpenGLUtils::debugPrintTextureInfo(strState, iTexId);
   }
+  // static int dummyid = 1;
+  // if (dummyid != 3)
+  //   OpenGLUtils::debugPrintTextureInfo(strState, dummyid);
+  // std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+  //           << dummyid << " bosgo"
+  //           << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+  //           << std::endl;
+  // dummyid++;
 
   appendLine(strState, Stz "----------------Bound Textures----------------");
+
+  Gu::checkErrorsRt();
 
   // - Get bound texture units.
   for (int i = 0; i < iMaxVertexTextureUnits; ++i) {
@@ -720,46 +730,68 @@ void OpenGLUtils::debugGetTextureState(string_t& strState) {
     Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0 + i);
     appendLine(strState, Stz "  Channel " + i);
     glGetIntegerv(GL_TEXTURE_BINDING_1D, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     1D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     1D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_1D_ARRAY, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     1D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     1D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     2D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     2D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D_ARRAY, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     2D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     2D_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     2D_MULTISAMPLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     2D_MULTISAMPLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     2D_MULTISAMPLE_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     2D_MULTISAMPLE_ARRAY: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_3D, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     3D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     3D: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_BUFFER, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     BUFFER: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     BUFFER: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     CUBE_MAP: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     CUBE_MAP: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
     iTextureId = 0;
     glGetIntegerv(GL_TEXTURE_BINDING_RECTANGLE, &iTextureId);
-    if (iTextureId > 0) appendLine(strState, Stz "     RECTANGLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    if (iTextureId > 0) {
+      appendLine(strState, Stz "     RECTANGLE: " + Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTextureId));
+    }
+    Gu::checkErrorsRt();
   }
 }
 void OpenGLUtils::debugPrintTextureInfo(string_t& strState, GLuint iTexId) {
-  return;
   if (!glIsTexture(iTexId)) {
     return;
   }
   Gu::checkErrorsRt();
 
+  Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
+
   string_t texName = Gu::getCoreContext()->getObjectLabel(GL_TEXTURE, iTexId);
   Gu::checkErrorsRt();
-
+  //
   GLenum tex_target = Gu::getCoreContext()->getTextureTarget(iTexId);
   Gu::checkErrorsRt();
 
@@ -777,25 +809,84 @@ void OpenGLUtils::debugPrintTextureInfo(string_t& strState, GLuint iTexId) {
       Gu::checkErrorsRt();
       glBindTexture(tex_target, iTexId);
       {
-        OpenGLUtils::debugPrintBoundTextureAttribs(strState, texName, tex_target);
+          OpenGLUtils::debugPrintBoundTextureAttribs(strState, texName, tex_target);
       }
       glBindTexture(tex_target, (GLuint)iSavedTextureId);
+
       Gu::checkErrorsRt();
     }
   }
 }
 GLenum OpenGLUtils::texTargetToTexBindingQuery(GLenum target) {
-  if (target == GL_TEXTURE_1D) return GL_TEXTURE_BINDING_1D;
-  else if (target == GL_TEXTURE_2D) return GL_TEXTURE_BINDING_2D;
-  else if (target == GL_TEXTURE_3D) return GL_TEXTURE_BINDING_3D;
-  else if (target == GL_TEXTURE_RECTANGLE) return GL_TEXTURE_BINDING_RECTANGLE;
-  else if (target == GL_TEXTURE_BUFFER) return GL_TEXTURE_BINDING_BUFFER;
-  else if (target == GL_TEXTURE_CUBE_MAP) return GL_TEXTURE_BINDING_CUBE_MAP;
-  else if (target == GL_TEXTURE_1D_ARRAY) return GL_TEXTURE_BINDING_1D_ARRAY;
-  else if (target == GL_TEXTURE_2D_ARRAY) return GL_TEXTURE_BINDING_2D_ARRAY;
-  else if (target == GL_TEXTURE_CUBE_MAP_ARRAY) return GL_TEXTURE_BINDING_CUBE_MAP_ARRAY;
-  else if (target == GL_TEXTURE_2D_MULTISAMPLE) return GL_TEXTURE_BINDING_2D_MULTISAMPLE;
-  else if (target == GL_TEXTURE_2D_MULTISAMPLE_ARRAY) return GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
+  if (target == GL_TEXTURE_1D) {
+    return GL_TEXTURE_BINDING_1D;
+  }
+  else if (target == GL_TEXTURE_2D) {
+    return GL_TEXTURE_BINDING_2D;
+  }
+  else if (target == GL_TEXTURE_3D) {
+    return GL_TEXTURE_BINDING_3D;
+  }
+  else if (target == GL_TEXTURE_RECTANGLE) {
+    return GL_TEXTURE_BINDING_RECTANGLE;
+  }
+  else if (target == GL_TEXTURE_BUFFER) {
+    return GL_TEXTURE_BINDING_BUFFER;
+  }
+  else if (target == GL_TEXTURE_CUBE_MAP) {
+    return GL_TEXTURE_BINDING_CUBE_MAP;
+  }
+  else if (target == GL_TEXTURE_1D_ARRAY) {
+    return GL_TEXTURE_BINDING_1D_ARRAY;
+  }
+  else if (target == GL_TEXTURE_2D_ARRAY) {
+    return GL_TEXTURE_BINDING_2D_ARRAY;
+  }
+  else if (target == GL_TEXTURE_CUBE_MAP_ARRAY) {
+    return GL_TEXTURE_BINDING_CUBE_MAP_ARRAY;
+  }
+  else if (target == GL_TEXTURE_2D_MULTISAMPLE) {
+    return GL_TEXTURE_BINDING_2D_MULTISAMPLE;
+  }
+  else if (target == GL_TEXTURE_2D_MULTISAMPLE_ARRAY) {
+    return GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
+  }
+  return (GLenum)0;
+}
+GLenum OpenGLUtils::texBindingToTexTargetQuery(GLenum binding) {
+  if (binding == GL_TEXTURE_BINDING_1D) {
+    return GL_TEXTURE_1D;
+  }
+  else if (binding == GL_TEXTURE_BINDING_2D) {
+    return GL_TEXTURE_2D;
+  }
+  else if (binding == GL_TEXTURE_BINDING_3D) {
+    return GL_TEXTURE_3D;
+  }
+  else if (binding == GL_TEXTURE_BINDING_RECTANGLE) {
+    return GL_TEXTURE_RECTANGLE;
+  }
+  else if (binding == GL_TEXTURE_BINDING_BUFFER) {
+    return GL_TEXTURE_BUFFER;
+  }
+  else if (binding == GL_TEXTURE_BINDING_CUBE_MAP) {
+    return GL_TEXTURE_CUBE_MAP;
+  }
+  else if (binding == GL_TEXTURE_BINDING_1D_ARRAY) {
+    return GL_TEXTURE_1D_ARRAY;
+  }
+  else if (binding == GL_TEXTURE_BINDING_2D_ARRAY) {
+    return GL_TEXTURE_2D_ARRAY;
+  }
+  else if (binding == GL_TEXTURE_BINDING_CUBE_MAP_ARRAY) {
+    return GL_TEXTURE_CUBE_MAP_ARRAY;
+  }
+  else if (binding == GL_TEXTURE_BINDING_2D_MULTISAMPLE) {
+    return GL_TEXTURE_2D_MULTISAMPLE;
+  }
+  else if (binding == GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY) {
+    return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
+  }
   return (GLenum)0;
 }
 void OpenGLUtils::debugPrintBoundTextureAttribs(string_t& strState, const string_t& texName, GLenum tex_target) {
@@ -806,7 +897,7 @@ void OpenGLUtils::debugPrintBoundTextureAttribs(string_t& strState, const string
 #define GL_VP0(dx, dy) ((value == dx) ? (std::string(#dx)) : (dy))
 #define GL_TEXPARM(tt, ss, xx, vp)                     \
   glGetTexParameteriv(tt, xx, &value);                 \
-  ss += "    " + std::string(#xx) + " = " + vp + "\n"; \
+  ss += "    " + std::string(#xx) + " = " + (vp); \
   Gu::checkErrorsRt();
 
   int value = (int)tex_target;
@@ -815,17 +906,21 @@ void OpenGLUtils::debugPrintBoundTextureAttribs(string_t& strState, const string
   strTi += "Binding: " + GL_VP0(GL_TEXTURE_1D, GL_VP0(GL_TEXTURE_2D, GL_VP0(GL_TEXTURE_3D, GL_VP0(GL_TEXTURE_RECTANGLE, GL_VP0(GL_TEXTURE_BUFFER, GL_VP0(GL_TEXTURE_CUBE_MAP, GL_VP0(GL_TEXTURE_1D_ARRAY, GL_VP0(GL_TEXTURE_2D_ARRAY, GL_VP0(GL_TEXTURE_CUBE_MAP_ARRAY, GL_VP0(GL_TEXTURE_2D_MULTISAMPLE, GL_VP0(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, GL_VPERR))))))))))) + "\n";
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_MAG_FILTER, GL_VP0(GL_NEAREST, GL_VP0(GL_LINEAR, GL_VPERR)))
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_MIN_FILTER, GL_VP0(GL_NEAREST, GL_VP0(GL_LINEAR, GL_VP0(GL_NEAREST_MIPMAP_NEAREST, GL_VP0(GL_LINEAR_MIPMAP_NEAREST, GL_VP0(GL_NEAREST_MIPMAP_LINEAR, GL_VP0(GL_LINEAR_MIPMAP_LINEAR, GL_VPERR)))))))
+  strTi += "\n";
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_MIN_LOD, TypeConv::intToStr(value));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_MAX_LOD, TypeConv::intToStr(value));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_BASE_LEVEL, TypeConv::intToStr(value));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_MAX_LEVEL, TypeConv::intToStr(value));
+  strTi += "\n";
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_WRAP_S, GL_VP0(GL_CLAMP_TO_BORDER, GL_VP0(GL_CLAMP_TO_EDGE, GL_VP0(GL_MIRRORED_REPEAT, GL_VP0(GL_MIRROR_CLAMP_TO_EDGE, GL_VP0(GL_REPEAT, GL_VP0(GL_CLAMP_TO_BORDER, GL_VPERR)))))));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_WRAP_T, GL_VP0(GL_CLAMP_TO_BORDER, GL_VP0(GL_CLAMP_TO_EDGE, GL_VP0(GL_MIRRORED_REPEAT, GL_VP0(GL_MIRROR_CLAMP_TO_EDGE, GL_VP0(GL_REPEAT, GL_VP0(GL_CLAMP_TO_BORDER, GL_VPERR)))))));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_WRAP_R, GL_VP0(GL_CLAMP_TO_BORDER, GL_VP0(GL_CLAMP_TO_EDGE, GL_VP0(GL_MIRRORED_REPEAT, GL_VP0(GL_MIRROR_CLAMP_TO_EDGE, GL_VP0(GL_REPEAT, GL_VP0(GL_CLAMP_TO_BORDER, GL_VPERR)))))));
-  GL_TEXPARM(tex_target, strTi, GL_TEXTURE_BORDER_COLOR, TypeConv::intToStr(value));
+  strTi += "\n";
+  //GL_TEXPARM(tex_target, strTi, GL_TEXTURE_BORDER_COLOR, TypeConv::intToStr(value));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_PRIORITY, TypeConv::intToStr(value));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_RESIDENT, GL_VP0(GL_TRUE, GL_VP0(GL_FALSE, GL_VPERR)));
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_COMPARE_MODE, GL_VP0(GL_COMPARE_R_TO_TEXTURE, GL_VP0(GL_NONE, GL_VPERR)));
+  strTi += "\n";
   GL_TEXPARM(tex_target, strTi, GL_TEXTURE_COMPARE_FUNC, GL_VP0(GL_LEQUAL, GL_VP0(GL_GEQUAL, GL_VP0(GL_LESS, GL_VP0(GL_GREATER, GL_VP0(GL_EQUAL, GL_VP0(GL_NOTEQUAL, GL_VP0(GL_ALWAYS, GL_VP0(GL_NEVER, GL_VPERR)))))))));
   GL_TEXPARM(tex_target, strTi, GL_DEPTH_TEXTURE_MODE, GL_VP0(GL_LUMINANCE, GL_VP0(GL_INTENSITY, GL_VP0(GL_ALPHA, GL_VPERR))));
   GL_TEXPARM(tex_target, strTi, GL_GENERATE_MIPMAP, GL_VP0(GL_TRUE, GL_VP0(GL_FALSE, GL_VPERR)));

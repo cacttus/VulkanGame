@@ -34,10 +34,10 @@ public:
 
   float _fSmallBoxSize = 0.2f;
   GLuint _glFrameBufferId = 0;
-  GLuint _glDepthTextureId;
+  GLuint _glDepthTextureId = 0;
   GLuint _glShadowCubeMapId = 0;
-  uint32_t _iFboWidthPixels;
-  uint32_t _iFboHeightPixels;
+  uint32_t _iFboWidthPixels = 0;
+  uint32_t _iFboHeightPixels = 0;
   Box2f _screenQuadPos;
   Box2f _screenQuadTCoords;
   std::shared_ptr<MeshNode> _pScreenQuadMesh = nullptr;
@@ -88,7 +88,7 @@ void ShadowBox_Internal::createFbo() {
   // Create the cube map
   Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
   Gu::getCoreContext()->glGenTextures(1, &_glShadowCubeMapId);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, _glShadowCubeMapId);
+  Gu::getCoreContext()->glBindTexture(GL_TEXTURE_CUBE_MAP, _glShadowCubeMapId);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -134,8 +134,8 @@ void ShadowBox_Internal::createFbo() {
   Gu::getCoreContext()->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _glDepthTextureId, 0);
   Gu::checkErrorsRt();
 
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);  //Renderbuffer is currently bound.
+  Gu::getCoreContext()->glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D, 0);  //Renderbuffer is currently bound.
   Gu::checkErrorsRt();
 
   // Disable writes to the color buffer
@@ -328,7 +328,7 @@ void ShadowBox::copyAndBlendToShadowMap(std::shared_ptr<ShadowBox> pBox) {
             GLuint i0;
             Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
             Gu::checkErrorsDbg();
-            glBindTexture(GL_TEXTURE_CUBE_MAP, _pint->_glShadowCubeMapId);
+            Gu::getCoreContext()->glBindTexture(GL_TEXTURE_CUBE_MAP, _pint->_glShadowCubeMapId);
             Gu::checkErrorsDbg();
             i0 = 0;
             pDofShader->setUf("_ufTexture0", (GLvoid*)&i0);
@@ -415,7 +415,7 @@ void ShadowBox::endRenderSide() {
 }
 void ShadowBox::endRenderShadowBox() {
   //Gd::verifyRenderThread();
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  Gu::getCoreContext()->glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
   Gu::getCoreContext()->glBindFramebuffer(GL_FRAMEBUFFER, 0);
   Gu::checkErrorsDbg();
 }

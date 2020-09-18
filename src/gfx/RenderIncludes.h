@@ -14,7 +14,8 @@
 
 //Including both APIs.  In the future we abstract the API calls to interface and move the headers.
 #include <SDL_opengl.h>
-#include <SDL_opengl_glext.h>
+#include <GL/glext.h>
+//#include <SDL_opengl_glext.h>
 #include <SDL_vulkan.h>
 
 //Needed to get the main window handle so we can set the main window handle.

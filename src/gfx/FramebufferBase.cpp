@@ -179,7 +179,7 @@ void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLen
   Gu::getCoreContext()->chkErrRt();
 
   if (bMultisample) {
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, *iTexId);
+    Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, *iTexId);
     Gu::getCoreContext()->chkErrRt();
 
     //if (Gu::GetEngineDisplayParams()->getEnableAnisotropicFiltering())
@@ -191,11 +191,12 @@ void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLen
     std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, nSamples, eInternalFormat, iWidth, iHeight, GL_TRUE);
     Gu::getCoreContext()->chkErrRt();
 
-    if (eOutTarget != NULL)
+    if (eOutTarget != NULL){
       *eOutTarget = GL_TEXTURE_2D_MULTISAMPLE;
+    }
   }
   else {
-    glBindTexture(GL_TEXTURE_2D, *iTexId);
+    Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D, *iTexId);
     Gu::getCoreContext()->chkErrRt();
     //if (Gu::GetEngineDisplayParams()->getEnableAnisotropicFiltering())
     //{

@@ -8,9 +8,6 @@ This is a game demo utilizing the SDL2 Vulkan API.
 1. GUI
 1. LUA Scripting
 
-# Changes
-nfo
-
 # TODO
 * Fix UI to show debug text
 * The problem is in the debugPrintTextureInfo - this was causing all errors. Some kind of string thing.

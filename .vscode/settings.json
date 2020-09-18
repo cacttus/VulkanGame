@@ -96,7 +96,7 @@
     "request": "launch",
     "program": "${command:cmake.launchTargetPath}",
     "args": [
-      "log_async=true",
+      "log_async=false",
       "package_loc=_debug"
     ],
     "stopAtEntry": false,

@@ -20,6 +20,7 @@ public:
   virtual ~OglErr();
   bool chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly = false);
   bool chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak = false, bool doNotLog = true, const string_t& shaderName = "", bool clearOnly = false);
+  void clearGPULog(std::shared_ptr<GLContext> ctx);
 
 private:
   std::unique_ptr<OglErr_Internal> _pint;

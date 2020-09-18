@@ -81,12 +81,12 @@ std::shared_ptr<InputManager> Gu::_pGlobalInput = nullptr;
 
 template <class Tx>
 std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> global_manager) {
-  bool b = global_manager != nullptr;
-  if (!b) {
+  bool manager_exists = global_manager != nullptr;
+  if (!manager_exists) {
     int n = 0;
     n++;
   }
-  AssertOrThrow2(b);
+  AssertOrThrow2(manager_exists);
   //**TODO: verify that the calling thread is the main thread.  Deadlocks has been causing issues.
   return global_manager;
 }

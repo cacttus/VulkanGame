@@ -58,10 +58,14 @@ public:
       newline++;
       if (newlineEle > 0 && newline == newlineEle) {
         ret += "\n";
+        newline = 0;
       }
     }
     return ret;
   }
+
+  static GLenum texTargetToTexBindingQuery(GLenum target);
+  static GLenum texBindingToTexTargetQuery(GLenum binding);
 
 private:
   // Debug
@@ -74,12 +78,10 @@ private:
   static void debugPrintActiveUniforms(int iGlProgramId, string_t& strOut);
   static void debugPrintFBOAttachment(string_t& strState, GLenum);
   // Texture
-  static void saveFramebufferAsPng(string_t&& strLoc, GLuint iFBOId = 0);                                 // Saves a GL texture by ID to the file path.
+  static void saveFramebufferAsPng(string_t&& strLoc, GLuint iFBOId = 0);  // Saves a GL texture by ID to the file path.
   static void getCompatibleDepthComponent(GLenum eRequestedDepth, std::function<void(GLenum)> func);
-  static void debugPrintTextureInfo(string_t& state, GLuint iTexId);  
+  static void debugPrintTextureInfo(string_t& state, GLuint iTexId);
   static void debugPrintBoundTextureAttribs(string_t& strState, const string_t& texName, GLenum tex_target);
-  static GLenum texTargetToTexBindingQuery(GLenum target);
-
 };
 
 }  // namespace BR2

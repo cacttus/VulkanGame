@@ -76,11 +76,18 @@ public:
   virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "", bool clearOnly = false) override;
   virtual bool chkErrDbg(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "", bool clearOnly = false) override;
 
+  void clearGPULog();
+
   string_t getObjectLabel(GLenum type, GLuint objectId);
   void setObjectLabel(GLenum type, GLuint objectId, const string_t& label);
-  
+
   //We can thunk most OpenGL methods right here if needed.
   void glGenTextures(GLsizei count, GLuint* ids);
+  //void glDeleteTextures(GLsizei count, GLuint* ids);
+  void glBindTexture(GLenum target, GLuint texid);
+  void glDeleteTextures(GLsizei n, const GLuint* textures);
+
+  std::map<GLuint, GLenum> _texBindings;
 
   virtual void pushCullFace() override;
   virtual void popCullFace() override;
@@ -229,9 +236,10 @@ public:
   PFNGLGETSAMPLERPARAMETERIUIVPROC glGetSamplerParameteruiv = nullptr;
   PFNGLGETSAMPLERPARAMETERIVPROC glGetSamplerParameteriv = nullptr;
   PFNGLCOPYIMAGESUBDATAPROC glCopyImageSubData = nullptr;
-  PFNGLDELETETEXTURESEXTPROC glDeleteTextures = nullptr;
-  PFNGLGETTEXPARAMETERIIVPROC glGetTexParameteriv = nullptr;
-  PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameteruiv = nullptr;
+  //PFNGLDELETETEXTURESEXTPROC glDeleteTextures = nullptr;
+  //PFNGLGETTEXPARAMETERIIVPROC glGetTexParameteriv = nullptr;
+  //PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameteruiv = nullptr;
+  //PFNGLGETTEXTUREPARAMETERIVEXTPROC glGetTextureParameteriv = nullptr;
 };
 
 }  // namespace BR2

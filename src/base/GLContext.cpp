@@ -18,6 +18,7 @@
 #include "../base/EngineConfig.h"
 #include "../math/MathAll.h"
 #include "../gfx/RenderUtils.h"
+#include "../gfx/OpenGLUtils.h"
 #include "../gfx/ParticleManager.h"
 #include "../gfx/TexCache.h"
 #include "../gfx/ShaderMaker.h"
@@ -106,6 +107,9 @@ void GLContext::setPolygonMode(PolygonMode p) {
   else {
     BRLogWarnOnce("glPolygonMode not supported in compatibility mode.");
   }
+}
+void GLContext::clearGPULog() {
+  return _pOglErr->clearGPULog(shared_from_this());
 }
 bool GLContext::chkErrRt(bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   //Enable runtime errors.
@@ -230,9 +234,10 @@ bool GLContext::loadOpenGLFunctions() {
   SDLGLP2(PFNGLGETSAMPLERPARAMETERIVPROC, glGetSamplerParameteriv);
   SDLGLP2(PFNGLGETSAMPLERPARAMETERIVPROC, glGetSamplerParameteriv);
   SDLGLP2(PFNGLCOPYIMAGESUBDATAPROC, glCopyImageSubData);
-  SDLGLP2(PFNGLDELETETEXTURESEXTPROC, glDeleteTextures);
-  SDLGLP2(PFNGLGETTEXPARAMETERIIVPROC, glGetTexParameteriv);
-  SDLGLP2(PFNGLGETTEXPARAMETERIUIVPROC, glGetTexParameteruiv);
+  //SDLGLP2(PFNGLDELETETEXTURESEXTPROC, glDeleteTextures);
+  //SDLGLP2(PFNGLGETTEXPARAMETERIIVPROC, glGetTexParameteriv);
+  //SDLGLP2(PFNGLGETTEXPARAMETERIUIVPROC, glGetTexParameteruiv);
+  //SDLGLP2(PFNGLGETTEXTUREPARAMETERIVEXTPROC, glGetTextureParameteriv);
 
   return bValid;
 }
@@ -609,65 +614,87 @@ int32_t GLContext::maxGLTextureUnits() {
 }
 
 GLenum GLContext::getTextureTarget(GLuint textureId) {
-  //Returns the binding for a texture, there IS glGetTextureParameteriv with GL_TEXTURE_TARGET which is an extension apparently.
-
-  //Check/handle any errors that may exist.
-  Gu::checkErrorsRt();
-  GLenum ret = (GLenum)0;
-
-  std::function<GLenum(GLuint, GLenum)> TEX_CHECKTARGET_RT = [](GLuint texid, GLenum ttx) {
-    for (int i = 0; i < 100; ++i) {
-      if (glGetError() == GL_NO_ERROR) {
-        break;
-      }
-    }
-    glBindTexture(ttx, texid);
-    if (glGetError() == GL_NO_ERROR) {
-      //We call this in order to also ignore potential GPU logs.
-      Gu::checkErrorsRt(true);
-      return ttx;
-    }
+  auto f = _texBindings.find(textureId);
+  if (f == _texBindings.end()) {
     return (GLenum)0;
-  };
-  //from https://www.khronos.org/opengl/wiki/Texture
-  if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D)) != (GLenum)0) {
-    return ret;
   }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D)) != (GLenum)0) {
-    return ret;
+  return f->second;
+#ifdef GL_4_5
+  //Returns the binding for a texture, there IS glGetTextureParameteriv with GL_TEXTURE_TARGET which is an extension apparently.
+  Gu::checkErrorsRt();
+
+  for (int i = 0; i < 100; ++i) {
+    if (glGetError() == GL_NO_ERROR) {
+      break;
+    }
   }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_3D)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_RECTANGLE)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_BUFFER)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_1D_ARRAY)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_ARRAY)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_CUBE_MAP_ARRAY)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE)) != (GLenum)0) {
-    return ret;
-  }
-  else if ((ret = TEX_CHECKTARGET_RT(textureId, GL_TEXTURE_2D_MULTISAMPLE_ARRAY)) != (GLenum)0) {
-    return ret;
+  GLint target = 0;
+  Gu::getCoreContext()->glGetTexParameteriv(textureId, GL_TEXTURE_TARGET, (GLint*)&target);
+  Gu::checkErrorsRt();
+
+  return (GLenum)target;
+#else
+  GLenum ret_target = (GLenum)0;
+
+  std::vector<GLenum> targets({GL_TEXTURE_1D,
+                               GL_TEXTURE_2D,
+                               GL_TEXTURE_3D,
+                               GL_TEXTURE_RECTANGLE,
+                               GL_TEXTURE_BUFFER,
+                               GL_TEXTURE_CUBE_MAP,
+                               GL_TEXTURE_1D_ARRAY,
+                               GL_TEXTURE_2D_ARRAY,
+                               GL_TEXTURE_CUBE_MAP_ARRAY,
+                               GL_TEXTURE_2D_MULTISAMPLE,
+                               GL_TEXTURE_2D_MULTISAMPLE_ARRAY});
+  for (auto target : targets) {
+    //Save the bound texture so we don't mess this up.
+    GLint iSavedTextureId = 0;
+    GLenum get_binding = OpenGLUtils::texTargetToTexBindingQuery(target);
+    AssertOrThrow2(get_binding != (GLenum)0);
+
+    glGetIntegerv(get_binding, &iSavedTextureId);
+    Gu::checkErrorsRt();
+    glBindTexture(target, textureId);
+    {
+      if (glGetError() == GL_NO_ERROR) {
+        ret_target = target;
+      }
+      else {
+        // glBindTexture(target, textureId);
+      }
+      //ignore potential GPU logs.
+      Gu::getCoreContext()->clearGPULog();
+    }
+    glBindTexture(target, (GLuint)iSavedTextureId);
+    Gu::checkErrorsRt();
+    Gu::checkErrorsRt();
+    Gu::checkErrorsRt();
+
+    if (ret_target != (GLenum)0) {
+      break;
+    }
   }
 
-  return ret;
+  return ret_target;
+#endif
 }
 void GLContext::glGenTextures(GLsizei count, GLuint* ids) {
   ::glGenTextures(1, ids);
+}
+void GLContext::glBindTexture(GLenum target, GLuint texid) {
+  auto f = _texBindings.find(texid);
+  if (f == _texBindings.end()) {
+    _texBindings.insert(std::make_pair(texid, target));
+  }
+  else {
+    f->second = target;
+  }
+
+  ::glBindTexture(target, texid);
+}
+void GLContext::glDeleteTextures(GLsizei n, const GLuint* textures) {
+  ::glDeleteTextures(n, textures);
 }
 
 }  // namespace BR2
