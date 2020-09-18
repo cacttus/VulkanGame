@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-project(VulkanGame VERSION 0.1.0)
+project(VulkanGame VERSION 0.1.0 LANGUAGES C CXX)
 
 message("CMAKE_MODULE_PATH=" ${CMAKE_MODULE_PATH})
 message("CMAKE_PREFIX_PATH=" ${CMAKE_PREFIX_PATH})
@@ -54,18 +54,17 @@ set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${VG_OUTPUT_NAME}
 set(OpenGL_GL_PREFERENCE LEGACY) #GLVND or LEGACY
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
-find_package(SDL2_net REQUIRED)
-find_package(VULKAN REQUIRED)  
-#find_package(GLM REQUIRED)
+find_package(Vulkan REQUIRED)  
 find_package(Threads REQUIRED) #This is better than -pthread
-#FindCurses() #ncurses library is for getting term info for console colors.
-  
+
 #This is required in windows to add to the Additional Include Directories.
-target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS} ${VULKAN_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDLNET_INCLUDE_DIR} ${VULKAN_INCLUDE_DIRS})
 
 set(ADDL_LIBS "")
 
 if(WIN32)
+  find_package(SDL2_net REQUIRED)
+
   # Unicode required for building with Unicode Character Set (vs MBCS)
   ADD_DEFINITIONS(-DUNICODE)
   ADD_DEFINITIONS(-D_UNICODE)
@@ -79,18 +78,17 @@ if(WIN32)
   set(ADDL_LIBS "ws2_32.lib" "winmm.lib" "imm32.lib" "version.lib" "dbghelp.lib" "setupapi.lib" "iphlpapi.lib")
 elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
   set(ADDL_LIBS ncurses)
-  #set(CPP_FLAGS_GLOBAL " -W -Wall -pedantic -LSDL2 -pthread -static-libgcc -static-libstdc++")
-  #-pthread required for std::thread
-  #** -pthread should be rplaced with Threads package
-#    set(CPP_FLAGS_GLOBAL " -pthread ") # -msse3  -- testing sse3
-    # thE DEBUG flag -D_GLIBCXX_DEBUG is from this link - it enables string visualization in vscode. https://github.com/Microsoft/vscode-cpptools/issues/201
+    set(CPP_FLAGS_GLOBAL " -pthread ") # -msse3  -- testing sse3
+    # thE DEBUG flag -D_GLIBCXX_DEBUG enables string visualization in vscode.
     string(APPEND CMAKE_CXX_FLAGS_DEBUG ${CPP_FLAGS_GLOBAL} " -D_DEBUG -D_GLIBCXX_DEBUG ")
     string(APPEND CMAKE_CXX_FLAGS_RELEASE ${CPP_FLAGS_GLOBAL} ) # -- testing " -ftree-vectorize "
-# -ftree-vectorize = variable vectorization.
-  #-rdynamic is required to place all symbols in the table for backtracing unmangled names.
-  #-rdynamic is already added in cmake here..
-  #string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG "")
-  #string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " -rdynamic ")
+
+  #Not sure why this is
+  set(VULKAN_LIBRARIES vulkan)
+  set(SDLNET_LIBRARIES SDL2_net)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES} ${ADDL_LIBS})
+message("Vulkan includes:" ${VULKAN_INCLUDE_DIRS})
+message("Vulkan libs:" ${VULKAN_LIBRARIES})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS})
