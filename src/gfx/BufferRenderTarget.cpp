@@ -8,7 +8,7 @@ BufferRenderTarget::BufferRenderTarget(const string_t& name, std::shared_ptr<GLC
   _strName = name;
 }
 BufferRenderTarget::~BufferRenderTarget() {
-  glDeleteTextures(1, &_iGlTexId);
+  getContext()->glDeleteTextures(1, &_iGlTexId);
 }
 
 int32_t BufferRenderTarget::getWidth() { return _iWidth; }

@@ -22,16 +22,12 @@ This is a game demo utilizing the SDL2 Vulkan API.
 1. GUI
 1. LUA Scripting
 
-# Changes
-nfo
-
-# TODO
+# TODO: Important
+* Get Windows build to work (VS).
 * Fix UI to show debug text
-* The problem is in the debugPrintTextureInfo - this was causing all errors. Some kind of string thing.
-* The width/height of hte window is messed up somewhere in the engineconfig props
-** TODO: Change props from preprocessor to "debuggable" props.
+* The width/height of the window is messed up somewhere in the engineconfig props.
 
-# TODO: Quick Fixes
+# TODO: Enhancments.
 * Import Mobmaker into the app itself. We can compile it with mono or just convert the code.
 * Simplified Engineconfig Properties
 * Removing Default Width/Height - use percentage of screen.
@@ -40,3 +36,5 @@ nfo
 * Test this build on Windows to make sure it still works.
 * Fix the "unrecognized parameter" in the console.
 
+# TODO: Backlog
+* Change props from preprocessor to "debuggable" props.

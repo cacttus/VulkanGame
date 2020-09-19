@@ -104,7 +104,6 @@ void ShaderBase::bindAllUniforms() {
   for (std::pair<Hash32, std::shared_ptr<ShaderUniformBlock>> uf : _vecUniformBlocks) {
     uf.second->bindUniformFast();
   }
-
 }
 void ShaderBase::recreateProgram() {
   //20160608 to do this we must rebind all VAO datas to the correctg programs
@@ -122,7 +121,6 @@ void ShaderBase::recreateProgram() {
 
 void ShaderBase::getProgramErrorLog(std::vector<string_t>& __out_ errs) {
   //GLShaderProgram* psp = (GLShaderProgram*)sp;
-
 
   // - Do your stuff
   GLsizei buf_size;
@@ -170,7 +168,7 @@ void ShaderBase::setCameraUf(std::shared_ptr<CameraNode> cam, mat4* model) {
   if (model != nullptr) {
     mModel = *model;
     //1/21/18  Instead of a normal matrix we're just adding v + n and multiplying by the model matrix, then subbing v
-//     mNormal = mModel.inverseOf();
+    //     mNormal = mModel.inverseOf();
   }
   else {
     mModel = mat4::identity();
@@ -258,7 +256,7 @@ void ShaderBase::setTextureUf(uint32_t iChannel, bool bIgnoreIfNotFound) {
   //Uniform should be "_ufTexturen"
   string_t ufName = Stz "_ufTexture" + iChannel;
 
-  if(iChannel >= Gu::getCoreContext()->maxGLTextureUnits()){
+  if (iChannel >= Gu::getCoreContext()->maxGLTextureUnits()) {
     BRLogWarnCycle("Too many texture channels bound to shader uniform Channels: " + iChannel + " shader: " + this->getProgramName() + " ");
   }
   setUf(ufName, &iChannel, -1, bIgnoreIfNotFound);
@@ -268,9 +266,9 @@ void ShaderBase::draw(std::shared_ptr<MeshNode> mesh, int32_t iCount, GLenum eDr
 
   //*IF the mesh has a VAO, draw that (likely, it's a skinned, or morphed mesh)
   //*Otherwise, draw the mesh's SPEC vao.
-  std::shared_ptr<VaoDataGeneric> vao;// = mesh->getVaoData();
-  //if (vao == nullptr) {
-    vao = mesh->getMeshSpec()->getVaoData();
+  std::shared_ptr<VaoDataGeneric> vao;  // = mesh->getVaoData();
+                                        //if (vao == nullptr) {
+  vao = mesh->getMeshSpec()->getVaoData();
   //}
   draw(vao, iCount, eDrawMode);
   Perf::popPerf();
@@ -317,7 +315,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
   }
   BRLogTODO("Allow for streamed drawing and unbind unstreamed shaders to prevent errors.");
   // unbind(); //TODO:
-   //Do not unbind so we keep the uniforms. This is for optimization.
+  //Do not unbind so we keep the uniforms. This is for optimization.
 }
 string_t ShaderBase::debugGetUniformValues() {
   string_t str = OperatingSystem::newline();
@@ -330,7 +328,6 @@ string_t ShaderBase::debugGetUniformValues() {
     }
     else {
       str += " " + uf.second->debugGetUniformValueAsString(true) + " " + OperatingSystem::newline();
-
     }
   }
 
@@ -341,14 +338,14 @@ void ShaderBase::setLightUf(std::shared_ptr<LightManager> pLightManager) {
   size_t lightCopySizeBytes;
   lightPtr = pLightManager->getGpuPointLightBuffer();
   if (lightPtr == nullptr) {
-    lightPtr = (void*)1;//No lights - not an error, Prevent the render system from thinking this wasn't set.
+    lightPtr = (void*)1;  //No lights - not an error, Prevent the render system from thinking this wasn't set.
   }
   lightCopySizeBytes = pLightManager->getDeferredParams()->_iPointLightCount * sizeof(GpuPointLight);
   Gu::getShaderMaker()->setUfBlock("UfPointLights", lightPtr, lightCopySizeBytes, false);
 
   lightPtr = pLightManager->getGpuDirLightBuffer();
   if (lightPtr == nullptr) {
-    lightPtr = (void*)1;//No lights - not an error, Prevent the render system from thinking this wasn't set.
+    lightPtr = (void*)1;  //No lights - not an error, Prevent the render system from thinking this wasn't set.
   }
   lightCopySizeBytes = pLightManager->getDeferredParams()->_iDirLightCount * sizeof(GpuDirLight);
   Gu::getShaderMaker()->setUfBlock("UfDirLights", lightPtr, lightCopySizeBytes, false);
@@ -360,7 +357,6 @@ void ShaderBase::setLightUf(std::shared_ptr<LightManager> pLightManager) {
 
 void ShaderBase::beginRaster(std::shared_ptr<RenderViewport> vp) {
   beginRaster(vp->getX(), vp->getY(), vp->getWidth(), vp->getHeight());
-
 }
 void ShaderBase::beginRaster(float fOrthoX, float fOrthoY, float fOrthoWidth, float fOrthoHeight) {
   Gu::getCoreContext()->pushDepthTest();
@@ -370,7 +366,6 @@ void ShaderBase::beginRaster(float fOrthoX, float fOrthoY, float fOrthoWidth, fl
   glDisable(GL_CULL_FACE);
 
   mat4 ident = mat4::identity();
-
 
   //Do not use w-1 or h-1 or else you'll get that weird "wiggly line" across the screen
   // Left, R, top, bot
@@ -386,12 +381,11 @@ void ShaderBase::endRaster() {
   Gu::getCoreContext()->chkErrDbg();
 }
 
-
 void ShaderBase::dispatchCompute() {
   dispatchCompute(
-    Gu::getShaderMaker()->getMaxWorkGroupDims()[0],
-    Gu::getShaderMaker()->getMaxWorkGroupDims()[1],
-    Gu::getShaderMaker()->getMaxWorkGroupDims()[2]);
+      Gu::getShaderMaker()->getMaxWorkGroupDims()[0],
+      Gu::getShaderMaker()->getMaxWorkGroupDims()[1],
+      Gu::getShaderMaker()->getMaxWorkGroupDims()[2]);
 }
 /**
 *    @fn
@@ -423,13 +417,11 @@ void ShaderBase::dispatchCompute(int32_t elementCount) {
     x += nf;
     y += nf;
     z += nf;
-
   }
   int tv = x * y * z;
   //assert(tv==elementCount);
 
   dispatchCompute(x, y, z);
-
 }
 void ShaderBase::dispatchCompute(int32_t x, int32_t y, int32_t z, std::shared_ptr<GpuComputeSync> sync) {
   AssertOrThrow2(sync != NULL);
@@ -439,7 +431,6 @@ void ShaderBase::dispatchCompute(int32_t x, int32_t y, int32_t z, std::shared_pt
   Gu::checkErrorsDbg();
 }
 void ShaderBase::dispatchCompute(int32_t x, int32_t y, int32_t z) {
-
   if (x > Gu::getShaderMaker()->getMaxWorkGroupDims()[0]) {
     BRThrowException("[Compute] X group greater than max work group GPU can handle which is " + Gu::getShaderMaker()->getMaxWorkGroupDims()[0]);
   }
@@ -470,13 +461,7 @@ void ShaderBase::bindSsbo(std::shared_ptr<GpuBufferData> pDat, const char* shade
 
   if (blockIndex < 0) {
     BRLogError(
-      "BIND FAILED: uniform buffer name: " + shaderBufferName
-      + " .Binding Block Shader Id " + getGlId()
-      + " shader name (may be invalid) " + getProgramName()
-      + " block idx " + blockIndex
-      + " ssbo idx: " + shaderSsboIndex
-      + OperatingSystem::newline()
-    );
+        "BIND FAILED: uniform buffer name: " + shaderBufferName + " .Binding Block Shader Id " + getGlId() + " shader name (may be invalid) " + getProgramName() + " block idx " + blockIndex + " ssbo idx: " + shaderSsboIndex + OperatingSystem::newline());
   }
 
   AssertOrThrow2(blockIndex >= 0);
@@ -484,6 +469,11 @@ void ShaderBase::bindSsbo(std::shared_ptr<GpuBufferData> pDat, const char* shade
 
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glShaderStorageBlockBinding(getGlId(), blockIndex, shaderSsboIndex);
   //Gu::checkErrorsDbg();
+
+  if (pDat->getGlId() == 0) {
+    int x = 0;
+    x++;
+  }
 
   std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glBindBufferBase(GL_SHADER_STORAGE_BUFFER, shaderSsboIndex, pDat->getGlId());
   //Gu::checkErrorsDbg();
@@ -494,7 +484,4 @@ void ShaderBase::bindSsbo(std::shared_ptr<GpuBufferData> pDat, const char* shade
   //}
 }
 
-
-
-
-}//ns Game
+}  // namespace BR2

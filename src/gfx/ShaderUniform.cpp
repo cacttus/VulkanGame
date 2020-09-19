@@ -480,6 +480,11 @@ void ShaderUniformBlock::bindUniformFast() {
     BRLogWarn("Shader Uniform Block '" + getName() + "' value was not set ");
   }
   _pContext->glBindBufferBase(GL_UNIFORM_BUFFER, _iBindingIndex, _iUboId);
+  if(_iUboId==0){
+    int x=0;
+    x++;
+  }
+
   _pContext->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
 }
 

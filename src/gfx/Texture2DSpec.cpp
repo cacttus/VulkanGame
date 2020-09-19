@@ -31,7 +31,7 @@ Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<G
   create(fmt, texData, iWidth, iHeight, mipmaps, false, false);
 }
 Texture2DSpec::~Texture2DSpec() {
-  dispose();
+  _pContext->glDeleteTextures(1, &_glId);
 }
 void Texture2DSpec::loadPng(string_t imgLoc, bool bRepeatU, bool bRepeatV) {
   _strLocation = imgLoc;
@@ -84,7 +84,9 @@ bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase>
   }
   else {
     std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glActiveTexture(GL_TEXTURE0 + eChannel);
-    glBindTexture(_eGLTextureBinding, getGlId());
+    _pContext->glBindTexture(_eGLTextureBinding, getGlId());
+
+    Gu::checkErrorsDbg();
 
     if (pShader != nullptr) {
       //Some cases, we just need to call glBindTexture..
@@ -96,7 +98,7 @@ bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase>
 }
 void Texture2DSpec::unbind(TextureChannel::e eChannel) {
   _pContext->glActiveTexture(GL_TEXTURE0 + eChannel);
-  glBindTexture(_eGLTextureBinding, 0);
+  _pContext->glBindTexture(_eGLTextureBinding, 0);
 }
 int32_t Texture2DSpec::generateMipmapLevels(uint32_t width, uint32_t height) {
   // - Create log2 mipmaps
@@ -122,7 +124,7 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
   _pContext->chkErrRt();
   _pContext->glGenTextures(1, &_glId);
   _pContext->chkErrRt();
-  glBindTexture(_eGLTextureBinding, _glId);
+  _pContext->glBindTexture(_eGLTextureBinding, _glId);
   _pContext->chkErrRt();
 
   //Calc format
@@ -153,7 +155,7 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
       h,
       _eGLTextureFormat,          //format
       _eGLTextureInternalFormat,  //type
-      (void*)imageData          //pixels
+      (void*)imageData            //pixels
   );
 
   _pContext->chkErrRt();
@@ -199,10 +201,7 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
   Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, getGlId(), _strName);
 
   //Unbind so we don't modify it
-  glBindTexture(_eGLTextureBinding, 0);
-}
-void Texture2DSpec::dispose() {
-  glDeleteTextures(1, &_glId);
+  _pContext->glBindTexture(_eGLTextureBinding, 0);
 }
 void Texture2DSpec::setWrapU(TexWrap::e wrap) {
   bind(TextureChannel::e::Channel0, nullptr);

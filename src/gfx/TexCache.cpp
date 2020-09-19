@@ -7,7 +7,7 @@
 #include "../gfx/RenderUtils.h"
 #include "../base/GLContext.h"
 #include "../gfx/OpenGLUtils.h"
-
+#include <iostream>
 namespace BR2 {
 
 const std::string TexCache::WorldGrass = "./data/tx32-grass.png";
@@ -43,48 +43,48 @@ TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
   int iWidthHeight = 1;
   vec4 v(1, 1, 1, 1);
   Vec4ub b(255, 255, 255, 255);
-  Gu::getCoreContext()->chkErrRt();
+  _pContext->chkErrRt();
 
   _pContext->glActiveTexture(GL_TEXTURE0);
 
   _pContext->glGenTextures(1, &_i1x1DummyCubeTexture);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, _i1x1DummyCubeTexture);
+  _pContext->glBindTexture(GL_TEXTURE_2D, 0);
+  _pContext->glBindTexture(GL_TEXTURE_CUBE_MAP, _i1x1DummyCubeTexture);
   for (int i = 0; i < 6; ++i) {
     //Note values here must match ShadowBox due to glCopyTexSubImage
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT,
                  iWidthHeight, iWidthHeight, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_DATATYPE, (void*)&v);
   }
-  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyCubeTexture, "Dummy Cube texture");
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  Gu::getCoreContext()->chkErrRt();
+  _pContext->setObjectLabel(GL_TEXTURE, _i1x1DummyCubeTexture, "Dummy Cube texture");
+  _pContext->glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  _pContext->glBindTexture(GL_TEXTURE_2D, 0);
+  _pContext->chkErrRt();
 
   _pContext->glGenTextures(1, &_i1x2Dummy2DTexture);
-  glBindTexture(GL_TEXTURE_2D, _i1x2Dummy2DTexture);
+  _pContext->glBindTexture(GL_TEXTURE_2D, _i1x2Dummy2DTexture);
   //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
   _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, iWidthHeight, iWidthHeight, GL_RGBA, GL_UNSIGNED_BYTE, (void*)&b);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x2Dummy2DTexture, "Dummy 2D Color texture");
+  _pContext->setObjectLabel(GL_TEXTURE, _i1x2Dummy2DTexture, "Dummy 2D Color texture");
   glBindTexture(GL_TEXTURE_2D, 0);
-  Gu::getCoreContext()->chkErrRt();
+  _pContext->chkErrRt();
 
   b.construct(0, 0, 255, 255);  //XZY Bump texture up
   _pContext->glGenTextures(1, &_i1x1DummyBump2DTexture);
-  glBindTexture(GL_TEXTURE_2D, _i1x1DummyBump2DTexture);
+  _pContext->glBindTexture(GL_TEXTURE_2D, _i1x1DummyBump2DTexture);
   //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
   _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, iWidthHeight, iWidthHeight, GL_RGBA, GL_UNSIGNED_BYTE, (void*)&b);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyBump2DTexture, "Dummy 2D Normal texture");
-  glBindTexture(GL_TEXTURE_2D, 0);
-  Gu::getCoreContext()->chkErrRt();
+  _pContext->setObjectLabel(GL_TEXTURE, _i1x1DummyBump2DTexture, "Dummy 2D Normal texture");
+  _pContext->glBindTexture(GL_TEXTURE_2D, 0);
+  _pContext->chkErrRt();
 
 
-  OpenGLUtils::debugGetRenderState(true,true,false);
+std::cout<<  OpenGLUtils::debugGetRenderState(true,true,false) << std::endl;
 
 }
 TexCache::~TexCache() {

@@ -31,20 +31,20 @@ public:
 
   float _fSmallBoxSize = 0.2f;
   GLuint _glFrameBufferId = 0;
-  GLuint _glDepthTextureId;
+  GLuint _glDepthTextureId = 0;
   GLuint _glShadowMapId = 0;
-  uint32_t _iFboWidthPixels;
-  uint32_t _iFboHeightPixels;
+  uint32_t _iFboWidthPixels = 0;
+  uint32_t _iFboHeightPixels = 0;
   std::shared_ptr<MeshNode> _pScreenQuadMesh = nullptr;
 
-  int32_t _iShadowFrustumId;
+  int32_t _iShadowFrustumId = 0;
   std::shared_ptr<FrustumBase> _pFrustum = nullptr;
   std::shared_ptr<RenderViewport> _pViewport = nullptr;
   mat4 _projMatrix;  // Frustum, Proj, View - basic camera parameters
   mat4 _viewMatrix;  //
   mat4 _PVB;
-  std::shared_ptr<RenderBucket> _pVisibleSet;
-  std::shared_ptr<RenderBucket> _pLastSet;  //TODO: check vs current set _bShadowDirty in BvhNOde
+  std::shared_ptr<RenderBucket> _pVisibleSet = nullptr;
+  std::shared_ptr<RenderBucket> _pLastSet = nullptr;  //TODO: check vs current set _bShadowDirty in BvhNOde
   //bool _bMustUpdate;
 
   ShadowFrustum_Internal(std::shared_ptr<LightNodeDir> pLightSource, int32_t iFboWidth, int32_t iFboHeight);
@@ -176,7 +176,7 @@ void ShadowFrustum_Internal::createFbo() {
   // Create the cube map
   Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
   Gu::getCoreContext()->glGenTextures(1, &_glShadowMapId);
-  glBindTexture(GL_TEXTURE_2D, _glShadowMapId);
+  Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D, _glShadowMapId);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -201,14 +201,14 @@ void ShadowFrustum_Internal::createFbo() {
 
   //GL_FRAMEBUFFER_SRGB
   glTexImage2D(GL_TEXTURE_2D, 0, SHADOW_FRUSTUM_TEX_INTERNAL_FORMAT,
-               _iFboWidthPixels, _iFboHeightPixels, 0, 
+               _iFboWidthPixels, _iFboHeightPixels, 0,
                SHADOW_FRUSTUM_TEX_FORMAT, SHADOW_FRUSTUM_TEX_DATATYPE, nullptr);
   Gu::getCoreContext()->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _glShadowMapId, 0);
   Gu::checkErrorsRt();
   Gu::getCoreContext()->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _glDepthTextureId, 0);
   Gu::checkErrorsRt();
 
-  glBindTexture(GL_TEXTURE_2D, 0);
+  Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D, 0);
   Gu::checkErrorsRt();
 
   // Disable writes to the color buffer
@@ -352,7 +352,7 @@ void ShadowFrustum::renderShadows(std::shared_ptr<ShadowFrustum> pShadowFrustumM
 }
 void ShadowFrustum::endRenderShadowFrustum() {
   //Gd::verifyRenderThread();
-  glBindTexture(GL_TEXTURE_2D, 0);
+  Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D, 0);
   Gu::getCoreContext()->glBindFramebuffer(GL_FRAMEBUFFER, 0);
   Gu::checkErrorsDbg();
 }

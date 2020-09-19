@@ -72,6 +72,9 @@ public:
 
     return bError;
   }
+  void clearGPULog(std::shared_ptr<GLContext> ctx){
+    printAndFlushGpuLog(ctx, true, true, true, "", true);
+  }
   void printAndFlushGpuLog(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog,
                            const string_t& shaderName, bool clearOnly) {
     if (_bPrintingGPULog) {
@@ -322,7 +325,9 @@ public:
 ///
 ///
 ///
-
+void OglErr::clearGPULog(std::shared_ptr<GLContext> ctx){
+  _pint->clearGPULog(ctx);
+}
 bool OglErr::chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
   if (Gu::getEngineConfig()->getEnableRuntimeErrorChecking() == true) {
     return _pint->handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);

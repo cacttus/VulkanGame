@@ -29,7 +29,6 @@ public:
   virtual ~Texture2DSpec() override;
 
   void create(TextureFormat fmt, unsigned char* imageData, uint32_t w, uint32_t h, bool genMipmaps, bool bRepeatU, bool bRepeatV);
-  void dispose();
   virtual bool bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound = false);
   void unbind(TextureChannel::e eChannel);
 
