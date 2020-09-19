@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #if defined(BR2_OS_LINUX)
 //This gets the OS name
@@ -327,9 +327,12 @@ std::vector<string_t> OperatingSystem::showOpenFileDialog(const string_t& title,
   ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
 
   if (!GetOpenFileNameW(&ofn)) {
-    return "";
+    ret.push_back(string_t(""));
   }
-  file = StringUtil::wStrToStr(openFileNameReturnString);
+  else {
+    string_t file = StringUtil::wStrToStr(openFileNameReturnString);
+    ret.push_back(file);
+  }
 #elif defined(BR2_OS_LINUX)
 
   std::string args = "zenity --file-selection --separator=\"|\" ";
@@ -363,7 +366,18 @@ string_t OperatingSystem::getEnvironmentVariable(const string_t& var) {
   //Get a Windows/Linux environment variable.
   string_t ret = "";
 #if defined(BR2_OS_WINDOWS)
-  OS_METHOD_NOT_IMPLEMENTED
+  wchar_t buf[1024];
+  std::memset(buf, 0, 1024);
+
+  std::wstring wvar = StringUtil::strToWStr(var);
+
+  DWORD retdw = GetEnvironmentVariable(wvar.c_str(), buf, 1024);
+  if (retdw != 0) {
+    ret = StringUtil::wStrToStr(std::wstring(buf));
+  }
+  else {
+    BRLogError("Could not get environment variable" + var);
+  }
 
 #elif defined(BR2_OS_LINUX)
   const char* val = std::getenv(var.c_str());
@@ -390,9 +404,9 @@ string_t OperatingSystem::newline() {
   return ret;
 }
 string_t OperatingSystem::executeReadOutput(const string_t& cmd) {
+  string_t data = "";
 #if defined(BR2_OS_LINUX)
   //This works only if VSCode launches the proper terminal (some voodoo back there);
-  string_t data = "";
   const int MAX_BUFFER = 256;
   char buffer[MAX_BUFFER];
   std::memset(buffer, 0, MAX_BUFFER);
@@ -410,7 +424,8 @@ string_t OperatingSystem::executeReadOutput(const string_t& cmd) {
     pclose(stream);
   }
 #else
-  OS_METHOD_NOT_IMPLEMENTED
+  BRLogWarn("Tried to call invalid method on non-linux platform.");
+  //Do nothing
 #endif
   return data;
 }

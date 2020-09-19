@@ -38,7 +38,14 @@ constexpr const char* BR_GET_FILENAME(const char* path) {
 //#endif
 
 //Note: Linux: this is defined in limits.h but doesn't account for actual BUFFER SIZES for wchar.
+#if defined(BR2_OS_WINDOWS)
+#define BRO_MAX_PATH ((MAX_PATH)*2)
+#elif defined(BR2_OS_LINUX)
 #define BRO_MAX_PATH ((PATH_MAX)*2)
+#else
+OS_ERROR_NOT_IMPLEMENTED
+#endif
+
 //std::char_traits<wchar_t>::length (dimObjPrefix);
 
 /************************************************************************/

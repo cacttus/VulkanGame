@@ -223,15 +223,15 @@ public:
   PFNGLGETINTEGERI_VPROC glGetIntegeri_v = nullptr;
   PFNGLSHADERSTORAGEBLOCKBINDINGPROC glShaderStorageBlockBinding = nullptr;
   PFNGLGETPROGRAMRESOURCEINDEXPROC glGetProgramResourceIndex = nullptr;
-  PFNGLGETSAMPLERPARAMETERFVPROC glGetSamplerParameterfv = nullptr;
-  PFNGLGETSAMPLERPARAMETERIIVPROC glGetSamplerParameterIiv = nullptr;
-  PFNGLGETSAMPLERPARAMETERIUIVPROC glGetSamplerParameterIuiv = nullptr;
-  PFNGLGETSAMPLERPARAMETERIUIVPROC glGetSamplerParameteruiv = nullptr;
-  PFNGLGETSAMPLERPARAMETERIVPROC glGetSamplerParameteriv = nullptr;
+  //PFNGLGETSAMPLERPARAMETERFVPROC glGetSamplerParameterfv = nullptr;
+  //PFNGLGETSAMPLERPARAMETERIIVPROC glGetSamplerParameterIiv = nullptr;
+  //PFNGLGETSAMPLERPARAMETERIUIVPROC glGetSamplerParameterIuiv = nullptr;
+  //PFNGLGETSAMPLERPARAMETERIUIVPROC glGetSamplerParameteruiv = nullptr;
+  //PFNGLGETSAMPLERPARAMETERIVPROC glGetSamplerParameteriv = nullptr;
   PFNGLCOPYIMAGESUBDATAPROC glCopyImageSubData = nullptr;
   PFNGLDELETETEXTURESEXTPROC glDeleteTextures = nullptr;
   PFNGLGETTEXPARAMETERIIVPROC glGetTexParameteriv = nullptr;
-  PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameteruiv = nullptr;
+//  PFNGLGETTEXPARAMETERIUIVPROC glGetTexParameteruiv = nullptr;
 };
 
 }  // namespace BR2

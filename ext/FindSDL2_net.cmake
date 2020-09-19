@@ -1,0 +1,42 @@
+# Find SDL_net
+# Defines:
+# ${SDL2_NET_INCLUDE_DIRS} 
+# ${SDL2_NET_LIBRARIES}
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(VC_LIB_PATH_SUFFIX lib/x64)
+else()
+  set(VC_LIB_PATH_SUFFIX lib/x86)
+endif()
+
+FIND_PATH(SDL2_NET_INCLUDE_DIR
+  NAMES
+  SDL_net.h
+  HINTS
+    ${CMAKE_SOURCE_DIR}/ext/SDL2_net-2.0.1/
+  PATH_SUFFIXES
+    include
+)
+
+FIND_LIBRARY(SDL2_NET_LIBRARY
+  NAMES
+  SDL2_net
+  HINTS
+  ${CMAKE_SOURCE_DIR}/ext/SDL2_net-2.0.1/${VC_LIB_PATH_SUFFIX}
+  PATH_SUFFIXES
+    lib64 lib
+)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(SDL2_net DEFAULT_MSG SDL2_NET_LIBRARY SDL2_NET_INCLUDE_DIR)
+
+IF(SDL2_net_FOUND)
+message("Found SDL2_net: include:" ${SDL2_NET_INCLUDE_DIR} " lib:" ${SDL2_NET_LIBRARY})
+set(SDL2_NET_INCLUDE_DIRS ${SDL2_NET_INCLUDE_DIR})
+set(SDL2_NET_LIBRARIES ${SDL2_NET_LIBRARY})
+ENDIF(SDL2_net_FOUND)
+
+mark_as_advanced(
+  SDL2_NET_INCLUDE_DIR
+  SDL2_NET_LIBRARY
+)

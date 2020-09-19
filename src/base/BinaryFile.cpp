@@ -176,14 +176,15 @@ bool BinaryFile::loadFromDisk(string_t fileLoc, size_t offset, int64_t length, b
   if (length == -1) {
     length = size;
   }
+  size_t size_len = (size_t) length;
 
   AssertOrThrow2(size <= length);
 
-  _data._alloca(length + 1);
-  memcpy(_data.ptr(), bufRet, length);
+  _data._alloca((size_t)(size_len + 1));
+  memcpy(_data.ptr(), bufRet, size_len);
   FileSystem::SDLFileFree(bufRet);
 
-  *(getData().ptr() + length) = 0;
+  *(getData().ptr() + size_len) = 0;
 
   return true;
 }
@@ -336,7 +337,7 @@ bool BinaryFile::readVersion() {
 
 #pragma region BinaryFile : Write
 void BinaryFile::writeBool(bool&& val, size_t offset) {
-  int8_t b = (val > 0) ? 1 : 0;
+  int8_t b = val ? (int8_t)1 : (int8_t)0;
   writeByte(std::move(b), offset);
 }
 void BinaryFile::writeByte(int8_t&& val, size_t offset) {

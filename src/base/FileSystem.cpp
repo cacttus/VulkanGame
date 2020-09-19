@@ -7,7 +7,6 @@
 
 #include "../base/DateTime.h"
 #include <fstream>
-#include <unistd.h>
 
 #if defined(BR2_CPP17)
 #include <filesystem>
@@ -21,6 +20,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <unistd.h>
 #endif
 
 namespace BR2 {
@@ -71,7 +71,7 @@ string_t FileSystem::combinePath(const std::string& a, const std::string& b) {
   }
   std::filesystem::path pa(a);
   std::filesystem::path pc = pa.concat(bfmt);
-  string_t st = pc;
+  string_t st = pc.string();
   return st;
 #else
   if ((a.length() == 0) || (b.length() == 0)) {
@@ -220,7 +220,7 @@ string_t FileSystem::getFileNameFromPath(const string_t& name) {
   // - If formatPath is true then we'll convert the path to a / path.
   string_t fn = "";
 #if defined(BR2_CPP17)
-  fn = std::filesystem::path(name).filename();
+  fn = std::filesystem::path(name).filename().string();
 #else
 
   DiskLoc l2;
@@ -665,7 +665,7 @@ string_t FileSystem::getRootedPath(const string_t& loc) {
   string_t path = "";
 
 #if defined(BR2_CPP17)
-  path = std::filesystem::absolute(loc);
+  path = std::filesystem::absolute(loc).string();
 #else
   // Get root of current.
   if (!pathIsAbsolute(loc)) {

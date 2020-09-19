@@ -1,5 +1,6 @@
 ~$lkan Game Demo GDD.docx
 .~lock.Vulkan Game Demo GDD.docx#
+/lib/
 /build/
 /bin/VulkanGame-*
 /bin/data/games/
@@ -16,3 +17,8 @@
 /bin/*.pdb
 /bin/*.ipdb
 /bin/*.iobj
+/tmp/
+/.vs/
+/logs/
+*.vcxproj.filters
+*.vcxproj.user
