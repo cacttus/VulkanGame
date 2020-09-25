@@ -368,7 +368,7 @@ void RenderPipe::saveScreenshot(std::shared_ptr<LightManager> lightman) {
       for (std::shared_ptr<ShadowFrustum> sf : lightman->getAllShadowFrustums()) {
         string_t fname = FileSystem::getScreenshotFilename();
         fname = fname + "_shadow_frustum_" + iTarget + "_.png";
-        RenderUtils::saveTexture(std::move(fname), sf->getGlTexId(), GL_TEXTURE_2D);
+        getContext()->getRenderUtils()->saveTexture(std::move(fname), sf->getGlTexId(), GL_TEXTURE_2D);
         BRLogInfo("[RenderPipe] Screenshot '" + fname + "' saved");
         iTarget++;
       }
@@ -392,7 +392,7 @@ void RenderPipe::saveScreenshot(std::shared_ptr<LightManager> lightman) {
             side = "-Z";
 
           fname = fname + "_shadowbox_" + iTarget + "_side_" + side + "_.png";
-          RenderUtils::saveTexture(std::move(fname), sb->getGlTexId(), GL_TEXTURE_CUBE_MAP, i);
+          getContext()->getRenderUtils()->saveTexture(std::move(fname), sb->getGlTexId(), GL_TEXTURE_CUBE_MAP, i);
           BRLogInfo("[RenderPipe] Screenshot '" + fname + "' saved");
         }
         iTarget++;
@@ -402,21 +402,21 @@ void RenderPipe::saveScreenshot(std::shared_ptr<LightManager> lightman) {
       for (std::shared_ptr<BufferRenderTarget> pTarget : _pBlittedDeferred->getTargets()) {
         string_t fname = FileSystem::getScreenshotFilename();
         fname = fname + "_deferred_" + pTarget->getName() + "_" + iTarget++ + "_.png";
-        RenderUtils::saveTexture(std::move(fname), pTarget->getGlTexId(), pTarget->getTextureTarget());
+        getContext()->getRenderUtils()->saveTexture(std::move(fname), pTarget->getGlTexId(), pTarget->getTextureTarget());
         BRLogInfo("[RenderPipe] Screenshot '" + fname + "' saved");
       }
       iTarget = 0;
       for (std::shared_ptr<BufferRenderTarget> pTarget : _pBlittedForward->getTargets()) {
         string_t fname = FileSystem::getScreenshotFilename();
         fname = fname + "_forward_" + pTarget->getName() + "_" + iTarget++ + "_.png";
-        RenderUtils::saveTexture(std::move(fname), pTarget->getGlTexId(), pTarget->getTextureTarget());
+        getContext()->getRenderUtils()->saveTexture(std::move(fname), pTarget->getGlTexId(), pTarget->getTextureTarget());
         BRLogInfo("[RenderPipe] Screenshot '" + fname + "' saved");
       }
     }
     else {
       //Basic Forward Screenshot
       string_t fname = FileSystem::getScreenshotFilename();
-      RenderUtils::saveTexture(std::move(fname), _pBlittedForward->getGlId(), GL_TEXTURE_2D);
+      getContext()->getRenderUtils()->saveTexture(std::move(fname), _pBlittedForward->getGlId(), GL_TEXTURE_2D);
       BRLogInfo("[RenderPipe] Screenshot '" + fname + "' saved");
     }
   }
@@ -571,7 +571,7 @@ void RenderPipe::bindDeferredTargets(bool bBind) {
 void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet) {
   //@param bSet - Set Shadow Textures and Uniforms, and ENV map for the GBUFFER. False: Clear texture slots.
   //Set Shadow and Environment map Uniforms.
-  int32_t iMaxTexs = Gu::getCoreContext()->maxGLTextureUnits();
+  int32_t iMaxTexs = getContext()->maxGLTextureUnits();
 
   //TEST
   //This is to get the lights to work again.
@@ -696,7 +696,7 @@ DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramewo
   getContext()->glBindFramebuffer(GL_FRAMEBUFFER, _uiDOFFboId);
   Gu::checkErrorsDbg();
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER, _uiDOFFboId, "DOF-FBO");
+  getContext()->setObjectLabel(GL_FRAMEBUFFER, _uiDOFFboId, "DOF-FBO");
 
   getContext()->glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, w);
   Gu::checkErrorsDbg();
@@ -706,7 +706,7 @@ DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramewo
   Gu::checkErrorsDbg();
 
   //Texurev
-  Gu::getCoreContext()->glGenTextures(1, &_uiTexId0);
+  ctx->glGenTextures(1, &_uiTexId0);
   getContext()->glBindTexture(GL_TEXTURE_2D, _uiTexId0);
   Gu::checkErrorsDbg();
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, nullptr);
@@ -715,7 +715,7 @@ DOFFbo::DOFFbo(std::shared_ptr<GLContext> ctx, int32_t w, int32_t h) : GLFramewo
   Gu::checkErrorsDbg();
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   Gu::checkErrorsDbg();
-  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, _uiTexId0, "DOF FBO");
+  ctx->setObjectLabel(GL_TEXTURE, _uiTexId0, "DOF FBO");
   getContext()->glBindTexture(GL_TEXTURE_2D, 0);
 }
 DOFFbo::~DOFFbo() {
@@ -824,7 +824,7 @@ void RenderPipe::endRenderAndBlit(std::shared_ptr<LightManager> lightman, std::s
       saveScreenshot(lightman);
       getContext()->chkErrDbg();
 
-      Gu::getCoreContext()->setPolygonMode(PolygonMode::Fill);
+      getContext()->setPolygonMode(PolygonMode::Fill);
       getContext()->chkErrDbg();
 
       _pForwardShader->setTextureUf(0);
@@ -915,7 +915,7 @@ std::shared_ptr<Img32> RenderPipe::getResultAsImage() {
 
   std::shared_ptr<BufferRenderTarget> pTarget;
   pTarget = _pBlittedForward->getTargetByName(ForwardFramebuffer::c_strColorMRT_FW);
-  if (OpenGLUtils::getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
+  if (getContext()->getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
     //the GL tex image must be flipped to show upriht/
   }
 

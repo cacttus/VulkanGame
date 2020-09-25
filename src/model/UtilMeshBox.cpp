@@ -23,7 +23,7 @@ void UtilMeshBox::generate() {
 }
 void UtilMeshBox::preDraw() {
   if (_blnWireFrame == true) {
-    Gu::getCoreContext()->setPolygonMode(PolygonMode::Line);  //GfxPolygonMode::PolygonModeWireframe);
+    getContext()->setPolygonMode(PolygonMode::Line);  //GfxPolygonMode::PolygonModeWireframe);
   }
 
   getContext()->setLineWidth(1.0);
@@ -32,7 +32,7 @@ void UtilMeshBox::preDraw() {
 void UtilMeshBox::postDraw() {
   //if(_blnWireFrame==true)
   //    Gd::popPolygonMode();
-  Gu::getCoreContext()->setPolygonMode(PolygonMode::Fill);  //GfxPolygonMode::PolygonModeWireframe);
+  getContext()->setPolygonMode(PolygonMode::Fill);  //GfxPolygonMode::PolygonModeWireframe);
 
   //CRITICAL we set these to null.
   //_verts = NULL;

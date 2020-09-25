@@ -577,7 +577,7 @@ void WorldGrid::postGenerateStage2() {
 
     //Finish generating synchronous opengl stuff (render thread)
     for (int iMatter = 0; iMatter < GridMeshLayer::e::MaxMatters; ++iMatter) {
-      Gu::checkErrorsRt();  //_pWorld25->getContext()->chkErrRt();
+      Gu::getCoreContext()->chkErrRt();  //_pWorld25->getContext()->chkErrRt();
       if (_pMeshes[iMatter] != nullptr) {
         _pMeshes[iMatter]->sendMeshToGpu();
       }

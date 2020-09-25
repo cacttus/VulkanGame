@@ -10,10 +10,12 @@ BufferRenderTarget::BufferRenderTarget(const string_t& name, std::shared_ptr<GLC
 BufferRenderTarget::~BufferRenderTarget() {
   getContext()->glDeleteTextures(1, &_iGlTexId);
 }
-
-int32_t BufferRenderTarget::getWidth() { return _iWidth; }
-int32_t BufferRenderTarget::getHeight() { return _iHeight; }
-
+int32_t BufferRenderTarget::getWidth() {
+  return _iWidth;
+}
+int32_t BufferRenderTarget::getHeight() {
+  return _iHeight;
+}
 bool BufferRenderTarget::getMsaaEnabled() {
   if (_eTextureTarget == GL_TEXTURE_2D_MULTISAMPLE) {
     return true;
@@ -25,7 +27,6 @@ bool BufferRenderTarget::getMsaaEnabled() {
     BRThrowNotImplementedException();
   }
 }
-
 void BufferRenderTarget::bind(GLenum eAttachment) {
   if (_eTargetType == RenderTargetType::e::Depth) {
     if (getMsaaEnabled()) {
@@ -46,12 +47,7 @@ void BufferRenderTarget::bind(GLenum eAttachment) {
       getContext()->glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, eAttachment, GL_TEXTURE_2D, _iGlTexId, 0);
     }
   }
-  Gu::checkErrorsDbg();
+  getContext()->chkErrDbg();
 }
 
-
-
-
-
-
-}//ns Game
+}  // namespace BR2

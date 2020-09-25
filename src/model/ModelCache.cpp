@@ -13,7 +13,7 @@
 #include "../model/Material.h"
 
 namespace BR2 {
-ModelCache::ModelCache(std::shared_ptr<GLContext> pc) : _pContext(pc) {
+ModelCache::ModelCache(std::shared_ptr<GLContext> pc) : GLFramework(pc) {
   _pDefaultMaterial = std::make_shared<Material>("Model_Default_Material");
   //default material is the initial blender params.
 }
@@ -128,7 +128,7 @@ std::shared_ptr<ModelSpec> ModelCache::getOrLoadModel(string_t mobName, bool bUs
       BRLogInfo("Loading model '" + mobName + "' from '" + filename + "'..");
       {
         if (bUseBinary) {
-          MbiFile mf;
+          MbiFile mf(getContext());
           if (mf.loadAndParse(filename) == false) {
             BRLogError("Failed to load model " + mobName + " ");
           }
@@ -200,7 +200,7 @@ void ModelCache::convertMobToBin(string_t strMobName, bool bOnlyIfNewer, std::st
     }
 
     BRLogInfo("Convert: Saving MOB " + strMobName);
-    MbiFile mb;
+    MbiFile mb(getContext());
     for (std::shared_ptr<ModelSpec> ms : mf.getModelSpecs()) {
       mb.getModelSpecs().push_back(ms);
     }

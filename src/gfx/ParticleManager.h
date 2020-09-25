@@ -31,7 +31,7 @@ public:
 *  @class ParticleManager
 *  @brief Manages particle system.
 */
-class ParticleManager : public VirtualMemory {
+class ParticleManager : public GLFramework {
 public:
 
   ParticleManager(std::shared_ptr<GLContext> pContext);
@@ -50,8 +50,7 @@ private:
 
   std::unique_ptr<Particle[]> _pParticles;
   std::shared_ptr<Atlas> _pParticleAtlas = nullptr;
-  std::shared_ptr<GLContext> _pContext = nullptr;
-  std::unique_ptr<QuadBufferMesh> _pQuadBufferMesh;
+   std::unique_ptr<QuadBufferMesh> _pQuadBufferMesh;
   // PartyShader* _pPartyShader = nullptr;
   string_t _sAtlasName;
   void reset();

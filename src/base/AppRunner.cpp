@@ -18,6 +18,9 @@
 #include "../gfx/OpenGLApi.h"
 #include "../gfx/VulkanApi.h"
 #include "../model/ModelCache.h"
+#include "../world/Scene.h"
+#include "../world/PhysicsWorld.h"
+#include "../bottle/BottleScript.h"
 
 #include <signal.h>
 #include <chrono>
@@ -39,7 +42,7 @@ public:
   std::shared_ptr<GraphicsApi> _pGraphicsApi = nullptr;
 
   void initSDLAndCreateGraphicsApi();
-  void doShowError(string_t err, const Exception * const e) const;
+  void doShowError(string_t err, const Exception* const e) const;
   void attachToGameHost();
   void printVideoDiagnostics();
   void updateWindowHandleForGamehost();
@@ -80,15 +83,12 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   // After this window is made, more windows can be made since we have a core context.
   std::shared_ptr<GraphicsWindow> window = _pGraphicsApi->createWindow(Stz "");  //Just avoid title
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
 
   initAudio();
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
 
   initNet();
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
 
   if (Gu::getEngineConfig()->getGameHostAttached()) {
     updateWindowHandleForGamehost();
@@ -98,26 +98,35 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   //Render System Static Data, which requires a prior context
   BRLogInfo("GraphicsContext - Making Vtx Formats.");
   RenderUtils::makeVertexFormats();
-  SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
 
   BRLogInfo("Creating Managers.");
-  Gu::createManagers();
-  SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  Gu::createManagers(window->getContext());
 
   BRLogInfo("Creating Window Renderer");
   window->initRenderSystem();
+
+  BRLogInfo("Creating Window 2");
+  std::shared_ptr<GraphicsWindow> window2 = _pGraphicsApi->createWindow(Stz "Window 2", window);  //Just avoid title
+  window2->initRenderSystem();
   SDLUtils::checkSDLErr();
   Gu::getCoreContext()->chkErrRt();
-  //
-  //   BRLogInfo("Creating Window 2");
-  //   std::shared_ptr<GraphicsWindow> window2 = _pGraphicsApi->createWindow(Stz "Window 2");  //Just avoid title
-  //   window2->initRenderSystem();
-  //   SDLUtils::checkSDLErr();
-  //   Gu::getCoreContext()->chkErrRt();
+
+  BRLogInfo("Creating Scene");
+  std::shared_ptr<Scene> pscene = Scene::create();
+  window->setScene(pscene);
+  
+  //**TODO: Multiple windows / scene
+  //**TODO: Multiple windows / scene
+  //window2->setScene(pscene);
+  //**TODO: Multiple windows / scene
+  //**TODO: Multiple windows / scene
+  
+  
+  pscene->addComponent(std::make_shared<BottleScript>());
+  
+  BRLogInfo("Apprunner complete.");
 }
-void AppRunner_Internal::doShowError(string_t err, const Exception *  const e ) const {
+void AppRunner_Internal::doShowError(string_t err, const Exception* const e) const {
   if (e != nullptr) {
     OperatingSystem::showErrorDialog(e->what() + err, Stz "Error");
   }
@@ -258,7 +267,7 @@ void AppRunner_Internal::runGameLoopTryCatch() {
   try {
     _pGraphicsApi->updateLoop();
   }
-  catch (const Exception&  e) {
+  catch (const Exception& e) {
     doShowError("Runtime Error", &e);
   }
   catch (...) {

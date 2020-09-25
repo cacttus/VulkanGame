@@ -125,10 +125,10 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createTarget(std::shared_pt
     BRThrowException("GPU Does not support enough color attachments, wanted: " + iIndex + " max supported: " + maxAttach);
   }
 
-  makeRenderTexture(&inf->_iGlTexId,
+  makeRenderTexture(ctx, &inf->_iGlTexId,
                     inf->_eAttachment, internalFormat, texFormat, dataType, w, h,
                     &inf->_eTextureTarget, bMsaaEnabled, nMsaaSamples);
-  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
+  ctx->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
 
   return inf;
 }
@@ -150,8 +150,8 @@ std::shared_ptr<BufferRenderTarget> FramebufferBase::createDepthTarget(std::shar
   inf->_iHeight = h;
 
   //This will cycle through depth formats and choose the most precise.
-  OpenGLUtils::createDepthTexture(strName, &inf->_iGlTexId, w, h, bMsaaEnabled, nMsaaSamples, GL_DEPTH_COMPONENT32F);
-  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
+  ctx->createDepthTexture(strName, &inf->_iGlTexId, w, h, bMsaaEnabled, nMsaaSamples, GL_DEPTH_COMPONENT32F);
+  ctx->setObjectLabel(GL_TEXTURE, inf->_iGlTexId, inf->getName());
 
   return inf;
 }
@@ -173,14 +173,14 @@ void FramebufferBase::deleteTargets() {
 //    deleteTargets();
 //    init(w, h, pSharedDepthTarget);
 //}
-void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLenum eInternalFormat, GLenum eTextureFormat, GLenum eDataType, int32_t iWidth, int32_t iHeight,
+void FramebufferBase::makeRenderTexture(std::shared_ptr<GLContext> ctx, GLuint* iTexId, GLenum eAttachment, GLenum eInternalFormat, GLenum eTextureFormat, GLenum eDataType, int32_t iWidth, int32_t iHeight,
                                         GLenum* eOutTarget, bool bMultisample, int32_t nSamples) {
-  Gu::getCoreContext()->glGenTextures(1, iTexId);
-  Gu::getCoreContext()->chkErrRt();
+  ctx->glGenTextures(1, iTexId);
+  ctx->chkErrRt();
 
   if (bMultisample) {
-    Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, *iTexId);
-    Gu::getCoreContext()->chkErrRt();
+    ctx->glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, *iTexId);
+    ctx->chkErrRt();
 
     //if (Gu::GetEngineDisplayParams()->getEnableAnisotropicFiltering())
     //{
@@ -188,27 +188,27 @@ void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLen
     //    glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAX_ANISOTROPY_EXT, Gu::GetEngineDisplayParams()->getTextureAnisotropyLevel());
     //    CheckGpuErrorsDbg();
     //}
-    std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, nSamples, eInternalFormat, iWidth, iHeight, GL_TRUE);
-    Gu::getCoreContext()->chkErrRt();
+    ctx->glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, nSamples, eInternalFormat, iWidth, iHeight, GL_TRUE);
+    ctx->chkErrRt();
 
     if (eOutTarget != NULL){
       *eOutTarget = GL_TEXTURE_2D_MULTISAMPLE;
     }
   }
   else {
-    Gu::getCoreContext()->glBindTexture(GL_TEXTURE_2D, *iTexId);
-    Gu::getCoreContext()->chkErrRt();
+    ctx->glBindTexture(GL_TEXTURE_2D, *iTexId);
+    ctx->chkErrRt();
     //if (Gu::GetEngineDisplayParams()->getEnableAnisotropicFiltering())
     //{
     //    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, Gu::GetEngineDisplayParams()->getTextureAnisotropyLevel());
     //    Gu::getGraphicsContext()->chkErrRt();
     //}
     glTexImage2D(GL_TEXTURE_2D, 0, eInternalFormat, iWidth, iHeight, 0, eTextureFormat, eDataType, nullptr);
-    Gu::getCoreContext()->chkErrRt();
+    ctx->chkErrRt();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    Gu::getCoreContext()->chkErrRt();
+    ctx->chkErrRt();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    Gu::getCoreContext()->chkErrRt();
+    ctx->chkErrRt();
 
     if (eOutTarget != nullptr) {
       *eOutTarget = GL_TEXTURE_2D;
@@ -216,7 +216,7 @@ void FramebufferBase::makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLen
   }
   glDisable(GL_DITHER);  //Dithering gets enabled for some reason
 
-  Gu::getCoreContext()->chkErrRt();
+  ctx->chkErrRt();
 }
 
 }  // namespace BR2

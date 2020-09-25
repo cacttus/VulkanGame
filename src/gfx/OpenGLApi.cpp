@@ -79,7 +79,7 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
   return profs;
 }
 
-std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const string_t& title) {
+std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const string_t& title, std::shared_ptr<GraphicsWindow> parent) {
   //Create GL Context.
   std::shared_ptr<GraphicsWindow> pRet = nullptr;
 
@@ -124,7 +124,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
     SDL_Window* win = makeSDLWindow(title, SDL_WINDOW_OPENGL, false);
     if (win != nullptr) {
       std::shared_ptr<GLContext> context = std::make_shared<GLContext>(getThis<GraphicsApi>(), prof, win);
-      if (context->valid()) {
+      if (context->init()) {
         pRet = context->getGraphicsWindow();
         if (pRet != nullptr) {
           SDL_GL_SetSwapInterval(prof->_bVsync ? 1 : 0);  //Vsync is automatic on IOS
@@ -136,8 +136,12 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
           _pDefaultCompatibleProfile = prof;
 
           //Context created successfully
-          setMainContext(context);
+          if (getCoreContext() == nullptr) {
+            setMainContext(context);
+          }
           getContexts().push_back(context);
+
+          context->chkErrRt();
         }
       }
       else {
@@ -151,8 +155,10 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
   }
   return pRet;
 }
-void OpenGLApi::makeCurrent(SDL_Window* win) {
-  SDL_GL_MakeCurrent(win, Gu::getCoreContext()->getSDLGLContext());
+void OpenGLApi::makeCurrent(GraphicsWindow* win) {
+  SDL_GL_MakeCurrent(win->getSDLWindow(), win->getContext()->getSDLGLContext());
+  Gu::setActiveContext(win->getContext());
+
 }
 void OpenGLApi::getDrawableSize(SDL_Window* win, int* w, int* h) {
   SDL_GL_GetDrawableSize(win, w, h);
@@ -161,6 +167,11 @@ void OpenGLApi::swapBuffers(SDL_Window* win) {
   SDL_GL_SwapWindow(win);
 }
 void OpenGLApi::destroyWindow(std::shared_ptr<GraphicsWindow> win) {
+  //Destroy children
+  for (auto child : win->getChildren()) {
+    GraphicsApi::destroyWindow(child.second);
+  }
+
   //SDL_GL_DeleteContext automatically happens in the window's context.
   GraphicsApi::destroyWindow(win);
 }

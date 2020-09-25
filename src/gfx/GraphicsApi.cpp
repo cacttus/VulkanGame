@@ -108,6 +108,8 @@ bool GraphicsApi::handleEvents(SDL_Event* event) {
     }
     return true;
   }
+  
+  //event->key.keysym.sym;
 
   switch (event->type) {
     case SDL_MOUSEMOTION:
@@ -176,13 +178,8 @@ bool GraphicsApi::handleEvents(SDL_Event* event) {
   return true;
 }
 void GraphicsApi::destroyWindow(std::shared_ptr<GraphicsWindow> w) {
-  w = nullptr;
-  
   SDL_DestroyWindow(w->getSDLWindow());
-  //std::vector<std::shared_ptr<GraphicsWindow>>::iterator it = std::find(_pvecWindows.begin(), _pvecWindows.end(), w);
-  //if (it != _pvecWindows.end()) {
-  //  _pvecWindows.erase(it);
-  //}
+  w = nullptr;
 }
 SDL_Window* GraphicsApi::makeSDLWindow(const string_t& windowTitle, int render_system, bool show) {
   string_t title;

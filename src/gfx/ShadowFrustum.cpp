@@ -162,10 +162,10 @@ void ShadowFrustum_Internal::createFbo() {
 
   string_t label = "ShadowMap_Frustum";
 
-  OpenGLUtils::debugGetRenderState();
+  Gu::getCoreContext()->debugGetRenderState();
   // Create the depth buffer
-  GLenum depth = OpenGLUtils::getSupportedDepthSize();
-  OpenGLUtils::createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
+  GLenum depth = Gu::getCoreContext()->getSupportedDepthSize();
+  Gu::getCoreContext()->createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
 
   //Bind framebuffer and attach depth texture.
   Gu::getCoreContext()->glGenFramebuffers(1, &_glFrameBufferId);
@@ -297,7 +297,7 @@ void ShadowFrustum::updateAndCullAsync(CullParams& cp) {
   _pint->cullObjectsAsync(cp);
 }
 void ShadowFrustum::debugRender(RenderParams& rp) {
-  RenderUtils::drawFrustumShader(rp.getCamera(), _pint->_pFrustum, Color4f(1, 0, 0, 1));
+  Gu::getCoreContext()->getRenderUtils()->drawFrustumShader(rp.getCamera(), _pint->_pFrustum, Color4f(1, 0, 0, 1));
 }
 void ShadowFrustum::beginRenderShadowFrustum() {
   //Gd::verifyRenderThread();

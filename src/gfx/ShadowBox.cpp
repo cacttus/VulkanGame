@@ -57,7 +57,6 @@ ShadowBox_Internal::ShadowBox_Internal(std::shared_ptr<LightNodePoint> pLightSou
   _iFboHeightPixels = iFboHeight;
   _iFboWidthPixels = iFboWidth;
   _pLightSource = pLightSource;
-  ;
 
   //used for interpolating frames.
   static int64_t idGen = 0;
@@ -74,10 +73,10 @@ void ShadowBox_Internal::createFbo() {
 
   string_t label = "ShadowMap_Cube";
 
-  OpenGLUtils::debugGetRenderState();
+  Gu::getCoreContext()->debugGetRenderState();
   // Create the depth buffer
-  GLenum depth = OpenGLUtils::getSupportedDepthSize();
-  OpenGLUtils::createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
+  GLenum depth = Gu::getCoreContext()->getSupportedDepthSize();
+  Gu::getCoreContext()->createDepthTexture(label, &_glDepthTextureId, _iFboWidthPixels, _iFboHeightPixels, false, 0, depth);
 
   //Bind framebuffer and attach depth texture.
   Gu::getCoreContext()->glGenFramebuffers(1, &_glFrameBufferId);
@@ -304,12 +303,12 @@ void ShadowBox::renderShadows(std::shared_ptr<ShadowBox> pShadowBoxMaster) {
   Perf::popPerf();
 }
 void ShadowBox::debugRender(RenderParams& rp) {
-  RenderUtils::drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Right]->getFrustum(), Color4f(1, 0, 0, 1));
-  RenderUtils::drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Left]->getFrustum(), Color4f(1, 0, 0, 1));
-  RenderUtils::drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Bottom]->getFrustum(), Color4f(0, 1, 0, 1));
-  RenderUtils::drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Top]->getFrustum(), Color4f(0, 1, 0, 1));
-  RenderUtils::drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Back]->getFrustum(), Color4f(0, 0, 1, 1));
-  RenderUtils::drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Front]->getFrustum(), Color4f(0, 0, 1, 1));
+  Gu::getCoreContext()->getRenderUtils()->drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Right]->getFrustum(), Color4f(1, 0, 0, 1));
+  Gu::getCoreContext()->getRenderUtils()->drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Left]->getFrustum(), Color4f(1, 0, 0, 1));
+  Gu::getCoreContext()->getRenderUtils()->drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Bottom]->getFrustum(), Color4f(0, 1, 0, 1));
+  Gu::getCoreContext()->getRenderUtils()->drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Top]->getFrustum(), Color4f(0, 1, 0, 1));
+  Gu::getCoreContext()->getRenderUtils()->drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Back]->getFrustum(), Color4f(0, 0, 1, 1));
+  Gu::getCoreContext()->getRenderUtils()->drawFrustumShader(rp.getCamera(), _pint->_pShadowBoxSide[BoxSide::Front]->getFrustum(), Color4f(0, 0, 1, 1));
 }
 void ShadowBox::copyAndBlendToShadowMap(std::shared_ptr<ShadowBox> pBox) {
   if (pBox->getGlTexId() != 0) {

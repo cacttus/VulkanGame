@@ -14,11 +14,11 @@ namespace BR2 {
 *  @class ShaderMaker
 *  @brief Compiles GLSL shaders.
 */
-class ShaderMaker : public VirtualMemory {
+class ShaderMaker : public GLFramework {
   typedef std::map<std::shared_ptr<VertexFormat>, std::shared_ptr<ShaderBase>> ShaderMap;
 
 public:
-  ShaderMaker();
+  ShaderMaker(std::shared_ptr<GLContext> ct);
   virtual ~ShaderMaker() override;
 
   void shaderBound(std::shared_ptr<ShaderBase> sb);
@@ -59,7 +59,6 @@ protected:
   std::set<std::shared_ptr<ShaderSubProgram>> _setSubPrograms;
   std::map<Hash32, std::shared_ptr<ShaderUniformBlock>> _mapUniformBlocks;
 
-  std::shared_ptr<GLContext> _pContext = nullptr;
   std::shared_ptr<ShaderCompiler> _pShaderCompiler = nullptr;
   std::shared_ptr<ShaderCache> _pShaderCache = nullptr;
   std::vector<std::shared_ptr<ShaderBase>> _vecShaders;

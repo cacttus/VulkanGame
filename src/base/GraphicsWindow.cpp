@@ -19,14 +19,11 @@
 #include "../base/SDLIncludes.h"
 #include "../world/Scene.h"
 #include "../world/PhysicsWorld.h"
-#include "../bottle/BottleScript.h"
-
 
 namespace BR2 {
 #pragma region GraphicsWindow_Internal
 class GraphicsWindow_Internal {
 public:
-  std::unique_ptr<GraphicsWindow> _cont = nullptr;
   std::shared_ptr<RenderViewport> _pViewport = nullptr;
   std::shared_ptr<Scene> _pScene = nullptr;
   std::shared_ptr<RenderPipe> _pRenderPipe = nullptr;
@@ -45,8 +42,11 @@ public:
   uint32_t _iFullscreenToggleWidth = 0;
   uint32_t _iFullscreenToggleHeight = 0;
 
+  GraphicsWindow::ChildWindows _mapChildren;
+  std::shared_ptr<GraphicsWindow> _pParent = nullptr;
+
   void printHelpfulDebug();
-  void beginRender();
+  void beginRender(std::shared_ptr<GraphicsWindow> cont);
   void endRender();
   void updateWidthHeight(uint32_t w, uint32_t h, bool force);
   void toggleFullscreen();
@@ -127,27 +127,27 @@ void GraphicsWindow_Internal::printHelpfulDebug() {
 
   SDLUtils::checkSDLErr();
 }
-void GraphicsWindow_Internal::beginRender() {
-
-  Gu::checkErrorsDbg();
+void GraphicsWindow_Internal::beginRender(std::shared_ptr<GraphicsWindow> cont) {
+  cont->getContext()->chkErrDbg();
   //Make this window current *critical*
   //OPTIMIZE:TODO:NOTE: if there is only 1 window we don't have to call this.
-  _pApi->makeCurrent(_pSDLWindow);
-  Gu::checkErrorsDbg();
+  _pApi->makeCurrent(cont.get());
+  cont->getContext()->chkErrDbg();
 
   //Update the widnow size
   int w, h;
   _pApi->getDrawableSize(_pSDLWindow, &w, &h);
-  Gu::checkErrorsDbg();
-  updateWidthHeight(w, h, false);
-  Gu::checkErrorsDbg();
+  cont->getContext()->chkErrDbg();
 
-  Perf::pushPerf();//**BEGIN PERF 
+  updateWidthHeight(w, h, false);
+  cont->getContext()->chkErrDbg();
+
+  Perf::pushPerf();  //**BEGIN PERF
 }
 void GraphicsWindow_Internal::endRender() {
   _pApi->swapBuffers(_pSDLWindow);
 
-  Perf::popPerf();//**END PERF
+  Perf::popPerf();  //**END PERF
 }
 #pragma endregion
 
@@ -163,6 +163,9 @@ GraphicsWindow::~GraphicsWindow() {
     _pint->_pSDLWindow = nullptr;
   }
   _pint = nullptr;
+}
+GraphicsWindow::ChildWindows& GraphicsWindow::getChildren() {
+  return _pint->_mapChildren;
 }
 void GraphicsWindow::init() {
   _pint->_iLastWidth = Gu::getConfig()->getDefaultScreenWidth();
@@ -207,8 +210,10 @@ void GraphicsWindow::initRenderSystem() {
   BRLogInfo("Creating Render Pipeline");
   _pint->_pRenderPipe = std::make_shared<RenderPipe>(getContext(), getThis<GraphicsWindow>());
   _pint->_pRenderPipe->init(getViewport()->getWidth(), getViewport()->getHeight(), Gu::getPackage()->makeAssetPath(Gu::getPackage()->getEnvTextureFolder()));
-
   _pint->printHelpfulDebug();
+
+  SDLUtils::checkSDLErr();
+  getContext()->chkErrRt();
 }
 FrameState GraphicsWindow::getFrameState() {
   return _pint->_eFrameState;
@@ -218,13 +223,7 @@ void GraphicsWindow::step() {
   _pint->_pDelta->update();
   _pint->_pFpsMeter->update();
 
-  if (_pint->_pScene == nullptr) {
-    std::shared_ptr<Scene> pscene = Scene::create();
-    setScene(pscene);
-    pscene->addComponent(std::make_shared<BottleScript>());
-  }
-
-  _pint->beginRender();
+  _pint->beginRender(getThis<GraphicsWindow>());
   {
     if (getInput()->keyPress(SDL_SCANCODE_F11)) {
       _pint->toggleFullscreen();
@@ -235,7 +234,7 @@ void GraphicsWindow::step() {
     {
       if (getScene() != nullptr) {
         _pint->setFrameState(FrameState::Update);
-        _pint->_pScene->update(_pint->_pDelta->get());
+        getScene()->update(_pint->_pDelta->get());
 
         _pint->setFrameState(FrameState::Render);
         PipeBits p;
@@ -249,14 +248,13 @@ void GraphicsWindow::step() {
     _pint->setFrameState(FrameState::SyncEnd);
     _pint->_pFrameSync->syncEnd();
   }
-
   _pint->endRender();
 
   getInput()->postUpdate();
 }
 void GraphicsWindow::idle(int64_t us) {
-  if (_pint->_pScene != nullptr) {
-    _pint->_pScene->idle(us);
+  if (getScene() != nullptr) {
+    getScene()->idle(us);
   }
 }
 string_t GraphicsWindow::getTitle() {
@@ -286,10 +284,9 @@ void GraphicsWindow::setScene(std::shared_ptr<Scene> scene) {
   scene->afterAttachedToWindow();
 }
 bool GraphicsWindow::containsPoint_Global2D(const vec2& mp) {
-
   //TDOO: store these values per frame in this window
- // int top, left, bot, right;
- // int ret = SDL_GetWindowBordersSize(getSDLWindow(), &top, &left, &bot, &right);
+  // int top, left, bot, right;
+  // int ret = SDL_GetWindowBordersSize(getSDLWindow(), &top, &left, &bot, &right);
   int posx, posy;
   SDL_GetWindowPosition(getSDLWindow(), &posx, &posy);
   int sizx, sizy;
@@ -316,9 +313,5 @@ bool GraphicsWindow::containsPoint_Global2D(const vec2& mp) {
   return true;
 }
 
-
-
-
-
 #pragma endregion
-}//ns Game
+}  // namespace BR2

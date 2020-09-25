@@ -11,7 +11,10 @@
 #include "../ext/stb_truetype.h"
 
 namespace BR2 {
-namespace MtTexType { typedef enum { Image, Font } e; }
+namespace MtTexType {
+typedef enum { Image,
+               Font } e;
+}
 /**
 *  @class MtNode
 *  @brief Node in the MegaTexture class.
@@ -29,7 +32,10 @@ public:
 */
 class MtTex : public VirtualMemoryShared<MtTex> {
 public:
-  MtTex(std::string imgName, int32_t iPatch) { _strImgName = imgName; _iPatchImg = iPatch; }
+  MtTex(std::string imgName, int32_t iPatch) {
+    _strImgName = imgName;
+    _iPatchImg = iPatch;
+  }
   std::string imgName() { return _strImgName; }
   virtual ~MtTex() override {}
   int32_t getWidth() { return _iWidth; }
@@ -37,8 +43,8 @@ public:
   float getSizeRatio() { return _fSizeRatio; }
   vec2& uv0() { return _uv_p0; }
   vec2& uv1() { return _uv_p1; }
-  std::shared_ptr<MtNode> node() { return _pMtNode; }//mega texture node
-  void setNode(std::shared_ptr<MtNode> n) { _pMtNode = n; }//mega texture node
+  std::shared_ptr<MtNode> node() { return _pMtNode; }        //mega texture node
+  void setNode(std::shared_ptr<MtNode> n) { _pMtNode = n; }  //mega texture node
   std::shared_ptr<Img32> img() { return _pImg; }
   void setImg(std::shared_ptr<Img32> img);
   void freeTmp();
@@ -46,8 +52,9 @@ public:
   void setWrapV(TexWrap::e e) { _eWrapV = e; }
   TexWrap::e getWrapU() { return _eWrapU; }
   TexWrap::e getWrapV() { return _eWrapV; }
+
 private:
-  std::shared_ptr<MtNode> _pMtNode = nullptr;//mega texture node
+  std::shared_ptr<MtNode> _pMtNode = nullptr;  //mega texture node
   std::shared_ptr<Img32> _pImg = nullptr;
   int32_t _iWidth = 0;
   int32_t _iHeight = 0;
@@ -56,7 +63,7 @@ private:
   TexWrap::e _eWrapV = TexWrap::e::Repeat;
   vec2 _uv_p0, _uv_p1;
   std::string _strImgName;
-  int32_t _iPatchImg = 0; //0-8 for 9p, or 0-2 for 3p
+  int32_t _iPatchImg = 0;  //0-8 for 9p, or 0-2 for 3p
 };
 /**
 * @class MtTexPatch
@@ -64,27 +71,34 @@ private:
 */
 class MtTexPatch : public VirtualMemoryShared<MtTexPatch> {
 public:
-  void addTexImage(std::string img, int32_t iPatch);
-  MtTexPatch(std::string imgName, Hash32 nameHash) { _strName = imgName; _iNameHash = nameHash; }
+  MtTexPatch(std::shared_ptr<MegaTex> mt,std::string imgName, Hash32 nameHash);
+  virtual ~MtTexPatch() override;  
   virtual void loadData();
   std::string getName() { return _strName; }
   std::vector<std::shared_ptr<MtTex>>& getTexs() { return _vecTexs; }
+  void addTexImage(std::string img, int32_t iPatch);
+
 private:
   std::vector<std::shared_ptr<Img32>> parseImagePatch(std::string file);
-  std::string _strName; //Image Or Font name
+  std::string _strName;  //Image Or Font name
   Hash32 _iNameHash = 0;
   std::vector<std::shared_ptr<MtTex>> _vecTexs;
+  std::shared_ptr<MegaTex> _pMegaTex = nullptr;
 };
+/**
+*  @class MtTexPatch
+*  @brief A 2D texture image font.
+*/
 class MtFont : public MtTexPatch {
 public:
-  MtFont(std::string name, Hash32 nameHash) : MtTexPatch(name, nameHash) {}
+  MtFont(std::shared_ptr<MegaTex> mt, std::string name, Hash32 nameHash);
   virtual ~MtFont() override;
   void createFont();
   void getCharQuad(int32_t cCode, int32_t cCodePrev, FontSize fontSize, float& outWidth, float& outHeight, Box2f& texs, float& padTop, float& padRight, float& padBot, float& padLeft);
   virtual void loadData() override;
   float getLineGap() { return _fLineGap; }
+
 private:
-  //std::string _strFontName;
   uint32_t _iBakedCharSizePixels = 40;
   uint32_t _atlasWidth = 1024;
   uint32_t _atlasHeight = 1024;
@@ -97,9 +111,10 @@ private:
   float _fLineGap = 0;
   std::unique_ptr<stbtt_packedchar[]> _charInfo;
   stbtt_fontinfo _fontInfo;
-  float _fScaleForPixelHeight;//return value of stbtt_ScaleForPixelHeight
-  std::shared_ptr<BinaryFile> _pFontBuffer;// STB:  "Load" a font file from a memory buffer (you have to keep the buffer loaded)
+  float _fScaleForPixelHeight;               //return value of stbtt_ScaleForPixelHeight
+  std::shared_ptr<BinaryFile> _pFontBuffer;  // STB:  "Load" a font file from a memory buffer (you have to keep the buffer loaded)
   bool _bInitialized = false;
+
   float fontSizeToFontScale(float fontSz);
   void scaleStbQuad(const stbtt_aligned_quad* const stbQuad, Box2f* __out_ worldQuad, const vec2& basePos, float fScale);
   std::shared_ptr<Img32> createFontImage(std::unique_ptr<uint8_t[]>& pData);
@@ -109,7 +124,11 @@ private:
 *  @brief Composes mega textures (non-uniform grid atlas)
 */
 class MegaTex : public Texture2DSpec {
-  enum class MegaTexCompileState { NotCompiled, Dirty, Compiling, Compiled };
+  enum class MegaTexCompileState { NotCompiled,
+                                   Dirty,
+                                   Compiling,
+                                   Compiled };
+
 public:
   MegaTex(string_t name, std::shared_ptr<GLContext> ct, bool bCache);
   virtual ~MegaTex() override;
@@ -119,7 +138,7 @@ public:
   std::shared_ptr<MtTexPatch> getTex(std::shared_ptr<Img32> tx);
   std::shared_ptr<MtTexPatch> getTex(std::string img, int32_t nPatches = 1, bool bPreloaded = false, bool bLoadNow = false);
   std::shared_ptr<MtFont> getFont(std::string fontName);
-  virtual bool bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound = false)  override;
+  virtual bool bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound = false) override;
   void loadImages();
   std::shared_ptr<Img32> compile();
 
@@ -136,8 +155,6 @@ private:
   bool _bCache = false;
 };
 
-}//ns Game
-
-
+}  // namespace BR2
 
 #endif

@@ -21,6 +21,9 @@
 
 namespace BR2 {
 
+RenderUtils::RenderUtils(std::shared_ptr<GLContext> ctx){
+  _pContext=ctx;
+}
 #pragma region Debug Draw
 //UNSAFE
 void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, float size) {
@@ -61,7 +64,7 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
 
   static const int _nIndexes = 6;
 
-  Gu::getCoreContext()->glActiveTexture(GL_TEXTURE0);
+  getContext()->glActiveTexture(GL_TEXTURE0);
 
   GLuint bdVerts,
       bdColors,
@@ -70,42 +73,42 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
       bdIndexes,
       vaoIndexes;
 
-  Gu::getCoreContext()->glGenVertexArrays(1, (GLuint*)&vaoIndexes);
-  Gu::getCoreContext()->glBindVertexArray(vaoIndexes);
+  getContext()->glGenVertexArrays(1, (GLuint*)&vaoIndexes);
+  getContext()->glBindVertexArray(vaoIndexes);
 
-  Gu::getCoreContext()->glGenBuffers(1, (GLuint*)&bdVerts);
-  Gu::getCoreContext()->glGenBuffers(1, (GLuint*)&bdColors);
-  Gu::getCoreContext()->glGenBuffers(1, (GLuint*)&bdTextures);
-  Gu::getCoreContext()->glGenBuffers(1, (GLuint*)&bdNormals);
-  Gu::getCoreContext()->glGenBuffers(1, (GLuint*)&bdIndexes);
+  getContext()->glGenBuffers(1, (GLuint*)&bdVerts);
+  getContext()->glGenBuffers(1, (GLuint*)&bdColors);
+  getContext()->glGenBuffers(1, (GLuint*)&bdTextures);
+  getContext()->glGenBuffers(1, (GLuint*)&bdNormals);
+  getContext()->glGenBuffers(1, (GLuint*)&bdIndexes);
 
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdVerts);
-  Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdVerts);
+  getContext()->glBufferData(GL_ARRAY_BUFFER,
                                      4 * sizeof(GLfloat) * 3,
                                      _vertexes,
                                      GL_STATIC_DRAW);
 
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdColors);
-  Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdColors);
+  getContext()->glBufferData(GL_ARRAY_BUFFER,
                                      4 * sizeof(GLfloat) * 4,
                                      _colors,
                                      GL_STATIC_DRAW);
 
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdNormals);
-  Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdNormals);
+  getContext()->glBufferData(GL_ARRAY_BUFFER,
                                      4 * sizeof(GLfloat) * 3,
                                      _normals,
                                      GL_STATIC_DRAW);
 
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdTextures);
-  Gu::getCoreContext()->glBufferData(GL_ARRAY_BUFFER,
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdTextures);
+  getContext()->glBufferData(GL_ARRAY_BUFFER,
                                      4 * sizeof(GLfloat) * 2,
                                      _tcoords,
                                      GL_STATIC_DRAW);
 
   //Hmm...
-  Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bdIndexes);
-  Gu::getCoreContext()->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+  getContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bdIndexes);
+  getContext()->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                                      6 * sizeof(GL_UNSIGNED_SHORT),
                                      _indexes,
                                      GL_STATIC_DRAW);
@@ -116,33 +119,33 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
   // MUST BIND BUFFER DATA TO USE VERTEX ATTRIBS
   // MUST USE VBOS WITH VERTEX ATTRIBS
 
-  Gu::getCoreContext()->glEnableVertexAttribArray(attr_v);
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdVerts);
-  Gu::getCoreContext()->glVertexAttribPointer(attr_v,
+  getContext()->glEnableVertexAttribArray(attr_v);
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdVerts);
+  getContext()->glVertexAttribPointer(attr_v,
                                               3,
                                               GL_FLOAT,
                                               GL_FALSE,
                                               sizeof(GLfloat) * 3,
                                               NULL);
-  Gu::getCoreContext()->glEnableVertexAttribArray(attr_c);
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdColors);
-  Gu::getCoreContext()->glVertexAttribPointer(attr_c,
+  getContext()->glEnableVertexAttribArray(attr_c);
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdColors);
+  getContext()->glVertexAttribPointer(attr_c,
                                               4,
                                               GL_FLOAT,
                                               GL_FALSE,
                                               sizeof(GLfloat) * 4,
                                               NULL);
-  Gu::getCoreContext()->glEnableVertexAttribArray(attr_n);
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdNormals);
-  Gu::getCoreContext()->glVertexAttribPointer(attr_n,
+  getContext()->glEnableVertexAttribArray(attr_n);
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdNormals);
+  getContext()->glVertexAttribPointer(attr_n,
                                               3,
                                               GL_FLOAT,
                                               GL_FALSE,
                                               sizeof(GLfloat) * 3,
                                               NULL);
-  Gu::getCoreContext()->glEnableVertexAttribArray(attr_t);
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, bdTextures);
-  Gu::getCoreContext()->glVertexAttribPointer(attr_t,
+  getContext()->glEnableVertexAttribArray(attr_t);
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, bdTextures);
+  getContext()->glVertexAttribPointer(attr_t,
                                               2,
                                               GL_FLOAT,
                                               GL_FALSE,
@@ -156,22 +159,22 @@ void RenderUtils::renderTexturedQuadAttrib(std::shared_ptr<CameraNode> cam, floa
   //std::cout<<_tcoords<<std::endl;
   //std::cout<<_indexes<<std::endl;
 
-  Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bdIndexes);
+  getContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bdIndexes);
 
-  Gu::getCoreContext()->glBindVertexArray(vaoIndexes);
+  getContext()->glBindVertexArray(vaoIndexes);
   glDrawElements(GL_TRIANGLES, _nIndexes, GL_UNSIGNED_SHORT, nullptr);
-  Gu::getCoreContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)0);
-  Gu::getCoreContext()->glBindBuffer(GL_ARRAY_BUFFER, (GLuint)0);
+  getContext()->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (GLuint)0);
+  getContext()->glBindBuffer(GL_ARRAY_BUFFER, (GLuint)0);
 
-  Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdVerts);
-  Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdColors);
-  Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdTextures);
-  Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdNormals);
-  Gu::getCoreContext()->glDeleteBuffers(1, (GLuint*)&bdIndexes);
-  Gu::getCoreContext()->glDeleteVertexArrays(1, (GLuint*)&vaoIndexes);
+  getContext()->glDeleteBuffers(1, (GLuint*)&bdVerts);
+  getContext()->glDeleteBuffers(1, (GLuint*)&bdColors);
+  getContext()->glDeleteBuffers(1, (GLuint*)&bdTextures);
+  getContext()->glDeleteBuffers(1, (GLuint*)&bdNormals);
+  getContext()->glDeleteBuffers(1, (GLuint*)&bdIndexes);
+  getContext()->glDeleteVertexArrays(1, (GLuint*)&vaoIndexes);
 }
 void RenderUtils::drawAxisShader(std::shared_ptr<CameraNode> cam, float scale, float lineWidth, const mat4& transform) {
-  UtilMeshAxis* ax = new UtilMeshAxis(Gu::getCoreContext(), scale, lineWidth, transform);
+  UtilMeshAxis* ax = new UtilMeshAxis(getContext(), scale, lineWidth, transform);
   ax->init();
   ax->draw(cam);
   delete ax;
@@ -184,7 +187,7 @@ void RenderUtils::drawAxisShader(std::shared_ptr<CameraNode> cam, float scale, f
 //    delete ax;
 //}
 void RenderUtils::drawWireSphereShader(std::shared_ptr<CameraNode> cam, float fRadius, const vec4& vColor, int32_t nSlices, int32_t nStacks, mat4* pMatrix) {
-  UtilMeshSphere* ax = new UtilMeshSphere(Gu::getCoreContext(), fRadius, vec3(0, 0, 0), vColor, nSlices, nStacks);
+  UtilMeshSphere* ax = new UtilMeshSphere(getContext(), fRadius, vec3(0, 0, 0), vColor, nSlices, nStacks);
   ax->init();
   if (pMatrix != nullptr) {
     ax->setModelMatrix(*pMatrix);
@@ -193,13 +196,13 @@ void RenderUtils::drawWireSphereShader(std::shared_ptr<CameraNode> cam, float fR
   delete ax;
 }
 void RenderUtils::drawWireBoxShader(std::shared_ptr<CameraNode> cam, const Box3f* box, const vec3& vOffset, const vec4& vColor) {
-  UtilMeshBox* ax = new UtilMeshBox(Gu::getCoreContext(), box, vOffset, vColor);
+  UtilMeshBox* ax = new UtilMeshBox(getContext(), box, vOffset, vColor);
   ax->init();
   ax->draw(cam);
   delete ax;
 }
 void RenderUtils::drawSolidBoxShaded(std::shared_ptr<CameraNode> cam, const Box3f* box, const vec3& vOffset, const vec4& vColor) {
-  UtilMeshBox* ax = new UtilMeshBox(Gu::getCoreContext(), box, vOffset, vColor);
+  UtilMeshBox* ax = new UtilMeshBox(getContext(), box, vOffset, vColor);
   ax->setWireFrame(false);
   ax->init();
   ax->draw(cam);
@@ -226,15 +229,15 @@ void RenderUtils::drawSolidBoxShaded(std::shared_ptr<CameraNode> cam, const Box3
 //    mesh.end();
 //}
 void RenderUtils::drawGridShader(std::shared_ptr<CameraNode> cam, float r, float g, float b, int32_t nSlices, float fSliceWidth, const vec3& center, std::shared_ptr<ShaderBase> pShader) {
-  UtilMeshGrid* pGrid = new UtilMeshGrid(Gu::getCoreContext(), r, g, b, nSlices, fSliceWidth, center);
+  UtilMeshGrid* pGrid = new UtilMeshGrid(getContext(), r, g, b, nSlices, fSliceWidth, center);
   pGrid->init();
   pGrid->draw(cam);
   delete pGrid;
 }
 void RenderUtils::drawFrustumShader(std::shared_ptr<CameraNode> cam, std::shared_ptr<FrustumBase> pf, const vec4& avColor) {
-  Gu::getCoreContext()->setLineWidth(3.0f);
+  getContext()->setLineWidth(3.0f);
 
-  UtilMeshInline mi(Gu::getCoreContext());
+  UtilMeshInline mi(getContext());
   Color4f c4 = avColor;
   mi.begin(GL_LINES);
   {
@@ -252,17 +255,17 @@ void RenderUtils::drawFrustumShader(std::shared_ptr<CameraNode> cam, std::shared
     mi.vt2(v_v3c4(pf->PointAt(fpt_ntr), c4), v_v3c4(pf->PointAt(fpt_nbr), c4));
   }
   mi.endAndDraw(cam);
-  Gu::getCoreContext()->setLineWidth(1.0f);
+  getContext()->setLineWidth(1.0f);
 }
 #pragma endregion
 
 void RenderUtils::saveTexture(string_t&& strLoc, GLuint iGLTexId, GLenum eTexTarget, int iCubeMapSide) {
   std::shared_ptr<Img32> bi = std::make_shared<Img32>();
-  if (OpenGLUtils::getTextureDataFromGpu(bi, iGLTexId, eTexTarget, iCubeMapSide) == true) {
+  if (getContext()->getTextureDataFromGpu(bi, iGLTexId, eTexTarget, iCubeMapSide) == true) {
     //the GL tex image must be flipped to show upriht/
     bi->flipV();
     Gu::saveImage(strLoc, bi);
-    Gu::checkErrorsRt();
+    getContext()->chkErrRt();
   }
 }
 

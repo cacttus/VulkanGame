@@ -56,7 +56,7 @@ void DeferredFramebuffer::init(int32_t w, int32_t h, std::shared_ptr<BufferRende
 
   checkFramebufferComplete();
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId, this->getLabel());
+  getContext()->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId, this->getLabel());
 
 
   getContext()->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

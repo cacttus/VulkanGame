@@ -16,10 +16,10 @@ namespace BR2 {
 *  @brief Mob Binary file.  The main file for all models.
 *   TODO: When we release this, we must implement multiple file version importers for backwards compat.
 */
-class MbiFile : public VirtualMemory {
+class MbiFile : public GLFramework {
 public:
 public:
-  MbiFile();
+  MbiFile(std::shared_ptr<GLContext> ct);
   virtual ~MbiFile() override;
 
   std::vector<std::shared_ptr<ModelSpec>>& getModelSpecs() { return _vecModels; }

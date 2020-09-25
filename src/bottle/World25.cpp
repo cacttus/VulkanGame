@@ -20,7 +20,7 @@
 #include "../gfx/Atlas.h"
 #include "../gfx/QuadBufferMesh.h"
 #include "../gfx/GpuQuad3.h"
-#include "../gfx/HappySky.h"
+#include "../gfx/SkyBox.h"
 #include "../gfx/ShaderBase.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/LightNode.h"
@@ -342,8 +342,8 @@ void World25::makeSky() {
   BRLogInfo("Making sky.");
   ivec2 gsiz;
   gsiz.construct(2, 2);
-  _pSkyBox = std::make_shared<HappySky>();
-  _pSkyAtlas = std::make_shared<Atlas>(Gu::getCoreContext(), "SkyBoxAtlas", gsiz);
+  _pSkyBox = std::make_shared<SkyBox>(Gu::getCoreContext());
+  _pSkyAtlas = std::make_shared<Atlas>(getScene()->tryGetContext(), "SkyBoxAtlas", gsiz);
   _pSkyAtlas->addImage(0, Gu::getPackage()->makeAssetPath("textures", "tx-sb-top.png"));  //top
   _pSkyAtlas->addImage(1, Gu::getPackage()->makeAssetPath("textures", "tx-sb-side.png")); //-s0
   _pSkyAtlas->addImage(2, Gu::getPackage()->makeAssetPath("textures", "tx-sb-side.png")); //-s0
@@ -374,7 +374,7 @@ void World25::makeAtlas() {
   BRLogInfo("Sprite Map Size = " + iSize + "x" + iSize);
 
   ivec2 gsiz(iSize, iSize);
-  _pWorldAtlas = std::make_shared<Atlas>(Gu::getCoreContext(), "W25Atlas", gsiz);
+  _pWorldAtlas = std::make_shared<Atlas>(getScene()->tryGetContext(), "W25Atlas", gsiz);
 
   //add sprite animations to the atlas.
   _pGameFile->getBucket()->addToAtlas(_pWorldAtlas);
@@ -649,8 +649,8 @@ void World25::drawDeferred(RenderParams& rp) {
 void World25::drawForward(RenderParams& rp) {
   if (_eShowGrid != GridShow::e::NoShow) {
     //draw grid liens
-    Gu::getCoreContext()->pushBlend();
-    Gu::getCoreContext()->pushDepthTest();
+    getScene()->tryGetContext()->pushBlend();
+    getScene()->tryGetContext()->pushDepthTest();
     {
       glLineWidth(2.0f);
       glEnable(GL_BLEND);
@@ -671,8 +671,8 @@ void World25::drawForward(RenderParams& rp) {
         wg->drawGrid(rp, _nMeshTrisFrame);
       }
     }
-    Gu::getCoreContext()->popDepthTest();
-    Gu::getCoreContext()->popBlend();
+    getScene()->tryGetContext()->popDepthTest();
+    getScene()->tryGetContext()->popBlend();
   }
 }
 void World25::drawSky(RenderParams& rp) {
@@ -685,14 +685,14 @@ void World25::drawSky(RenderParams& rp) {
 
   //Gu::getShaderMaker()->getDiffuseShader(v_v3n3x2::getVertexFormat())->setCameraUf(bc, &model);
 
-  Gu::getCoreContext()->pushDepthTest();
+  getScene()->tryGetContext()->pushDepthTest();
   {
     glDisable(GL_DEPTH_TEST);
     RenderParams rp2(Gu::getShaderMaker()->getDiffuseShader(v_v3n3x2::getVertexFormat()));
     rp2.setCamera(rp.getCamera());
     _pSkyBox->draw(rp2);
   }
-  Gu::getCoreContext()->popDepthTest();
+  getScene()->tryGetContext()->popDepthTest();
 }
 void World25::drawWorldDeferred(RenderParams& rp) {
   static GpuTile gpuTiles[W25_MAX_GPU_SPRITES];
@@ -704,8 +704,8 @@ void World25::drawWorldDeferred(RenderParams& rp) {
 
   Gu::getShaderMaker()->setUfBlock("GpuSprites", gpuTiles, W25_MAX_GPU_SPRITES * sizeof(GpuTile));
 
-  Gu::getCoreContext()->pushCullFace();
-  Gu::getCoreContext()->pushBlend();
+  getScene()->tryGetContext()->pushCullFace();
+  getScene()->tryGetContext()->pushBlend();
 
   RenderParams rp2(_pTileShader);
   rp2.setCamera(rp.getCamera());
@@ -719,8 +719,8 @@ void World25::drawWorldDeferred(RenderParams& rp) {
     wg->drawOpaque(rp2, _nMeshTrisFrame);
   }
 
-  Gu::getCoreContext()->popBlend();
-  Gu::getCoreContext()->popCullFace();
+  getScene()->tryGetContext()->popBlend();
+  getScene()->tryGetContext()->popCullFace();
 }
 void World25::drawTransparent(RenderParams& rp) {
   static GpuTile gpuTiles[W25_MAX_GPU_SPRITES];
@@ -733,8 +733,8 @@ void World25::drawTransparent(RenderParams& rp) {
 
   Gu::getShaderMaker()->setUfBlock("GpuSprites", gpuTiles, W25_MAX_GPU_SPRITES * sizeof(GpuTile));
 
-  Gu::getCoreContext()->pushCullFace();
-  Gu::getCoreContext()->pushBlend();
+  getScene()->tryGetContext()->pushCullFace();
+  getScene()->tryGetContext()->pushBlend();
 
   RenderParams rp2(_pTileShader);
   rp2.setCamera(rp.getCamera());
@@ -752,8 +752,8 @@ void World25::drawTransparent(RenderParams& rp) {
     }
   }
 
-  Gu::getCoreContext()->popBlend();
-  Gu::getCoreContext()->popCullFace();
+  getScene()->tryGetContext()->popBlend();
+  getScene()->tryGetContext()->popCullFace();
 }
 WorldCell* World25::getGlobalCellForPoint(vec3& pt) {
   ivec3 iv;

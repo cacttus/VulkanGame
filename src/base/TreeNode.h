@@ -20,23 +20,24 @@ public:
   //DOn't change this to MAP because the vecotr must be ordered by index
   typedef std::vector<std::shared_ptr<TreeNode>> NodeList;
   typedef std::function<bool(std::shared_ptr<TreeNode>)> NodeLambda;
+
 public:
   TreeNode(string_t name);
-  virtual ~TreeNode()  override;
+  virtual ~TreeNode() override;
 
-  virtual std::shared_ptr<TreeNode> attachChild(std::shared_ptr<TreeNode> pChild, bool validateNoDupes=true);  // calls insert()
-  virtual bool detachChild(std::shared_ptr<TreeNode> pChild);  //calls remove()
-  bool detachFromParent();  //calls remove()
+  virtual std::shared_ptr<TreeNode> attachChild(std::shared_ptr<TreeNode> pChild, bool validateNoDupes = true);  // calls insert()
+  virtual bool detachChild(std::shared_ptr<TreeNode> pChild);                                                    //calls remove()
+  bool detachFromParent();                                                                                       //calls remove()
 
-  template < class Tx >
+  template <class Tx>
   bool iterateBreadthFirst(std::function<bool(std::shared_ptr<Tx>)> fn);
-  template < class Tx >
+  template <class Tx>
   bool iterateDepthFirst(std::function<bool(std::shared_ptr<Tx>)> fn);
-  template < class TBase, class TCopy >
+  template <class TBase, class TCopy>
   std::shared_ptr<TCopy> duplicateBreadthFirst(std::function<std::shared_ptr<TCopy>(std::shared_ptr<TBase>)> fn);
   void flattenBreadthFirst(NodeList& outVec);
   std::shared_ptr<TreeNode> find(std::shared_ptr<TreeNode> bt);
-  template < class Tx >
+  template <class Tx>
   std::shared_ptr<Tx> findParent();
   string_t name();
   size_t getNodeCountHierarchy();
@@ -45,16 +46,17 @@ public:
   std::shared_ptr<TreeNode> getParent() { return _pParent; }
   std::unique_ptr<NodeList>& getChildren() { return _mapChildren; }
   virtual bool getIsLeaf() const;
-  virtual bool canDelete() { return true; }    //override to check whether the node can be deleted.
+  virtual bool canDelete() { return true; }  //override to check whether the node can be deleted.
 
   std::shared_ptr<TreeNode> getRoot();
+
 protected:
   void addNullChildren(int32_t count);
-  virtual void afterAttached(std::shared_ptr<TreeNode> parent) {}    //Override this - Called after THIS is appended.
-  virtual void afterDetached(std::shared_ptr<TreeNode> parent) {}    //Override this - Called after THIS is removed.
-  virtual void afterChildAttached(std::shared_ptr<TreeNode> child) {}    //Override this - Called after a child node is appended.
-  virtual void afterChildDetached(std::shared_ptr<TreeNode> child) {}    //Override this - Called after a child node is removed.
-  void attachToParent(std::shared_ptr<TreeNode> pParent);  // calls insert()
+  virtual void afterAttached(std::shared_ptr<TreeNode> parent) {}      //Override this - Called after THIS is appended.
+  virtual void afterDetached(std::shared_ptr<TreeNode> parent) {}      //Override this - Called after THIS is removed.
+  virtual void afterChildAttached(std::shared_ptr<TreeNode> child) {}  //Override this - Called after a child node is appended.
+  virtual void afterChildDetached(std::shared_ptr<TreeNode> child) {}  //Override this - Called after a child node is removed.
+  void attachToParent(std::shared_ptr<TreeNode> pParent);              // calls insert()
 
 private:
   string_t _name;
@@ -64,7 +66,7 @@ private:
   bool _bUnloading = false;
 
   std::shared_ptr<TreeNode> insert(std::shared_ptr<TreeNode> txChild, std::shared_ptr<TreeNode> txParent = nullptr);
-  bool remove(std::shared_ptr<TreeNode> node = NULL, bool blnSplice = false, bool bImmediateNodeOnly = true);// Return true if the node was removed
+  bool remove(std::shared_ptr<TreeNode> node = NULL, bool blnSplice = false, bool bImmediateNodeOnly = true);  // Return true if the node was removed
 
   void getNodeCount_r(std::unique_ptr<NodeList>& vecNodes, size_t& count);
   void getBreadthFirstList_r(std::shared_ptr<TreeNode> parent, NodeList& outList);
@@ -73,16 +75,18 @@ private:
   void internalRemoveChildNode(std::shared_ptr<TreeNode> pTreeNode);
   bool validateBeforeAdd(std::shared_ptr<TreeNode> pChild);
 };
-template < class Tx >
+template <class Tx>
 std::shared_ptr<Tx> TreeNode::findParent() {
   //Finds the first parent, from the given node of type Tx
   //Need to test this
   std::shared_ptr<Tx> found = nullptr;
   std::function<void(std::shared_ptr<TreeNode>)> fp;
 
-
   fp = [&found, &fp](std::shared_ptr<TreeNode> cur) {
     if (found != nullptr) {
+      return;
+    }
+    if (cur == nullptr) {
       return;
     }
     std::shared_ptr<Tx> casted = std::dynamic_pointer_cast<Tx>(cur);
@@ -98,7 +102,7 @@ std::shared_ptr<Tx> TreeNode::findParent() {
 
   return found;
 }
-template < class Tx >
+template <class Tx>
 bool TreeNode::iterateBreadthFirst(std::function<bool(std::shared_ptr<Tx>)> fn) {
   //**Return FALSE to stop iterating**
   //Same as other lambda, but instead we use a temp1late and try to cast it
@@ -107,7 +111,7 @@ bool TreeNode::iterateBreadthFirst(std::function<bool(std::shared_ptr<Tx>)> fn) 
   std::shared_ptr<Tx> pt = std::dynamic_pointer_cast<Tx>(pTreeNode);
   //We need the other type here.
 
-//Tx pt = DirectCast(pTreeNode, Tx);
+  //Tx pt = DirectCast(pTreeNode, Tx);
   if (pt == nullptr) {
     return true;
   }
@@ -124,7 +128,7 @@ bool TreeNode::iterateBreadthFirst(std::function<bool(std::shared_ptr<Tx>)> fn) 
 
   return true;
 }
-template < class Tx >
+template <class Tx>
 bool TreeNode::iterateDepthFirst(std::function<bool(std::shared_ptr<Tx>)> fn) {
   //**Return FALSE to stop iterating**
 
@@ -162,7 +166,7 @@ bool TreeNode::iterateDepthFirst(std::function<bool(std::shared_ptr<Tx>)> fn) {
 *    If you return NULL from fn() the copy process stops for that node.  This effectively
 *    prunes nodes in the resulting structure.
 */
-template < class TBase, class TCopy>
+template <class TBase, class TCopy>
 std::shared_ptr<TCopy> TreeNode::duplicateBreadthFirst(std::function<std::shared_ptr<TCopy>(std::shared_ptr<TBase>)> fn) {
   std::shared_ptr<TreeNode> trThis = getThis<TreeNode>();
 
@@ -187,9 +191,6 @@ std::shared_ptr<TCopy> TreeNode::duplicateBreadthFirst(std::function<std::shared
   return pParentCopy;
 }
 
-
-}//ns BR2
-
-
+}  // namespace BR2
 
 #endif

@@ -10,7 +10,7 @@
 #include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
-ShaderUniform::ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, string_t name, size_t iArraySize) : _pContext(ct) {
+ShaderUniform::ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, string_t name, size_t iArraySize) : GLFramework(ct) {
   _glType = eType;
   _glLocation = location;
   _strName = name;  //this gets parsed and changed
@@ -72,20 +72,20 @@ string_t ShaderUniform::debugGetUniformValueAsString(bool raw) {
   #define DDUMP(typ) ((std::string((const char*)((typ*)_pStorage.data()), _pStorage.size())) )
 
   switch (_systemType) {
-  case OpenGLShaderVarType::e::GpuInt1:   return (raw) ? (DDUMP(int32_t*))  : (OpenGLUtils::stringifyUniform< int32_t>(_pStorage,     1, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuInt2:   return (raw) ? (DDUMP(ivec2*))    : (OpenGLUtils::stringifyUniform< int32_t>(_pStorage,     2, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuInt3:   return (raw) ? (DDUMP(ivec3*))    : (OpenGLUtils::stringifyUniform< int32_t>(_pStorage,     3, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuInt4:   return (raw) ? (DDUMP(ivec4*))    : (OpenGLUtils::stringifyUniform<uint32_t>(_pStorage,     4, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuUint1:  return (raw) ? (DDUMP(uint32_t*)) : (OpenGLUtils::stringifyUniform<uint32_t>(_pStorage,     1, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuUint2:  return (raw) ? (DDUMP(uvec2*))    : (OpenGLUtils::stringifyUniform<uint32_t>(_pStorage,     2, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuUint3:  return (raw) ? (DDUMP(uvec3*))    : (OpenGLUtils::stringifyUniform<uint32_t>(_pStorage,     3, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuUint4:  return (raw) ? (DDUMP(uvec4*))    : (OpenGLUtils::stringifyUniform<uint32_t>(_pStorage,     4, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuFloat1: return (raw) ? (DDUMP(float*))    : (OpenGLUtils::stringifyUniform<   float>(_pStorage,     1, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuFloat2: return (raw) ? (DDUMP(vec2*))     : (OpenGLUtils::stringifyUniform<   float>(_pStorage,     2, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuFloat3: return (raw) ? (DDUMP(vec3*))     : (OpenGLUtils::stringifyUniform<   float>(_pStorage,     3, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuFloat4: return (raw) ? (DDUMP(vec4*))     : (OpenGLUtils::stringifyUniform<   float>(_pStorage,     4, -1))   ; break;
-  case OpenGLShaderVarType::e::GpuMat3:   return (raw) ? (DDUMP(mat3*))     : (OpenGLUtils::stringifyUniform<   float>(_pStorage, 9 * 4,  3))   ; break;
-  case OpenGLShaderVarType::e::GpuMat4:   return (raw) ? (DDUMP(mat4*))     : (OpenGLUtils::stringifyUniform<   float>(_pStorage, 6 * 4,  4))   ; break;
+  case OpenGLShaderVarType::e::GpuInt1:   return (raw) ? (DDUMP(int32_t*))  : (ShaderUniform::stringifyUniform< int32_t>(_pStorage,     1, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuInt2:   return (raw) ? (DDUMP(ivec2*))    : (ShaderUniform::stringifyUniform< int32_t>(_pStorage,     2, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuInt3:   return (raw) ? (DDUMP(ivec3*))    : (ShaderUniform::stringifyUniform< int32_t>(_pStorage,     3, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuInt4:   return (raw) ? (DDUMP(ivec4*))    : (ShaderUniform::stringifyUniform<uint32_t>(_pStorage,     4, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuUint1:  return (raw) ? (DDUMP(uint32_t*)) : (ShaderUniform::stringifyUniform<uint32_t>(_pStorage,     1, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuUint2:  return (raw) ? (DDUMP(uvec2*))    : (ShaderUniform::stringifyUniform<uint32_t>(_pStorage,     2, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuUint3:  return (raw) ? (DDUMP(uvec3*))    : (ShaderUniform::stringifyUniform<uint32_t>(_pStorage,     3, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuUint4:  return (raw) ? (DDUMP(uvec4*))    : (ShaderUniform::stringifyUniform<uint32_t>(_pStorage,     4, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuFloat1: return (raw) ? (DDUMP(float*))    : (ShaderUniform::stringifyUniform<   float>(_pStorage,     1, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuFloat2: return (raw) ? (DDUMP(vec2*))     : (ShaderUniform::stringifyUniform<   float>(_pStorage,     2, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuFloat3: return (raw) ? (DDUMP(vec3*))     : (ShaderUniform::stringifyUniform<   float>(_pStorage,     3, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuFloat4: return (raw) ? (DDUMP(vec4*))     : (ShaderUniform::stringifyUniform<   float>(_pStorage,     4, -1))   ; break;
+  case OpenGLShaderVarType::e::GpuMat3:   return (raw) ? (DDUMP(mat3*))     : (ShaderUniform::stringifyUniform<   float>(_pStorage, 9 * 4,  3))   ; break;
+  case OpenGLShaderVarType::e::GpuMat4:   return (raw) ? (DDUMP(mat4*))     : (ShaderUniform::stringifyUniform<   float>(_pStorage, 6 * 4,  4))   ; break;
   default:
     return Stz "Type string conversion " + (int)_systemType + " not supported.";
   }
@@ -373,55 +373,55 @@ void ShaderUniform::bindUniformFast() {
       return;
     }
   }
-  _pContext->chkErrDbg();
+  getContext()->chkErrDbg();
 
-  OpenGLUtils::debugGetRenderState();
+  getContext()->debugGetRenderState();
 
   switch (_systemType) {
     case OpenGLShaderVarType::e::GpuInt1:
-      _pContext->glUniform1iv(_glLocation, count, (GLint*)value);
+      getContext()->glUniform1iv(_glLocation, count, (GLint*)value);
       break;
     case OpenGLShaderVarType::e::GpuInt2:
-      _pContext->glUniform2iv(_glLocation, count, (GLint*)value);
+      getContext()->glUniform2iv(_glLocation, count, (GLint*)value);
       break;
     case OpenGLShaderVarType::e::GpuInt3:
-      _pContext->glUniform3iv(_glLocation, count, (GLint*)value);
+      getContext()->glUniform3iv(_glLocation, count, (GLint*)value);
       break;
     case OpenGLShaderVarType::e::GpuInt4:
-      _pContext->glUniform4iv(_glLocation, count, (GLint*)value);
+      getContext()->glUniform4iv(_glLocation, count, (GLint*)value);
       break;
     case OpenGLShaderVarType::e::GpuUint1:
-      _pContext->glUniform1uiv(_glLocation, count, (GLuint*)value);
+      getContext()->glUniform1uiv(_glLocation, count, (GLuint*)value);
       break;
     case OpenGLShaderVarType::e::GpuUint2:
-      _pContext->glUniform2uiv(_glLocation, count, (GLuint*)value);
+      getContext()->glUniform2uiv(_glLocation, count, (GLuint*)value);
       break;
     case OpenGLShaderVarType::e::GpuUint3:
-      _pContext->glUniform3uiv(_glLocation, count, (GLuint*)value);
+      getContext()->glUniform3uiv(_glLocation, count, (GLuint*)value);
       break;
     case OpenGLShaderVarType::e::GpuUint4:
-      _pContext->glUniform4uiv(_glLocation, count, (GLuint*)value);
+      getContext()->glUniform4uiv(_glLocation, count, (GLuint*)value);
       break;
     case OpenGLShaderVarType::e::GpuFloat1:
-      _pContext->glUniform1fv(_glLocation, count, (GLfloat*)value);
+      getContext()->glUniform1fv(_glLocation, count, (GLfloat*)value);
       break;
     case OpenGLShaderVarType::e::GpuFloat2:
-      _pContext->glUniform2fv(_glLocation, count, (GLfloat*)value);
+      getContext()->glUniform2fv(_glLocation, count, (GLfloat*)value);
       break;
     case OpenGLShaderVarType::e::GpuFloat3:
-      _pContext->glUniform3fv(_glLocation, count, (GLfloat*)value);
+      getContext()->glUniform3fv(_glLocation, count, (GLfloat*)value);
       break;
     case OpenGLShaderVarType::e::GpuFloat4:
-      _pContext->glUniform4fv(_glLocation, count, (GLfloat*)value);
+      getContext()->glUniform4fv(_glLocation, count, (GLfloat*)value);
       break;
     case OpenGLShaderVarType::e::GpuMat2:
-      _pContext->glUniformMatrix2fv(_glLocation, count, GL_FALSE, (GLfloat*)value);
+      getContext()->glUniformMatrix2fv(_glLocation, count, GL_FALSE, (GLfloat*)value);
       break;
     case OpenGLShaderVarType::e::GpuMat3:
-      _pContext->glUniformMatrix3fv(_glLocation, count, GL_FALSE, (GLfloat*)value);
+      getContext()->glUniformMatrix3fv(_glLocation, count, GL_FALSE, (GLfloat*)value);
       break;
     case OpenGLShaderVarType::e::GpuMat4:
-      _pContext->glUniformMatrix4fv(_glLocation, count, GL_FALSE, (GLfloat*)value);
+      getContext()->glUniformMatrix4fv(_glLocation, count, GL_FALSE, (GLfloat*)value);
       break;
 
     default:
@@ -430,7 +430,7 @@ void ShaderUniform::bindUniformFast() {
       Gu::debugBreak();
       break;
   }
-  _pContext->chkErrDbg();
+  getContext()->chkErrDbg();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -438,7 +438,7 @@ void ShaderUniform::bindUniformFast() {
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-ShaderUniformBlock::ShaderUniformBlock(std::shared_ptr<GLContext> ct, string_t name, GLint iBlockIndex, GLint iBindingIndex, size_t iBufferByteSize) : _pContext(ct),
+ShaderUniformBlock::ShaderUniformBlock(std::shared_ptr<GLContext> ct, string_t name, GLint iBlockIndex, GLint iBindingIndex, size_t iBufferByteSize) : GLFramework(ct),
                                                                                                                                                        _iBlockIndex(iBlockIndex),
                                                                                                                                                        _iBindingIndex(iBindingIndex) {
   _strName = name;
@@ -446,10 +446,10 @@ ShaderUniformBlock::ShaderUniformBlock(std::shared_ptr<GLContext> ct, string_t n
 
   AssertOrThrow2(_iBufferSizeBytes > 0);
 
-  _pContext->glGenBuffers(1, (GLuint*)&_iUboId);
-  _pContext->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
-  _pContext->glBufferData(GL_UNIFORM_BUFFER, _iBufferSizeBytes, 0, GL_DYNAMIC_DRAW);
-  _pContext->glBindBuffer(GL_UNIFORM_BUFFER, 0);
+  getContext()->glGenBuffers(1, (GLuint*)&_iUboId);
+  getContext()->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
+  getContext()->glBufferData(GL_UNIFORM_BUFFER, _iBufferSizeBytes, 0, GL_DYNAMIC_DRAW);
+  getContext()->glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 ShaderUniformBlock::~ShaderUniformBlock() {
 }
@@ -459,33 +459,33 @@ void ShaderUniformBlock::copyUniformData(void* pData, size_t copySizeBytes) {
 
   _pValue = pData;
 
-  _pContext->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
-  //    void* pBuf =_pContext->glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+  getContext()->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
+  //    void* pBuf =getContext()->glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
   //if(pBuf != nullptr) {
   //    memcpy(pBuf, pData, copySizeBytes);
-  //    _pContext->glMapBuffer(GL_UNIFORM_BUFFER, 0);
+  //    getContext()->glMapBuffer(GL_UNIFORM_BUFFER, 0);
   //}
   //else {
   //    BroLogError("Uniform buffer could not be mapped.");
   //}
-  //_pContext->glBufferData(GL_UNIFORM_BUFFER, copySizeBytes, (void*)_pValue, GL_DYNAMIC_DRAW);
-  _pContext->glBufferSubData(GL_UNIFORM_BUFFER, 0, copySizeBytes, pData);
-  _pContext->glBindBuffer(GL_UNIFORM_BUFFER, 0);
+  //getContext()->glBufferData(GL_UNIFORM_BUFFER, copySizeBytes, (void*)_pValue, GL_DYNAMIC_DRAW);
+  getContext()->glBufferSubData(GL_UNIFORM_BUFFER, 0, copySizeBytes, pData);
+  getContext()->glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-  _pContext->chkErrDbg();
+  getContext()->chkErrDbg();
   _bHasBeenSet = true;
 }
 void ShaderUniformBlock::bindUniformFast() {
   if (_pValue == nullptr) {
     BRLogWarn("Shader Uniform Block '" + getName() + "' value was not set ");
   }
-  _pContext->glBindBufferBase(GL_UNIFORM_BUFFER, _iBindingIndex, _iUboId);
+  getContext()->glBindBufferBase(GL_UNIFORM_BUFFER, _iBindingIndex, _iUboId);
   if(_iUboId==0){
     int x=0;
     x++;
   }
 
-  _pContext->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
+  getContext()->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
 }
 
 }  // namespace BR2

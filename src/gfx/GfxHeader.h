@@ -247,7 +247,7 @@ class SpriteMap;
 class Texture2DSpec;
 class TextureAtlas2d;
 class GLContext;
-class HappySky;
+class SkyBox;
 class UiElement;
 class SpriteBucket;
 class SpriteSpec;

@@ -11,10 +11,6 @@
 #include "../math/MathAll.h"
 
 namespace BR2 {
-/**
-*  @class Material
-*  Material Lighting Parameters + Texture maps + Binding + other stuff like sounds, bumpiness, perhaps physics
-*/
 class TextureSlot : public VirtualMemory {
 public:
   Hash32 _iTexFileHashed = 0;
@@ -26,9 +22,12 @@ public:
   void deserialize(std::shared_ptr<BinaryFile> fb);
   void serialize(std::shared_ptr<BinaryFile> fb);
 };
+/**
+*  @class Material
+*  Material Lighting Parameters + Texture maps + Binding + other stuff like sounds, bumpiness, perhaps physics
+*/
 class Material : public VirtualMemory {
 public:
-  //Material() {}//deser
   Material(const string_t& name);
   virtual ~Material() override;
   string_t getName() { return _strName; }

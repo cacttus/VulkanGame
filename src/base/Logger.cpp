@@ -7,7 +7,7 @@
 #include "../base/StringUtil.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/GLContext.h"
-#include "../base/FpsMeter.h"
+#include "../base/Stopwatch.h"
 #include "../base/ColoredConsole.h"
 #include "../base/OperatingSystem.h"
 #include <mutex>
@@ -22,6 +22,9 @@ namespace BR2 {
 #pragma region Logger_Internal
 class Logger_Internal {
 public:
+  Logger_Internal();
+  virtual ~Logger_Internal();
+
   enum class LogLevel { Debug,
                         Info,
                         Warn,
@@ -48,9 +51,19 @@ public:
   void log(string_t msg, string_t header, Logger_Internal::LogLevel level, const BR2::Exception* const e);
   void processLogs_Async();
 
-  void log_cycle_mainThread(std::function<void()> f, bool, int);
+  std::unique_ptr<Stopwatch> _cycler;
+
+  void log_cycle_mainThread(std::function<void()> f, bool, int wait_ms);
   void log_wedi_mainThread(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level);
 };
+Logger_Internal::Logger_Internal(){
+  _cycler = std::make_unique<Stopwatch>();
+  _cycler->start();
+}
+Logger_Internal::~Logger_Internal(){
+  _cycler->stop();
+  _cycler = nullptr;
+}
 void Logger_Internal::log_wedi_mainThread(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level) {
   if (_bEnabled == false) {
     return;
@@ -62,15 +75,9 @@ void Logger_Internal::log_wedi_mainThread(string_t msg, int line, const char* fi
 
   log(msg, createMessageHead(level, file, line), level, e);
 }
-void Logger_Internal::log_cycle_mainThread(std::function<void()> f, bool force, int iCycle) {
-  if (Gu::getCoreContext() != nullptr) {
-    if (Gu::getCoreContext()->getGraphicsWindow() != nullptr) {
-      if (Gu::getCoreContext()->getGraphicsWindow()->getFpsMeter()) {
-        if (force || Gu::getCoreContext()->getGraphicsWindow()->getFpsMeter()->frameMod(iCycle)) {
-          f();
-        }
-      }
-    }
+void Logger_Internal::log_cycle_mainThread(std::function<void()> f, bool force, int wait_ms) {
+  if (_cycler->pulse((t_timeval)wait_ms)) {
+    f();
   }
 }
 string_t Logger_Internal::addStackTrace(string_t msg) {

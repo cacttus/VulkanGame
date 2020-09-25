@@ -156,7 +156,7 @@ void Atlas::finishCompile(std::shared_ptr<Img32> sp, bool bMipmaps) {
   //Create the texture
   create(TextureFormat::Image4ub, (unsigned char*)sp->getData()->ptr(), sp->getWidth(), sp->getHeight(), bMipmaps, false, false);
 
-  Gu::getTexCache()->add(getName(), shared_from_this());
+  Gu::getTexCache()->add(getName(), getThis<Texture2DSpec>());
   Gu::freeImage(sp);
 }
 void Atlas::addImage(Hash32 en, string_t loc) {

@@ -57,7 +57,7 @@ void VaoShader::constructVao(std::shared_ptr<VboData> pVboData, std::shared_ptr<
   }
   unbind();
 
-  Gu::getCoreContext()->setObjectLabel(GL_VERTEX_ARRAY, _iGlVaoId, this->_pShader->getProgramName() + "-vao");
+  _pContext->setObjectLabel(GL_VERTEX_ARRAY, _iGlVaoId, this->_pShader->getProgramName() + "-vao");
 
   _pContext->chkErrRt();
 }
@@ -89,7 +89,7 @@ void VaoShader::enableAttributesForShader(std::shared_ptr<ShaderBase> pShader, s
     if (comp == nullptr) {
       errStr += Stz "  Error: Could not match vertex attribute '" + attr->getName() + "'\r\n";
       errStr += Stz "     UserType:'" + VertexFormat::getUserTypeName(attr->getUserType()) + "'\r\n";
-      errStr += Stz "     GL Type:'" + OpenGLUtils::openGlTypeToString(attr->getGlAttributeType()) + "'\r\n";
+      errStr += Stz "     GL Type:'" + _pContext->openGlTypeToString(attr->getGlAttributeType()) + "'\r\n";
       errStr += Stz "     GL Location:" + attr->getGlLocation() + ".\r\n";
       errStr += Stz "\r\n";
     }
@@ -135,7 +135,7 @@ void VaoShader::enableAttributesForShader(std::shared_ptr<ShaderBase> pShader, s
     Gu::debugBreak();
   }
 
-  OpenGLUtils::debugGetRenderState(false, true);
+  _pContext->debugGetRenderState(false, true);
 }
 ///////////////////////////////////////////////////////////////////
 

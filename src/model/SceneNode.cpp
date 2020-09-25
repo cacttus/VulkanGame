@@ -103,7 +103,7 @@ vec3 SceneNode::getViewNormal() {
 }
 void SceneNode::setViewNormal(const vec3& p, bool normalize) {
   _vViewNormal = p;
-  if (normalize) { 
+  if (normalize) {
     _vViewNormal.normalize();
   }
   _bTransformChanged = true;
@@ -179,7 +179,7 @@ bool SceneNode::isCulled() {
   return _bCulled;
 }
 void SceneNode::init() {
-  // ** WHY IS THIS HERE? -- READ BELOW ** 
+  // ** WHY IS THIS HERE? -- READ BELOW **
   // All nodes require separate initialization due to the fact that shared_ptr cannot pass its own reference in a constructor.
   // Making this universal, we added this init() variable to prevent accidentally forgetting to call the node's init() method.
   if (_bInitialized == true) {
@@ -210,7 +210,7 @@ void SceneNode::update(float delta, std::map<Hash32, std::shared_ptr<Animator>>&
   animate(mapAnimators);
   compileWorldMatrix();
 
-  //So this is technically only ever going to 
+  //So this is technically only ever going to
   //be used by ModelNode, however it allows us to
   //modify ALL nodes if we need to.
   _mLocal = _mLocal * _mWorld;
@@ -226,7 +226,7 @@ void SceneNode::update(float delta, std::map<Hash32, std::shared_ptr<Animator>>&
     }
   }
 
-  calcBoundBox();//Must come after matrix calc
+  calcBoundBox();  //Must come after matrix calc
 }
 void SceneNode::updateComponents(float delta) {
   for (auto comp : _vecComponents) {
@@ -235,7 +235,7 @@ void SceneNode::updateComponents(float delta) {
 }
 
 void SceneNode::compileWorldMatrix() {
-  //So this is technically only ever going to 
+  //So this is technically only ever going to
   //be used by ModelNode, however it allows us to
   //modify ALL nodes if we need to.
   if (getTransformChanged() == false) {
@@ -250,8 +250,6 @@ void SceneNode::compileWorldMatrix() {
   mRot = mat4::getRotationRad(_fRotation, _vRotationNormal);
   mScl = mat4::getScale(_vScale);
   _mWorld = mScl * mRot * mPos;
-
-
 }
 bool SceneNode::isPathNode() {
   return getThis<Path>() != nullptr;
@@ -319,10 +317,9 @@ void SceneNode::applyParent() {
       }
     }
     else if (
-      getSpec()->getParentType() == ParentType::Armature ||
-      getSpec()->getParentType() == ParentType::Object ||
-      getSpec()->getParentType() == ParentType::NoParent) {
-
+        getSpec()->getParentType() == ParentType::Armature ||
+        getSpec()->getParentType() == ParentType::Object ||
+        getSpec()->getParentType() == ParentType::NoParent) {
       if (isSkinnedMesh()) {
         //Setting this to ident here so we do't get confused.
         //We're doing all multiplies in CopyJointsToGPU no 1/20/18
@@ -339,25 +336,24 @@ void SceneNode::applyParent() {
       if (getBoneParent() != nullptr) {
         static int n = 0;
         if (n == 0) {
-
           if (pParent != nullptr) {
             static int a = 4;
             if (a == 0)
-              _mLocal = getBoneParent()->getSpec()->getInvBind() * _mLocal * getBoneParent()->getLocal() * pParent->getLocal();//Armature
+              _mLocal = getBoneParent()->getSpec()->getInvBind() * _mLocal * getBoneParent()->getLocal() * pParent->getLocal();  //Armature
             if (a == 1)
-              _mLocal = _mLocal * getBoneParent()->getSpec()->getInvBind() * getBoneParent()->getLocal() * pParent->getLocal();//Armature
+              _mLocal = _mLocal * getBoneParent()->getSpec()->getInvBind() * getBoneParent()->getLocal() * pParent->getLocal();  //Armature
             if (a == 2)
-              _mLocal = getBoneParent()->getSpec()->getBind() * _mLocal * getBoneParent()->getLocal() * pParent->getLocal();//Armature
+              _mLocal = getBoneParent()->getSpec()->getBind() * _mLocal * getBoneParent()->getLocal() * pParent->getLocal();  //Armature
             if (a == 3)
-              _mLocal = _mLocal * getBoneParent()->getSpec()->getBind() * getBoneParent()->getLocal() * pParent->getLocal();//Armature
+              _mLocal = _mLocal * getBoneParent()->getSpec()->getBind() * getBoneParent()->getLocal() * pParent->getLocal();  //Armature
             if (a == 4)
               //**ALMOST
-              _mLocal = getBoneParent()->getSpec()->getInvBind() * _mLocal * getBoneParent()->getSpec()->getBind() * getBoneParent()->getLocal() * pParent->getLocal();//Armature
+              _mLocal = getBoneParent()->getSpec()->getInvBind() * _mLocal * getBoneParent()->getSpec()->getBind() * getBoneParent()->getLocal() * pParent->getLocal();  //Armature
             if (a == 5)
               //Didn't work
-              _mLocal = getBoneParent()->getSpec()->getInvBind() * _mLocal * getBoneParent()->getLocal() * getBoneParent()->getSpec()->getBind() * pParent->getLocal();//Armature
+              _mLocal = getBoneParent()->getSpec()->getInvBind() * _mLocal * getBoneParent()->getLocal() * getBoneParent()->getSpec()->getBind() * pParent->getLocal();  //Armature
             if (a == 6)
-              _mLocal = _mLocal * getBoneParent()->getSpec()->getBind() * getBoneParent()->getLocal() * pParent->getLocal();//Armature
+              _mLocal = _mLocal * getBoneParent()->getSpec()->getBind() * getBoneParent()->getLocal() * pParent->getLocal();  //Armature
           }
         }
         if (n == 1) {
@@ -365,7 +361,7 @@ void SceneNode::applyParent() {
           if (getBoneParent()->getParent() != nullptr) {
             _mLocal = _mLocal * std::dynamic_pointer_cast<SceneNode>(getBoneParent()->getParent())->getLocal();
           }
-          _mLocal = _mLocal * pParent->getLocal();//Armature
+          _mLocal = _mLocal * pParent->getLocal();  //Armature
         }
         if (n == 2)
           _mLocal = _mLocal * getBoneParent()->getLocal();
@@ -377,7 +373,6 @@ void SceneNode::applyParent() {
     else {
       BRThrowNotImplementedException();
     }
-
   }
   else if (getThis<Scene>() != nullptr) {
     //Scene node..67
@@ -387,7 +382,9 @@ void SceneNode::applyParent() {
   }
 
   if (false) {
-    vec4 p; vec4 r; vec4 s;
+    vec4 p;
+    vec4 r;
+    vec4 s;
     _mLocal.decompose(p, r, s, true);
   }
 }
@@ -401,13 +398,14 @@ void SceneNode::applyLocalAnimation(std::shared_ptr<Animator> anm) {
         // who don't have this particular animation name.
         std::shared_ptr<ActionKeys> ak = aa->getActionKeys(getThis<SceneNode>()->getSpec()->getNameHashed());
         if (ak != nullptr) {
-
           ak->animate(anm, _mAnimated);
 
           _mLocal = _mAnimated;
 
           if (false) {
-            vec4 p; vec4 r; vec4 s;
+            vec4 p;
+            vec4 r;
+            vec4 s;
             _mLocal.decompose(p, r, s, true);
           }
         }
@@ -442,7 +440,6 @@ void SceneNode::calcBoundBox(Box3f& __out_ pBox, const vec3& obPos, float extra_
     pBox._min = obPos - vec3(radius + extra_pad, radius + extra_pad, radius + extra_pad);
     pBox._max = obPos + vec3(radius + extra_pad, radius + extra_pad, radius + extra_pad);
   }
-
 }
 void SceneNode::drawBoneBindBoxes(std::shared_ptr<ArmatureNode> an, std::shared_ptr<UtilMeshInline> mi) {
   std::shared_ptr<SceneNode> that = getThis<SceneNode>();
@@ -451,7 +448,7 @@ void SceneNode::drawBoneBindBoxes(std::shared_ptr<ArmatureNode> an, std::shared_
       tx->drawBoneBindBoxes(an, mi);
     }
     return true;
-    });
+  });
   if (isBoneNode()) {
     vec4 cOBB(1, 1, 0, 1);
     OBB ob;
@@ -467,7 +464,7 @@ void SceneNode::drawBoneBoxes(std::shared_ptr<UtilMeshInline> mi) {
       tx->drawBoneBoxes(mi);
     }
     return true;
-    });
+  });
   if (isBoneNode()) {
     vec4 cOBB(0.181, 0.8, 1, 1);
     mi->addBox(getOBB()->getVerts(), &cOBB);
@@ -481,7 +478,7 @@ void SceneNode::drawMeshBoxes(std::shared_ptr<UtilMeshInline> mi) {
       tx->drawMeshBoxes(mi);
     }
     return true;
-    });
+  });
   if (isMeshNode()) {
     vec4 cOBB(1, 0, 1, 1);
     mi->addBox(getOBB()->getVerts(), &cOBB);
@@ -495,9 +492,8 @@ void SceneNode::drawBoxes(std::shared_ptr<UtilMeshInline> mi) {
       tx->drawBoxes(mi);
     }
     return true;
-    });
+  });
   drawBox(mi);
-
 }
 void SceneNode::drawBox(std::shared_ptr<UtilMeshInline> mi) {
   vec4 cBB(1, 1, 0, 1);
@@ -651,4 +647,5 @@ std::shared_ptr<InputManager> SceneNode::getInput() {
 
   return nullptr;
 }
-}//ns Game
+
+}  // namespace BR2

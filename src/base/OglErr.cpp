@@ -58,7 +58,7 @@ public:
         if (StringUtil::isNotEmpty(shaderName)) {
           errmsg += OperatingSystem::newline() + " -> shader: " + shaderName;
         }
-        errmsg += OpenGLUtils::debugGetRenderState();
+        errmsg += ctx->debugGetRenderState();
         BRLogError(errmsg);
       }
 
@@ -150,14 +150,15 @@ public:
           GLenum severity = severities[iMsg];
           GLenum type = types[iMsg];
           GLenum source = sources[iMsg];
-          logGPUMessageText(strMsg, id, shaderName, doNotLog, severity, type, source, graphicsLogHigh, graphicsLogMed, graphicsLogLow, graphicsLogInfo);
+          logGPUMessageText(strMsg, id, shaderName, doNotLog, severity, type, source, graphicsLogHigh, graphicsLogMed, graphicsLogLow, graphicsLogInfo, ctx);
         }
         currPos = currPos + lengths[iMsg];
       }
     } while (numFound > 0);
   }
   void logGPUMessageText(const string_t& cstrMsg, int msgId, const string_t& shaderName, bool doNotLog, GLenum severity,
-                         GLenum type, GLenum source, bool graphicsLogHigh, bool graphicsLogMed, bool graphicsLogLow, bool graphicsLogInfo) {
+                         GLenum type, GLenum source, bool graphicsLogHigh, bool graphicsLogMed, bool graphicsLogLow, 
+                         bool graphicsLogInfo, std::shared_ptr<GLContext> ctx) {
     string_t msg = "";
     string_t shaderMsg = "";
 
@@ -195,7 +196,7 @@ public:
         _bPrintingGPULog = true;
         //This isn't necessary. We can just add it above. what's happening is calling renderstate() resets the glError.
         // Also the GL Error automatically resets.
-        strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : OpenGLUtils::debugGetRenderState(true, false, false);
+        strRenderState = (type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : ctx->debugGetRenderState(true, false, false);
         strStackInfo = "";//(type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_SEVERITY_NOTIFICATION) ? "" : DebugHelper::getStackTrace();  //error prints stack.
         _bPrintingGPULog = false;
       }

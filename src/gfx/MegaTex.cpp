@@ -1,5 +1,4 @@
 ﻿#include "../base/Img32.h"
-#include "../base/Img32.h"
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
@@ -33,9 +32,16 @@ void MtTex::freeTmp() {
 }
 #pragma endregion
 #pragma region MtTexPatch
+MtTexPatch::MtTexPatch(std::shared_ptr<MegaTex> mt, std::string imgName, Hash32 nameHash) {
+  _strName = imgName;
+  _iNameHash = nameHash;
+  _pMegaTex = mt;
+}
+MtTexPatch::~MtTexPatch() {
+}
 void MtTexPatch::addTexImage(std::string img, int32_t iPatch) {
   std::shared_ptr<MtTex> mt = std::make_shared<MtTex>(img, iPatch);
-  Gu::checkErrorsDbg();
+  _pMegaTex->getContext()->chkErrDbg();
   _vecTexs.push_back(mt);
 }
 void MtTexPatch::loadData() {
@@ -88,21 +94,22 @@ std::vector<std::shared_ptr<Img32>> MtTexPatch::parseImagePatch(std::string file
     BRLogError("Error parsing image patch for file " + file);
   }
 
-  bool b=false;
+  bool b = false;
   if (b) {
     //save images (and master
     Gu::saveImage("./data/cache/saved_9P_master.png", master);
     for (int n = 0; n < ret.size(); ++n) {
-      std::shared_ptr<Texture2DSpec> tex = std::make_shared<Texture2DSpec>(getName(), TextureFormat::Image4ub, ret[n], Gu::getCoreContext(), TexFilter::e::Nearest);
-      RenderUtils::saveTexture(std::move(Stz"./data/cache/saved_9P_" + n + ".png"), tex->getGlId(), GL_TEXTURE_2D);
+      std::shared_ptr<Texture2DSpec> tex = std::make_shared<Texture2DSpec>(getName(), TextureFormat::Image4ub, ret[n], _pMegaTex->getContext(), TexFilter::e::Nearest);
+      _pMegaTex->getContext()->getRenderUtils()->saveTexture(std::move(Stz "./data/cache/saved_9P_" + n + ".png"), tex->getGlId(), GL_TEXTURE_2D);
     }
   }
 
   return ret;
 }
 #pragma endregion
-//////////////////////////////////////////////////////////////////////////
 #pragma region MtFont
+MtFont::MtFont(std::shared_ptr<MegaTex> mt, std::string name, Hash32 nameHash) : MtTexPatch(mt, name, nameHash) {
+}
 MtFont::~MtFont() {
   //shouldn't get called
   int nn = 0;
@@ -112,7 +119,8 @@ void MtFont::loadData() {
   createFont();
 }
 void MtFont::createFont() {
-  _iBakedCharSizePixels = Gu::getConfig()->getBakedCharSize();;
+  _iBakedCharSizePixels = Gu::getConfig()->getBakedCharSize();
+  ;
   _atlasWidth = Gu::getConfig()->getFontBitmapSize();
   _atlasHeight = Gu::getConfig()->getFontBitmapSize();
 
@@ -130,7 +138,7 @@ void MtFont::createFont() {
     //https://stackoverflow.com/questions/1366068/whats-the-complete-range-for-chinese-characters-in-unicode
     //Han Ideographs: 4E00 - 9FFF   Common
     _firstChar = 0x4E00;
-    _charCount = 0x62FF - 0x4E00; //0x9FFF is the whole range, that's a lot
+    _charCount = 0x62FF - 0x4E00;  //0x9FFF is the whole range, that's a lot
     //Compute size for a 20x20 pixel han character
     _iBakedCharSizePixels = 20;
     float ch_w = ceilf(sqrtf((float)_charCount));
@@ -199,14 +207,16 @@ void MtFont::createFont() {
 std::shared_ptr<Img32> MtFont::createFontImage(std::unique_ptr<uint8_t[]>& pData) {
   //Copied from fontspec
   auto imgData = std::make_unique<uint8_t[]>(_atlasWidth * _atlasHeight * 4);
-  if (_charInfo == nullptr) { Gu::debugBreak(); }
+  if (_charInfo == nullptr) {
+    Gu::debugBreak();
+  }
 
   for (int32_t iPix = 0; iPix < _atlasWidth * _atlasHeight * 4; iPix += 4) {
     uint8_t dat = pData[iPix / 4];
-    imgData[iPix + 0] = 255;//r
-    imgData[iPix + 1] = 255;//g
-    imgData[iPix + 2] = 255;//b
-    imgData[iPix + 3] = dat;//a
+    imgData[iPix + 0] = 255;  //r
+    imgData[iPix + 1] = 255;  //g
+    imgData[iPix + 2] = 255;  //b
+    imgData[iPix + 3] = dat;  //a
   }
 
   std::shared_ptr<Img32> img = std::make_shared<Img32>();
@@ -220,7 +230,7 @@ std::shared_ptr<Img32> MtFont::createFontImage(std::unique_ptr<uint8_t[]>& pData
   return img;
 }
 void MtFont::getCharQuad(int32_t cCode, int32_t cCodePrev, FontSize fontSize, float& outWidth, float& outHeight, Box2f& texs,
-  float& padTop, float& padRight, float& padBot, float& padLeft) {
+                         float& padTop, float& padRight, float& padBot, float& padLeft) {
   stbtt_aligned_quad stbQuad;
   Box2f worldQuad;
   if (_bInitialized == false) {
@@ -237,7 +247,7 @@ void MtFont::getCharQuad(int32_t cCode, int32_t cCodePrev, FontSize fontSize, fl
     cCode = ' ';
   }
 
-  float curX = 0, curY = 0; //Dummies
+  float curX = 0, curY = 0;  //Dummies
   stbtt_GetPackedQuad(_charInfo.get(), _atlasWidth, _atlasHeight, cCode - _firstChar, &curX, &curY, &stbQuad, 0);
   if (getTexs().size() == 0) {
     //You didn't save the image
@@ -248,15 +258,15 @@ void MtFont::getCharQuad(int32_t cCode, int32_t cCodePrev, FontSize fontSize, fl
 
   //**TExs
   //Scale hte returned texcoodrs from [0,1] to the width of the baked texture
-  float tw = getTexs()[0]->uv1().x - getTexs()[0]->uv0().x;//top left, origin
-  float th = getTexs()[0]->uv0().y - getTexs()[0]->uv1().y;//This is flipped; We are in OpenGL tcoords, however our origin is at the top left
+  float tw = getTexs()[0]->uv1().x - getTexs()[0]->uv0().x;  //top left, origin
+  float th = getTexs()[0]->uv0().y - getTexs()[0]->uv1().y;  //This is flipped; We are in OpenGL tcoords, however our origin is at the top left
 
   //Scale
   float dv = stbQuad.t1 - stbQuad.t0;
   float du = stbQuad.s1 - stbQuad.s0;
   vec2 uv0, uv1;
   uv0.u() = getTexs()[0]->uv0().x + stbQuad.s0 * tw;
-  uv0.v() = getTexs()[0]->uv1().y + stbQuad.t0 * th;//Bottom-left = uv1
+  uv0.v() = getTexs()[0]->uv1().y + stbQuad.t0 * th;  //Bottom-left = uv1
   uv1.u() = getTexs()[0]->uv0().x + stbQuad.s1 * tw;
   uv1.v() = getTexs()[0]->uv1().y + stbQuad.t1 * th;
 
@@ -298,14 +308,14 @@ void MtFont::getCharQuad(int32_t cCode, int32_t cCodePrev, FontSize fontSize, fl
 
   //Compute the glyph padding values, and spaceing
   //for some reason space has a negative x0
-  padLeft = fBearing;// leftSideBearing is the offset from the current horizontal position to the left edge of the character
-  padRight = fAdvWidth - outWidth;// advanceWidth is the offset from the current horizontal position to the next horizontal position
+  padLeft = fBearing;               // leftSideBearing is the offset from the current horizontal position to the left edge of the character
+  padRight = fAdvWidth - outWidth;  // advanceWidth is the offset from the current horizontal position to the next horizontal position
 
   //Position character vertically
   //The ascent + descent of the character is wherever the quad is above, or below zero (zero is the baseline, we pass it in with curY)
   //_fAscent adn _fDescent are the scaled MAXIMUM ascent + descent of the font.  So the math here is correct
-  padBot = (fabsf(_fDescent) - fabsf(stbQuad.y1));// usually negative
-  padTop = (fabsf(_fAscent) - fabsf(stbQuad.y0));//
+  padBot = (fabsf(_fDescent) - fabsf(stbQuad.y1));  // usually negative
+  padTop = (fabsf(_fAscent) - fabsf(stbQuad.y0));   //
   padBot *= fScale;
   padTop *= fScale;
 }
@@ -323,9 +333,8 @@ float MtFont::fontSizeToFontScale(float fs) {
 //    worldQuad->_p1 = basePos + (worldQuad->_p1 - basePos) * fScale;
 //}
 #pragma endregion
-
 #pragma region MegaTex
-MegaTex::MegaTex(string_t name, std::shared_ptr<GLContext> ct, bool bCache) : Texture2DSpec(name, TextureFormat::Image4ub, ct) {
+MegaTex::MegaTex(string_t name, std::shared_ptr<GLContext> ctx, bool bCache) : Texture2DSpec(name, TextureFormat::Image4ub, ctx) {
   _bCache = bCache;
 }
 MegaTex::~MegaTex() {
@@ -337,7 +346,7 @@ std::shared_ptr<MtFont> MegaTex::getFont(std::string fn) {
   auto f = _mapTexs.find(h);
   if (f == _mapTexs.end()) {
     _eState = MegaTexCompileState::Dirty;
-    std::shared_ptr<MtFont> mtf = std::make_shared<MtFont>(fn, h);
+    std::shared_ptr<MtFont> mtf = std::make_shared<MtFont>(getThis<MegaTex>(), fn, h);
     _mapTexs.insert(std::make_pair(h, mtf));
     _eState = MegaTexCompileState::Dirty;
 
@@ -362,11 +371,11 @@ std::shared_ptr<MtTexPatch> MegaTex::getTex(std::shared_ptr<Img32> tx) {
   return p;
 }
 /**
-* @fn getTex
-* @brief Returns the given texture image by name, separated into patches. Not case sensitive.
-* @param nPatches - number of patches to expect - this is more of a debug thing to prevent invalid patches
-* @param bPreloaded - if we already loaded the image (skips validation and texture coords)
-* @param bLoadNow - Load the image immediately in this function (skips validation of texture coords)
+*  @fn getTex
+*  @brief Returns the given texture image by name, separated into patches. Not case sensitive.
+*  @param nPatches - number of patches to expect - this is more of a debug thing to prevent invalid patches
+*  @param bPreloaded - if we already loaded the image (skips validation and texture coords)
+*  @param bLoadNow - Load the image immediately in this function (skips validation of texture coords)
 */
 std::shared_ptr<MtTexPatch> MegaTex::getTex(std::string img, int32_t nPatches, bool bPreloaded, bool bLoadNow) {
   AssertOrThrow2(nPatches > 0);
@@ -384,9 +393,9 @@ std::shared_ptr<MtTexPatch> MegaTex::getTex(std::string img, int32_t nPatches, b
   std::map<Hash32, std::shared_ptr<MtTexPatch>>::iterator it;
   it = _mapTexs.find(hImg);
   if (it == _mapTexs.end()) {
-    ret = std::make_shared<MtTexPatch>(imgNameLow, hImg);
+    ret = std::make_shared<MtTexPatch>(getThis<MegaTex>(), imgNameLow, hImg);
     for (int i = 0; i < nPatches; ++i) {
-      ret->addTexImage(imgNameLow, i);//we could do "preloaded' as a bool, but it's probably nto necessary
+      ret->addTexImage(imgNameLow, i);  //we could do "preloaded' as a bool, but it's probably nto necessary
     }
     _mapTexs.insert(std::make_pair(hImg, ret));
     _eState = MegaTexCompileState::Dirty;
@@ -449,7 +458,7 @@ std::shared_ptr<Img32> MegaTex::compile() {
 
   //Tex size
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, (GLint*)&_iMaxTexSize);
-  Gu::checkErrorsDbg();
+  getContext()->chkErrDbg();
 
   int32_t iImageSize = _iStartWH;
   int32_t nFailures = 0;
@@ -513,13 +522,13 @@ std::shared_ptr<Img32> MegaTex::compile() {
     BRLogDebug("MegaTex - Copying Sub-Images..");
     for (std::shared_ptr<MtTex> tex : vecTexs) {
       _pMaster->copySubImageFrom(tex->node()->_b2Rect._p0, ivec2(0, 0), ivec2(tex->getWidth(), tex->getHeight()), tex->img());
-      Gu::checkErrorsDbg();
+      getContext()->chkErrDbg();
 
       //New Tex coords
       tex->uv0().x = (float)tex->node()->_b2Rect._p0.x / imgW;
       tex->uv0().y = (float)tex->node()->_b2Rect._p1.y / imgH;
       tex->uv1().x = (float)tex->node()->_b2Rect._p1.x / imgW;
-      tex->uv1().y = (float)tex->node()->_b2Rect._p0.y / imgH; //*Note the Y flop - OpenGL
+      tex->uv1().y = (float)tex->node()->_b2Rect._p0.y / imgH;  //*Note the Y flop - OpenGL
 
       //Free the image and node, we don't need it
       tex->freeTmp();
@@ -581,31 +590,27 @@ std::shared_ptr<MtNode> MtNode::plop(std::shared_ptr<MtTex> tex) {
 
     if (dw > dh) {
       _pChild[0]->_b2Rect.construct(
-        _b2Rect.left(),
-        _b2Rect.top(),
-        _b2Rect.left() + tex->getWidth(),
-        _b2Rect.bottom()
-      );
+          _b2Rect.left(),
+          _b2Rect.top(),
+          _b2Rect.left() + tex->getWidth(),
+          _b2Rect.bottom());
       _pChild[1]->_b2Rect.construct(
-        _b2Rect.left() + tex->getWidth(),
-        _b2Rect.top(),
-        _b2Rect.right(),
-        _b2Rect.bottom()
-      );
+          _b2Rect.left() + tex->getWidth(),
+          _b2Rect.top(),
+          _b2Rect.right(),
+          _b2Rect.bottom());
     }
     else {
       _pChild[0]->_b2Rect.construct(
-        _b2Rect.left(),
-        _b2Rect.top(),
-        _b2Rect.right(),
-        _b2Rect.top() + tex->getHeight()
-      );
+          _b2Rect.left(),
+          _b2Rect.top(),
+          _b2Rect.right(),
+          _b2Rect.top() + tex->getHeight());
       _pChild[1]->_b2Rect.construct(
-        _b2Rect.left(),
-        _b2Rect.top() + tex->getHeight(),
-        _b2Rect.right(),
-        _b2Rect.bottom()
-      );
+          _b2Rect.left(),
+          _b2Rect.top() + tex->getHeight(),
+          _b2Rect.right(),
+          _b2Rect.bottom());
     }
     return _pChild[0]->plop(tex);
   }
@@ -632,4 +637,4 @@ bool MegaTex::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShad
 }
 
 #pragma endregion
-}//ns Game
+}  // namespace BR2

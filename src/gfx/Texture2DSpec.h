@@ -20,7 +20,7 @@ enum class TextureFormat { Image4ub,     //png image from disk
 *  @class Texture2D
 *  @brief Stores information about a texture map.
 */
-class Texture2DSpec : public VirtualMemoryShared<Texture2DSpec> {
+class Texture2DSpec : public GLFramework {
 public:
   Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ct);
   Texture2DSpec(string_t name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV);
@@ -50,9 +50,6 @@ public:
   void deserialize(std::shared_ptr<BinaryFile> fb);
 
   static int32_t generateMipmapLevels(uint32_t width, uint32_t height);  //return a computed set of mipmap levels for the texture.
-
-protected:
-  std::shared_ptr<GLContext> _pContext = nullptr;
 
 private:
   TextureFormat _eFormat;

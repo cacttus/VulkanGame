@@ -17,7 +17,7 @@
 #include "../world/PhysicsWorld.h"
 
 namespace BR2 {
-MbiFile::MbiFile() {
+MbiFile::MbiFile(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
   _pFile = std::make_shared<BinaryFile>(c_strMbiVersion);
 }
 MbiFile::~MbiFile() {
@@ -99,7 +99,7 @@ bool MbiFile::loadAndParse(string_t file) {
     Hash32 hTex;
     fb->readUint32(hTex);
 
-    std::shared_ptr<Texture2DSpec> pTex = std::make_shared<Texture2DSpec>("<unset>", TextureFormat::Image4ub, Gu::getCoreContext());
+    std::shared_ptr<Texture2DSpec> pTex = std::make_shared<Texture2DSpec>("<unset>", TextureFormat::Image4ub, getContext());
     pTex->deserialize(fb);
     if (Gu::getTexCache()->add(pTex->getLocation(), pTex, false) == false) {
       string_t loc = pTex->getLocation();

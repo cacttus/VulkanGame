@@ -28,8 +28,8 @@ void UtilMeshSphere::generate() {
 }
 void UtilMeshSphere::preDraw() {
   if (_blnWireFrame == true) {
-    Gu::getCoreContext()->setPolygonMode(PolygonMode::Line);
-    Gu::getCoreContext()->setLineWidth(1);
+    getContext()->setPolygonMode(PolygonMode::Line);
+    getContext()->setLineWidth(1);
     //Gu::getGraphicsContext()->setLineWidth(1.0f);
   }
   //Gd::pushPolygonMode(GfxPolygonMode::PolygonModeWireframe);
@@ -37,7 +37,7 @@ void UtilMeshSphere::preDraw() {
 }
 void UtilMeshSphere::postDraw() {
   if (_blnWireFrame == true) {
-    Gu::getCoreContext()->setPolygonMode(PolygonMode::Fill);
+    getContext()->setPolygonMode(PolygonMode::Fill);
   }
 }
 

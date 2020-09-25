@@ -289,8 +289,8 @@ void BottleScript::onDrawDebug(RenderParams& rp) {
 void BottleScript::onScreenChanged(uint32_t uiWidth, uint32_t uiHeight, bool bFullscreen) {
 }
 void BottleScript::draw2d() {
-  Gu::getCoreContext()->pushDepthTest();
-  Gu::getCoreContext()->pushBlend();
+  getScene()->tryGetContext()->pushDepthTest();
+  getScene()->tryGetContext()->pushBlend();
   {
     //F3 = disable culling
     glDisable(GL_DEPTH_TEST);
@@ -304,8 +304,8 @@ void BottleScript::draw2d() {
     }
     drawDebugText();
   }
-  Gu::getCoreContext()->popDepthTest();
-  Gu::getCoreContext()->popBlend();
+  getScene()->tryGetContext()->popDepthTest();
+  getScene()->tryGetContext()->popBlend();
 }
 void BottleScript::drawDebugText() {
   int bx = 5;

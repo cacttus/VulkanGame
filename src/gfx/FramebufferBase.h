@@ -54,7 +54,7 @@ protected:
   void deleteTargets();
 
 protected:
-  static void makeRenderTexture(GLuint* iTexId, GLenum eAttachment, GLenum eInternalFormat, GLenum eTextureFormat,
+  static void makeRenderTexture(std::shared_ptr<GLContext> ctx, GLuint* iTexId, GLenum eAttachment, GLenum eInternalFormat, GLenum eTextureFormat,
                                 GLenum eDataType, int32_t iWidth, int32_t iHeight, GLenum* eOutTarget, bool bMultisample, int32_t nSamples);
 };
 

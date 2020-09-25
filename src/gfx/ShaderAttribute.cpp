@@ -1,4 +1,6 @@
 #include "../base/Logger.h"
+#include "../base/Gu.h"
+#include "../gfx/ShaderMaker.h"
 #include "../base/Hash.h"
 #include "../base/GLContext.h"
 #include "../base/OperatingSystem.h"
@@ -22,7 +24,7 @@ void ShaderAttribute::parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, in
 
   memset(buf, 0, 512);
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetActiveAttrib(pShaderBase->getGlId(), attribIndex, NBUFSIZ, &buflen, &_iGLAttribSize, &_eGLAttribType, buf);
+  pShaderBase->getContext()->glGetActiveAttrib(pShaderBase->getGlId(), attribIndex, NBUFSIZ, &buflen, &_iGLAttribSize, &_eGLAttribType, buf);
 
   AssertOrThrow2(buflen < NBUFSIZ);
 
@@ -33,7 +35,7 @@ void ShaderAttribute::parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, in
     _bIsBuiltInAttrib = true;
   }
   else {
-    _iGLLocation = std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetAttribLocation(pShaderBase->getGlId(), getName().c_str());
+    _iGLLocation = pShaderBase->getContext()->glGetAttribLocation(pShaderBase->getGlId(), getName().c_str());
 
     _eUserType = parseUserType(_strName);
 

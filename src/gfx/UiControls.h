@@ -575,6 +575,10 @@ private:
 
 
 };
+/**
+*  @class UIWindow
+*  @breif This is a window within a screen, not an operating system window.
+*/
 class UiWindow : public UiElement {
 public:
   UiWindow() {}

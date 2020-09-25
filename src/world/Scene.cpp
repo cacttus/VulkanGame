@@ -124,6 +124,7 @@ void Scene::afterAttachedToWindow() {
 void Scene::createUi() {
   string_t DEBUG_FONT = "Lato-Regular.ttf";
   AssertOrThrow2(getWindow() != nullptr);
+  
   _pUiScreen = UiScreen::create(getWindow());
   Gu::checkErrorsDbg();
 
@@ -243,14 +244,14 @@ void Scene::update(float delta) {
 }
 void Scene::idle(int64_t us) {
 }
-std::shared_ptr<GLContext> Scene::getContext() {
+std::shared_ptr<GLContext> Scene::tryGetContext() {
   std::shared_ptr<GraphicsWindow> w = getWindow();
   if (w) {
     std::shared_ptr<GLContext> c = w->getContext();
     return c;
   }
   else {
-    BRLogErrorOnce("Window was null when getting graphics context.");
+    BRLogErrorOnce("Window was null when getting graphics context. Context not found");
     Gu::debugBreak();
   }
   return nullptr;
@@ -406,8 +407,8 @@ void Scene::drawShadow(RenderParams& rp) {
   SceneNode::drawShadow(rp);
 }
 void Scene::drawForwardDebug(RenderParams& rp) {
-  RenderUtils::drawAxisShader(getActiveCamera());
-  RenderUtils::drawGridShader(getActiveCamera());
+  Gu::getCoreContext()->getRenderUtils()->drawAxisShader(getActiveCamera());
+  Gu::getCoreContext()->getRenderUtils()->drawGridShader(getActiveCamera());
 
   SceneNode::drawForwardDebug(rp);
 }
@@ -418,13 +419,13 @@ void Scene::drawNonDepth(RenderParams& rp) {
 void Scene::drawTransparent(RenderParams& rp) {
   Perf::pushPerf();
 
-  getContext()->pushDepthTest();
-  getContext()->pushCullFace();
-  getContext()->pushBlend();
+  tryGetContext()->pushDepthTest();
+  tryGetContext()->pushCullFace();
+  tryGetContext()->pushBlend();
   {
-    getContext()->enableDepthTest(true);
-    getContext()->enableCullFace(true);
-    getContext()->enableBlend(false);
+    tryGetContext()->enableDepthTest(true);
+    tryGetContext()->enableCullFace(true);
+    tryGetContext()->enableBlend(false);
 
     RenderParams rp;
     for (std::pair<float, std::shared_ptr<MeshNode>> p : _pRenderBucket->getMeshesTransparent()) {
@@ -432,9 +433,9 @@ void Scene::drawTransparent(RenderParams& rp) {
       pm->drawTransparent(rp);
     }
   }
-  getContext()->popBlend();
-  getContext()->popCullFace();
-  getContext()->popDepthTest();
+  tryGetContext()->popBlend();
+  tryGetContext()->popCullFace();
+  tryGetContext()->popDepthTest();
 
   Perf::popPerf();
 }

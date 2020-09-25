@@ -35,7 +35,7 @@ public:
   std::shared_ptr<CameraNode> getDefaultCamera() { return _pDefaultCamera; }
   std::shared_ptr<LightManager> getLightManager() { return _pLightManager; }
   std::shared_ptr<GraphicsWindow> getWindow() { return _pGraphicsWindow; }
-  std::shared_ptr<GLContext> getContext();
+  std::shared_ptr<GLContext> tryGetContext();
   std::shared_ptr<RenderBucket> getRenderBucket() { return _pRenderBucket; }
   std::vector<std::shared_ptr<CameraNode>> getAllCameras();
   void setPhysicsWorld(std::shared_ptr<PhysicsWorld> p) { _pPhysicsWorld = p; }

@@ -1,6 +1,6 @@
 #include "../base/Gu.h"
 #include "../base/GLContext.h"
-#include "../gfx/HappySky.h"
+#include "../gfx/SkyBox.h"
 #include "../gfx/TexCache.h"
 #include "../gfx/Atlas.h"
 #include "../gfx/RenderUtils.h"
@@ -13,13 +13,13 @@
 #include "../gfx/RenderParams.h"
 
 namespace BR2 {
-HappySky::HappySky() {
+SkyBox::SkyBox(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
 
 }
-HappySky::~HappySky() {
+SkyBox::~SkyBox() {
 
 }
-void HappySky::init(std::shared_ptr<Atlas> pAtlas, float fBoxDiagonalSize2, bool bDeferred) {
+void SkyBox::init(std::shared_ptr<Atlas> pAtlas, float fBoxDiagonalSize2, bool bDeferred) {
   _pAtlas = pAtlas;
   _fSize = fBoxDiagonalSize2;
   // 2-->3
@@ -94,7 +94,7 @@ void HappySky::init(std::shared_ptr<Atlas> pAtlas, float fBoxDiagonalSize2, bool
 
 
 }
-void HappySky::side(std::vector<v_v3n3x2>* verts, std::vector<v_index32>* inds,
+void SkyBox::side(std::vector<v_v3n3x2>* verts, std::vector<v_index32>* inds,
   int32_t& iOff, vec3& du, vec3& dv, float siz, vec3& origin, int eMat) {
   v_v3n3x2 v;
   vec3 n;
@@ -131,14 +131,14 @@ void HappySky::side(std::vector<v_v3n3x2>* verts, std::vector<v_index32>* inds,
   iOff += 4;
 
 }
-void HappySky::draw(RenderParams& rp) {
-  Graphics->pushCullFace();
-  Graphics->pushBlend();
+void SkyBox::draw(RenderParams& rp) {
+  getContext()->pushCullFace();
+  getContext()->pushBlend();
   //We can't disable depth testing here unless we put an additional forward stage before thed eferred stage.
  // Gu::pushDepthTest();
   {
-    Graphics->enableCullFace(false);
-    Graphics->enableBlend(false);
+    getContext()->enableCullFace(false);
+    getContext()->enableBlend(false);
     //glDisable(GL_CULL_FACE);
     //glDisable(GL_BLEND);
 
@@ -162,8 +162,8 @@ void HappySky::draw(RenderParams& rp) {
     // rp.setMesh(_pMesh);
     // rp.draw();
   }
-  Graphics->popCullFace();
-  Graphics->popBlend();
+  getContext()->popCullFace();
+  getContext()->popBlend();
   //  Gu::popDepthTest();
 
 }

@@ -19,8 +19,7 @@ void InputManager::init() {
   _vLastMousePos_global = 0.0f;
 
   _eRmb = _eLmb = _eMmb = ButtonState::e::Up;
-  
-  
+
   if (Gu::getEngineConfig()->gamePadType() == GamePadType::KeyboardAndMouse) {
     _pGamePad = std::make_shared<KeyboardGamePad>(getThis<InputManager>());
   }
@@ -28,7 +27,7 @@ void InputManager::init() {
     BRLogError("Invalid gamepad type when creating input.");
     _pGamePad = std::make_shared<KeyboardGamePad>(getThis<InputManager>());
   }
-  
+
   //Pre + Post update to prevent garbage
   preUpdate();
   postUpdate();
@@ -53,7 +52,6 @@ bool InputManager::altHeld() {
   return keyPressOrDown(SDL_SCANCODE_LALT) || keyPressOrDown(SDL_SCANCODE_RALT);
 }
 void InputManager::setKeyDown(SDL_Scancode keyCode) {
-
   if (keyCode >= SDL_NUM_SCANCODES) {
     //Error
     BRLogError("scancode outside range:" + keyCode);
@@ -61,11 +59,6 @@ void InputManager::setKeyDown(SDL_Scancode keyCode) {
   else {
     _kbKeys[keyCode] = BR2::ButtonState::e::Press;
   }
-
-  // SDL_bool withControl = !!(event->key.keysym.mod & KMOD_CTRL);
-  //  SDL_bool withShift = !!(event->key.keysym.mod & KMOD_SHIFT);
-  // SDL_bool withAlt = !!(event->key.keysym.mod & KMOD_ALT);
-
 }
 void InputManager::setKeyUp(SDL_Scancode keyCode) {
   if (keyCode >= SDL_NUM_SCANCODES) {
@@ -153,7 +146,4 @@ void InputManager::warpMouse(int x, int y) {
   //  _bMouseWarped = true;
 }
 
-
-
-}//ns Game
-
+}  // namespace BR2

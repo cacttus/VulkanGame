@@ -19,7 +19,6 @@ Picker::Picker(std::shared_ptr<GLContext> pc, std::shared_ptr<RenderPipe> rp) : 
 Picker::~Picker() {
 }
 uint32_t Picker::genPickId() {
-
   //DEBUG pick ID that shows the color of the picked object.
   _iid++;
   if (_iid == Picker::c_iInvalidPickId) {
@@ -37,57 +36,54 @@ void Picker::updatePickedPixel(int32_t x, int32_t y) {
   //    return;
   //}
 
-  OpenGLUtils::debugGetRenderState();
+  //getContext()->debugGetRenderState();
 
   getContext()->glBindFramebuffer(GL_READ_FRAMEBUFFER, _pRenderPipe->getBlittedDeferred()->getFramebufferId());
-  Gu::checkErrorsDbg();
+  getContext()->chkErrDbg();
 
   glReadBuffer(GL_COLOR_ATTACHMENT4);
+  getContext()->chkErrDbg();
 
-  Gu::checkErrorsDbg();
-
-  OpenGLUtils::debugGetRenderState();
+  //getContext()->debugGetRenderState();
 
   samplePixelId(x, y, _uiLastSelectedPixelId);
-
-  Gu::checkErrorsDbg();
+  getContext()->chkErrDbg();
 
 #ifdef _DEBUG
-  
+
   if (_uiLastSelectedPixelId > 0) {
     if (_pRenderPipe->getWindow()->getFpsMeter()->frameMod(20)) {
       BRLogDebug("(" + x + "," + y + "), picked " + _uiLastSelectedPixelId);
     }
   }
 
-  Gu::checkErrorsDbg();
+  getContext()->chkErrDbg();
+
 #endif
 
   glReadBuffer(GL_NONE);
-  Gu::checkErrorsDbg();
-
+  getContext()->chkErrDbg();
 }
 void Picker::samplePixelId(int32_t x, int32_t y, uint32_t& __out_ selectedId) {
   GLuint pixel = 0;
 
   //https://www.khronos.org/opengles/sdk/docs/man/xhtml/glReadPixels.xml
-  //If the currently bound framebuffer is not the default framebuffer object, color components 
+  //If the currently bound framebuffer is not the default framebuffer object, color components
   // are read from the color image attached to the GL_COLOR_ATTACHMENT0 attachment point.
-  OpenGLUtils::debugGetRenderState();
+  getContext()->debugGetRenderState();
 
   int32_t iHeight = getContext()->getActiveCamera()->getViewport()->getHeight();
 
   glReadPixels(x - 1,
-    iHeight - y + 1,
-    1, 1,
-    GL_RED_INTEGER,
-    GL_UNSIGNED_INT,
-    (GLvoid*)&pixel
-  );
+               iHeight - y + 1,
+               1, 1,
+               GL_RED_INTEGER,
+               GL_UNSIGNED_INT,
+               (GLvoid*)&pixel);
 
-  Gu::checkErrorsDbg();
+  getContext()->chkErrDbg();
 
   selectedId = pixel;
 }
 
-}//ns Game
+}  // namespace BR2

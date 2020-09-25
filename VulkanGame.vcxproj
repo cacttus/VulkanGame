@@ -173,7 +173,7 @@
     <ClInclude Include="src\gfx\GpuQuad3.h" />
     <ClInclude Include="src\gfx\GraphicsApi.h" />
     <ClInclude Include="src\gfx\GraphicsContext.h" />
-    <ClInclude Include="src\gfx\HappySky.h" />
+    <ClInclude Include="src\gfx\SkyBox.h" />
     <ClInclude Include="src\gfx\LightManager.h" />
     <ClInclude Include="src\gfx\LightNode.h" />
     <ClInclude Include="src\gfx\MegaTex.h" />

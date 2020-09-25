@@ -3037,11 +3037,9 @@ void UiWindow::update(std::shared_ptr<InputManager> pFingers) {
   _pContainer->width() = uDim(getComputedQuad().right() - getComputedQuad().left(), UiDimUnit::e::Pixel);
   _pContainer->height() = uDim(getComputedQuad().bottom() - getComputedQuad().top(), UiDimUnit::e::Pixel);
 }
-
 void UiWindow::enableResize() {
   _pContainer->enableResize();
 }
-
 void UiWindow::enableDrag() {
   //Use weak ptr to avoid circular reference
   std::weak_ptr<UiWindow> win = getThis<UiWindow>();
@@ -3075,7 +3073,7 @@ void UiWindow::enableVScrollbar() {
 }
 void UiWindow::enableHScrollbar() {
   _pContainer->enableScrollbar(_pWindowSkin->_pHScroll);
-}
+} 
 
 #pragma endregion
 //////////////////////////////////////////////////////////////////////////

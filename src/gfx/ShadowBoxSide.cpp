@@ -201,7 +201,6 @@ void ShadowBoxSide::renderShadows(std::shared_ptr<ShadowBox> pMasterBox, bool bF
   }
   pMasterBox->endRenderSide();
 
-  Gu::checkErrorsDbg();
   Perf::popPerf();
 }
 }//ns Game

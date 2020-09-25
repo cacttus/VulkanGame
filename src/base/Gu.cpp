@@ -78,6 +78,7 @@ std::shared_ptr<Logger> Gu::_pLogger = nullptr;
 std::shared_ptr<EngineConfig> Gu::_pEngineConfig = nullptr;
 std::shared_ptr<Net> Gu::_pNet = nullptr;
 std::shared_ptr<InputManager> Gu::_pGlobalInput = nullptr;
+std::shared_ptr<GLContext> Gu::_pActiveContext = nullptr;
 
 template <class Tx>
 std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> global_manager) {
@@ -353,8 +354,6 @@ bool Gu::saveImage(std::string path, std::shared_ptr<Img32> spec) {
   }
   free(buffer);  //lodepng_free
 
-  Gu::checkErrorsDbg();
-
   return bRet;
 }
 void Gu::freeImage(std::shared_ptr<Img32> b) {
@@ -607,51 +606,50 @@ std::string Gu::getCPPVersion() {
   return Stz "pre-standard C++";
 }
 
-void Gu::createManagers() {
-  std::shared_ptr<GLContext> ct = std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext());
+void Gu::createManagers(std::shared_ptr<GLContext> ct) {
   _pRenderSettings = RenderSettings::create();
 
   BRLogInfo("GLContext - Building ApplicationPackage");
   _pPackage = std::make_shared<ApplicationPackage>();
   _pPackage->build(FileSystem::getExecutableFullPath());
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating TexCache");
-  _pTexCache = std::make_shared<TexCache>(Gu::getCoreContext());
+  _pTexCache = std::make_shared<TexCache>(ct);
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating Sequencer");
   _pSequencer = std::make_shared<Sequencer>();
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating Global Input");
   _pGlobalInput = std::make_shared<InputManager>();
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating SoundCache");
   _pSoundCache = std::make_shared<SoundCache>();
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating ShaderMaker & base shaders");
-  _pShaderMaker = std::make_shared<ShaderMaker>();
+  _pShaderMaker = std::make_shared<ShaderMaker>(ct);
   _pShaderMaker->initialize();
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 
   BRLogInfo("GLContext - Model Cache");
-  _pModelCache = std::make_shared<ModelCache>(Gu::getCoreContext());
+  _pModelCache = std::make_shared<ModelCache>(ct);
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 
   BRLogInfo("GLContext - Network");
   _pNet = std::make_shared<Net>();
   SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  ct->chkErrRt();
 }
 void Gu::updateManagers() {
   if (_pSequencer != nullptr) {
@@ -665,7 +663,6 @@ void Gu::updateManagers() {
     _pNet->update();
   }
 
-  Gu::checkErrorsDbg();
 }
 void Gu::sleepThread(uint64_t milliseconds) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));

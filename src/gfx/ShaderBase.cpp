@@ -33,7 +33,7 @@
 #include "../world/RenderBucket.h"
 
 namespace BR2 {
-ShaderBase::ShaderBase(string_t strName) {
+ShaderBase::ShaderBase(std::shared_ptr<GLContext> ctx, string_t strName) : GLFramework(ctx) {
   setProgramName(strName);
 }
 ShaderBase::~ShaderBase() {
@@ -79,7 +79,7 @@ void ShaderBase::bind() {
   //This system is used to make sure we don't bind multiple
   //shaders in between invocations - thus disturbing the
   //bound uniform state
-  Gu::getShaderMaker()->shaderBound(shared_from_this());
+  Gu::getShaderMaker()->shaderBound(getThis<ShaderBase>());
 }
 void ShaderBase::unbind() {
   //This system is used to make sure we don't bind multiple
@@ -275,9 +275,9 @@ void ShaderBase::draw(std::shared_ptr<MeshNode> mesh, int32_t iCount, GLenum eDr
 }
 void ShaderBase::draw(std::shared_ptr<VaoDataGeneric> vao, int32_t iCount, GLenum eDrawMode) {
   std::shared_ptr<VaoShader> vs = nullptr;
-  OpenGLUtils::debugGetRenderState();
-  vs = vao->getOrCreateVaoForShader(shared_from_this());
-  OpenGLUtils::debugGetRenderState();
+  getContext()->debugGetRenderState();
+  vs = vao->getOrCreateVaoForShader(getThis<ShaderBase>());
+  getContext()->debugGetRenderState();
   draw(vs, iCount, eDrawMode);
 }
 void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDrawMode) {
@@ -288,7 +288,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
   AssertOrThrow2(vao != nullptr);
   Gu::getCoreContext()->chkErrDbg();
 
-  OpenGLUtils::debugGetRenderState();
+  getContext()->debugGetRenderState();
   bind();
   {
     Gu::getCoreContext()->chkErrDbg();
@@ -297,7 +297,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
     Gu::getCoreContext()->chkErrDbg();
     verifyBound();
 
-    OpenGLUtils::debugGetRenderState();
+    getContext()->debugGetRenderState();
 
     vao->bind();
     {
@@ -305,7 +305,7 @@ void ShaderBase::draw(std::shared_ptr<VaoShader> vao, int32_t iCount, GLenum eDr
         iCount = (int32_t)vao->getIbo()->getNumElements();
       }
       if (iCount > 0) {
-        OpenGLUtils::debugGetRenderState();
+        getContext()->debugGetRenderState();
         //GL_TRIANGLES = 0x0004
         glDrawElements(eDrawMode, iCount, GL_UNSIGNED_INT, (GLvoid*)0);
         Gu::getCoreContext()->chkErrDbg(false, false, this->getProgramName());

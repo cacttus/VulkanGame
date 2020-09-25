@@ -67,10 +67,9 @@ public:
   GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile> profile, SDL_Window* win);
   virtual ~GLContext() override;
 
-  int32_t maxGLTextureUnits();
+  bool init();
 
-  int32_t getSupportedDepthSize() { return _iSupportedDepthSize; }
-  SDL_GLContext getSDLGLContext() { return _context; }
+  int32_t maxGLTextureUnits();
 
   //virtual void update(float delta) override;
   virtual bool chkErrRt(bool bDoNotBreak = false, bool doNotLog = false, const string_t& shaderName = "", bool clearOnly = false) override;
@@ -96,11 +95,15 @@ public:
   virtual void pushDepthTest() override;
   virtual void popDepthTest() override;
 
+  bool isActive(); 
+
   //compatibility issues
   void setPolygonMode(PolygonMode p);
   void setLineWidth(float w);
 
   GLenum getTextureTarget(GLuint textureId);
+  SDL_GLContext getSDLGLContext() { return _context; }
+  RenderUtils* getRenderUtils() { return _pRenderUtils.get(); }
 
   void enableCullFace(bool enable) override;
   void enableBlend(bool enable) override;
@@ -108,31 +111,61 @@ public:
 
   static void setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof);
 
-  bool valid() { return _bValid; }
+  //bool valid() { return _bLoadedFunctions; }
   bool isForwardCompatible();
 
-private:
-  std::shared_ptr<GLProfile> _profile;
-  bool _bValid = false;
-  bool loadOpenGLFunctions();
+  /// Rendering State
+  void resetRenderState();
+  string_t debugGetRenderState(bool bForceRun = false, bool bPrintToStdout = true, bool bSaveFramebufferTexture = true);  //breakpoint it
 
+  // Textures
+  void createDepthTexture(const string_t& owner, GLuint* __out_ texId, int32_t w, int32_t h, bool bMsaaEnabled, int32_t nMsaaSamples, GLenum eRequestedDepth);
+  GLenum getSupportedDepthSize();
+  bool getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLuint iGLTexId, GLenum eTarget, int iCubeMapSide = -1);
+
+  //Conversion
+  static string_t openGlTypeToString(GLenum type);  //TODO: move this to the GL hardware or Gd::..
+
+  static GLenum texTargetToTexBindingQuery(GLenum target);
+  static GLenum texBindingToTexTargetQuery(GLenum binding);
+
+private:
+  SDL_GLContext _context;
+  std::shared_ptr<GLProfile> _profile;
   int32_t _iMaxTexs = -1;
+  int _iSupportedDepthSize;
+  std::unique_ptr<OglErr> _pOglErr;
+  std::unique_ptr<RenderUtils> _pRenderUtils;
 
   //Render Stack.
   std::stack<GLenum> _eLastCullFaceStack;
   std::stack<GLenum> _eLastBlendStack;
   std::stack<GLenum> _eLastDepthTestStack;
   static const int MaxStackSize = 32;
-
-  SDL_GLContext _context;
-
+  
   bool checkOpenGlMinimumVersionInfo(int required_version, int required_subversion);
   void getOpenGLVersion(int& ver, int& subver, int& shad_ver, int& shad_subver);
   void loadCheckProc();
   void printHelpfulDebug();
+  bool loadOpenGLFunctions();
 
-  int _iSupportedDepthSize;
-  std::unique_ptr<OglErr> _pOglErr;
+private:
+  // Debug
+  void debugGetVertexArrayState(string_t& strOut);  //breakpoint it
+  void debugGetFramebufferAttachmentState(string_t& strOut);
+  void debugGetTextureState(string_t& strOut);
+  void debugGetAttribState(string_t& strOut);
+  void debugGetBufferState(string_t& strOut);
+  void debugGetLegacyViewAndMatrixStack(string_t& strOut);
+  void debugPrintActiveUniforms(int iGlProgramId, string_t& strOut);
+  void debugPrintFBOAttachment(string_t& strState, GLenum);
+  // Texture
+  void saveFramebufferAsPng(string_t&& strLoc, GLuint iFBOId = 0);  // Saves a GL texture by ID to the file path.
+  void getCompatibleDepthComponent(GLenum eRequestedDepth, std::function<void(GLenum)> func);
+  void debugPrintTextureInfo(string_t& state, GLuint iTexId);
+  void debugPrintBoundTextureAttribs(string_t& strState, const string_t& texName, GLenum tex_target);
+
+
 
 public:
   PFNGLUSEPROGRAMPROC glUseProgram = nullptr;

@@ -1,4 +1,3 @@
-#include "../base/GLContext.h"
 #include "../base/Logger.h"
 #include "../base/Gu.h"
 #include "../gfx/RenderUtils.h"
@@ -19,93 +18,90 @@ VertexFormat::~VertexFormat() {
   //}
 }
 void VertexFormat::addComponent(VertexUserType eUserType) {
-
   GLenum eType;
   int compCount;
   int size;
   switch (eUserType) {
-  case VertexUserType::v2_01:
-    eType = GL_FLOAT;
-    compCount = 2;
-    size = sizeof(vec2);
-    break;
-  case VertexUserType::v3_01:
-    //*******************************************
-    //**Look at the size: vec4 - note this from the opengl wiki
-    //"Implementations sometimes get the std140 layout wrong for vec3 components. 
-    //You are advised to manually pad your structures/arrays out and avoid using vec3 at all."
-    eType = GL_FLOAT;
-    compCount = 3;
-    size = sizeof(vec4);
-    //*******************************************
-    break;
-  case VertexUserType::v4_01:
-  case VertexUserType::v4_02:
-  case VertexUserType::v4_03:
-    eType = GL_FLOAT;
-    compCount = 4;
-    size = sizeof(vec4);
-    break;
-  case VertexUserType::c4_01:
-    eType = GL_FLOAT;
-    compCount = 4;
-    size = sizeof(vec4);
-    break;
-  case VertexUserType::c3_01:
-    eType = GL_FLOAT;
-    compCount = 3;
-    size = sizeof(vec4);//**Look at the size: vec4 - note this from the opengl wiki
-    break;
-  case VertexUserType::n3_01:
-    eType = GL_FLOAT;
-    compCount = 3;
-    size = sizeof(vec4);//**Look at the size: vec4 - note this from the opengl wiki
-    break;
-  case VertexUserType::x2_01:
-    eType = GL_FLOAT;
-    compCount = 2;
-    size = sizeof(vec4);//**Look at the size: vec4 - note this from the opengl wiki
-    break;
-  case VertexUserType::i2_01:
-    eType = GL_INT;
-    compCount = 2;
-    size = sizeof(vec2);
-    break;
-  case VertexUserType::u2_01:
-    eType = GL_UNSIGNED_INT;
-    compCount = 2;
-    size = sizeof(uvec2);
-    break;
-    //**std430 padded types.
-//case VertexUserType::v3_01_STD430:
-//    eType = GL_FLOAT;
-//    compCount = 3;
-//    size = sizeof(vec4);
-//    break;
-//case VertexUserType::n3_01_STD430:
-//    eType = GL_FLOAT;
-//    compCount = 3;
-//    size = sizeof(vec4);
-//    break;
-//case VertexUserType::x2_01_STD430:
-//    eType = GL_FLOAT;
-//    compCount = 2;
-//    size = sizeof(vec4);
-//    break;
-  default:
-    BRThrowException("Vertex user type not impelmented.");
+    case VertexUserType::v2_01:
+      eType = GL_FLOAT;
+      compCount = 2;
+      size = sizeof(vec2);
+      break;
+    case VertexUserType::v3_01:
+      //*******************************************
+      //**Look at the size: vec4 - note this from the opengl wiki
+      //"Implementations sometimes get the std140 layout wrong for vec3 components.
+      //You are advised to manually pad your structures/arrays out and avoid using vec3 at all."
+      eType = GL_FLOAT;
+      compCount = 3;
+      size = sizeof(vec4);
+      //*******************************************
+      break;
+    case VertexUserType::v4_01:
+    case VertexUserType::v4_02:
+    case VertexUserType::v4_03:
+      eType = GL_FLOAT;
+      compCount = 4;
+      size = sizeof(vec4);
+      break;
+    case VertexUserType::c4_01:
+      eType = GL_FLOAT;
+      compCount = 4;
+      size = sizeof(vec4);
+      break;
+    case VertexUserType::c3_01:
+      eType = GL_FLOAT;
+      compCount = 3;
+      size = sizeof(vec4);  //**Look at the size: vec4 - OpenGL requires components to be 64 byte aligned.
+      break;
+    case VertexUserType::n3_01:
+      eType = GL_FLOAT;
+      compCount = 3;
+      size = sizeof(vec4);  //**Look at the size: vec4  - OpenGL requires components to be 64 byte aligned.
+      break;
+    case VertexUserType::x2_01:
+      eType = GL_FLOAT;
+      compCount = 2;
+      size = sizeof(vec4);  //**Look at the size: vec4  - OpenGL requires components to be 64 byte aligned.
+      break;
+    case VertexUserType::i2_01:
+      eType = GL_INT;
+      compCount = 2;
+      size = sizeof(vec2);
+      break;
+    case VertexUserType::u2_01:
+      eType = GL_UNSIGNED_INT;
+      compCount = 2;
+      size = sizeof(uvec2);
+      break;
+      //**std430 padded types.
+      //case VertexUserType::v3_01_STD430:
+      //    eType = GL_FLOAT;
+      //    compCount = 3;
+      //    size = sizeof(vec4);
+      //    break;
+      //case VertexUserType::n3_01_STD430:
+      //    eType = GL_FLOAT;
+      //    compCount = 3;
+      //    size = sizeof(vec4);
+      //    break;
+      //case VertexUserType::x2_01_STD430:
+      //    eType = GL_FLOAT;
+      //    compCount = 2;
+      //    size = sizeof(vec4);
+      //    break;
+    default:
+      BRThrowException("Vertex user type not impelmented.");
   }
 
   addComponent(eType, compCount, size, eUserType);
 }
 void VertexFormat::addComponent(GLenum type, int componentCount, int size, VertexUserType eUserType) {
-
   //Check duples
   for (std::pair<int, std::shared_ptr<VertexComponent>> p : _vecComponents) {
     std::shared_ptr<VertexComponent> comp = p.second;
     if (comp->getUserType() == eUserType) {
-      BRLogError("Duplicate Vertex component '" + getUserTypeName(eUserType) + "' for Vertex Type '" + getName() + "'.");
-      Gu::debugBreak();
+      BRThrowException("Duplicate Vertex component '" + getUserTypeName(eUserType) + "' for Vertex Type '" + getName() + "'.");
     }
   }
 
@@ -137,7 +133,6 @@ std::shared_ptr<VertexComponent> VertexFormat::getComponentForUserType(VertexUse
     return nullptr;
   }
   return it->second;
-
 }
 
 //void VertexFormat::enableAndBindAllArraysForVaoBuffer(std::shared_ptr<VboData> pVboData) {
@@ -242,19 +237,32 @@ GLenum VertexFormat::computeAttributeType(GLenum type, GLuint count) {
 }
 string_t VertexFormat::getUserTypeName(VertexUserType eUserType) {
   switch (eUserType) {
-  case VertexUserType::c4_01: return ("Color4f"); break;
-  case VertexUserType::v2_01: return ("Position2f"); break;
-  case VertexUserType::v3_01: return ("Position3f"); break;
-  case VertexUserType::n3_01: return ("Normal3f"); break;
-  case VertexUserType::x2_01: return ("Texcoord2f"); break;
-  case VertexUserType::u2_01: return ("Unsigned_Int_2"); break;
-  case VertexUserType::v4_01:
-  case VertexUserType::v4_02:
-  case VertexUserType::v4_03:
-    return ("Position4f"); break;
+    case VertexUserType::c4_01:
+      return ("Color4f");
+      break;
+    case VertexUserType::v2_01:
+      return ("Position2f");
+      break;
+    case VertexUserType::v3_01:
+      return ("Position3f");
+      break;
+    case VertexUserType::n3_01:
+      return ("Normal3f");
+      break;
+    case VertexUserType::x2_01:
+      return ("Texcoord2f");
+      break;
+    case VertexUserType::u2_01:
+      return ("Unsigned_Int_2");
+      break;
+    case VertexUserType::v4_01:
+    case VertexUserType::v4_02:
+    case VertexUserType::v4_03:
+      return ("Position4f");
+      break;
   };
 
-  Gu::debugBreak();
+  BRThrowException("Invalid user type.");
   return ("Unknown User Type.");
 }
 int VertexFormat::matchTypeForShaderType(std::shared_ptr<VertexFormat> shaderType) {
@@ -282,8 +290,4 @@ int VertexFormat::matchTypeForShaderType(std::shared_ptr<VertexFormat> shaderTyp
   return n;
 }
 
-
-
-
-
-}//ns Game
+}  // namespace BR2

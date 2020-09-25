@@ -1,22 +1,23 @@
 /**
-*  @file HappySky.h
+*  @file SkyBox.h
 *  @date December 9, 2016
 *  @author MetalMario971
 */
 #pragma once
-#ifndef __HAPPYSKY_14813313153843142444_H__
-#define __HAPPYSKY_14813313153843142444_H__
+#ifndef __SKYBOX_14813313153843142444_H__
+#define __SKYBOX_14813313153843142444_H__
 
 #include "../gfx/GfxHeader.h"
 #include "../model/ModelHeader.h"
 namespace BR2 {
 /**
-*  @class HappySky
+*  @class SkyBox
+*  @TODO: Make a scenenode with mesh component.
 */
-class HappySky : public VirtualMemory {
+class SkyBox : public GLFramework {
 public:
-  HappySky();
-  virtual ~HappySky() override;
+  SkyBox(std::shared_ptr<GLContext> ct);
+  virtual ~SkyBox() override;
   void init(std::shared_ptr<Atlas> pAtlas, float fBoxDiagonalSize2, bool bDeferred);
   void draw(RenderParams& rp);
 

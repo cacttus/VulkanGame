@@ -15,7 +15,7 @@ namespace BR2 {
 *  @class ModelCache
 *  @brief simple mod cahce
 */
-class ModelCache : public VirtualMemory {
+class ModelCache : public GLFramework {
 public:
   ModelCache(std::shared_ptr<GLContext> pc);
   virtual ~ModelCache() override;
@@ -32,7 +32,6 @@ public:
   void unloadModel(string_t strMobName, bool bErrorIfFailed = true);
   std::shared_ptr<Material> getDefaultMaterial() { return _pDefaultMaterial; }
 private:
-  std::shared_ptr<GLContext> _pContext = nullptr;
   std::map<Hash32, std::shared_ptr<ModelSpec>> _mapModels;
   //std::map<int32_t, std::shared_ptr<Armature>> _mapArmaturesOrdered;
   //std::map<Hash32, std::shared_ptr<ActionGroup>> _mapActions;

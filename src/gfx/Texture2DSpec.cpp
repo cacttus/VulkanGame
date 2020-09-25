@@ -12,26 +12,26 @@
 #include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
-Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : _pContext(ct) {
+Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : GLFramework(ct) {
   _strName = name;
   _eFormat = fmt;
 }
-Texture2DSpec::Texture2DSpec(string_t name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV) : _pContext(ctx) {
+Texture2DSpec::Texture2DSpec(string_t name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV) : GLFramework(ctx) {
   _strName = name;
   _eFormat = TextureFormat::Image4ub;
   loadPng(loc, bRepeatU, bRepeatV);
 }
-Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : _pContext(ctx) {
+Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : GLFramework(ctx) {
   _strName = name;
   create(fmt, (unsigned char*)sp->getData()->ptr(), sp->getWidth(), sp->getHeight(), false, false, false);
   setFilter(eFilter);
 }
-Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps) : _pContext(ctx) {
+Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps) : GLFramework(ctx) {
   _strName = name;
   create(fmt, texData, iWidth, iHeight, mipmaps, false, false);
 }
 Texture2DSpec::~Texture2DSpec() {
-  _pContext->glDeleteTextures(1, &_glId);
+  getContext()->glDeleteTextures(1, &_glId);
 }
 void Texture2DSpec::loadPng(string_t imgLoc, bool bRepeatU, bool bRepeatV) {
   _strLocation = imgLoc;
@@ -83,10 +83,10 @@ bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase>
     return false;
   }
   else {
-    std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glActiveTexture(GL_TEXTURE0 + eChannel);
-    _pContext->glBindTexture(_eGLTextureBinding, getGlId());
+    getContext()->glActiveTexture(GL_TEXTURE0 + eChannel);
+    getContext()->glBindTexture(_eGLTextureBinding, getGlId());
 
-    Gu::checkErrorsDbg();
+    getContext()->chkErrDbg();
 
     if (pShader != nullptr) {
       //Some cases, we just need to call glBindTexture..
@@ -97,8 +97,8 @@ bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase>
   return true;
 }
 void Texture2DSpec::unbind(TextureChannel::e eChannel) {
-  _pContext->glActiveTexture(GL_TEXTURE0 + eChannel);
-  _pContext->glBindTexture(_eGLTextureBinding, 0);
+  getContext()->glActiveTexture(GL_TEXTURE0 + eChannel);
+  getContext()->glBindTexture(_eGLTextureBinding, 0);
 }
 int32_t Texture2DSpec::generateMipmapLevels(uint32_t width, uint32_t height) {
   // - Create log2 mipmaps
@@ -120,15 +120,15 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
   calculateGLTextureFormat(format);
 
   // Bind texture
-  _pContext->glActiveTexture(GL_TEXTURE0);
-  _pContext->chkErrRt();
-  _pContext->glGenTextures(1, &_glId);
-  _pContext->chkErrRt();
-  _pContext->glBindTexture(_eGLTextureBinding, _glId);
-  _pContext->chkErrRt();
+  getContext()->glActiveTexture(GL_TEXTURE0);
+  getContext()->chkErrRt();
+  getContext()->glGenTextures(1, &_glId);
+  getContext()->chkErrRt();
+  getContext()->glBindTexture(_eGLTextureBinding, _glId);
+  getContext()->chkErrRt();
 
   //Calc format
-  _pContext->chkErrRt();
+  getContext()->chkErrRt();
 
   _bHasMipmaps = genMipmaps;
   _bRepeatU = bRepeatU;
@@ -136,15 +136,15 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
 
   //Specify storage mode
   if (genMipmaps) {
-    _pContext->chkErrRt();
+    getContext()->chkErrRt();
 
     int numMipMaps = generateMipmapLevels(getWidth(), getHeight());
-    _pContext->glTexStorage2D(_eGLTextureBinding, numMipMaps, _eGLTextureMipmapFormat, getWidth(), getHeight());
-    _pContext->chkErrRt();
+    getContext()->glTexStorage2D(_eGLTextureBinding, numMipMaps, _eGLTextureMipmapFormat, getWidth(), getHeight());
+    getContext()->chkErrRt();
   }
   else {
-    _pContext->glTexStorage2D(_eGLTextureBinding, 1, _eGLTextureMipmapFormat, getWidth(), getHeight());
-    _pContext->chkErrRt();
+    getContext()->glTexStorage2D(_eGLTextureBinding, 1, _eGLTextureMipmapFormat, getWidth(), getHeight());
+    getContext()->chkErrRt();
   }
 
   // Copy texture data
@@ -158,7 +158,7 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
       (void*)imageData            //pixels
   );
 
-  _pContext->chkErrRt();
+  getContext()->chkErrRt();
 
   // Specify Parameters
   if (bRepeatU) {
@@ -194,14 +194,14 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
   // - Generate the mipmaps
   if (genMipmaps) {
     //GL 3.0 mipmaps
-    _pContext->glGenerateMipmap(_eGLTextureBinding);
-    _pContext->chkErrRt();
+    getContext()->glGenerateMipmap(_eGLTextureBinding);
+    getContext()->chkErrRt();
   }
 
-  Gu::getCoreContext()->setObjectLabel(GL_TEXTURE, getGlId(), _strName);
+  getContext()->setObjectLabel(GL_TEXTURE, getGlId(), _strName);
 
   //Unbind so we don't modify it
-  _pContext->glBindTexture(_eGLTextureBinding, 0);
+  getContext()->glBindTexture(_eGLTextureBinding, 0);
 }
 void Texture2DSpec::setWrapU(TexWrap::e wrap) {
   bind(TextureChannel::e::Channel0, nullptr);
@@ -232,11 +232,11 @@ void Texture2DSpec::setWrapV(TexWrap::e wrap) {
 void Texture2DSpec::setFilter(TexFilter::e filter) {
   _eFilter = filter;
   bind(TextureChannel::e::Channel0, nullptr);
-  Gu::checkErrorsDbg();
+  getContext()->chkErrDbg();
 
   if (filter == TexFilter::e::Linear) {
     if (_bHasMipmaps) {
-      _pContext->glGenerateMipmap(_eGLTextureBinding);
+      getContext()->glGenerateMipmap(_eGLTextureBinding);
       glTexParameteri(_eGLTextureBinding, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(_eGLTextureBinding, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       //Note: GL_GENERATE_MIPMAP is deprecated.
@@ -249,7 +249,7 @@ void Texture2DSpec::setFilter(TexFilter::e filter) {
   }
   else if (filter == TexFilter::e::Nearest) {
     if (_bHasMipmaps) {
-      _pContext->glGenerateMipmap(_eGLTextureBinding);
+      getContext()->glGenerateMipmap(_eGLTextureBinding);
       glTexParameteri(_eGLTextureBinding, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexParameteri(_eGLTextureBinding, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
     }
@@ -261,12 +261,12 @@ void Texture2DSpec::setFilter(TexFilter::e filter) {
   else {
     BRThrowNotImplementedException();
   }
-  _pContext->chkErrRt();
+  getContext()->chkErrRt();
 
   unbind(TextureChannel::e::Channel0);
 }
 bool Texture2DSpec::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image) {
-  return OpenGLUtils::getTextureDataFromGpu(image, _glId, _eGLTextureBinding);
+  return getContext()->getTextureDataFromGpu(image, _glId, _eGLTextureBinding);
 }
 void Texture2DSpec::serialize(std::shared_ptr<BinaryFile> fb) {
   std::shared_ptr<Img32> img = std::make_shared<Img32>();

@@ -22,7 +22,7 @@ public:
 *  @class TexCache
 *  @brief Caches loaded textures.
 */
-class TexCache : public VirtualMemory {
+class TexCache : public GLFramework {
 public:
   ///Initialize in CPP file
   static const std::string WorldGrass;
@@ -53,8 +53,6 @@ private:
   typedef std::map<Hash32, std::shared_ptr<Texture2DSpec>> TexMap;
   TexMap _cache;
   std::shared_ptr<Texture2DSpec> _pBound = nullptr; //NOT reliable
-  std::shared_ptr<GLContext> _pContext;
-
   GLuint _i1x1DummyCubeTexture = 0;
   GLuint _i1x2Dummy2DTexture = 0;
   GLuint _i1x1DummyBump2DTexture = 0;

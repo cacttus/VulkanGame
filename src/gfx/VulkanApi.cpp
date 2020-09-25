@@ -415,7 +415,7 @@ VulkanApi::VulkanApi() {
 VulkanApi::~VulkanApi() {
   _pint = nullptr;
 }
-std::shared_ptr<GraphicsWindow> VulkanApi::createWindow(const string_t& title) {
+std::shared_ptr<GraphicsWindow> VulkanApi::createWindow(const string_t& title, std::shared_ptr<GraphicsWindow> parent) {
   SDL_Window* win = makeSDLWindow(title, SDL_WINDOW_VULKAN, false);
 
    //loadCaps();
@@ -448,7 +448,7 @@ void VulkanApi::cleanup() {
   GraphicsApi::cleanup();
 }
 
-void VulkanApi::makeCurrent(SDL_Window* win) {
+void VulkanApi::makeCurrent(GraphicsWindow*) {
 }
 void VulkanApi::getDrawableSize(SDL_Window* win, int* w, int* h) {
 }

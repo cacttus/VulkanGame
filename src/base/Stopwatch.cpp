@@ -57,10 +57,12 @@ bool Stopwatch::pulse(t_timeval isGreaterThanMs) {
   bool bRet;
   stop();
   {
-    if (deltaMilliseconds() >= isGreaterThanMs)
+    if (deltaMilliseconds() >= isGreaterThanMs) {
       bRet = true;
-    else
+    }
+    else {
       bRet = false;
+    }
   }
   start();
 

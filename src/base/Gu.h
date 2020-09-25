@@ -34,7 +34,7 @@ public:
   static std::shared_ptr<EngineConfig> getEngineConfig();
   static std::shared_ptr<GraphicsApi> getGraphicsApi();
   static std::shared_ptr<Net> getNet();
-  static std::shared_ptr<GLContext> getCoreContext();
+
 
   static bool isManagerConstructed(ManagerType m) {
     if (m == ManagerType::ShaderMaker) {
@@ -46,14 +46,23 @@ public:
   static void createLogger(string_t logfile_dir, const std::vector<string_t>& args);
   static bool checkArg(const std::vector<string_t>& args, string_t key, string_t value);
   static void initGlobals(const std::vector<std::string>& args);
-  static void createManagers();
+  static void createManagers(std::shared_ptr<GLContext> ct);
   static void updateManagers();
   static void deleteManagers();
   static void setPackage(std::shared_ptr<ApplicationPackage> x) { _pPackage = x; }
   static void setGraphicsApi(std::shared_ptr<GraphicsApi> api);
 
+  //In synchronous rendering mode (one thread) We have an active context. We have multiple active in asynchronous rendering mode..
+  static std::shared_ptr<GLContext> getActiveContext() { return _pActiveContext; }
+  static void setActiveContext(std::shared_ptr<GLContext> c) { _pActiveContext = c; }
+
+//**Going away
+ // static std::shared_ptr<GLContext> getStorageContext();
+  static std::shared_ptr<GLContext> getCoreContext();
   static void checkErrorsDbg(bool ignore = false);
   static void checkErrorsRt(bool ignore = false);
+//**Going away
+
   static void debugBreak();
   static void checkMemory();
   static bool isDebug();
@@ -115,9 +124,9 @@ private:
   static std::shared_ptr<Logger> _pLogger;
   static std::shared_ptr<GraphicsApi> _pGraphicsApi;
   static std::shared_ptr<Net> _pNet;
+  static std::shared_ptr<GLContext> _pActiveContext;
 };
 
-#define Graphics Gu::getCoreContext()
 #define Config Gu::getEngineConfig()
 
 }  // namespace BR2

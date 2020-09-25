@@ -91,7 +91,7 @@ private:
   std::shared_ptr<World25Plane> _pWorld25Plane = nullptr;
   std::shared_ptr<ShaderBase> _pTileShader = nullptr;
   std::shared_ptr<ShaderBase> _pGridShader = nullptr;
-  std::shared_ptr<HappySky> _pSkyBox = nullptr;
+  std::shared_ptr<SkyBox> _pSkyBox = nullptr;
   std::shared_ptr<Atlas> _pSkyAtlas = nullptr;
   std::shared_ptr<W25MeshMaker> _pMeshMaker = nullptr;
   std::shared_ptr<WorldMaker> _pWorldMaker = nullptr;

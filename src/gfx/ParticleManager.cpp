@@ -11,7 +11,7 @@
 #include "../model/VertexFormat.h"
 
 namespace BR2 {
-ParticleManager::ParticleManager(std::shared_ptr<GLContext> pContext) : _pContext(pContext) {
+ParticleManager::ParticleManager(std::shared_ptr<GLContext> pContext) : GLFramework(pContext) {
 }
 ParticleManager::~ParticleManager() {
   //  DEL_MEM(_pQuadBufferMesh);
@@ -25,7 +25,7 @@ void ParticleManager::init(std::shared_ptr<Atlas> pAtlas, int iMaxParticles) {
 
   _pParticleAtlas = pAtlas;
 
-  _pQuadBufferMesh = std::make_unique<QuadBufferMesh>(_pContext, _iMaxParticles + 1);
+  _pQuadBufferMesh = std::make_unique<QuadBufferMesh>(getContext(), _iMaxParticles + 1);
 
   // _pPartyShader= new PartyShader(_pContext);
   // _pPartyShader>load("./data/party.vs", "./data/party.ps");
@@ -153,14 +153,14 @@ void ParticleManager::update(float delta) {
 void ParticleManager::draw(std::shared_ptr<ShaderBase> pShader) {
 
   _pQuadBufferMesh->copyToGpu(_pQuadBufferMesh->getQuadCount());
-  Graphics->pushCullFace();
+  getContext()->pushCullFace();
   {
     glDisable(GL_CULL_FACE);
     _pParticleAtlas->bind(TextureChannel::e::Channel0, pShader);
     RenderParams rp(pShader);
     _pQuadBufferMesh->draw(rp);
   }
-  Graphics->popCullFace();
+  getContext()->popCullFace();
   _pQuadBufferMesh->resetCopy();
 }
 

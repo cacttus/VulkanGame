@@ -39,8 +39,7 @@ void ForwardFramebuffer::init(int32_t iWidth, int32_t iHeight, std::shared_ptr<B
 
   checkFramebufferComplete();
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId,  this->getLabel());
-
+  getContext()->setObjectLabel(GL_FRAMEBUFFER,_uiGlFramebufferId,  this->getLabel());
 
   //Return to default.
   Gu::getShaderMaker()->shaderBound(nullptr);

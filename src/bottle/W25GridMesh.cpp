@@ -9,6 +9,7 @@
 #include "../gfx/RenderUtils.h"
 #include "../gfx/OpenGLUtils.h"
 #include "../gfx/ShaderBase.h"
+#include "../world/Scene.h"
 #include "../model/MeshNode.h"
 #include "../model/MeshSpec.h"
 #include "../model/VaoDataGeneric.h"
@@ -83,7 +84,7 @@ void W25GridMesh::draw(RenderParams& rp, int& iDbgNumTrisDrawn) {
   if (getMesh() != nullptr) {
     if (false) {
       std::shared_ptr<VaoDataGeneric> vao = getMesh()->getMeshSpec()->getVaoData();
-      OpenGLUtils::debugGetRenderState(false, true);
+      this->_pGrid->getWorld25()->getScene()->tryGetContext()->debugGetRenderState(false, true);
       W25MeshVert* test_read = new W25MeshVert[vao->getVbo()->getNumElements()];
       vao->getVbo()->copyDataServerClient(vao->getVbo()->getNumElements(), test_read);
       delete[] test_read;
@@ -155,7 +156,7 @@ void W25GridMesh::makeMeshImmediately(bool bAsync) {
     makeMeshImmediately_r(_pGrid->getRoot());
 
     if (bAsync == false) {
-      Gu::checkErrorsRt();
+      _pGrid->getWorld25()->getScene()->tryGetContext()->chkErrRt();
       sendMeshToGpu();
     }
 

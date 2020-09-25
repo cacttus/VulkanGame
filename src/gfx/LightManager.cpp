@@ -42,8 +42,9 @@ void LightManager::setHdrToneMapExponent(float val) {
   _pGpuDeferredParams->_fHdrToneMapExp = val;
 }
 void LightManager::setHdrSampleSpaceExponent(float val) {
-  if (val < 0.0f)
+  if (val < 0.0f){
     val = 0.0f;
+  }
   _pGpuDeferredParams->_fHdrSampleExp = val;
 }
 void LightManager::initializeDeferredFogData() {
@@ -131,7 +132,7 @@ void LightManager::setupLights(std::shared_ptr<ShadowBox> pf, std::shared_ptr<Sh
   _vecGpuShadowBoxes.clear();
   _vecGpuShadowFrustums.clear();
 
-  Gu::checkErrorsDbg();
+  
   //Note: we collect all lights in the physics world collection step.
   //Update all lights that collide with the main frustum
   for (std::pair<float, std::shared_ptr<LightNodePoint>> p : physics->getRenderBucket()->getPointLights()) {
@@ -145,7 +146,6 @@ void LightManager::setupLights(std::shared_ptr<ShadowBox> pf, std::shared_ptr<Sh
       _vecGpuPointLights.push_back(*(pPointLight->getGpuLight().get()));
     }
   }
-  Gu::checkErrorsDbg();
   for (std::pair<float, std::shared_ptr<LightNodeDir>> p : physics->getRenderBucket()->getDirLights()) {
     std::shared_ptr<LightNodeDir> pDirLight = p.second;
     if (_pGpuDeferredParams->_iDirLightCount < nMaxDirLights) {
@@ -158,7 +158,6 @@ void LightManager::setupLights(std::shared_ptr<ShadowBox> pf, std::shared_ptr<Sh
     }
   }
 
-  Gu::checkErrorsDbg();
   Perf::popPerf();
 
 }

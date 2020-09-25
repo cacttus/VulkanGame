@@ -39,53 +39,49 @@ TexFile::TexFile(string_t name, string_t loc) {
 #pragma endregion
 
 #pragma region TexCache
-TexCache::TexCache(std::shared_ptr<GLContext> ct) : _pContext(ct) {
+TexCache::TexCache(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
   int iWidthHeight = 1;
   vec4 v(1, 1, 1, 1);
   Vec4ub b(255, 255, 255, 255);
-  _pContext->chkErrRt();
+  getContext()->chkErrRt();
 
-  _pContext->glActiveTexture(GL_TEXTURE0);
-
-  _pContext->glGenTextures(1, &_i1x1DummyCubeTexture);
-  _pContext->glBindTexture(GL_TEXTURE_2D, 0);
-  _pContext->glBindTexture(GL_TEXTURE_CUBE_MAP, _i1x1DummyCubeTexture);
+  //*Create a set of dummy textures to fix the correct shader binding indexes.
+  getContext()->glActiveTexture(GL_TEXTURE0);
+  getContext()->glGenTextures(1, &_i1x1DummyCubeTexture);
+  getContext()->glBindTexture(GL_TEXTURE_2D, 0);
+  getContext()->glBindTexture(GL_TEXTURE_CUBE_MAP, _i1x1DummyCubeTexture);
   for (int i = 0; i < 6; ++i) {
     //Note values here must match ShadowBox due to glCopyTexSubImage
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, SHADOW_CUBE_MAP_TEX_INTERNAL_FORMAT,
                  iWidthHeight, iWidthHeight, 0, SHADOW_CUBE_MAP_TEX_FORMAT, SHADOW_CUBE_MAP_TEX_DATATYPE, (void*)&v);
   }
-  _pContext->setObjectLabel(GL_TEXTURE, _i1x1DummyCubeTexture, "Dummy Cube texture");
-  _pContext->glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-  _pContext->glBindTexture(GL_TEXTURE_2D, 0);
-  _pContext->chkErrRt();
+  getContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyCubeTexture, "Dummy Cube texture");
+  getContext()->glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  getContext()->glBindTexture(GL_TEXTURE_2D, 0);
+  getContext()->chkErrRt();
 
-  _pContext->glGenTextures(1, &_i1x2Dummy2DTexture);
-  _pContext->glBindTexture(GL_TEXTURE_2D, _i1x2Dummy2DTexture);
+  getContext()->glGenTextures(1, &_i1x2Dummy2DTexture);
+  getContext()->glBindTexture(GL_TEXTURE_2D, _i1x2Dummy2DTexture);
   //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
-  _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
+  getContext()->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, iWidthHeight, iWidthHeight, GL_RGBA, GL_UNSIGNED_BYTE, (void*)&b);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  _pContext->setObjectLabel(GL_TEXTURE, _i1x2Dummy2DTexture, "Dummy 2D Color texture");
+  getContext()->setObjectLabel(GL_TEXTURE, _i1x2Dummy2DTexture, "Dummy 2D Color texture");
   glBindTexture(GL_TEXTURE_2D, 0);
-  _pContext->chkErrRt();
+  getContext()->chkErrRt();
 
   b.construct(0, 0, 255, 255);  //XZY Bump texture up
-  _pContext->glGenTextures(1, &_i1x1DummyBump2DTexture);
-  _pContext->glBindTexture(GL_TEXTURE_2D, _i1x1DummyBump2DTexture);
+  getContext()->glGenTextures(1, &_i1x1DummyBump2DTexture);
+  getContext()->glBindTexture(GL_TEXTURE_2D, _i1x1DummyBump2DTexture);
   //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, iWidthHeight, iWidthHeight, 0, GL_RGBA, GL_FLOAT, (void*)&v);
-  _pContext->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
+  getContext()->glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, iWidthHeight, iWidthHeight);
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, iWidthHeight, iWidthHeight, GL_RGBA, GL_UNSIGNED_BYTE, (void*)&b);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  _pContext->setObjectLabel(GL_TEXTURE, _i1x1DummyBump2DTexture, "Dummy 2D Normal texture");
-  _pContext->glBindTexture(GL_TEXTURE_2D, 0);
-  _pContext->chkErrRt();
-
-
-std::cout<<  OpenGLUtils::debugGetRenderState(true,true,false) << std::endl;
-
+  getContext()->setObjectLabel(GL_TEXTURE, _i1x1DummyBump2DTexture, "Dummy 2D Normal texture");
+  getContext()->glBindTexture(GL_TEXTURE_2D, 0);
+  getContext()->chkErrRt();
 }
 TexCache::~TexCache() {
   TexMap::iterator ite = _cache.begin();
@@ -119,14 +115,14 @@ std::shared_ptr<Texture2DSpec> TexCache::getOrLoad(TexFile tc, bool bIsGenerated
     ret = ite->second;
   }
   else if (bIsGenerated == false) {
-    ret = std::make_shared<Texture2DSpec>(tc._name, tc._loc, _pContext, bRepeatU, bRepeatV);
+    ret = std::make_shared<Texture2DSpec>(tc._name, tc._loc, getContext(), bRepeatU, bRepeatV);
     _cache.insert(std::make_pair(ih, ret));
   }
 
   return ret;
 }
 std::shared_ptr<Texture2DSpec> TexCache::addGeneratedImage(string_t name, const std::shared_ptr<Img32> ss) {
-  std::shared_ptr<Texture2DSpec> pRet = std::make_shared<Texture2DSpec>(name, TextureFormat::Image4ub, ss, _pContext);
+  std::shared_ptr<Texture2DSpec> pRet = std::make_shared<Texture2DSpec>(name, TextureFormat::Image4ub, ss, getContext());
   add(name, pRet);
 
   return pRet;

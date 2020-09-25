@@ -26,13 +26,16 @@ std::shared_ptr<CameraNode> CameraNode::create(string_t name, std::shared_ptr<Re
 }
 void CameraNode::init() {
   PhysicsNode::init();
-//  TODO:
+  //  TODO:
 }
 void CameraNode::drawForwardDebug(RenderParams& rp) {
-  Gu::getCoreContext()->setLineWidth(3.0f);
+  if (getScene() == nullptr || getScene()->tryGetContext() == nullptr) {
+    return;
+  }
+  getScene()->tryGetContext()->setLineWidth(3.0f);
 
   std::shared_ptr<FrustumBase> pf = _pMainFrustum;
-  UtilMeshInline mi(Gu::getCoreContext());
+  UtilMeshInline mi(getScene()->tryGetContext());
 
   //Limit the distance of the frustum to fixed units
   float limit_length = 1;
@@ -46,21 +49,21 @@ void CameraNode::drawForwardDebug(RenderParams& rp) {
   Color4f c4(1, 1, 0, 1);
   mi.begin(GL_LINES);
   {
-    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(ftl, c4));// Edges
+    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(ftl, c4));  // Edges
     mi.vt2(v_v3c4(pf->PointAt(fpt_nbr), c4), v_v3c4(fbr, c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_nbl), c4), v_v3c4(fbl, c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ntr), c4), v_v3c4(ftr, c4));
-    mi.vt2(v_v3c4(ftl, c4), v_v3c4(ftr, c4));// Far Quad
+    mi.vt2(v_v3c4(ftl, c4), v_v3c4(ftr, c4));  // Far Quad
     mi.vt2(v_v3c4(fbl, c4), v_v3c4(fbr, c4));
     mi.vt2(v_v3c4(ftl, c4), v_v3c4(fbl, c4));
     mi.vt2(v_v3c4(ftr, c4), v_v3c4(fbr, c4));
-    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_ntr), c4));// Near Quad
+    mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_ntr), c4));  // Near Quad
     mi.vt2(v_v3c4(pf->PointAt(fpt_nbl), c4), v_v3c4(pf->PointAt(fpt_nbr), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ntl), c4), v_v3c4(pf->PointAt(fpt_nbl), c4));
     mi.vt2(v_v3c4(pf->PointAt(fpt_ntr), c4), v_v3c4(pf->PointAt(fpt_nbr), c4));
   }
   mi.endAndDraw(getThis<CameraNode>());
-  Gu::getCoreContext()->setLineWidth(1.0f);
+  getScene()->tryGetContext()->setLineWidth(1.0f);
 }
 Ray_t CameraNode::projectPoint2(vec2& mouse) {
   Ray_t pr;
@@ -123,9 +126,9 @@ void CameraNode::update(float dt, std::map<Hash32, std::shared_ptr<Animator>>& m
   setupViewMatrix();
 
   //Fix the cursor
- // fixCursor();
+  // fixCursor();
 
-//  _updateFrameStamp = Globals::getTime()->getFrameStamp();
+  //  _updateFrameStamp = Globals::getTime()->getFrameStamp();
 }
 void CameraNode::setupProjectionMatrix() {
   _pMainFrustum->update(getViewNormal(), getPos(), _vUp, _eProjectionMode);
@@ -142,7 +145,7 @@ const vec3 CameraNode::getLookAt() {
   return r;
 }
 void CameraNode::lookAt(const vec3& v) {
-  setViewNormal(std::move(v-getPos()));
+  setViewNormal(std::move(v - getPos()));
 }
 void CameraNode::zoom(float amt) {
   //This is useless now that we have scripts, however, this is a cool function that zooms camera with mouse wheel, so we could
@@ -159,7 +162,7 @@ void CameraNode::zoom(float amt) {
   vec3 lookat = getLookAt();
 
   //Get the min PT
-  vec3 ny = vec3(0, 1, 0);//This must be constant
+  vec3 ny = vec3(0, 1, 0);  //This must be constant
   vec3 vp = getPos();
   vec3 del = vp - lookat;
   if (false) {
@@ -182,14 +185,13 @@ void CameraNode::zoom(float amt) {
 
   vec3 finalPt;
   finalPt = vec3(
-    Alg::cerp_1D(minPt.x, maxPt.x, tVal),
-    Alg::cerp_1D(minPt.y, maxPt.y, tVal),
-    Alg::cerp_1D(minPt.z, maxPt.z, tVal));
+      Alg::cerp_1D(minPt.x, maxPt.x, tVal),
+      Alg::cerp_1D(minPt.y, maxPt.y, tVal),
+      Alg::cerp_1D(minPt.z, maxPt.z, tVal));
 
   newP = lookat + finalPt;
 
   setPos(std::move(newP));
 }
 
-
-}//ns game
+}  // namespace BR2

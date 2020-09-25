@@ -11,11 +11,11 @@
 #include <algorithm>
 
 namespace BR2 {
-GLProgramBinary::GLProgramBinary(ShaderCache* cc, size_t binLength) :
-  _pShaderCache(cc),
-  _binaryLength(binLength),
-  _binaryData(NULL),
-  _compileTime(0) {
+#pragma region GLProgramBinary
+GLProgramBinary::GLProgramBinary(ShaderCache* cc, size_t binLength) : _pShaderCache(cc),
+                                                                      _binaryLength(binLength),
+                                                                      _binaryData(NULL),
+                                                                      _compileTime(0) {
   _binaryData = new char[binLength];
 }
 GLProgramBinary::~GLProgramBinary() {
@@ -24,8 +24,10 @@ GLProgramBinary::~GLProgramBinary() {
   }
   _binaryData = NULL;
 }
+#pragma endregion
 
-ShaderCache::ShaderCache(string_t cacheDir) {
+#pragma region ShaderCache
+ShaderCache::ShaderCache(std::shared_ptr<GLContext> ct, string_t cacheDir) : GLFramework(ct) {
   _strCacheDirectory = cacheDir;
   GLint n;
   glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &n);
@@ -34,25 +36,22 @@ ShaderCache::ShaderCache(string_t cacheDir) {
     BRLogWarn("[ShaderCache] Gpu does not support any program binary formats.");
     _bCacheIsSupported = false;
   }
-
 }
 ShaderCache::~ShaderCache() {
   for (size_t i = 0; i < _vecBinaries.size(); ++i)
     delete _vecBinaries[i];
   _vecBinaries.resize(0);
 }
-
 string_t ShaderCache::getBinaryNameFromProgramName(const string_t& progName) {
   string_t fb = progName + ".sb";
-  return FileSystem::combinePath(_strCacheDirectory, fb);//::appendCacheDirectory(fb);
+  return FileSystem::combinePath(_strCacheDirectory, fb);  //::appendCacheDirectory(fb);
 }
-
 GLProgramBinary* ShaderCache::getBinaryFromGpu(std::shared_ptr<ShaderBase> prog) {
   GLint binBufSz = 0;
   GLint outLen = 0;
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetProgramiv(prog->getGlId(), GL_PROGRAM_BINARY_LENGTH, &binBufSz);
-  Gu::getCoreContext()->chkErrRt();
+  getContext()->glGetProgramiv(prog->getGlId(), GL_PROGRAM_BINARY_LENGTH, &binBufSz);
+  getContext()->chkErrRt();
 
   if (binBufSz == 0 || binBufSz > MemSize::e::MEMSZ_GIG2) {
     BRThrowException("Shader program binary was 0 or exceeded " + MemSize::e::MEMSZ_GIG2 + " bytes; actual: " + binBufSz);
@@ -60,8 +59,8 @@ GLProgramBinary* ShaderCache::getBinaryFromGpu(std::shared_ptr<ShaderBase> prog)
 
   GLProgramBinary* b = new GLProgramBinary(this, binBufSz);
 
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetProgramBinary(prog->getGlId(), binBufSz, &outLen, &(b->_glFormat), (void*)b->_binaryData);
-  Gu::getCoreContext()->chkErrRt();
+  getContext()->glGetProgramBinary(prog->getGlId(), binBufSz, &outLen, &(b->_glFormat), (void*)b->_binaryData);
+  getContext()->chkErrRt();
 
   if (binBufSz != outLen) {
     delete b;
@@ -75,23 +74,20 @@ GLProgramBinary* ShaderCache::getBinaryFromGpu(std::shared_ptr<ShaderBase> prog)
 
   return b;
 }
-
-
-
 /**
-*    @fn getBinaryFromDisk
-*    @brief Pass in the program name, not the name of the binary.
-
-
-Shader Binary Cache File Format
-
-Extension: .sb
-
-    compile time (int64)
-    shader format (int32)
-    binary size (int32)
-    binary (char*)
-
+*  @fn getBinaryFromDisk
+*  @brief Pass in the program name, not the name of the binary.
+* 
+* 
+* Shader Binary Cache File Format
+* 
+* Extension: .sb
+* 
+*     compile time (int64)
+*     shader format (int32)
+*     binary size (int32)
+*     binary (char*)
+* 
 */
 GLProgramBinary* ShaderCache::getBinaryFromDisk(string_t& programName) {
   DiskFile df;
@@ -131,7 +127,7 @@ GLProgramBinary* ShaderCache::getBinaryFromDisk(string_t& programName) {
       _vecBinaries.push_back(pbin);
     }
   }
-  catch (const Exception&  ex) {
+  catch (const Exception& ex) {
     //fail silently
 
     BRLogError("Failed to load program binary " + binaryName + ex.what());
@@ -142,7 +138,6 @@ GLProgramBinary* ShaderCache::getBinaryFromDisk(string_t& programName) {
   }
 
   return pbin;
-
 }
 void ShaderCache::saveBinaryToDisk(const string_t& programName, GLProgramBinary* bin) {
   DiskFile df;
@@ -164,12 +159,7 @@ void ShaderCache::saveBinaryToDisk(const string_t& programName, GLProgramBinary*
   catch (const Exception& ex) {
     BRLogError("Failed to save program binary " + binaryName + ex.what());
   }
-
 }
-/**
-*    @fn deleteBinaryFromDisk
-*    @brief
-*/
 void ShaderCache::deleteBinaryFromDisk(const string_t& programName) {
   string_t binaryName = getBinaryNameFromProgramName(programName);
 
@@ -179,27 +169,19 @@ void ShaderCache::deleteBinaryFromDisk(const string_t& programName) {
 
   FileSystem::deleteFile(binaryName);
 }
-/**
-*    @fn freeLoadedBinary
-*    @brief
-*/
 void ShaderCache::freeLoadedBinary(GLProgramBinary* bin) {
   _vecBinaries.erase(std::remove(_vecBinaries.begin(), _vecBinaries.end(), bin), _vecBinaries.end());
   delete bin;
 }
-/**
-*    @fn saveCompiledBinaryToDisk
-*    @brief
-*/
 void ShaderCache::saveCompiledBinaryToDisk(std::shared_ptr<ShaderBase> pProgram) {
   GLProgramBinary* bin = getBinaryFromGpu(pProgram);
   saveBinaryToDisk(pProgram->getProgramName(), bin);
 }
 /**
-*    @fn tryLoadCachedBinary
-*    @brief Try to load a cached GLSL binary to the GPU.
-*    @return false if the load failed or file was not found.
-*    @return true if the program loaded successfully
+*  @fn tryLoadCachedBinary
+*  @brief Try to load a cached GLSL binary to the GPU.
+*  @return false if the load failed or file was not found.
+*  @return true if the program loaded successfully
 */
 std::shared_ptr<ShaderBase> ShaderCache::tryLoadCachedBinary(std::string programName, std::vector<string_t> shaderFiles) {
   bool bSuccess = false;
@@ -230,12 +212,11 @@ std::shared_ptr<ShaderBase> ShaderCache::tryLoadCachedBinary(std::string program
           deleteBinaryFromDisk(programName);
         }
       }
-      catch (const Exception&  e) {
+      catch (const Exception& e) {
         BRLogWarn("[ShaderCache] Loading program binary returned warnings/errors:\r\n");
         BRLogWarn(e.what());
         deleteBinaryFromDisk(programName);
       }
-
     }
 
     freeLoadedBinary(binary);
@@ -243,31 +224,28 @@ std::shared_ptr<ShaderBase> ShaderCache::tryLoadCachedBinary(std::string program
 
   return ret;
 }
-
 /**
-*    @fn
-*    @brief Attaches the binary to the already created program object and loads it to the GPU.
-*        Prog must already have been created.
-*
-*    @return false if the program returned errors.
+*  @fn loadBinaryToGpu
+*  @brief Attaches the binary to the already created program object and loads it to the GPU. Prog must already have been created.
+*  @return false if the program returned errors.
 */
 std::shared_ptr<ShaderBase> ShaderCache::loadBinaryToGpu(std::string programName, GLProgramBinary* bin) {
-  Gu::getCoreContext()->chkErrRt();
+  getContext()->chkErrRt();
 
-  std::shared_ptr<ShaderBase> pProgram = std::make_shared<ShaderBase>(programName);
+  std::shared_ptr<ShaderBase> pProgram = std::make_shared<ShaderBase>(getContext(), programName);
   pProgram->init();
-  Gu::checkErrorsRt();
+  getContext()->chkErrRt();
 
-  GLboolean b1 = std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glIsProgram(pProgram->getGlId());
+  GLboolean b1 = getContext()->glIsProgram(pProgram->getGlId());
   if (b1 == false) {
     BRLogWarn("[ShaderCache] Program was not valid before loading to GPU");
     return nullptr;
   }
-  Gu::checkErrorsRt();
+  getContext()->chkErrRt();
 
   BRLogDebug("[ShaderCache] Loading Cached Program Binary to GPU");
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glProgramBinary(pProgram->getGlId(), bin->_glFormat, (void*)bin->_binaryData, (GLsizei)bin->_binaryLength);
-  if (Gu::getCoreContext()->chkErrRt(true, true)) {
+  getContext()->glProgramBinary(pProgram->getGlId(), bin->_glFormat, (void*)bin->_binaryData, (GLsizei)bin->_binaryLength);
+  if (getContext()->chkErrRt(true, true)) {
     //If we have en error here, we failed to load the binary.
     BRLogWarn("[ShaderCache] Failed to load binary to GPU - we might be on a different platform.");
     return nullptr;
@@ -282,18 +260,20 @@ std::shared_ptr<ShaderBase> ShaderCache::loadBinaryToGpu(std::string programName
 
   //validate program.
   GLint iValid;
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glValidateProgram(pProgram->getGlId());
-  Gu::checkErrorsRt();
-  std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glGetProgramiv(pProgram->getGlId(), GL_VALIDATE_STATUS, (GLint*)&iValid);
-  Gu::checkErrorsRt();
+  getContext()->glValidateProgram(pProgram->getGlId());
+  getContext()->chkErrRt();
+
+  getContext()->glGetProgramiv(pProgram->getGlId(), GL_VALIDATE_STATUS, (GLint*)&iValid);
+  getContext()->chkErrRt();
+
   if (iValid == GL_FALSE) {
     // Program load faiiled
     BRLogWarn("[ShaderCache] glValidateProgram says program binary load failed.  Check the above logs for errors.");
     return nullptr;
   }
 
-  GLboolean b2 = std::dynamic_pointer_cast<GLContext>(Gu::getCoreContext())->glIsProgram(pProgram->getGlId());
-  Gu::checkErrorsRt();
+  GLboolean b2 = getContext()->glIsProgram(pProgram->getGlId());
+  getContext()->chkErrRt();
 
   if (b2 == false) {
     BRThrowException("[ShaderCache] glIsProgram says program was not valid after loading to GPU");
@@ -308,13 +288,13 @@ std::shared_ptr<ShaderBase> ShaderCache::loadBinaryToGpu(std::string programName
   }
 
   //Save Name.
-  Gu::getCoreContext()->setObjectLabel(GL_PROGRAM, pProgram->getGlId(), pProgram->getProgramName());
+  getContext()->setObjectLabel(GL_PROGRAM, pProgram->getGlId(), pProgram->getProgramName());
 
   pProgram->unbind();
-  Gu::checkErrorsRt();
+  getContext()->chkErrRt();
 
   return pProgram;
 }
+#pragma endregion
 
-
-}//ns game
+}  // namespace BR2

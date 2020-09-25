@@ -22,6 +22,8 @@ class GraphicsWindow : public RenderTarget {
   friend class OpenGLApi;
   friend class VulkanApi;
 public:
+  typedef std::unordered_map<std::string, std::shared_ptr<GraphicsWindow>> ChildWindows;
+
   GraphicsWindow(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLContext> ct, SDL_Window* win);
   virtual ~GraphicsWindow() override;
 
@@ -48,6 +50,11 @@ public:
   bool containsPoint_Global2D(const vec2& mp);
 
   void setScene(std::shared_ptr<Scene> scene);
+  ChildWindows& getChildren();
+  std::shared_ptr<GraphicsWindow> getParent();
+  //bool isChild();
+  //bool hasChildren();
+
 private:
   //There's a static_assert in clang10 that prevents assignment to pure nullptr, but initializer_list works.
   std::unique_ptr<GraphicsWindow_Internal> _pint;
