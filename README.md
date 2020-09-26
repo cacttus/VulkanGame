@@ -27,14 +27,14 @@ This is a game demo utilizing the SDL2 Vulkan API.
 
 # Tasks
 
-## Important
+### Important
 * DestroyWindow is not wired up correctly (SDL_DestroyWindow is not gbeing called)
 * Fix the exit in GraphicsApi if user closes child window.
 * Get Windows build to work (VS).
 * Fix UI to show debug text
 * The width/height of the window is messed up somewhere in the engineconfig props.
 
-## Enhancments
+### Enhancments
 * Make RenderUtils be a class instance and hold the instantiated renders that we add to it.
   * Later - Add them to scene instead of using RenderUtils.
 * Import Mobmaker into the app itself. We can compile it with mono or just convert the code.
@@ -45,12 +45,12 @@ This is a game demo utilizing the SDL2 Vulkan API.
 * Test this build on Windows to make sure it still works.
 * Fix the "unrecognized parameter" in the console.
 
-## Backlog
+### Backlog
 * Change props from preprocessor to "debuggable" props.
 
-## Design Reference
+# Design
 
-### Folders
+## Folders
 
 |  Folder | Contents|
 |---------|----------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ This is a game demo utilizing the SDL2 Vulkan API.
 |  Scene    | Scenegraph for all items in the currently loaded game world.  Areas are separated into scenes in order to minimize memory footprint.        |
 |  Gu       | Global static class to access commonly used pieces of the engine (textures, meshes) through static methods.                                                      |
 
-### Hierarchy
+## Hierarchy
 
 * Gu
 	* Texture Manager (1, GLOBAL)
