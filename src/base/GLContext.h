@@ -15,6 +15,7 @@ class OglErr;
 /**
 *  @class GLProfile
 *  @brief OpenGL pixel format, profile.
+*  This class essentially fills out SDL's PixelFormatDescriptor.
 */
 struct GLProfile : public VirtualMemory {
 public:
@@ -64,10 +65,10 @@ public:
 */
 class GLContext : public GraphicsContext {
 public:
-  GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile> profile, SDL_Window* win);
+  GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile> profile);
   virtual ~GLContext() override;
 
-  bool init();
+  bool init(SDL_Window* sdlw);
 
   int32_t maxGLTextureUnits();
 
@@ -95,7 +96,7 @@ public:
   virtual void pushDepthTest() override;
   virtual void popDepthTest() override;
 
-  bool isActive(); 
+  bool isActive();
 
   //compatibility issues
   void setPolygonMode(PolygonMode p);
@@ -104,6 +105,7 @@ public:
   GLenum getTextureTarget(GLuint textureId);
   SDL_GLContext getSDLGLContext() { return _context; }
   RenderUtils* getRenderUtils() { return _pRenderUtils.get(); }
+  std::shared_ptr<GLProfile> getProfile() { return _profile; }
 
   void enableCullFace(bool enable) override;
   void enableBlend(bool enable) override;
@@ -136,13 +138,13 @@ private:
   int _iSupportedDepthSize;
   std::unique_ptr<OglErr> _pOglErr;
   std::unique_ptr<RenderUtils> _pRenderUtils;
-
+  bool _bInitialized = false;
   //Render Stack.
   std::stack<GLenum> _eLastCullFaceStack;
   std::stack<GLenum> _eLastBlendStack;
   std::stack<GLenum> _eLastDepthTestStack;
   static const int MaxStackSize = 32;
-  
+
   bool checkOpenGlMinimumVersionInfo(int required_version, int required_subversion);
   void getOpenGLVersion(int& ver, int& subver, int& shad_ver, int& shad_subver);
   void loadCheckProc();
@@ -164,8 +166,6 @@ private:
   void getCompatibleDepthComponent(GLenum eRequestedDepth, std::function<void(GLenum)> func);
   void debugPrintTextureInfo(string_t& state, GLuint iTexId);
   void debugPrintBoundTextureAttribs(string_t& strState, const string_t& texName, GLenum tex_target);
-
-
 
 public:
   PFNGLUSEPROGRAMPROC glUseProgram = nullptr;

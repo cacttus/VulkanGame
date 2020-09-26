@@ -40,22 +40,25 @@
 #include "../world/Scene.h"
 #include <iostream>
 namespace BR2 {
-GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile> profile, SDL_Window* sdl_win) : GraphicsContext(api) {
+GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile> profile) : GraphicsContext(api) {
   _profile = profile;
-  _pSDLWindow = sdl_win;
-
 }
 GLContext::~GLContext() {
   if (_context) {
     _pOglErr = nullptr;
-    /* SDL_GL_MakeCurrent(0, NULL); */ /* doesn't do anything */
+    SDL_GL_MakeCurrent(0, NULL);
     SDL_GL_DeleteContext(_context);
   }
 }
-bool GLContext::init() {
+bool GLContext::init(SDL_Window* sdlw) {
   bool bRet = false;
+  if (_bInitialized == true) {
+    BRLogError("Tried to initialize context twice.");
+    return true;
+  }
+  _bInitialized = true;
 
-  _context = SDL_GL_CreateContext(_pSDLWindow);
+  _context = SDL_GL_CreateContext(sdlw);
   if (!_context) {
     //Eat the "context failed" error.  It's not informative.
     SDLUtils::checkSDLErr(false, false);
@@ -92,6 +95,10 @@ bool GLContext::init() {
 
         //Check that OpenGL initialized successfully
         loadCheckProc();
+
+        //Swap Interval.
+        SDL_GL_SetSwapInterval(_profile->_bVsync ? 1 : 0);  //Vsync is automatic on IOS
+        SDLUtils::checkSDLErr();
 
         //Create opengl error handler
         _pOglErr = std::make_unique<OglErr>();
@@ -513,6 +520,7 @@ bool GLContext::isForwardCompatible() {
   return (_profile->_iProfile == SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 }
 void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
+  SDLUtils::checkSDLErr();
   //Attribs
   SDL_GL_ResetAttributes();
   SDLUtils::checkSDLErr();

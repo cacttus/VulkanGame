@@ -20,7 +20,7 @@ public:
 };
 /**
 *  @class RenderPipe
-*  @brief Manages teh render pipeline.
+*  @brief Manages render pipeline.
 */
 class RenderPipe : public GLFramework {
 public:

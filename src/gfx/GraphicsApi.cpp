@@ -27,11 +27,6 @@ void GraphicsApi::updateLoop() {
 #ifdef __WINDOWS__
   SDL_ShowCursor(SDL_DISABLE);
 #endif
-  if (_pCoreContext == nullptr) {
-    BRLogError("No main window was created entering game loop.  Cannot continue");
-    return;
-  }
-
   //TODO: global input is needed.
   //Make the main window the global input.
 
@@ -46,17 +41,15 @@ void GraphicsApi::updateLoop() {
       Gu::updateManagers();
 
       for (std::shared_ptr<GraphicsContext> ct : _contexts) {
-        std::shared_ptr<GraphicsWindow> w = ct->getGraphicsWindow();
-        w->step();
+        for (auto w : ct->getGraphicsWindows()) {
+          w->step();
+        }
+        ct->chkErrRt(); //**End of loop error -- Don't Remove**
       }
     }
     Perf::popPerf();
     Perf::endPerf();
     DebugHelper::checkMemory();
-
-    //**End of loop error -- Don't Remove**
-    _pCoreContext->chkErrRt();
-    //**End of loop error -- Don't Remove**
   }
 
   DebugHelper::checkMemory();
@@ -73,9 +66,11 @@ bool GraphicsApi::handleSDLEvents() {
 }
 std::shared_ptr<InputManager> GraphicsApi::getInputForWindow(uint32_t sdl_windowId) {
   for (std::shared_ptr<GraphicsContext> ct : _contexts) {
-    Uint32 wid = SDL_GetWindowID(ct->getGraphicsWindow()->getSDLWindow());
-    if (sdl_windowId == wid) {
-      return ct->getGraphicsWindow()->getInput();
+    for (auto w : ct->getGraphicsWindows()) {
+      Uint32 wid = SDL_GetWindowID(w->getSDLWindow());
+      if (sdl_windowId == wid) {
+        return w->getInput();
+      }
     }
   }
   return nullptr;
@@ -100,15 +95,17 @@ bool GraphicsApi::handleEvents(SDL_Event* event) {
       string_t ze = Stz "Window input manager could not be found for window ID " + event->window.windowID + ". Known Ids:";
       string_t appz = "";
       for (auto wc : this->_contexts) {
-        ze += Stz appz + SDL_GetWindowID(wc->getGraphicsWindow()->getSDLWindow());
-        appz = ",";
+        for (auto w : wc->getGraphicsWindows()) {
+          ze += Stz appz + SDL_GetWindowID(w->getSDLWindow());
+          appz = ",";
+        }
       }
       ze += Stz " event=" + event->type;
       BRLogWarn(ze);
     }
     return true;
   }
-  
+
   //event->key.keysym.sym;
 
   switch (event->type) {
@@ -171,6 +168,7 @@ bool GraphicsApi::handleEvents(SDL_Event* event) {
       }
       break;
     case SDL_QUIT:
+      BRLogTODO(" only exit if user closed main window.");
       return false;
       break;
   }
@@ -236,6 +234,10 @@ SDL_Window* GraphicsApi::makeSDLWindow(const string_t& windowTitle, int render_s
       SDL_SetWindowFullscreen(ret, SDL_WINDOW_FULLSCREEN);
     }
     SDLUtils::checkSDLErr();
+  }
+  else{
+    //Linux: Couldn't find matching GLX visual.
+    SDLUtils::checkSDLErr(true, false);
   }
 
   return ret;

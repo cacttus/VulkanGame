@@ -23,32 +23,40 @@ namespace BR2 {
 typedef enum {
   GFX_DISPLAY_MODE_FULLSCREEN,
   GFX_DISPLAY_WINDOW
-}GfxDisplayMode;
+} GfxDisplayMode;
 
 namespace TextureChannel {
 typedef enum {
-  Channel0,// don't use anymore.  Use an integer instead
-  Channel1,//
-  Channel2,//
-  Channel3,//
-  Channel4,//
-  Channel5,//
-  Channel6,//
-}e;
+  Channel0,  // don't use anymore.  Use an integer instead
+  Channel1,  //
+  Channel2,  //
+  Channel3,  //
+  Channel4,  //
+  Channel5,  //
+  Channel6,  //
+} e;
 }
 
 typedef enum {
-  Deferred
-  , Shadow
-  , Pick
+  Deferred,
+  Shadow,
+  Pick
 } RenderMode;
 
 //Deprecated in OpenGL, but we can implement our own if needed.
-enum class PolygonMode {Fill, Line, Point};
+enum class PolygonMode { Fill,
+                         Line,
+                         Point };
 
-namespace ShaderClass { typedef enum { Shadow, Diffuse } e; }
+namespace ShaderClass {
+typedef enum { Shadow,
+               Diffuse } e;
+}
 
-namespace ProjectionMode { typedef enum { Perspective, Orthographic }e; }
+namespace ProjectionMode {
+typedef enum { Perspective,
+               Orthographic } e;
+}
 
 #define GFX_OPENGL_DEFAULT_MIN_VERSION (4)
 #define GFX_OPENGL_DEFAULT_MIN_SUB_VERSION (3)
@@ -70,21 +78,27 @@ namespace ProjectionMode { typedef enum { Perspective, Orthographic }e; }
 // this is the "max" number used for culling objects out.
 #define GFX_FRUSTUM_MAX_DISTANCE (1000000)
 
-namespace TexWrap { typedef enum { Clamp, Repeat } e; }
-namespace TexFilter { typedef enum { Linear, Nearest } e; }
+namespace TexWrap {
+typedef enum { Clamp,
+               Repeat } e;
+}
+namespace TexFilter {
+typedef enum { Linear,
+               Nearest } e;
+}
 
 typedef std::bitset<16> PipeBits;
 namespace PipeBit {
 typedef enum {
-  Deferred,     // 1 Basic 3D lighted rendering
-  Shadow,       // 2 Shadow step
-  Forward,      // 3 Forward Rendering
-  Debug,        // 4 Debug rendering
-  NonDepth,     // 5 2D rendering, behind the UI
-  UI_Overlay,   // 6 The UI
-  Transparent,  // 7 Transparency Pass
-  BlitFinal,    // 8 Use this to blit to the screen, otherwise, the rendering stays offscreen.
-  DepthOfField, // 9 Depth of Field.
+  Deferred,      // 1 Basic 3D lighted rendering
+  Shadow,        // 2 Shadow step
+  Forward,       // 3 Forward Rendering
+  Debug,         // 4 Debug rendering
+  NonDepth,      // 5 2D rendering, behind the UI
+  UI_Overlay,    // 6 The UI
+  Transparent,   // 7 Transparency Pass
+  BlitFinal,     // 8 Use this to blit to the screen, otherwise, the rendering stays offscreen.
+  DepthOfField,  // 9 Depth of Field.
   MaxPipes
 } e;
 }
@@ -94,32 +108,44 @@ typedef enum {
 typedef enum {
   CCS_MOVING,
   CCS_IDLE
-}CameraCharacterState;
+} CameraCharacterState;
 typedef enum {
   VPA_LOOKZ_XLEFT,
   VPA_LOOKZ_XRIGHT
-}ViewportAxis;    // - looking down positive z axis, with Y up,  x axis is to the left or right
+} ViewportAxis;  // - looking down positive z axis, with Y up,  x axis is to the left or right
 //typedef enum {
 //    VVW_CCW = GL_CCW,
 //    VVW_CW = GL_CW
 //}ViewportVertexWinding;
 
 typedef enum {
-  fpt_nbl, fpt_fbl, fpt_fbr, fpt_nbr, fpt_ntl, fpt_ftl, fpt_ftr, fpt_ntr
-}FrustumPoint;
+  fpt_nbl,
+  fpt_fbl,
+  fpt_fbr,
+  fpt_nbr,
+  fpt_ntl,
+  fpt_ftl,
+  fpt_ftr,
+  fpt_ntr
+} FrustumPoint;
 
 typedef enum {
-  fp_near, fp_far, fp_left, fp_right, fp_top, fp_bottom
+  fp_near,
+  fp_far,
+  fp_left,
+  fp_right,
+  fp_top,
+  fp_bottom
   /*fp_near, fp_far, fp_right, fp_left, fp_bottom, fp_top*/
-}frustum_plane_index;
+} frustum_plane_index;
 
 namespace ShaderStatus {
 typedef enum {
   Uninitialized,
-  Loaded,            // step1
-  Compiled,        // step2
+  Loaded,    // step1
+  Compiled,  // step2
   Linked,
-  CreateComplete,    //setp3
+  CreateComplete,  //setp3
 
   CreateFailed,
   Unloaded,
@@ -136,39 +162,40 @@ typedef enum {
   st_fragment,
   st_vertex,
   st_geometry,
-  st_compute    //new 9/2014
+  st_compute  //new 9/2014
 } e;
 }
 
 namespace OpenGLShaderVarType {
 typedef enum {
-  ut_notype
-  , GpuInt1
-  , GpuInt2
-  , GpuInt3
-  , GpuInt4
-  , GpuUint1
-  , GpuUint2
-  , GpuUint3
-  , GpuUint4
-  , GpuFloat1
-  , GpuFloat2
-  , GpuFloat3
-  , GpuFloat4
-  , GpuBool1
-  , GpuBool2
-  , GpuBool3
-  , GpuBool4
-  , GpuMat2
-  , GpuMat3
-  , GpuMat4
-  , GpuDouble1
-  , GpuDouble2
-  , GpuDouble3
-  , GpuDouble4
-  , GpuUniformBuffer//This is sort of a 1 off, and doesn't really apply
+  ut_notype,
+  GpuInt1,
+  GpuInt2,
+  GpuInt3,
+  GpuInt4,
+  GpuUint1,
+  GpuUint2,
+  GpuUint3,
+  GpuUint4,
+  GpuFloat1,
+  GpuFloat2,
+  GpuFloat3,
+  GpuFloat4,
+  GpuBool1,
+  GpuBool2,
+  GpuBool3,
+  GpuBool4,
+  GpuMat2,
+  GpuMat3,
+  GpuMat4,
+  GpuDouble1,
+  GpuDouble2,
+  GpuDouble3,
+  GpuDouble4,
+  GpuUniformBuffer  //This is sort of a 1 off, and doesn't really apply
   //////////////////
-  , ut_var_count //
+  ,
+  ut_var_count  //
 } e;
 }
 
@@ -177,41 +204,80 @@ typedef enum {
 //***Font stuff
 //***Font stuff
 
- //32 - ASCII 0-31 are unprintable characters
+//32 - ASCII 0-31 are unprintable characters
 #define GFX_ASCII_FONT_RANGE_START (0)
 //0x20)
 //256
 //int32_t _charsetMax = 0x7E;    //126
 #define GFX_ASCII_FONT_RANGE_END (0xFF)
 
-
-
 typedef enum {
   GFX_ASCII_FONT_QUALITY_SMOOTH,
   GFX_ASCII_FONT_QUALITY_EXACT,
-}GfxAsciiFontQuality;
+} GfxAsciiFontQuality;
 
-typedef float FontSize; //in pixels
-
-typedef enum {
-  ATLAS_BUILD_POS_TOP_LEFT// start at the top left
-}TextureAtlasBuildPosition;
+typedef float FontSize;  //in pixels
 
 typedef enum {
-  ATLAS_BUILD_DIR_RIGHT    //build to the right
-}TextureAtlasBuildDirection;
+  ATLAS_BUILD_POS_TOP_LEFT  // start at the top left
+} TextureAtlasBuildPosition;
 
-namespace RenderTargetType { typedef enum { Color, Depth, Alpha, Bloom, Pick, Shadow, Position } e; }
-namespace FramebufferState { typedef enum { Not_Initialized, Initialized } e; }
+typedef enum {
+  ATLAS_BUILD_DIR_RIGHT  //build to the right
+} TextureAtlasBuildDirection;
+
+namespace RenderTargetType {
+typedef enum { Color,
+               Depth,
+               Alpha,
+               Bloom,
+               Pick,
+               Shadow,
+               Position } e;
+}
+namespace FramebufferState {
+typedef enum { Not_Initialized,
+               Initialized } e;
+}
 //What channel teh texture effects
-namespace TextureType { typedef enum { Undefined, Color, Normal } e; }
-namespace UiImageSizeMode { typedef enum { Expand, Tile, Computed, Proportion } e; }
-namespace UiPositionMode { typedef enum { Relative, Static /*Fixed = relative to viewport.  We don't need this (yet)*/ } e; }//Static: auto adjust position, Relative - fixes position (set left, top)
-namespace UiDimUnit { typedef enum { Percent, Pixel, Auto/*, Initial*/ } e; }
-namespace UiOverflowMode { typedef enum { Show, Hide } e; }
-namespace UiDisplayMode { typedef enum { InlineWrap, Block, InlineNoWrap } e; }//Wrap: elements on same line and they wrap at the end of container, block - always wrap, inlinenowrap - inline and expand past container
-namespace UiAutoSizeMode { typedef enum { Fixed, Grow, Shrink, GrowAndShrink } e; }
-enum class DrawMode { Point, Line, Solid };
+namespace TextureType {
+typedef enum { Undefined,
+               Color,
+               Normal } e;
+}
+namespace UiImageSizeMode {
+typedef enum { Expand,
+               Tile,
+               Computed,
+               Proportion } e;
+}
+namespace UiPositionMode {
+typedef enum { Relative,
+               Static /*Fixed = relative to viewport.  We don't need this (yet)*/ } e;
+}  // namespace UiPositionMode
+namespace UiDimUnit {
+typedef enum { Percent,
+               Pixel,
+               Auto /*, Initial*/ } e;
+}
+namespace UiOverflowMode {
+typedef enum { Show,
+               Hide } e;
+}
+namespace UiDisplayMode {
+typedef enum { InlineWrap,
+               Block,
+               InlineNoWrap } e;
+}  // namespace UiDisplayMode
+namespace UiAutoSizeMode {
+typedef enum { Fixed,
+               Grow,
+               Shrink,
+               GrowAndShrink } e;
+}
+enum class DrawMode { Point,
+                      Line,
+                      Solid };
 
 //FWDDCL
 class ShaderSubProgram;
@@ -276,7 +342,7 @@ class RenderTarget;
 class BufferRenderTarget;
 class Picker;
 class ShadowFrustum;
-class ShadowBox;//1/22/18
+class ShadowBox;  //1/22/18
 class ShadowBoxSide;
 class LightManager;
 class LightNodePoint;
@@ -327,22 +393,22 @@ class MeshNode;
 
 namespace UiEventId {
 typedef enum {
-  Mouse_Lmb_Up
-  , Mouse_Lmb_Press
-  , Mouse_Lmb_Down
-  , Mouse_Lmb_Release
-  , Mouse_Lmb_None
-  , Mouse_Rmb_Up
-  , Mouse_Rmb_Press
-  , Mouse_Rmb_Down
-  , Mouse_Rmb_Release
-  , Mouse_Rmb_None
-  , Mouse_Mmb_Up
-  , Mouse_Mmb_Press
-  , Mouse_Mmb_Down
-  , Mouse_Mmb_Release
-  , Mouse_Mmb_None
-  , Scrollbar_Pos_Change
+  Mouse_Lmb_Up,
+  Mouse_Lmb_Press,
+  Mouse_Lmb_Down,
+  Mouse_Lmb_Release,
+  Mouse_Lmb_None,
+  Mouse_Rmb_Up,
+  Mouse_Rmb_Press,
+  Mouse_Rmb_Down,
+  Mouse_Rmb_Release,
+  Mouse_Rmb_None,
+  Mouse_Mmb_Up,
+  Mouse_Mmb_Press,
+  Mouse_Mmb_Down,
+  Mouse_Mmb_Release,
+  Mouse_Mmb_None,
+  Scrollbar_Pos_Change
 } e;
 }
 
@@ -353,14 +419,14 @@ public:
   // - do not change order
   vec3 _vPos;
   float _fRadius;
-  //    
+  //
   vec3 _vDiffuseColor;
   float _fPad;
   //  float _fSpecAmt;
-//
-   //  vec3 _vSpecColor;
-   //  float _fSpecExp;
-//
+  //
+  //  vec3 _vSpecColor;
+  //  float _fSpecExp;
+  //
 };
 class GpuDirLight : public GpuMemory {
 public:
@@ -371,14 +437,14 @@ public:
   //
   vec3 _vDir;
   float _fLinearAttenuation;
-  //    
+  //
   vec3 _vDiffuseColor;
   float _fPad;
   //  float _fSpecAmt;
-//
+  //
   //   vec3 _vSpecColor;
   //   float _fSpecExp;
-//
+  //
   mat4 _mView;
   mat4 _mProj;
   mat4 _mPVB;
@@ -390,13 +456,13 @@ public:
   float _fFogDivisor;
   float _pad1;
   //
-  vec4  _vFogColor;
+  vec4 _vFogColor;
   //
   int32_t _iPointLightCount;
-  float _fHdrSampleExp; //Exponent to use converting input color textures to HDR
-  float _fHdrToneMapExp; //Exponent to use when tone mapping back to LDR
+  float _fHdrSampleExp;   //Exponent to use converting input color textures to HDR
+  float _fHdrToneMapExp;  //Exponent to use when tone mapping back to LDR
   int32_t _iShadowBoxCount;
-  //    
+  //
   vec3 _vViewPos;
   int32_t _iDirLightCount;
   //
@@ -412,9 +478,8 @@ public:
   float _pad3;
 };
 
-
 //TODO: Make this "CullBucket"
-class CullParams : public VirtualMemoryShared <CullParams> {
+class CullParams : public VirtualMemoryShared<CullParams> {
 public:
   //void setFrustum(std::shared_ptr<FrustumBase> fb) { _pFrustum = fb; }
   //std::shared_ptr<FrustumBase> getFrustum() { return _pFrustum; }
@@ -439,17 +504,39 @@ private:
 //Goes here becauwse TreeNode inherits it.
 class Drawable : public VirtualMemoryShared<Drawable> {
 public:
- // virtual void cull(CullParams& cp) = 0;
+  // virtual void cull(CullParams& cp) = 0;
   virtual void drawDeferred(RenderParams& rp) = 0;
   virtual void drawForward(RenderParams& rp) = 0;
   virtual void drawShadow(RenderParams& rp) = 0;
   virtual void drawForwardDebug(RenderParams& rp) = 0;
-  virtual void drawNonDepth(RenderParams& rp) = 0; // draw the non-depth test items (last)
-  virtual void drawTransparent(RenderParams& rp) = 0; //These come after the way after, the very end
+  virtual void drawNonDepth(RenderParams& rp) = 0;     // draw the non-depth test items (last)
+  virtual void drawTransparent(RenderParams& rp) = 0;  //These come after the way after, the very end
   virtual void drawUI(RenderParams& rp) = 0;
 };
 
-}//ns game
+class GraphicsWindowCreateParameters {
+public:
+  string_t _title = "My_Window";
+  int32_t _width = 800;
+  int32_t _height = 600;
+  bool _fullscreen = false;
+  bool _show = true;
+  bool _forceAspectRatio = false;  //Forces the window buffer to be the same aspect as the screen.
+  std::shared_ptr<GraphicsWindow> _parent = nullptr;
+  GraphicsWindowCreateParameters(const string_t& title, int32_t width, int32_t height,
+                                 bool fullscreen, bool show, bool forceAspectRatio,
+                                 std::shared_ptr<GraphicsWindow> parent) {
+    _title = title;
+    _width = width;
+    _height = height;
+    _fullscreen = fullscreen;
+    _show = show;
+    _forceAspectRatio = forceAspectRatio;
+    _parent = parent;
+  }
+};
+
+}  // namespace BR2
 
 #include "../gfx/RenderParams.h"
 
@@ -457,19 +544,17 @@ public:
 // STB Defines
 extern "C" {
 
-  //DereK: note if you are updating stb_truetype, make sure to comment these structs out 2/7/18
-  //STB namespace
-  typedef struct {
-    unsigned short x0, y0, x1, y1; // coordinates of bbox in bitmap
-    float xoff, yoff, xadvance;
-  } stbtt_bakedchar;
+//DereK: note if you are updating stb_truetype, make sure to comment these structs out 2/7/18
+//STB namespace
+typedef struct {
+  unsigned short x0, y0, x1, y1;  // coordinates of bbox in bitmap
+  float xoff, yoff, xadvance;
+} stbtt_bakedchar;
 
-  typedef struct {
-    float x0, y0, s0, t0; // top-left
-    float x1, y1, s1, t1; // bottom-right
-  } stbtt_aligned_quad;
+typedef struct {
+  float x0, y0, s0, t0;  // top-left
+  float x1, y1, s1, t1;  // bottom-right
+} stbtt_aligned_quad;
 }
-
-
 
 #endif

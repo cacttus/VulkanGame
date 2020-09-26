@@ -173,6 +173,7 @@ std::future<bool> LightNodePoint::cullShadowVolumesAsync(CullParams& cp) {
   std::future<bool> fut = std::async(std::launch::async, [&] {
     Perf::pushPerf();
     {
+      BRLogTODO("Commented out shadow box");
       //**TODO: Uncomment
       //**TODO: Uncomment
       //**TODO: Uncomment

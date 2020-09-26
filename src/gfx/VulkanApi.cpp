@@ -415,11 +415,11 @@ VulkanApi::VulkanApi() {
 VulkanApi::~VulkanApi() {
   _pint = nullptr;
 }
-std::shared_ptr<GraphicsWindow> VulkanApi::createWindow(const string_t& title, std::shared_ptr<GraphicsWindow> parent) {
-  SDL_Window* win = makeSDLWindow(title, SDL_WINDOW_VULKAN, false);
+std::shared_ptr<GraphicsWindow> VulkanApi::createWindow(GraphicsWindowCreateParameters&& params) {
+  SDL_Window* win = makeSDLWindow(params._title, SDL_WINDOW_VULKAN, false);
 
    //loadCaps();
-  _pint->createVulkanInstance(title, win);
+  _pint->createVulkanInstance(params._title, win);
   _pint->loadExtensions();
   _pint->setupDebug();
   _pint->pickPhysicalDevice();

@@ -72,7 +72,8 @@ void Picker::samplePixelId(int32_t x, int32_t y, uint32_t& __out_ selectedId) {
   // are read from the color image attached to the GL_COLOR_ATTACHMENT0 attachment point.
   getContext()->debugGetRenderState();
 
-  int32_t iHeight = getContext()->getActiveCamera()->getViewport()->getHeight();
+BRLogTODO("Serious hack right here- fix it");
+  int32_t iHeight = 600; //getContext()->getActiveCamera()->getViewport()->getHeight();
 
   glReadPixels(x - 1,
                iHeight - y + 1,

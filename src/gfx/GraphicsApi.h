@@ -10,6 +10,7 @@
 #include "../gfx/GfxHeader.h"
 
 namespace BR2 {
+
 /**
 *  @class GraphicsApi
 *  @brief Base class for rendering system.
@@ -21,23 +22,21 @@ public:
 
   void updateLoop();
 
-  virtual std::shared_ptr<GraphicsWindow> createWindow(const string_t& title, std::shared_ptr<GraphicsWindow> parent = nullptr) = 0;
+  virtual std::shared_ptr<GraphicsWindow> createWindow(GraphicsWindowCreateParameters&& params) = 0;
   virtual void destroyWindow(std::shared_ptr<GraphicsWindow> w);
   virtual void makeCurrent(GraphicsWindow*) = 0;
   virtual void getDrawableSize(SDL_Window* win, int* w, int* h) = 0;
   virtual void swapBuffers(SDL_Window* win) = 0;
   virtual void cleanup() {}
 
-  std::shared_ptr<GraphicsContext> getCoreContext() { return _pCoreContext; }
+  std::shared_ptr<GraphicsContext> getCoreContext() { return _contexts.size() ? _contexts[0] : nullptr; }
 
 protected:
   SDL_Window* makeSDLWindow(const string_t& windowTitle, int render_system, bool show);
-  void setMainContext(std::shared_ptr<GraphicsContext> ct) { _pCoreContext = ct; }
   std::vector<std::shared_ptr<GraphicsContext>>& getContexts() { return _contexts; }
 
 private:
   std::vector<std::shared_ptr<GraphicsContext>> _contexts;
-  std::shared_ptr<GraphicsContext> _pCoreContext = nullptr;
   bool handleSDLEvents();
   bool handleEvents(SDL_Event* event);
   std::shared_ptr<InputManager> getInputForWindow(uint32_t sdl_windowId);

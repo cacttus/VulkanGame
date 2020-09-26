@@ -1,10 +1,6 @@
 # VulkanGame
 This is a game demo utilizing the SDL2 Vulkan API.
 
-# Changes
-Moved OpenGLUtils to GLContext per the multiple contexts.
-HappySky -> Skybox
-
 # Building 
 ## Windows
 ### Visual Studio
@@ -30,53 +26,15 @@ HappySky -> Skybox
 * Build with Cmake + GCC, CLANG
 
 # Tasks
-1. Multiple Windows. 
-  * Notes:
-  * Inspect SDL_GL_MakeCurrent to see if we can simply make another window current, same context.
-  * Path: Its a scene node so its context isn't fixed. The meshes use a context. TODO: make the meshes components.
-  * SkyBox: Change to SceneNode with Mesh /atlas componetns.
-    
-    * How to render the same scene from 2 windows.
-      Can't get context from scene as scene is being drawn from 2 separate widnows so it shares a context.
-      Window = Viewport + FBOs + Camera(s)
-        // Graphics: Multiple contexts -> 1 thread
-        // Other Threads: Multiple threads -> queue graphics Commands
 
-    * Problem: Many things in Scene require the specific window, for instance the UI (window viewport, input, window context)
-      * Solution:
-        * Multiple UI Screen's per window.
-        * UI Screen's communicate with each other via events & databind.
-          * ex: Click button on screen #2, -> write a script to send click event to screen #1
-
-    I want to check for errors in WorldGrid
-      Runs from Script
-      Runs from ScriptComponent
-      Runs from SceneNode
-      from Scene
-      From Window -> Context
-    Multiple windows with multiple contexts running at the same time.
-
-
-  1. Goal is to draw the same scene on 2 different windows.
-  1. __Synchrous windows (child windows) - shared context.__
-    * https://community.khronos.org/t/sharing-contexts/73563/3
-    * Not possible. Must use separate contexts.
-    * Unshared GL Objects
-      * VAO, FBO, 
-    1. SDL_GL_makecurrent SDL_GL_SwapWindow
-  1. Asynchronous (separate GL context)
-    * Requires creating multiple render pipelines.
-    * Replace Gu::checkErrors with getContext()->checkerrors
-  1. Get a separate camera to render to a separate window.
-1. GUI
-1. LUA Scripting
-
-# TODO: Important
+## Important
+* DestroyWindow is not wired up correctly (SDL_DestroyWindow is not gbeing called)
+* Fix the exit in GraphicsApi if user closes child window.
 * Get Windows build to work (VS).
 * Fix UI to show debug text
 * The width/height of the window is messed up somewhere in the engineconfig props.
 
-# TODO: Enhancments.
+## Enhancments
 * Make RenderUtils be a class instance and hold the instantiated renders that we add to it.
   * Later - Add them to scene instead of using RenderUtils.
 * Import Mobmaker into the app itself. We can compile it with mono or just convert the code.
@@ -87,5 +45,57 @@ HappySky -> Skybox
 * Test this build on Windows to make sure it still works.
 * Fix the "unrecognized parameter" in the console.
 
-# TODO: Backlog
+## Backlog
 * Change props from preprocessor to "debuggable" props.
+
+## Design Reference
+
+### Folders
+
+|  Folder | Contents|
+|---------|----------------------------------------------------------------------------------------------
+|  base   | graphs, generic systems, memory, buffers, networking, events and OS interface.				|
+|  ext    | *Lightweight* external libraries.  (Large API's reside in ./external).						|
+|  gfx    | GPU, graphics classes, image manipulation,  materials, lighting, framebuffers, shaders.		|
+|  math   | vectors, matrices, boxes, geometry, hulls, algorithms.										|
+|  model  | meshes, animation, models, characters, skeletons, bones.									|
+|  world  | physics, scenegraph. 																		|
+|  bottle | contains world rendering data.                                                              |
+
+| Class     | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  Package  | Application and project state inforamtion.  Contains all scenes, models, meshes and textures and packages them into one executable.                                                                                                                                                                                                                                                                                                              |
+|  Window   | Each window gets its own rendering pipeline, and graphics context.						|
+|  Context  | Rendering context.  1 Global context, and multiple additional contexts are possible.  Items shared across contexts include textures, meshes and shaders.                |
+|  Scene    | Scenegraph for all items in the currently loaded game world.  Areas are separated into scenes in order to minimize memory footprint.        |
+|  Gu       | Global static class to access commonly used pieces of the engine (textures, meshes) through static methods.                                                      |
+
+### Hierarchy
+
+* Gu
+	* Texture Manager (1, GLOBAL)
+	* Mesh Manager (1, GLOBAL)
+	* ShaderManager (1, GLOBAL)
+    * Package (1, GLOBAL)
+	* GraphicsApi (1, GLOBAL)
+		* Context (1+)
+			* GraphicsWindow (1+)
+        * GraphicsWindow (child)(1+)
+				* FrameSync (1)
+				* Delta (1)
+				* RenderPipe (1)
+					* Picker (1)
+				* UiScreen (1)
+				* PhysicsWorld (1)
+				* Scene (1)
+					* LightNode (1*)
+						* :PointLight
+						* :DirLight
+					* CameraNode (1*, only 1 active at a time)
+					* PhysicsNode (1*) 
+					* MeshNode (1*)
+					* ModelNode (1*)
+					* SceneNode (1*)
+						* Component (1*)
+							* BottleScript (1)
+								* World25 (1)

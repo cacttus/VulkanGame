@@ -4,9 +4,9 @@
 #include "../base/GLContext.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/EngineConfig.h"
-#include "../base/OpenGLWindow.h"
 #include "../base/SDLUtils.h"
 #include "../gfx/OpenGLApi.h"
+#include "../gfx/RenderUtils.h"
 
 namespace BR2 {
 OpenGLApi::OpenGLApi() {
@@ -43,7 +43,7 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
     iProfile = SDL_GL_CONTEXT_PROFILE_ES;
   }
 #endif
-  //Attempt to make a big depth buffer.
+  //Reduce aliasing & z fighting.
   std::vector<int> depth_sizes({32, 24, 16});
 
   int msaa_buf = 0;
@@ -78,15 +78,18 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
 
   return profs;
 }
-
-std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const string_t& title, std::shared_ptr<GraphicsWindow> parent) {
-  //Create GL Context.
+std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(GraphicsWindowCreateParameters&& params) {
   std::shared_ptr<GraphicsWindow> pRet = nullptr;
-
-  if (_pDefaultCompatibleProfile) {
-    //Try to make window from the profile we used for a previous window.
-    if ((pRet = createWindowFromProfile(_pDefaultCompatibleProfile, title)) == nullptr) {
-      BRLogError("Couldn't create a window from the default window profile.");
+  if (params._parent != nullptr) {
+    if (params._parent->getContext()) {
+      //Try to make window from the profile we used for a previous window.
+      pRet = createWindowFromProfile(params._parent->getContext()->getProfile(), std::move(params));
+      if (pRet == nullptr) {
+        BRLogError("Couldn't create a window from the default window profile.");
+      }
+    }
+    else {
+      BRLogError("Window " + params._parent->getTitle() + " context had no profile.");
     }
   }
 
@@ -94,7 +97,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const string_t& title, s
     auto profs = getProfiles();
     for (std::shared_ptr<GLProfile> prof : profs) {
       //in general you can't change the value of SDL_GL_CONTEXT_PROFILE_MASK without first destroying all windows created with the previous setting.
-      pRet = createWindowFromProfile(prof, title);
+      pRet = createWindowFromProfile(prof, std::move(params));
       if (pRet != nullptr) {
         break;
       }
@@ -105,47 +108,52 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const string_t& title, s
     BRThrowException("Failed to create OpenGL context.  See errors in log.");
   }
 
+  if (getCoreContext()) {
+    getCoreContext()->chkErrRt();
+  }
+  SDLUtils::checkSDLErr();
+
   return pRet;
 }
-std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_ptr<GLProfile> prof, const string_t& title) {
-  // Create an OPENGL enabled window from a spec profile.
+std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_ptr<GLProfile> prof, GraphicsWindowCreateParameters&& params) {
+  // Create an OpenGL enabled window from a spec profile.
   // @return An OpenGL enabled graphics window of the given profile, or nullptr if the profile wasn't compatible.
   AssertOrThrow2(prof != nullptr);
   BRLogInfo("Profile: " + prof->toString());
   std::shared_ptr<GraphicsWindow> pRet = nullptr;
   try {
-    SDL_Init(SDL_INIT_VIDEO);
-
-    //This must be called before creating the window because this sets SDL's PixelFormatDescritpro
+    //This must be called before creating the window because this sets SDL's PixelFormatDescriptor.
     GLContext::setWindowAndOpenGLFlags(prof);
     SDLUtils::checkSDLErr();
 
-    //This fails on Linux for invalid profiles, but succeeds on windows.
-    SDL_Window* win = makeSDLWindow(title, SDL_WINDOW_OPENGL, false);
+    SDL_Window* win = makeSDLWindow(params._title, SDL_WINDOW_OPENGL, false);
     if (win != nullptr) {
-      std::shared_ptr<GLContext> context = std::make_shared<GLContext>(getThis<GraphicsApi>(), prof, win);
-      if (context->init()) {
-        pRet = context->getGraphicsWindow();
-        if (pRet != nullptr) {
-          SDL_GL_SetSwapInterval(prof->_bVsync ? 1 : 0);  //Vsync is automatic on IOS
-          SDLUtils::checkSDLErr();
-
-          SDL_ShowWindow(win);
-          SDLUtils::checkSDLErr();
-
-          _pDefaultCompatibleProfile = prof;
-
-          //Context created successfully
-          if (getCoreContext() == nullptr) {
-            setMainContext(context);
-          }
-          getContexts().push_back(context);
-
-          context->chkErrRt();
-        }
+      if (params._parent) {
+        //Share a context, GBuffer
+        std::shared_ptr<GLContext> context = getCoreContext()->getThis<GLContext>();
+        pRet = context->createGraphicsWindow(win, std::move(params));
       }
       else {
-        SDL_DestroyWindow(win);
+        //Create a new context,and GBuffer.
+        std::shared_ptr<GLContext> context = std::make_shared<GLContext>(getThis<GraphicsApi>(), prof);
+        if (context->init(win)) {
+          getContexts().push_back(context);
+
+          if (getContexts().size() == 1) {
+            //This is the core context.
+            BRLogInfo("First Context Initialized.");
+            BRLogInfo("GraphicsContext - Making Vtx Formats.");
+            RenderUtils::makeVertexFormats();
+            BRLogInfo("Creating Managers.");
+            Gu::createManagers(context);
+          }
+
+          pRet = context->createGraphicsWindow(win, std::move(params));
+        }
+        else {
+          SDL_DestroyWindow(win);
+          pRet = nullptr;
+        }
       }
     }
   }
@@ -157,8 +165,9 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
 }
 void OpenGLApi::makeCurrent(GraphicsWindow* win) {
   SDL_GL_MakeCurrent(win->getSDLWindow(), win->getContext()->getSDLGLContext());
-  Gu::setActiveContext(win->getContext());
-
+  if (Gu::getActiveContext() != win->getContext()) {
+    Gu::setActiveContext(getCoreContext()->getThis<GLContext>());
+  }
 }
 void OpenGLApi::getDrawableSize(SDL_Window* win, int* w, int* h) {
   SDL_GL_GetDrawableSize(win, w, h);

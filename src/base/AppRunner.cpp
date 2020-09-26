@@ -46,7 +46,7 @@ public:
   void attachToGameHost();
   void printVideoDiagnostics();
   void updateWindowHandleForGamehost();
-  SDL_bool initAudio();
+  void initAudio();
   void initNet();
   void runGameLoopTryCatch();
   void exitApp(string_t error, int rc);
@@ -78,52 +78,25 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   }
   Gu::setGraphicsApi(_pGraphicsApi);
 
-  //Unfortunately we need a window for a graphics context.  We need contexts to init the managers.
-  // This default window must come here.  We initialize the rendering system later.
-  // After this window is made, more windows can be made since we have a core context.
-  std::shared_ptr<GraphicsWindow> window = _pGraphicsApi->createWindow(Stz "");  //Just avoid title
-  SDLUtils::checkSDLErr();
+  std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window", Gu::getConfig()->getDefaultScreenWidth(), Gu::getConfig()->getDefaultScreenHeight(), Gu::getConfig()->getStartFullscreen(), true, Gu::getConfig()->getForceAspectRatio(), nullptr));  //Just avoid title
 
-  initAudio();
-  SDLUtils::checkSDLErr();
-
+  //initAudio();//This is probably not needed - remove
   initNet();
-  SDLUtils::checkSDLErr();
 
-  if (Gu::getEngineConfig()->getGameHostAttached()) {
-    updateWindowHandleForGamehost();
-    attachToGameHost();
-  }
-
-  //Render System Static Data, which requires a prior context
-  BRLogInfo("GraphicsContext - Making Vtx Formats.");
-  RenderUtils::makeVertexFormats();
-
-  BRLogInfo("Creating Managers.");
-  Gu::createManagers(window->getContext());
-
-  BRLogInfo("Creating Window Renderer");
-  window->initRenderSystem();
-
-  BRLogInfo("Creating Window 2");
-  std::shared_ptr<GraphicsWindow> window2 = _pGraphicsApi->createWindow(Stz "Window 2", window);  //Just avoid title
-  window2->initRenderSystem();
-  SDLUtils::checkSDLErr();
-  Gu::getCoreContext()->chkErrRt();
+  BRLogInfo("Creating Child Window ");
+  std::shared_ptr<GraphicsWindow> child_win = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Window 2", 300, 600, false, true, false, mainwindow));  //Just avoid title
 
   BRLogInfo("Creating Scene");
   std::shared_ptr<Scene> pscene = Scene::create();
-  window->setScene(pscene);
-  
+  mainwindow->setScene(pscene);
+
   //**TODO: Multiple windows / scene
+  //   child_win->setScene(pscene);
   //**TODO: Multiple windows / scene
-  //window2->setScene(pscene);
-  //**TODO: Multiple windows / scene
-  //**TODO: Multiple windows / scene
-  
-  
+
+  //The game specific script
   pscene->addComponent(std::make_shared<BottleScript>());
-  
+
   BRLogInfo("Apprunner complete.");
 }
 void AppRunner_Internal::doShowError(string_t err, const Exception* const e) const {
@@ -235,19 +208,25 @@ void AppRunner_Internal::updateWindowHandleForGamehost() {
   //SetActiveWindow(hwnd);
 #endif
 }
-SDL_bool AppRunner_Internal::initAudio() {
+void AppRunner_Internal::initAudio() {
   //AUDIO
   if (SDL_AudioInit(NULL) < 0) {
-    fprintf(stderr, "Couldn't initialize audio driver: %s\n", SDL_GetError());
-    return SDL_FALSE;
+    exitApp(Stz "SDL Couldn't initialize audio driver: " + SDL_GetError(), -1);
   }
-  return SDL_TRUE;
+  SDLUtils::checkSDLErr();
 }
 void AppRunner_Internal::initNet() {
   BRLogInfo("Initializing SDL Net");
   if (SDLNet_Init() == -1) {
     exitApp(Stz "SDL Net could not be initialized: " + SDL_GetError(), -1);
   }
+
+  if (Gu::getEngineConfig()->getGameHostAttached()) {
+    updateWindowHandleForGamehost();
+    attachToGameHost();
+  }
+
+  SDLUtils::checkSDLErr();
 }
 void AppRunner_Internal::runGameLoopTryCatch() {
   typedef void (*SignalHandlerPointer)(int);
@@ -366,5 +345,53 @@ void AppRunner::runApp(const std::vector<string_t>& args, std::vector<std::funct
   }
   Gu::deleteManagers();
 }
+
+//        //Init SDL ?? DO we need?
+//        if (SDL_Init(0) != 0) {
+//            fprintf(stderr, "Couldn't initialize video driver: %s\n",
+//                    SDL_GetError());
+//            return SDL_FALSE;
+//        }
+//
+//
+//        if (SDL_VideoInit(_pGlState->videodriver) < 0) {
+//            fprintf(stderr, "Couldn't initialize video driver: %s\n",
+//                    SDL_GetError());
+//            return SDL_FALSE;
+//        }
+//Fullscreen
+//        SDL_zero(fullscreen_mode);
+//        switch (depthBits) {
+//            case 16:
+//                fullscreen_mode.format = SDL_PIXELFORMAT_RGB565;
+//                break;
+//            case 24:
+//                fullscreen_mode.format = SDL_PIXELFORMAT_RGB24;
+//                break;
+//        }
+//        fullscreen_mode.refresh_rate = _pGlState->refresh_rate;
+//
+//Create Window.
+// char  etitle[1024];
+// char* szTitle = NULL;
+
+//SDL_ShowWindow(_pWindow);
+
+//Not necessary - we need to make sure this it
+//Create Renderer
+// _pGlState->renderer = SDL_CreateRenderer(_pGlState->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+// if (!_pGlState->renderer) {
+//     fprintf(stderr, "Couldn't create renderer: %s\n",
+//         SDL_GetError());
+//     return SDL_FALSE;
+// }
+// if (_pGlState->logical_w && _pGlState->logical_h) {
+//     SDL_RenderSetLogicalSize(_pGlState->renderer, _pGlState->logical_w, _pGlState->logical_h);
+// }
+// else if (_pGlState->scale) {
+//     SDL_RenderSetScale(_pGlState->renderer, _pGlState->scale, _pGlState->scale);
+// }
+
+//}
 
 }  // namespace BR2

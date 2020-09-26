@@ -24,18 +24,17 @@ class GraphicsWindow : public RenderTarget {
 public:
   typedef std::unordered_map<std::string, std::shared_ptr<GraphicsWindow>> ChildWindows;
 
-  GraphicsWindow(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLContext> ct, SDL_Window* win);
+  GraphicsWindow(std::shared_ptr<GLContext> ct);
   virtual ~GraphicsWindow() override;
 
-  static std::shared_ptr<GraphicsWindow> create(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLContext> ct, SDL_Window* win);
-  void init();
+  void init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, GraphicsWindowCreateParameters&& params);
   void step();
   void idle(int64_t us);
 
-  void initRenderSystem();
   virtual int32_t getWidth() override;
   virtual int32_t getHeight() override;
   string_t getTitle();
+  void setTitle(const string_t& title);
   
   SDL_Window* getSDLWindow();
   std::shared_ptr<RenderViewport> getViewport();
@@ -52,11 +51,10 @@ public:
   void setScene(std::shared_ptr<Scene> scene);
   ChildWindows& getChildren();
   std::shared_ptr<GraphicsWindow> getParent();
-  //bool isChild();
-  //bool hasChildren();
 
 private:
-  //There's a static_assert in clang10 that prevents assignment to pure nullptr, but initializer_list works.
+  void addChild(std::shared_ptr<GraphicsWindow> child);
+  std::shared_ptr<GraphicsWindow>  removeChildByTitle(const string_t& title);
   std::unique_ptr<GraphicsWindow_Internal> _pint;
 };
 

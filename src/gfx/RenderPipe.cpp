@@ -244,10 +244,17 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
   //   futs[i].wait();
   // }
 
+
   _bRenderInProgress = true;
   {
     RenderParams rp;
     rp.setCamera(cam);
+    //Algorithm:
+    // 1. Render models to GBuffer (deferred)
+    // 2. Render GBuffer to Texture computing shadows & lighting (forward)
+    // 3. Render UI, FW models. Picking.
+    // 4. Transparency.
+    // 5. Draw FWTexture to window framebuffer using quad.
 
     //This doesn't conform ot the new ability to render individual objects.
     //This draws all scene shadows
@@ -283,10 +290,7 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
       }
     }
 
-    // OpenGLUtils::debugGetRenderState(true, true, false);
-
     //2. Forward Rendering
-    BRLogTODO("Commented out forward rendering!");
     if (pipeBits.test(PipeBit::e::Forward)) {
       beginRenderForward();
 
@@ -317,14 +321,15 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
 
       endRenderForward();
     }
-    //
-    //      beginRenderTransparent();
-    //      {
-    //          //TP uses the forward texture.
-    //        //   toDraw->drawTransparent(rp);
-    //      }
-    //      endRenderTransparent();
+    //3. Transparency
+    //beginRenderTransparent();
+    //{
+    //    //TP uses the forward texture.
+    //  //   toDraw->drawTransparent(rp);
+    //}
+    //endRenderTransparent();
 
+    //Blit to window
     if (pipeBits.test(PipeBit::e::BlitFinal)) {
       endRenderAndBlit(lightman, cam);
     }

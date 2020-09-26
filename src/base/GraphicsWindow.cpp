@@ -26,7 +26,7 @@ class GraphicsWindow_Internal {
 public:
   std::shared_ptr<RenderViewport> _pViewport = nullptr;
   std::shared_ptr<Scene> _pScene = nullptr;
-  std::shared_ptr<RenderPipe> _pRenderPipe = nullptr;
+  std::shared_ptr<RenderPipe> _pRenderPipe = nullptr;  // This may be null if shared with a parent window.
   std::shared_ptr<GraphicsApi> _pApi = nullptr;
   std::shared_ptr<FrameSync> _pFrameSync = nullptr;
   std::shared_ptr<FpsMeter> _pFpsMeter = nullptr;
@@ -34,6 +34,8 @@ public:
   std::shared_ptr<InputManager> _pInput = nullptr;
 
   FrameState _eFrameState = FrameState::NoFrameState;
+
+  string_t _title = "window";
 
   SDL_Window* _pSDLWindow = nullptr;
   bool _bFullscreen = false;
@@ -153,10 +155,8 @@ void GraphicsWindow_Internal::endRender() {
 
 #pragma region GraphicsWindow
 //Called exclusively by the graphics API
-GraphicsWindow::GraphicsWindow(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLContext> ct, SDL_Window* win) : RenderTarget(ct) {
+GraphicsWindow::GraphicsWindow(std::shared_ptr<GLContext> ct) : RenderTarget(ct) {
   _pint = std::make_unique<GraphicsWindow_Internal>();
-  _pint->_pSDLWindow = win;
-  _pint->_pApi = api;
 }
 GraphicsWindow::~GraphicsWindow() {
   if (_pint->_pSDLWindow != nullptr) {
@@ -164,26 +164,33 @@ GraphicsWindow::~GraphicsWindow() {
   }
   _pint = nullptr;
 }
-GraphicsWindow::ChildWindows& GraphicsWindow::getChildren() {
-  return _pint->_mapChildren;
-}
-void GraphicsWindow::init() {
-  _pint->_iLastWidth = Gu::getConfig()->getDefaultScreenWidth();
-  _pint->_iLastHeight = Gu::getConfig()->getDefaultScreenHeight();
+void GraphicsWindow::init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, GraphicsWindowCreateParameters&& params) {
+  _pint->_iLastWidth = params._width;
+  _pint->_iLastHeight = params._height;
   _pint->_pViewport = std::make_shared<RenderViewport>(_pint->_iLastWidth, _pint->_iLastHeight, ViewportConstraint::Full);
   _pint->_pFrameSync = std::make_shared<FrameSync>(getThis<GraphicsWindow>());
   _pint->_pDelta = std::make_shared<Delta>();
   _pint->_pFpsMeter = std::make_shared<FpsMeter>();
   _pint->_pInput = std::make_shared<InputManager>();
-}
-void GraphicsWindow::initRenderSystem() {
-  if (_pint->_pSDLWindow == nullptr) {
-    BRThrowException("You need to make the SDL window before initializing render system.");
+  _pint->_pSDLWindow = win;
+  _pint->_pApi = api;
+  _pint->_pParent = params._parent;
+  _pint->_title = params._title;
+
+  if (_pint->_pParent) {
+    _pint->_pParent->addChild(getThis<GraphicsWindow>());
+  }
+
+  if (params._show) {
+    SDL_ShowWindow(_pint->_pSDLWindow);
   }
 
   SDLUtils::trySetWindowIcon(_pint->_pSDLWindow, Gu::getPackage()->getIconPath());
+  SDLUtils::checkSDLErr();
+  getContext()->chkErrRt();
 
-  if (Gu::getConfig()->getForceAspectRatio()) {
+  //Set W/H to match Desktop aspect ratio (e.g. 1920/1080)
+  if (params._forceAspectRatio) {
     SDL_DisplayMode dm;
     if (SDL_GetDesktopDisplayMode(0, &dm) != 0) {
       BRLogError("SDL_GetDesktopDisplayMode failed: " + SDL_GetError());
@@ -202,18 +209,59 @@ void GraphicsWindow::initRenderSystem() {
   SDL_SetWindowSize(_pint->_pSDLWindow, _pint->_iLastWidth, _pint->_iLastHeight);
   _pint->updateWidthHeight(_pint->_iLastWidth, _pint->_iLastHeight, true);
 
-  if (Gu::getConfig()->getStartFullscreen() == true) {
-    BRLogInfo("Setting window fullscreen.");
+  //Fullscreen
+  if (params._fullscreen == true) {
+    BRLogInfo("Going fullscreen.");
     _pint->toggleFullscreen();
   }
 
-  BRLogInfo("Creating Render Pipeline");
-  _pint->_pRenderPipe = std::make_shared<RenderPipe>(getContext(), getThis<GraphicsWindow>());
-  _pint->_pRenderPipe->init(getViewport()->getWidth(), getViewport()->getHeight(), Gu::getPackage()->makeAssetPath(Gu::getPackage()->getEnvTextureFolder()));
-  _pint->printHelpfulDebug();
-
-  SDLUtils::checkSDLErr();
-  getContext()->chkErrRt();
+  //Render Pipe
+  if (_pint->_pParent) {
+    BRLogInfo("'" + getTitle() + "'Sharing Render Pipeline with '" + _pint->_pParent->getTitle() + "'");
+  }
+  else {
+    BRLogInfo("Creating Render Pipeline for '" + getTitle() + "'");
+    _pint->_pRenderPipe = std::make_shared<RenderPipe>(getContext(), getThis<GraphicsWindow>());
+    _pint->_pRenderPipe->init(getViewport()->getWidth(), getViewport()->getHeight(), Gu::getPackage()->makeAssetPath(Gu::getPackage()->getEnvTextureFolder()));
+    _pint->printHelpfulDebug();
+    SDLUtils::checkSDLErr();
+    getContext()->chkErrRt();
+  }
+}
+void GraphicsWindow::setTitle(const string_t& title) {
+  //Update parent/child relations.
+  string_t last = getTitle();
+  getParent()->removeChildByTitle(last);
+  _pint->_title = title;
+  SDL_SetWindowTitle(_pint->_pSDLWindow, title.c_str());
+  getParent()->addChild(getThis<GraphicsWindow>());
+}
+std::shared_ptr<GraphicsWindow> GraphicsWindow::removeChildByTitle(const string_t& title) {
+  //Removes a child window and returns the removed window.
+  std::shared_ptr<GraphicsWindow> ret = nullptr;
+  auto ch = _pint->_mapChildren.find(title);
+  if (ch == _pint->_mapChildren.end()) {
+    BRLogError("Could not find child window named '" + title + "' in parent window '" + getTitle() + "'.");
+  }
+  else {
+    ret = ch->second;
+    _pint->_mapChildren.erase(title);
+  }
+  return ret;
+}
+void GraphicsWindow::addChild(std::shared_ptr<GraphicsWindow> child) {
+  if (_pint->_mapChildren.find(child->getTitle()) != _pint->_mapChildren.end()) {
+    BRLogError("Tried to add duplicate child window '" + child->getTitle() + "' to parent '" + getTitle() + "'");
+  }
+  else {
+    _pint->_mapChildren.insert(std::make_pair(child->getTitle(), child));
+  }
+}
+GraphicsWindow::ChildWindows& GraphicsWindow::getChildren() {
+  return _pint->_mapChildren;
+}
+std::shared_ptr<GraphicsWindow> GraphicsWindow::getParent() {
+  return _pint->_pParent;
 }
 FrameState GraphicsWindow::getFrameState() {
   return _pint->_eFrameState;
@@ -237,9 +285,23 @@ void GraphicsWindow::step() {
         getScene()->update(_pint->_pDelta->get());
 
         _pint->setFrameState(FrameState::Render);
-        PipeBits p;
-        p.set();
-        _pint->_pRenderPipe->renderScene(getScene(), getScene()->getPhysicsManager()->getRenderBucket(), getScene()->getActiveCamera(), getScene()->getLightManager(), p);
+
+        std::shared_ptr<RenderPipe> rp = nullptr;
+        if (_pint->_pRenderPipe) {
+          rp = _pint->_pRenderPipe;
+        }
+        else if (_pint->_pParent) {
+          rp = _pint->_pParent->getRenderPipe();
+        }
+        else {
+          BRLogErrorCycle("Parent window not found and render pipe not set for window '" + getTitle() + "'. No rendering will occur.");
+        }
+
+        if (rp) {
+          PipeBits p;
+          p.set();
+          rp->renderScene(getScene(), getScene()->getPhysicsManager()->getRenderBucket(), getScene()->getActiveCamera(), getScene()->getLightManager(), p);
+        }
       }
       else {
         BRLogErrorCycle("Scene was not set on graphics window " + getTitle());
@@ -257,15 +319,7 @@ void GraphicsWindow::idle(int64_t us) {
     getScene()->idle(us);
   }
 }
-string_t GraphicsWindow::getTitle() {
-  string_t st(SDL_GetWindowTitle(_pint->_pSDLWindow));
-  return st;
-}
-std::shared_ptr<GraphicsWindow> GraphicsWindow::create(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLContext> ct, SDL_Window* win) {
-  std::shared_ptr<GraphicsWindow> w = std::make_shared<GraphicsWindow>(api, ct, win);
-  w->init();
-  return w;
-}
+string_t GraphicsWindow::getTitle() { return _pint->_title; }
 uint64_t GraphicsWindow::getFrameNumber() { return _pint->_pFpsMeter->getFrameNumber(); }
 int32_t GraphicsWindow::getWidth() { return _pint->_iLastWidth; }
 int32_t GraphicsWindow::getHeight() { return _pint->_iLastHeight; }
@@ -277,14 +331,18 @@ std::shared_ptr<FrameSync> GraphicsWindow::getFrameSync() { return _pint->_pFram
 std::shared_ptr<Delta> GraphicsWindow::getDelta() { return _pint->_pDelta; }
 std::shared_ptr<FpsMeter> GraphicsWindow::getFpsMeter() { return _pint->_pFpsMeter; }
 std::shared_ptr<InputManager> GraphicsWindow::getInput() { return _pint->_pInput; }
-
 void GraphicsWindow::setScene(std::shared_ptr<Scene> scene) {
   scene->setWindow(getThis<GraphicsWindow>());
   _pint->_pScene = scene;
-  scene->afterAttachedToWindow();
+  static bool x = false;
+  if (x == false) {
+    scene->afterAttachedToWindow();
+    x = true;
+  }
 }
 bool GraphicsWindow::containsPoint_Global2D(const vec2& mp) {
-  //TDOO: store these values per frame in this window
+  //Returns true if a point in screen coordinates lies within the window bounds in screen space.
+  //TDOO: Check for window border
   // int top, left, bot, right;
   // int ret = SDL_GetWindowBordersSize(getSDLWindow(), &top, &left, &bot, &right);
   int posx, posy;

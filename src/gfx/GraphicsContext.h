@@ -35,8 +35,9 @@ public:
   virtual void enableBlend(bool enable) = 0;
   virtual void enableDepthTest(bool enable) = 0;
 
-  std::shared_ptr<GraphicsWindow> getGraphicsWindow();
-  std::shared_ptr<CameraNode> getActiveCamera();
+  std::shared_ptr<GraphicsWindow> createGraphicsWindow(SDL_Window*, GraphicsWindowCreateParameters&& params);
+  std::vector<std::shared_ptr<GraphicsWindow>>& getGraphicsWindows() { return _vecWindows; }
+  //std::shared_ptr<CameraNode> getActiveCamera();
   std::shared_ptr<GraphicsApi> getGraphicsApi() { return _pGraphicsApi; }
 
   float& getClearR() { return _fClearR; }
@@ -45,10 +46,10 @@ public:
   float& getClearA() { return _fClearA; }
 
 protected:
-  SDL_Window* _pSDLWindow = nullptr;
+  //SDL_Window* _pSDLWindow = nullptr;
 
 private:
-  std::shared_ptr<GraphicsWindow> _pWindow = nullptr;
+  std::vector<std::shared_ptr<GraphicsWindow>> _vecWindows;
   std::shared_ptr<GraphicsApi> _pGraphicsApi = nullptr;
   float _fClearR = 1.0f;
   float _fClearG = 1.0f;

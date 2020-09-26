@@ -9,8 +9,8 @@
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
 #include "../base/GraphicsWindow.h"
-#include "../gfx/UiControls.h"   
-#include "../gfx/Picker.h"   
+#include "../gfx/UiControls.h"
+#include "../gfx/Picker.h"
 #include "../gfx/GraphicsContext.h"
 #include "../gfx/RenderSettings.h"
 #include "../gfx/CameraNode.h"
@@ -33,27 +33,23 @@ GraphicsContext::GraphicsContext(std::shared_ptr<GraphicsApi> api) {
 }
 GraphicsContext::~GraphicsContext() {
 }
-std::shared_ptr<CameraNode> GraphicsContext::getActiveCamera() {
-  return getGraphicsWindow()->getScene()->getActiveCamera();
-}
-std::shared_ptr<GraphicsWindow> GraphicsContext::getGraphicsWindow() {
-  if (_pWindow == nullptr) {
-    //We must lazy initialize window because we want to pass context to window, but need context first.
-    try {
-      _pWindow = GraphicsWindow::create(_pGraphicsApi, getThis<GLContext>(), _pSDLWindow);
-    }
-    catch (const Exception&  ex) {
-      _pWindow = nullptr;
-      BRLogError("Error creating graphics window from graphics context.");
-    }
+std::shared_ptr<GraphicsWindow> GraphicsContext::createGraphicsWindow(SDL_Window* sdlw, GraphicsWindowCreateParameters&& params) {
+  if (_vecWindows.size() > 0) {
+    BRLogError("Creating duplicate graphics window.");
   }
 
-  return _pWindow;
+  std::shared_ptr<GraphicsWindow> w = nullptr;
+  try {
+    w = std::make_shared<GraphicsWindow>(getThis<GLContext>());
+    w->init(_pGraphicsApi, sdlw, std::move(params));
+    _vecWindows.push_back(w);
+  }
+  catch (const Exception& ex) {
+    w = nullptr;
+    BRLogError("Error creating graphics window from graphics context.");
+  }
+
+  return w;
 }
 
-
-
-
-
-
-}//ns Game
+}  // namespace BR2
