@@ -2,28 +2,24 @@
 This is a game demo utilizing the SDL2 Vulkan API.
 
 # Building 
-## Windows
-### Visual Studio
+### Visual Studio (Windows)
 * Build with the Visual Studio Solution.
-### VSCode 
-* In the bottom right on status bar change configuration (click button) from Linux To Win32 if not changed.
-* Ctrl+Shift+P -> Type Cmake: Build -> hit enter
-### CMake
-* (Cygwin if not installed)
-* Navigate to the project directory
-* Run ./cmake-windows-gcc.sh
-* You can build the project using Visual Studio in the /build directory
-## Linux
-### VSCode
+### CMake (Windows)
+* Run ./cmake-windows-gcc.sh via Cygwin.
+### VSCode (Linux/Windows) 
+* Change configuration from Linux To Win32.
+* Ctrl+Shift+P -> Cmake: Build -> Enter.
+## CMake (Linux)
 * sudo apt-get update
 * sudo apt-get upgrade
-* Install (apt install)
+* sudo apt install
+  * build-essential
   * libsdl2-dev
   * libsdl2-net-dev
   * libvulkan-dev
   * libopengl-dev
   * cmake
-* Build with Cmake + GCC, CLANG
+* Build with Cmake / VSCode.
 
 # Tasks
 
