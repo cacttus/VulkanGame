@@ -9,7 +9,7 @@ This is a game demo utilizing the SDL2 Vulkan API.
 ### VSCode - Linux/Windows
 * Change configuration from Linux To Win32.
 * Ctrl+Shift+P -> Cmake: Build -> Enter.
-## CMake - Linux
+### CMake - Linux
 * sudo apt-get update
 * sudo apt-get upgrade
 * sudo apt install
