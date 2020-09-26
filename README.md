@@ -52,7 +52,7 @@ This is a game demo utilizing the SDL2 Vulkan API.
 
 ## Folders
 
-|  Folder | Contents|
+|  Folder | Description|
 |---------|----------------------------------------------------------------------------------------------
 |  base   | graphs, generic systems, memory, buffers, networking, events, OS.        |
 |  ext    | External libraries.           |
@@ -61,7 +61,7 @@ This is a game demo utilizing the SDL2 Vulkan API.
 |  model  | meshes, animation, models, characters, skeletons, bones.                  |
 |  world  | physics, scenegraph.                                     |
 
-| Class     | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Class     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |  Package  | Application and project state inforamtion.  Scenes, models, meshes textures.                    |
 |  Window   | SDL window.            |
