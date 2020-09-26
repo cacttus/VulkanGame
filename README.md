@@ -54,18 +54,18 @@ This is a game demo utilizing the SDL2 Vulkan API.
 
 |  Folder | Contents|
 |---------|----------------------------------------------------------------------------------------------
-|  base   | graphs, generic systems, memory, buffers, networking, events and OS interface.				|
-|  ext    | *Lightweight* external libraries.  (Large API's reside in ./external).						|
-|  gfx    | GPU, graphics classes, image manipulation,  materials, lighting, framebuffers, shaders.		|
-|  math   | vectors, matrices, boxes, geometry, hulls, algorithms.										|
-|  model  | meshes, animation, models, characters, skeletons, bones.									|
-|  world  | physics, scenegraph. 																		|
+|  base   | graphs, generic systems, memory, buffers, networking, events and OS interface.        |
+|  ext    | *Lightweight* external libraries.  (Large API's reside in ./external).            |
+|  gfx    | GPU, graphics classes, image manipulation,  materials, lighting, framebuffers, shaders.    |
+|  math   | vectors, matrices, boxes, geometry, hulls, algorithms.                    |
+|  model  | meshes, animation, models, characters, skeletons, bones.                  |
+|  world  | physics, scenegraph.                                     |
 |  bottle | contains world rendering data.                                                              |
 
 | Class     | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |  Package  | Application and project state inforamtion.  Contains all scenes, models, meshes and textures and packages them into one executable.                                                                                                                                                                                                                                                                                                              |
-|  Window   | Each window gets its own rendering pipeline, and graphics context.						|
+|  Window   | Each window gets its own rendering pipeline, and graphics context.            |
 |  Context  | Rendering context.  1 Global context, and multiple additional contexts are possible.  Items shared across contexts include textures, meshes and shaders.                |
 |  Scene    | Scenegraph for all items in the currently loaded game world.  Areas are separated into scenes in order to minimize memory footprint.        |
 |  Gu       | Global static class to access commonly used pieces of the engine (textures, meshes) through static methods.                                                      |
@@ -73,29 +73,29 @@ This is a game demo utilizing the SDL2 Vulkan API.
 ## Hierarchy
 
 * Gu
-	* Texture Manager (1, GLOBAL)
-	* Mesh Manager (1, GLOBAL)
-	* ShaderManager (1, GLOBAL)
+  * Texture Manager (1, GLOBAL)
+  * Mesh Manager (1, GLOBAL)
+  * ShaderManager (1, GLOBAL)
     * Package (1, GLOBAL)
-	* GraphicsApi (1, GLOBAL)
-		* Context (1+)
-			* GraphicsWindow (1+)
+  * GraphicsApi (1, GLOBAL)
+    * Context (1+)
+      * GraphicsWindow (1+)
         * GraphicsWindow (child)(1+)
-				* FrameSync (1)
-				* Delta (1)
-				* RenderPipe (1)
-					* Picker (1)
-				* UiScreen (1)
-				* PhysicsWorld (1)
-				* Scene (1)
-					* LightNode (1*)
-						* :PointLight
-						* :DirLight
-					* CameraNode (1*, only 1 active at a time)
-					* PhysicsNode (1*) 
-					* MeshNode (1*)
-					* ModelNode (1*)
-					* SceneNode (1*)
-						* Component (1*)
-							* BottleScript (1)
-								* World25 (1)
+        * FrameSync (1)
+        * Delta (1)
+        * RenderPipe (1)
+          * Picker (1)
+        * UiScreen (1)
+        * PhysicsWorld (1)
+        * Scene (1)
+          * LightNode (1*)
+            * :PointLight
+            * :DirLight
+          * CameraNode (1*, only 1 active at a time)
+          * PhysicsNode (1*) 
+          * MeshNode (1*)
+          * ModelNode (1*)
+          * SceneNode (1*)
+            * Component (1*)
+              * BottleScript (1)
+                * World25 (1)
