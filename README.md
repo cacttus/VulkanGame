@@ -54,21 +54,21 @@ This is a game demo utilizing the SDL2 Vulkan API.
 
 |  Folder | Contents|
 |---------|----------------------------------------------------------------------------------------------
-|  base   | graphs, generic systems, memory, buffers, networking, events and OS interface.        |
-|  ext    | *Lightweight* external libraries.  (Large API's reside in ./external).            |
-|  gfx    | GPU, graphics classes, image manipulation,  materials, lighting, framebuffers, shaders.    |
+|  base   | graphs, generic systems, memory, buffers, networking, events, OS.        |
+|  ext    | External libraries.           |
+|  gfx    | GPU, graphics, images, materials, lighting, framebuffers, shaders.    |
 |  math   | vectors, matrices, boxes, geometry, hulls, algorithms.                    |
 |  model  | meshes, animation, models, characters, skeletons, bones.                  |
 |  world  | physics, scenegraph.                                     |
-|  bottle | contains world rendering data.                                                              |
 
 | Class     | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 |-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|  Package  | Application and project state inforamtion.  Contains all scenes, models, meshes and textures and packages them into one executable.                                                                                                                                                                                                                                                                                                              |
-|  Window   | Each window gets its own rendering pipeline, and graphics context.            |
-|  Context  | Rendering context.  1 Global context, and multiple additional contexts are possible.  Items shared across contexts include textures, meshes and shaders.                |
-|  Scene    | Scenegraph for all items in the currently loaded game world.  Areas are separated into scenes in order to minimize memory footprint.        |
-|  Gu       | Global static class to access commonly used pieces of the engine (textures, meshes) through static methods.                                                      |
+|  Package  | Application and project state inforamtion.  Scenes, models, meshes textures.                    |
+|  Window   | SDL window.            |
+|  Context  | Rendering context.                  |
+|  Scene    | Scenegraph & meshes.          |
+|  Gu       | Global static class to access core/active context.         |
+|  Ui       | 2D user interface |
 
 ## Hierarchy
 
