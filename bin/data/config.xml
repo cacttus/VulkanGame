@@ -5,7 +5,7 @@
   <MaxCubeShadowSamples value="4"/>
   <MaxFrustShadowSamples value="4"/>
   <StartFullscreen value="false"/>
-  <DefaultScreenWidth value="800"/>
+  <DefaultScreenWidth value="1280"/>
   <DefaultScreenHeight value="600"/>
   <ForceAspectRatio value="false"/>
   <EnableFileLog value="true"/>

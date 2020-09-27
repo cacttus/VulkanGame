@@ -19,6 +19,8 @@ This is a game demo utilizing the SDL2 Vulkan API.
   * libvulkan-dev
   * libopengl-dev
   * cmake
+  * liblua5.3-dev
+  * libluabind-dev
 * Build with Cmake / VSCode.
 
 # Tasks

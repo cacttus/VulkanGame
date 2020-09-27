@@ -207,8 +207,6 @@ void ShaderCompiler::loadSourceData(const string_t& location, std::shared_ptr<Bi
   }
 
   Gu::getPackage()->getFile(location, sourceData, true);
-  //  sourceData.fread(location, true);
-  //DiskFile::readAllBytes(location, sourceData);
 }
 /**
  * @param data [in] The binary data.

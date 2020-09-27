@@ -29,16 +29,18 @@ public:
   ApplicationPackage();
   virtual ~ApplicationPackage() override;
 
-  bool getFile(std::string fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull = false);
-  void build(std::string exeLoc);
+  bool getFile(const string_t& fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull = false);
+  string_t getFileAsString(const string_t& fileLoc);
+  std::vector<string_t> getFileAsLines(const string_t& fileLoc);
+  void build(const string_t& exeLoc);
   string_t debugPrint();
-  bool fileExists(string_t file);
-  time_t getLastModifyTime(string_t str);
+  bool fileExists(const string_t& file);
+  time_t getLastModifyTime(const string_t& str);
 
-  void load(string_t file_path);
+  void load(const string_t& file_path);
 
-  string_t makeAssetPath(string_t file);
-  string_t makeAssetPath(string_t folder, string_t file);
+  string_t makeAssetPath(const string_t& file);
+  string_t makeAssetPath(const string_t& folder, const string_t& file);
 
   bool isPackage();
   string_t getAssetsFolder();

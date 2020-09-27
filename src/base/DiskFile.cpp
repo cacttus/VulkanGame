@@ -44,7 +44,7 @@ bool DiskFile::checkEOF() {
 *
 *    TODO: Remove this function.  It is superfluous and does nothing important.
 */
-RetCode DiskFile::create(string_t szloc, size_t offset) {
+RetCode DiskFile::create(const string_t& szloc, size_t offset) {
   std::fstream fs;
 
   _internal->off = offset;
@@ -57,12 +57,15 @@ RetCode DiskFile::create(string_t szloc, size_t offset) {
   //CheckOsErrorsDbg();
   if (!fs.good()) {
     fs.close();
-    if (fs.rdstate() | fs.badbit)
+    if (fs.rdstate() | fs.badbit) {
       return FILE_CREATEFAILED;
-    if (fs.rdstate() | fs.eofbit)
+    }
+    if (fs.rdstate() | fs.eofbit) {
       return FILE_CREATEFAILED;
-    if (fs.rdstate() | fs.failbit)
+    }
+    if (fs.rdstate() | fs.failbit) {
       return FILE_CREATEFAILED;
+    }
   }
 
   state = file_created;
@@ -377,7 +380,7 @@ RetCode DiskFile::getReadStream(std::fstream& newStream) {
 
   return GR_OK;
 }
-RetCode DiskFile::readAllBytes(string_t loc, Allocator<char>& __out_ outBuf) {
+RetCode DiskFile::readAllBytes(const string_t& loc, Allocator<char>& __out_ outBuf) {
   if (!FileSystem::fileExists(loc)) {
     BRLogError("File " + loc + " did not exist.");
     return GR_FILE_NOT_FOUND_ON_DISK;
@@ -401,7 +404,7 @@ RetCode DiskFile::readAllBytes(string_t loc, Allocator<char>& __out_ outBuf) {
 
   return GR_OK;
 }
-RetCode DiskFile::writeAllBytes(string_t loc, Allocator<char>& __out_ outBuf) {
+RetCode DiskFile::writeAllBytes(const string_t& loc, Allocator<char>& __out_ outBuf) {
   //Unnecessary to create file.  We truncate it later.
   //if (!FileSystem::fileExists(loc)) {
   //    t_string strPath = FileSystem::getDirectoryNameFromPath(loc);

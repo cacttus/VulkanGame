@@ -21,6 +21,7 @@
 #include "../world/Scene.h"
 #include "../world/PhysicsWorld.h"
 #include "../bottle/BottleScript.h"
+#include "../base/LuaScript.h"
 
 #include <signal.h>
 #include <chrono>
@@ -78,9 +79,14 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   }
   Gu::setGraphicsApi(_pGraphicsApi);
 
-  std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window", Gu::getConfig()->getDefaultScreenWidth(), Gu::getConfig()->getDefaultScreenHeight(), Gu::getConfig()->getStartFullscreen(), true, Gu::getConfig()->getForceAspectRatio(), nullptr));  //Just avoid title
+  std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window",
+                                                                                                          Gu::getConfig()->getDefaultScreenWidth(), 
+                                                                                                          Gu::getConfig()->getDefaultScreenHeight(),
+                                                                                                          Gu::getConfig()->getStartFullscreen(), 
+                                                                                                          true, 
+                                                                                                          Gu::getConfig()->getForceAspectRatio(), 
+                                                                                                          nullptr));  //Just avoid title
 
-  //initAudio();//This is probably not needed - remove
   initNet();
 
   BRLogInfo("Creating Child Window ");
@@ -94,8 +100,9 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   //   child_win->setScene(pscene);
   //**TODO: Multiple windows / scene
 
-  //The game specific script
-  pscene->addComponent(std::make_shared<BottleScript>());
+  //The game specific script 
+  pscene->addComponent(std::make_shared<LuaScript>());
+  //pscene->addComponent(std::make_shared<BottleScript>());
 
   BRLogInfo("Apprunner complete.");
 }

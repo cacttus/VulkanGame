@@ -19,11 +19,11 @@ public:
   DiskFile();
   virtual ~DiskFile();
 
-  STATIC RetCode readAllBytes(string_t loc, Allocator<char>& __out_ outBuf);
-  STATIC RetCode writeAllBytes(string_t loc, Allocator<char>& __out_ outBuf);
+  static RetCode readAllBytes(const string_t& loc, Allocator<char>& __out_ outBuf);
+  static RetCode writeAllBytes(const string_t& loc, Allocator<char>& __out_ outBuf);
 
   size_t getFileSize() const;
-  RetCode create(string_t szloc, size_t offset = 0);  // - only create a file.
+  RetCode create(const string_t& szloc, size_t offset = 0);  // - only create a file.
   bool checkEOF();
 
   virtual RetCode read(char* buf, size_t len, size_t buflen = memsize_max, size_t offset = memsize_max) override;  // read into a buffer

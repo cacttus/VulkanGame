@@ -56,20 +56,24 @@ find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(Vulkan REQUIRED)  
 find_package(Threads REQUIRED) #This is better than -pthread
+find_package(Lua REQUIRED)
+if(${LUA_FOUND})
+  message("Lua " ${LUA_VERSION_MAJOR} "." ${LUA_VERSION_MINOR} " found.")
+endif()
 
 #This is required in windows to add to the Additional Include Directories.
-target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDLNET_INCLUDE_DIR} ${VULKAN_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDLNET_INCLUDE_DIR} ${VULKAN_INCLUDE_DIRS} ${LUA_INCLUDE_DIR})
 
 set(ADDL_LIBS "")
 
 if(WIN32)
   find_package(SDL2_net REQUIRED)
 
-  # Unicode required for building with Unicode Character Set (vs MBCS)
+  #Unicode required for building with Unicode Character Set (vs MBCS)
   ADD_DEFINITIONS(-DUNICODE)
   ADD_DEFINITIONS(-D_UNICODE)
 
-  # Suppress error
+  #Suppress error
   ADD_DEFINITIONS(-D_CRT_NO_VA_START_VALIDATION)
 
   #Enable multicore build.
@@ -78,17 +82,16 @@ if(WIN32)
   set(ADDL_LIBS "ws2_32.lib" "winmm.lib" "imm32.lib" "version.lib" "dbghelp.lib" "setupapi.lib" "iphlpapi.lib")
 elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
   set(ADDL_LIBS ncurses)
-    set(CPP_FLAGS_GLOBAL " -pthread ") # -msse3  -- testing sse3
-    # thE DEBUG flag -D_GLIBCXX_DEBUG enables string visualization in vscode.
-    string(APPEND CMAKE_CXX_FLAGS_DEBUG ${CPP_FLAGS_GLOBAL} " -D_DEBUG -D_GLIBCXX_DEBUG ")
-    string(APPEND CMAKE_CXX_FLAGS_RELEASE ${CPP_FLAGS_GLOBAL} ) # -- testing " -ftree-vectorize "
+  set(CPP_FLAGS_GLOBAL " -pthread ")
+  #DEBUG flag -D_GLIBCXX_DEBUG enables string visualization in vscode.
+  string(APPEND CMAKE_CXX_FLAGS_DEBUG ${CPP_FLAGS_GLOBAL} " -D_DEBUG -D_GLIBCXX_DEBUG ")
+  string(APPEND CMAKE_CXX_FLAGS_RELEASE ${CPP_FLAGS_GLOBAL} )
 
-  #Not sure why this is
+  #Not sure
   set(VULKAN_LIBRARIES vulkan)
   set(SDLNET_LIBRARIES SDL2_net)
 endif()
 
 message("Vulkan includes:" ${VULKAN_INCLUDE_DIRS})
 message("Vulkan libs:" ${VULKAN_LIBRARIES})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS} ${LUA_LIBRARIES})

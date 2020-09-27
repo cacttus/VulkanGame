@@ -61,6 +61,7 @@ void ApplicationPackage_Internal::makeDefaultPaths() {
   _strModelsBinDir = FileSystem::combinePath(_strAssetsDir, "/mbi");
   _strSoundsFolder = FileSystem::combinePath(_strAssetsDir, "/sounds");
   _strFontsFolder = FileSystem::combinePath(_strAssetsDir, "/fonts");
+  _strScriptsFolder = FileSystem::combinePath(_strAssetsDir, "/scripts");
 
   _strIconPath = FileSystem::combinePath(_strAssetsDir, "/icon.png");
   _strEnvTexturePath = FileSystem::combinePath(_strTextureDir, "/env1_huge.png");
@@ -144,11 +145,9 @@ void ApplicationPackage_Internal::setSz(string_t name, string_t& value, std::sha
   }
 }
 void ApplicationPackage_Internal::load(string_t file_path) {
-
 }
 
 #pragma endregion
-
 
 #pragma region ApplicationPackage
 ApplicationPackage::ApplicationPackage() {
@@ -174,7 +173,7 @@ string_t ApplicationPackage::getModelsBinFolder() { return _pint->_strModelsBinD
 string_t ApplicationPackage::getEnvTextureFolder() { return _pint->_strEnvTexturePath; }
 string_t ApplicationPackage::getTextureFolder() { return _pint->_strTextureDir; }
 string_t ApplicationPackage::getAppName() { return _pint->_appName; }
-void ApplicationPackage::load(string_t file_path) {
+void ApplicationPackage::load(const string_t& file_path) {
   //Load a given package.
   std::shared_ptr<PackageConfiguration> ents = XmlFile::getXMLConfiguration(file_path);
   _pint->setSz("TextureFolder", _pint->_strTextureDir, ents);
@@ -191,16 +190,16 @@ void ApplicationPackage::load(string_t file_path) {
     BRThrowException("Failed to create cache folder in '" + strCache + "'.");
   }
 }
-string_t ApplicationPackage::makeAssetPath(string_t file) {
+string_t ApplicationPackage::makeAssetPath(const string_t& file) {
   string_t ret = FileSystem::combinePath(getAssetsFolder(), file);
   return ret;
 }
-string_t ApplicationPackage::makeAssetPath(string_t folder, string_t file) {
+string_t ApplicationPackage::makeAssetPath(const string_t& folder, const string_t& file) {
   string_t fold = FileSystem::combinePath(getAssetsFolder(), folder);
   string_t ret = FileSystem::combinePath(fold, file);
   return ret;
 }
-void ApplicationPackage::build(std::string exeLoc) {
+void ApplicationPackage::build(const string_t& exeLoc) {
   _pint->_strExeLoc = exeLoc;
   std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>(c_strVersion);
   _pint->loadExe(fb);
@@ -242,14 +241,33 @@ void ApplicationPackage::build(std::string exeLoc) {
     _pint->_vecEntries.push_back(fe);
   }
 }
-bool ApplicationPackage::getFile(std::string fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull) {
+std::vector<string_t> ApplicationPackage::getFileAsLines(const string_t& fileLoc) {
+  string_t ret = getFileAsString(fileLoc);
+  //Hm..
+  std::vector<string_t> lines = StringUtil::split(ret, std::vector({'\r','\n'}));
+  return lines;
+}
+string_t ApplicationPackage::getFileAsString(const string_t& fileLoc) {
+  // @fn getFileString
+  // @brief Get file as a string.
+  // @return Returns file as a string. Throws a ::Exception if there was a problem.
+  std::shared_ptr<BinaryFile> bf = std::make_shared<BinaryFile>("<none>");
+  bool ret = getFile(fileLoc, bf, true);
+  if (!ret) {
+    bf = nullptr;
+    BRThrowException("Failed to read file '" + fileLoc + "'");
+  }
+  string_t str = bf->toString();
+  return str;
+}
+bool ApplicationPackage::getFile(const string_t& fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull) {
   if (fb == nullptr) {
-    BRLogError("Buffered file was nullptr, no file was read.  Make sur to initialize fb.");
+    BRLogError("Buffered file was nullptr, no file was read. Initialize binaryfile.");
     Gu::debugBreak();
     return false;
   }
   if (isPackage() == false) {
-    return fb->loadFromDisk(fileLoc);
+    return fb->loadFromDisk(fileLoc, bAddNull);
   }
   else {
     return _pint->loadPackedFile(fileLoc, fb, bAddNull);
@@ -269,11 +287,10 @@ string_t ApplicationPackage::debugPrint() {
     else {
       ret += " ERROR getting file data.";
     }
-
   }
   return ret;
 }
-bool ApplicationPackage::fileExists(string_t file) {
+bool ApplicationPackage::fileExists(const string_t& file) {
   if (isPackage() == false) {
     return FileSystem::fileExists(file);
   }
@@ -281,7 +298,7 @@ bool ApplicationPackage::fileExists(string_t file) {
     BRThrowNotImplementedException();
   }
 }
-time_t ApplicationPackage::getLastModifyTime(string_t str) {
+time_t ApplicationPackage::getLastModifyTime(const string_t& str) {
   if (isPackage() == false) {
     return FileSystem::getLastModifyTime(str);
   }
@@ -311,6 +328,4 @@ string_t ApplicationPackage::getEngineConfigFilePath() {
 
 #pragma endregion
 
-
-
-}//ns BR2
+}  // namespace BR2

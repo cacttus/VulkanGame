@@ -32,8 +32,9 @@ void ObjFile::load(string_t& strFilePath, bool flipWinding) {
   // - Read the file into memory (that is the point of a buffered file).
   bool ret = bufferedFile.loadFromDisk(strFilePath);
 
-  if (ret != true)
+  if (ret != true){
     BRThrowException("Failed to open Object File.");
+  }
 
   loadObjFileContents(bufferedFile);
 

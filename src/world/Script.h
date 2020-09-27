@@ -19,14 +19,10 @@ public:
   Script();
   virtual ~Script() override;
 
-
-
-
   virtual void onDrawUi(RenderParams& rp) {}
   virtual void onIdle(t_timeval ms) {}
   virtual void onScreenChanged(uint32_t uiWidth, uint32_t uiHeight, bool bFullscreen) {}
   virtual void onServerPacketReceived(std::shared_ptr<Packet> pack) {}
-
 };
 
 }//ns Game

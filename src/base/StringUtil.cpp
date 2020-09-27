@@ -201,7 +201,10 @@ string_t StringUtil::getPaddedNumber(int32_t number, int32_t maxNumberOfChars, c
   }
   else {  
     //right pad
-    snprintf(cbuf, maxNumberOfChars + 1, "%-0*d", maxNumberOfChars, number);
+    //TODO: make sure this is alright. In Windows this worked.
+    //snprintf(cbuf, maxNumberOfChars + 1, "%-0*d", maxNumberOfChars, number);
+    //Linux
+    snprintf(cbuf, maxNumberOfChars + 1, "%-*d", maxNumberOfChars, number);
   }
 
   ret = string_t(cbuf);

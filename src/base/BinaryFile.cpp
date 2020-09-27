@@ -144,10 +144,6 @@ bool BinaryFile::loadFromDisk(string_t fileLoc, bool bAddNull) {
   return loadFromDisk(fileLoc, 0, -1, bAddNull);
 }
 bool BinaryFile::loadFromDisk(string_t fileLoc, size_t offset, int64_t length, bool bAddNull) {
-  //DiskFile df;
-  //df.openForRead(fileLoc);
-
-  //df.close();
   rewind();
 
   BRLogInfo("Reading File " + fileLoc);
