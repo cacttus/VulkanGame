@@ -30,6 +30,7 @@ public:
   void logInfo(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
   void logWarn(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
   void logError(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = false);
+  void logScript(string_t msg, int line, const char* file);
   void logTODO(string_t msg, int line, const char* file);
   void logDebug(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
   void logWarnCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int wait_ms = 1000, bool force = false);
@@ -53,6 +54,7 @@ private:
 #define BRLogInfo(x) BR2::Gu::getLogger()->logInfo(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
 #define BRLogWarn(x) BR2::Gu::getLogger()->logWarn(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr)
 #define BRLogError(x) BR2::Gu::getLogger()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr)
+#define BRLogScript(x) BR2::Gu::getLogger()->logScript(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
 #define BRLogErrorNoStack(x) BR2::Gu::getLogger()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, true)
 #define BRLogErrorEx(x, aex) BR2::Gu::getLogger()->logError(x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, aex)
 

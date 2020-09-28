@@ -27,7 +27,7 @@ public:
   GraphicsWindow(std::shared_ptr<GLContext> ct);
   virtual ~GraphicsWindow() override;
 
-  void init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, GraphicsWindowCreateParameters&& params);
+  void init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, const GraphicsWindowCreateParameters& params);
   void step();
   void idle(int64_t us);
 

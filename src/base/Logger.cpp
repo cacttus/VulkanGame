@@ -30,6 +30,7 @@ public:
                         Warn,
                         Error,
                         TODO,
+                        Script,
   };
   string_t _logDir;
   string_t _logFileName;
@@ -175,8 +176,15 @@ void Logger_Internal::processLogs_Async() {
       else if (level == Logger_Internal::LogLevel::TODO) {
         ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_GREEN);
       }
-      else {
+      else if (level == Logger_Internal::LogLevel::Info) {
         ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_WHITE);
+      }
+      else if (level == Logger_Internal::LogLevel::Script) {
+        ColoredConsole::print(logs[iMsg], ColoredConsole::Color::FG_MAGENTA);
+      }
+      else {
+        string_t st = "\r\n*Warning: Log level not supported..*\r\n";
+        ColoredConsole::print(st + logs[iMsg], ColoredConsole::Color::FG_WHITE);
       }
     }
   }
@@ -261,6 +269,9 @@ void Logger::logInfo(string_t msg, int line, const char* file, const BR2::Except
 }
 void Logger::logError(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Error);
+}
+void Logger::logScript(string_t msg, int line, const char* file) {
+  _pint->log_wedi_mainThread(msg, line, file, nullptr, true, Logger_Internal::LogLevel::Script);
 }
 void Logger::logWarn(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Warn);

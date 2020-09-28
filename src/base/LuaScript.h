@@ -11,20 +11,8 @@
 #include "../base/LuaIncludes.h"
 
 namespace BR2 {
-class LuaScript;
-class LuaFunction;
-class LuaFunction {
-public:
-  LuaFunction(std::shared_ptr<LuaScript> sc, const string_t& fname);
-  void call(const string_t& data);
-
-private:
-  std::shared_ptr<LuaScript> _pScript = nullptr;
-  string_t _name;
-};
 class LuaScript : public Script {
 public:
-
   LuaScript();
   virtual ~LuaScript() override;
   virtual void onStart() override;
@@ -38,7 +26,7 @@ public:
 private:
   string_t _filename = "";
   lua_State* _pState = nullptr;
-  std::shared_ptr<LuaFunction> getGlobalFunction(const string_t& name);
+  //std::shared_ptr<LuaFunction> getGlobalFunction(const string_t& name);
 };
 
 }  // namespace BR2

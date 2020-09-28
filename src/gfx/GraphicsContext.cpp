@@ -33,7 +33,7 @@ GraphicsContext::GraphicsContext(std::shared_ptr<GraphicsApi> api) {
 }
 GraphicsContext::~GraphicsContext() {
 }
-std::shared_ptr<GraphicsWindow> GraphicsContext::createGraphicsWindow(SDL_Window* sdlw, GraphicsWindowCreateParameters&& params) {
+std::shared_ptr<GraphicsWindow> GraphicsContext::createGraphicsWindow(SDL_Window* sdlw, const GraphicsWindowCreateParameters& params) {
   if (_vecWindows.size() > 0) {
     BRLogError("Creating duplicate graphics window.");
   }
@@ -41,7 +41,7 @@ std::shared_ptr<GraphicsWindow> GraphicsContext::createGraphicsWindow(SDL_Window
   std::shared_ptr<GraphicsWindow> w = nullptr;
   try {
     w = std::make_shared<GraphicsWindow>(getThis<GLContext>());
-    w->init(_pGraphicsApi, sdlw, std::move(params));
+    w->init(_pGraphicsApi, sdlw, params);
     _vecWindows.push_back(w);
   }
   catch (const Exception& ex) {

@@ -525,7 +525,7 @@ public:
   std::shared_ptr<GraphicsWindow> _parent = nullptr;
   GraphicsWindowCreateParameters(const string_t& title, int32_t width, int32_t height,
                                  bool fullscreen, bool show, bool forceAspectRatio,
-                                 std::shared_ptr<GraphicsWindow> parent) {
+                                 std::shared_ptr<GraphicsWindow> parent = nullptr) {
     _title = title;
     _width = width;
     _height = height;

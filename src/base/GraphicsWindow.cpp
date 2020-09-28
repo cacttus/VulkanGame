@@ -164,7 +164,7 @@ GraphicsWindow::~GraphicsWindow() {
   }
   _pint = nullptr;
 }
-void GraphicsWindow::init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, GraphicsWindowCreateParameters&& params) {
+void GraphicsWindow::init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, const GraphicsWindowCreateParameters& params) {
   _pint->_iLastWidth = params._width;
   _pint->_iLastHeight = params._height;
   _pint->_pViewport = std::make_shared<RenderViewport>(_pint->_iLastWidth, _pint->_iLastHeight, ViewportConstraint::Full);

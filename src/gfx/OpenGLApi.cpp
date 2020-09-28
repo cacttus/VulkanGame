@@ -78,7 +78,7 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
 
   return profs;
 }
-std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(GraphicsWindowCreateParameters&& params) {
+std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const GraphicsWindowCreateParameters& params) {
   std::shared_ptr<GraphicsWindow> pRet = nullptr;
   if (params._parent != nullptr) {
     if (params._parent->getContext()) {
@@ -115,7 +115,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(GraphicsWindowCreatePara
 
   return pRet;
 }
-std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_ptr<GLProfile> prof, GraphicsWindowCreateParameters&& params) {
+std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_ptr<GLProfile> prof, const GraphicsWindowCreateParameters& params) {
   // Create an OpenGL enabled window from a spec profile.
   // @return An OpenGL enabled graphics window of the given profile, or nullptr if the profile wasn't compatible.
   AssertOrThrow2(prof != nullptr);
@@ -131,7 +131,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
       if (params._parent) {
         //Share a context, GBuffer
         std::shared_ptr<GLContext> context = getCoreContext()->getThis<GLContext>();
-        pRet = context->createGraphicsWindow(win, std::move(params));
+        pRet = context->createGraphicsWindow(win, params);
       }
       else {
         //Create a new context,and GBuffer.
@@ -148,7 +148,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
             Gu::createManagers(context);
           }
 
-          pRet = context->createGraphicsWindow(win, std::move(params));
+          pRet = context->createGraphicsWindow(win, params);
         }
         else {
           SDL_DestroyWindow(win);

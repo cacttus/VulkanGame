@@ -22,7 +22,7 @@ public:
 
   void updateLoop();
 
-  virtual std::shared_ptr<GraphicsWindow> createWindow(GraphicsWindowCreateParameters&& params) = 0;
+  virtual std::shared_ptr<GraphicsWindow> createWindow(const GraphicsWindowCreateParameters& params) = 0;
   virtual void destroyWindow(std::shared_ptr<GraphicsWindow> w);
   virtual void makeCurrent(GraphicsWindow*) = 0;
   virtual void getDrawableSize(SDL_Window* win, int* w, int* h) = 0;

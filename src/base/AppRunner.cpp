@@ -79,30 +79,42 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   }
   Gu::setGraphicsApi(_pGraphicsApi);
 
-  std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window",
-                                                                                                          Gu::getConfig()->getDefaultScreenWidth(), 
-                                                                                                          Gu::getConfig()->getDefaultScreenHeight(),
-                                                                                                          Gu::getConfig()->getStartFullscreen(), 
-                                                                                                          true, 
-                                                                                                          Gu::getConfig()->getForceAspectRatio(), 
-                                                                                                          nullptr));  //Just avoid title
+#ifdef _DEBUG
+  // Run Tests
+  std::shared_ptr<LuaScript> math_test = std::make_shared<LuaScript>();
+  math_test->compile(FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/test_math.lua"));
+  math_test = nullptr;
+#endif
 
-  initNet();
+  std::shared_ptr<LuaScript> editor = std::make_shared<LuaScript>();
+  editor->compile(FileSystem::combinePath(Gu::getPackage()->getAssetsFolder(), "/Editor.lua"));
 
-  BRLogInfo("Creating Child Window ");
-  std::shared_ptr<GraphicsWindow> child_win = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Window 2", 300, 600, false, true, false, mainwindow));  //Just avoid title
-
-  BRLogInfo("Creating Scene");
-  std::shared_ptr<Scene> pscene = Scene::create();
-  mainwindow->setScene(pscene);
-
-  //**TODO: Multiple windows / scene
-  //   child_win->setScene(pscene);
-  //**TODO: Multiple windows / scene
-
-  //The game specific script 
-  pscene->addComponent(std::make_shared<LuaScript>());
-  //pscene->addComponent(std::make_shared<BottleScript>());
+  //** Editor.lua
+  //
+  //   std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window",
+  //                                                                                                           Gu::getConfig()->getDefaultScreenWidth(),
+  //                                                                                                           Gu::getConfig()->getDefaultScreenHeight(),
+  //                                                                                                           Gu::getConfig()->getStartFullscreen(),
+  //                                                                                                           true,
+  //                                                                                                           Gu::getConfig()->getForceAspectRatio(),
+  //                                                                                                           nullptr));  //Just avoid title
+  //
+  //   initNet();
+  //
+  //   BRLogInfo("Creating Child Window ");
+  //   std::shared_ptr<GraphicsWindow> child_win = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Window 2", 300, 600, false, true, false, mainwindow));  //Just avoid title
+  //
+  //   BRLogInfo("Creating Scene");
+  //   std::shared_ptr<Scene> pscene = Scene::create();
+  //   mainwindow->setScene(pscene);
+  //
+  //   //**TODO: Multiple windows / scene
+  //   //   child_win->setScene(pscene);
+  //   //**TODO: Multiple windows / scene
+  //
+  //   //The game specific script
+  //   pscene->addComponent(std::make_shared<LuaScript>());
+  //   //pscene->addComponent(std::make_shared<BottleScript>());
 
   BRLogInfo("Apprunner complete.");
 }
@@ -303,6 +315,13 @@ bool AppRunner_Internal::runCommands(const std::vector<string_t>& args) {
 void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
   if (Gu::checkArg(args, "package_loc", "_debug")) {
     BRLogInfo("Application package set to debug.");
+
+    BRLogInfo("Building Debug ApplicationPackage");
+    std::shared_ptr<ApplicationPackage> def = std::make_shared<ApplicationPackage>();
+    def->build(FileSystem::getExecutableFullPath());
+    SDLUtils::checkSDLErr();
+
+    Gu::setPackage(def);
   }
   else {
     BRLogInfo("Select App Package: Use package_loc=_debug to skip the file selector.");
@@ -317,8 +336,7 @@ void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
       Gu::setPackage(pack);
     }
     else {
-      BRLogWarn("Package could not be loaded.  Folder not selected, or invalid path.");
-      BRLogDebug("We do not yet support packages.");
+      BRThrowException("Package could not be loaded.  Folder not selected, or invalid path.");
     }
   }
 }

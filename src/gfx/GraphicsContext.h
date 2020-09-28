@@ -35,7 +35,7 @@ public:
   virtual void enableBlend(bool enable) = 0;
   virtual void enableDepthTest(bool enable) = 0;
 
-  std::shared_ptr<GraphicsWindow> createGraphicsWindow(SDL_Window*, GraphicsWindowCreateParameters&& params);
+  std::shared_ptr<GraphicsWindow> createGraphicsWindow(SDL_Window*, const GraphicsWindowCreateParameters& params);
   std::vector<std::shared_ptr<GraphicsWindow>>& getGraphicsWindows() { return _vecWindows; }
   //std::shared_ptr<CameraNode> getActiveCamera();
   std::shared_ptr<GraphicsApi> getGraphicsApi() { return _pGraphicsApi; }

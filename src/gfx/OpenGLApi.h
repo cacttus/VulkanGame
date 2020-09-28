@@ -23,7 +23,7 @@ public:
   const int c_iCurrentOpenGLVersion = 4;
   const int c_iCurrentOpenGLSubVersion = 5;
 
-  virtual std::shared_ptr<GraphicsWindow> createWindow(GraphicsWindowCreateParameters&& params) override;
+  virtual std::shared_ptr<GraphicsWindow> createWindow(const GraphicsWindowCreateParameters& params) override;
   virtual void makeCurrent(GraphicsWindow*) override;
   virtual void getDrawableSize(SDL_Window* win, int* w, int* h) override;
   virtual void swapBuffers(SDL_Window* win) override;
@@ -32,7 +32,7 @@ public:
 
 private:
   std::vector<std::shared_ptr<GLProfile>> getProfiles();
-  std::shared_ptr<GraphicsWindow> createWindowFromProfile(std::shared_ptr<GLProfile> prof, GraphicsWindowCreateParameters&& params);
+  std::shared_ptr<GraphicsWindow> createWindowFromProfile(std::shared_ptr<GLProfile> prof, const GraphicsWindowCreateParameters& params);
 };
 
 }  // namespace BR2

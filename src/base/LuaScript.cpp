@@ -7,6 +7,8 @@
 #include "../base/OperatingSystem.h"
 #include "../base/Stopwatch.h"
 #include "../math/Random.h"
+#include "../gfx/GraphicsApi.h"
+#include "../base/GraphicsWindow.h"
 #include <iostream>
 
 //https://github.com/SteveKChiu/lua-intf
@@ -20,57 +22,54 @@ LUA_USING_LIST_TYPE(std::vector)
 LUA_USING_MAP_TYPE(std::map)
 }  // namespace LuaIntf
 
+
+
 namespace BR2 {
-static int average(lua_State* L) {
-  BRLogInfo("Calling 'average' from LUA - exciting!");
-  /* get number of arguments */
+static int print(lua_State* L) {
   int n = lua_gettop(L);
   double sum = 0;
   int i;
 
-  /* loop through each argument */
-  for (i = 1; i <= n; i++) {
-    /* total the arguments */
-    sum += lua_tonumber(L, i);
+  string_t msg = "";
+  if (n == 1) {
+    const char* s = lua_tostring(L, i);
+    if(s){
+    msg = string_t(s);
+    }
   }
-
-  /* push the average */
-  lua_pushnumber(L, sum / n);
-
-  /* push the sum */
-  lua_pushnumber(L, sum);
-
-  /* return the number of results */
-  return 2;
-}
-
-#pragma region LuaFunction
-LuaFunction::LuaFunction(std::shared_ptr<LuaScript> sc, const string_t& fname) {
-  _pScript = sc;
-  _name = fname;
-}
-void LuaFunction::call(const string_t& data) {
-  if (!lua_getglobal(_pScript->getState(), _name.c_str())) {
-    _pScript->runtimeError("Could not find function name " + _name);
-    return;
+  if (msg.length() > 0) {
+    BRLogScript(msg);
   }
-  if (!lua_isfunction(_pScript->getState(), -1)) {
-    _pScript->runtimeError("Was not a function: " + _name);
-    return;
-  }
-
-  lua_pushlstring(_pScript->getState(), data.c_str(), data.length());
-  lua_resume(_pScript->getState(), NULL, 1);
+  return 0;
 }
-#pragma endregion
 #pragma region LuaScript
 LuaScript::LuaScript() {
   //Create state
   _pState = luaL_newstate();
   luaL_openlibs(_pState);
 
+#define START_CLASS(x) \
+  LuaIntf::LuaBinding(_pState).beginClass<x>(#x)
+
+  lua_register(_pState, "print", print);
+
   // BR2 Bindings
-  LuaIntf::LuaBinding(_pState).beginClass<vec3>("vec3").addConstructor(LUA_ARGS(float, float, float))  // use _opt<float> for optional
+  START_CLASS(Gu)
+      .addStaticFunction("getGraphicsApi", &Gu::getGraphicsApi)
+      .addStaticFunction("getEngineConfig", &Gu::getEngineConfig)
+      .endClass();
+  START_CLASS(EngineConfig)
+      .endClass();
+  START_CLASS(GraphicsApi)
+      .addFunction("createWindow", static_cast<std::shared_ptr<GraphicsWindow> (GraphicsApi::*)(const GraphicsWindowCreateParameters&)>(&GraphicsApi::createWindow), LUA_ARGS(const GraphicsWindowCreateParameters&))
+      .endClass();
+  START_CLASS(GraphicsWindowCreateParameters)
+      .addConstructor(LUA_ARGS(const string_t&, int32_t, int32_t, bool, bool, bool, LuaIntf::_opt<std::shared_ptr<GraphicsWindow>>))
+      .endClass();
+  START_CLASS(GraphicsWindow)
+      .endClass();
+  START_CLASS(vec3)
+      .addConstructor(LUA_ARGS(float, float, float))  // use _opt<float> for optional
       .addVariableRef("x", &vec3::x)
       .addVariableRef("y", &vec3::y)
       .addVariableRef("z", &vec3::z)
@@ -87,14 +86,13 @@ LuaScript::LuaScript() {
       .addFunction("__div", static_cast<vec3 (vec3::*)(const vec3&) const>(&vec3::divide), LUA_ARGS(vec3))
       .addFunction("divs", static_cast<vec3 (vec3::*)(const float&) const>(&vec3::divide), LUA_ARGS(float))
       .endClass();
-
-  LuaIntf::LuaBinding(_pState).beginClass<Stopwatch>("Stopwatch").addConstructor(LUA_ARGS(LuaIntf::_opt<std::string>, LuaIntf::_opt<bool>))  // use _opt<float> for optional
+  START_CLASS(Stopwatch)
+      .addConstructor(LUA_ARGS(LuaIntf::_opt<std::string>, LuaIntf::_opt<bool>))  // use _opt<float> for optional
       .addFunction("start", &Stopwatch::start, LUA_ARGS(LuaIntf::_opt<std::string>))
       .addFunction("stop", &Stopwatch::stop, LUA_ARGS(LuaIntf::_opt<bool>, LuaIntf::_opt<bool>))
       .addFunction("deltaMilliseconds", &Stopwatch::deltaMilliseconds)
       .endClass();
-
-  LuaIntf::LuaBinding(_pState).beginClass<Random>("Random")
+  START_CLASS(Random)
       .addConstructor(LUA_ARGS())
       .addConstructor(LUA_ARGS(int32_t))
       .addFunction("nextFloat", &Random::nextFloat, LUA_ARGS(float, float))
@@ -114,70 +112,42 @@ void LuaScript::compileError(const string_t& msg) {
   BRLogError(msg_m);
   Gu::debugBreak();
 }
-std::shared_ptr<LuaFunction> LuaScript::getGlobalFunction(const string_t& fname) {
-  std::shared_ptr<LuaFunction> ret = nullptr;
-  if (!lua_getglobal(_pState, fname.c_str())) {
-    runtimeError("Failed to find global function '" + fname + "'");
-    return ret;
-  }
-  if (!lua_isfunction(_pState, -1)) {
-    return ret;
-  }
-  ret = std::make_shared<LuaFunction>(getThis<LuaScript>(), fname);
 
-  //Pop the function name off the stack.
-  lua_pop(_pState, 1);
-
-  return ret;
-}
 void LuaScript::onStart() {
   //Testing..
-  while (true) {
-    string_t file_path = FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/test_math.lua");
-    compile(file_path);
-
-    // std::shared_ptr<LuaFunction> func;
-    // func = getGlobalFunction("onStart");
-    // if (func) {
-    //   func->call(" Data from C++ ");
-    // }
-    // func = getGlobalFunction("onUpdate");
-    // if (func) {
-    //   func->call(" Data from C++ ");
-    // }
-    // func = getGlobalFunction("onExit");
-    // if (func) {
-    //   func->call(" Data from C++ ");
-    // }
-
-    // func = getGlobalFunction("SFSDFSDF");
-    // if (func) {
-    //   func->call(" Data from C++ ");
-    // }
-    std::cin.get();
-  }
+  //   while (true) {
+  //     string_t file_path = FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/test_math.lua");
+  //     compile(file_path);
+  //
+  //     // std::shared_ptr<LuaFunction> func;
+  //     // func = getGlobalFunction("onStart");
+  //     // if (func) {
+  //     //   func->call(" Data from C++ ");
+  //     // }
+  //     // func = getGlobalFunction("onUpdate");
+  //     // if (func) {
+  //     //   func->call(" Data from C++ ");
+  //     // }
+  //     // func = getGlobalFunction("onExit");
+  //     // if (func) {
+  //     //   func->call(" Data from C++ ");
+  //     // }
+  //
+  //     // func = getGlobalFunction("SFSDFSDF");
+  //     // if (func) {
+  //     //   func->call(" Data from C++ ");
+  //     // }
+  //     std::cin.get();
+  //   }
 }
 void LuaScript::onUpdate(float dt) {
 }
 void LuaScript::onExit() {
 }
-
 void LuaScript::compile(const string_t& filename) {
   _filename = filename;
 
   string_t file_str = "";
-
-  //**TODO:OPTIMIZE
-  // Append library functions file lib.lua
-  string_t libpath = FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/lib.lua");
-  try {
-    file_str += Gu::getPackage()->getFileAsString(libpath);
-  }
-  catch (const Exception& ex) {
-    lua_close(_pState);
-    return;
-  }
-
   //Read file lines.
   try {
     file_str += Gu::getPackage()->getFileAsString(filename);
@@ -216,5 +186,32 @@ void LuaScript::compile(const string_t& filename) {
 // }
 // if (!lua_isfunction(L, -1)) {
 //   lua_pop(L, 1);
+//   return ret;
+// }
+// class LuaScript;
+// class LuaFunction;
+// class LuaFunction {
+// public:
+//   LuaFunction(std::shared_ptr<LuaScript> sc, const string_t& fname);
+//   void call(const string_t& data);
+//
+// private:
+//   std::shared_ptr<LuaScript> _pScript = nullptr;
+//   string_t _name;
+// };
+// std::shared_ptr<LuaFunction> LuaScript::getGlobalFunction(const string_t& fname) {
+//   std::shared_ptr<LuaFunction> ret = nullptr;
+//   if (!lua_getglobal(_pState, fname.c_str())) {
+//     runtimeError("Failed to find global function '" + fname + "'");
+//     return ret;
+//   }
+//   if (!lua_isfunction(_pState, -1)) {
+//     return ret;
+//   }
+//   ret = std::make_shared<LuaFunction>(getThis<LuaScript>(), fname);
+//
+//   //Pop the function name off the stack.
+//   lua_pop(_pState, 1);
+//
 //   return ret;
 // }

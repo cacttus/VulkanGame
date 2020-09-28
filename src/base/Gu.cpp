@@ -613,12 +613,6 @@ void Gu::createManagers(std::shared_ptr<GLContext> ct) {
   _pRenderSettings = RenderSettings::create();
   _pRandom = std::make_shared<Random>();
 
-  BRLogInfo("GLContext - Building ApplicationPackage");
-  _pPackage = std::make_shared<ApplicationPackage>();
-  _pPackage->build(FileSystem::getExecutableFullPath());
-  SDLUtils::checkSDLErr();
-  ct->chkErrRt();
-
   BRLogInfo("GLContext - Creating TexCache");
   _pTexCache = std::make_shared<TexCache>(ct);
   SDLUtils::checkSDLErr();

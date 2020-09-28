@@ -1,12 +1,6 @@
 # VulkanGame
 This is a game demo utilizing the SDL2 Vulkan API.
 
-# Changes
-Changing random from static class to global class with state. This lets us create an instance of random for testing, noise, or other consistent randomness.
-
-# Working on :
-trying to figure out how to get LuaItnf to overload __div correctly.
-
 # Building 
 ### Visual Studio - Windows
 * Open VulkanGame.sln with Visual Studio 2019.

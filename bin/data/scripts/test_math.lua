@@ -208,7 +208,7 @@ for i = 0, count, 1 do
   local v0 = vec3(rando:nextFloat(-10, 10), rando:nextFloat(-10, 10), rando:nextFloat(-10, 10))
   local v1 = vec3(rando:nextFloat(-10, 10), rando:nextFloat(-10, 10), rando:nextFloat(-10, 10))
   local v2 = v0 + v1
-  br_v3 = (br_v3 + v2):div(2)
+  br_v3 = (br_v3 + v2):divs(2)
 end
 sw:stop()
 -- Make sure the results are the same for both tests
@@ -242,7 +242,7 @@ for i = 0, count, 1 do
   local v0 = vec3(rando:nextFloat(-10, 10), rando:nextFloat(-10, 10), rando:nextFloat(-10, 10))
   local v1 = vec3(rando:nextFloat(-10, 10), rando:nextFloat(-10, 10), rando:nextFloat(-10, 10))
   local v2 = v0:cross(v1)
-  br_v3 = (br_v3 + v2):div(2)
+  br_v3 = (br_v3 + v2):divs(2)
 end
 sw:stop()
 -- Make sure the results are the same for both tests

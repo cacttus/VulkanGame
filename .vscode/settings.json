@@ -92,7 +92,11 @@
     "complex": "cpp",
     "list": "cpp",
     "typeindex": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "*.ipp": "cpp",
+    "csignal": "cpp",
+    "cfenv": "cpp",
+    "valarray": "cpp"
   },
   "cmake.configureOnOpen": false,
   "cmake.debugConfig": {
