@@ -56,7 +56,19 @@ LuaScript::LuaScript() {
   luaL_openlibs(_pState);
 
   //Setup C++ <-> Lua interface
-  lua_register(_pState, "average", average);
+  //lua_register(_pState, "average", average);
+
+  // lua_register(_pState, "average", average);
+
+  //Luabind test
+  // luabind::module_(_pState) [
+  //   luabind::namespace_("MyNamespace")[
+  //     luabind::class_<vec2>("vec2")
+  //       .def(luabind::constructor<int, int>),
+  //       .def("__add", &vec2::operator+),
+  //       .def("toString", &vec2::toString)
+  //   ]
+  // ];
 }
 LuaScript::~LuaScript() {
   lua_close(_pState);
@@ -87,24 +99,68 @@ std::shared_ptr<LuaFunction> LuaScript::getGlobalFunction(const string_t& fname)
 
   return ret;
 }
+//
+// void js_print(CScriptVar *v, void *userdata) {
+//     printf("> %s\n", v->getParameter("text")->getString().c_str());
+// }
+// void js_dump(CScriptVar *v, void *userdata) {
+//     CTinyJS *js = (CTinyJS*)userdata;
+//     js->root->trace(">  ");
+// }
 void LuaScript::onStart() {
-  string_t path = FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/main.lua");
-  compile(path);
-  std::shared_ptr<LuaFunction> func = getGlobalFunction("onStart");
-  if (func) {
-    func->call(" Data from C++ ");
-  }
-  func = getGlobalFunction("onUpdate");
-  if (func) {
-    func->call(" Data from C++ ");
-  }
-  func = getGlobalFunction("onExit");
-  if (func) {
-    func->call(" Data from C++ ");
-  }
-  func = getGlobalFunction("SFSDFSDF");
-  if (func) {
-    func->call(" Data from C++ ");
+  //   CTinyJS s;
+  //   registerFunctions(&s);
+  //   s.addNative("function print(text)", &js_print, 0);
+  //   s.addNative("function dump()", &js_dump, &s);
+  //
+  //   //  registerFunctions(&s);
+  //   //  registerMathFunctions(&s);
+  //   //  registerStringFunctions(&s);
+  //  // s.getRoot()->addChild("result", s.newScriptVar(0));
+  //   string_t filename = FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/main.js");
+  //   string_t file_str;
+  //   try {
+  //     file_str = Gu::getPackage()->getFileAsString(filename);
+  //   }
+  //   catch (const Exception& ex) {
+  //     lua_close(_pState);
+  //     return;
+  //   }
+  //
+  //   try {
+  //     s.execute(file_str);
+  //   }
+  //   catch (CScriptException* e) {
+  //     BRLogError("Error in JS: " + e->text);
+  //     delete e;
+  //   }
+  //   //bool pass = s.getRoot()->findChild("result")->toBoolean();
+  //
+  //   //TEST TINYHJS
+  //
+  //   return;
+
+//Testing..
+  while (true) {
+    string_t path = FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/main.lua");
+    compile(path);
+    std::shared_ptr<LuaFunction> func = getGlobalFunction("onStart");
+    if (func) {
+      func->call(" Data from C++ ");
+    }
+    func = getGlobalFunction("onUpdate");
+    if (func) {
+      func->call(" Data from C++ ");
+    }
+    func = getGlobalFunction("onExit");
+    if (func) {
+      func->call(" Data from C++ ");
+    }
+    // func = getGlobalFunction("SFSDFSDF");
+    // if (func) {
+    //   func->call(" Data from C++ ");
+    // }
+    Gu::debugBreak();
   }
 }
 void LuaScript::onUpdate(float dt) {
