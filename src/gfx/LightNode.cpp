@@ -214,7 +214,7 @@ void LightNodePoint::updateFlicker() {
 
         if (_fFlickerValue >= 1.0f) {
           _fLastRandomValue = _fNextRandomValue;
-          _fNextRandomValue = Random::nextFloat(0.0f, 1.0f);
+          _fNextRandomValue = Gu::getRandom()->nextFloat(0.0f, 1.0f);
 
           _fFlickerValue = 0.0f;
         }

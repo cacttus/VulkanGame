@@ -79,6 +79,7 @@ std::shared_ptr<EngineConfig> Gu::_pEngineConfig = nullptr;
 std::shared_ptr<Net> Gu::_pNet = nullptr;
 std::shared_ptr<InputManager> Gu::_pGlobalInput = nullptr;
 std::shared_ptr<GLContext> Gu::_pActiveContext = nullptr;
+std::shared_ptr<Random> Gu::_pRandom = nullptr;
 
 template <class Tx>
 std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> global_manager) {
@@ -104,6 +105,7 @@ std::shared_ptr<Logger> Gu::getLogger() { return GetExistingManager(_pLogger); }
 std::shared_ptr<GraphicsApi> Gu::getGraphicsApi() { return GetExistingManager(_pGraphicsApi); }
 std::shared_ptr<EngineConfig> Gu::getConfig() { return GetExistingManager(_pEngineConfig); }
 std::shared_ptr<Net> Gu::getNet() { return GetExistingManager(_pNet); }
+std::shared_ptr<Random> Gu::getRandom() { return GetExistingManager(_pRandom); }
 std::shared_ptr<InputManager> Gu::getGlobalInput() { return GetExistingManager(_pGlobalInput); }
 
 std::shared_ptr<GLContext> Gu::getCoreContext() {
@@ -281,6 +283,7 @@ void Gu::deleteManagers() {
   _pPackage = nullptr;
   _pLogger = nullptr;
   _pNet = nullptr;
+  _pRandom = nullptr;
 
   _pGraphicsApi = nullptr;
 }
@@ -608,6 +611,7 @@ std::string Gu::getCPPVersion() {
 
 void Gu::createManagers(std::shared_ptr<GLContext> ct) {
   _pRenderSettings = RenderSettings::create();
+  _pRandom = std::make_shared<Random>();
 
   BRLogInfo("GLContext - Building ApplicationPackage");
   _pPackage = std::make_shared<ApplicationPackage>();
@@ -650,6 +654,7 @@ void Gu::createManagers(std::shared_ptr<GLContext> ct) {
   _pNet = std::make_shared<Net>();
   SDLUtils::checkSDLErr();
   ct->chkErrRt();
+
 }
 void Gu::updateManagers() {
   if (_pSequencer != nullptr) {

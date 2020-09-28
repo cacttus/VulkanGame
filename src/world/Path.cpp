@@ -65,7 +65,7 @@ void Path::updateDebugDraw() {
   std::shared_ptr<GLContext> ctx = Gu::getCoreContext();
   if (ctx) {
     //
-    color = Random::nextVec4(vec4(.2f, .2f, .2f, 1), vec4(1, 1, 1, 1));
+    color = Gu::getRandom()->nextVec4(vec4(.2f, .2f, .2f, 1), vec4(1, 1, 1, 1));
     _pDrawSpline = std::make_shared<UtilMeshInline>(ctx);
     _pDrawSpline->begin(GL_LINES);
     _pSpline->iterate(
@@ -114,7 +114,7 @@ void Path::updateDebugDraw() {
 
     float m = 0.5f;
     _box = Box3f(-m, -m, -m, m, m, m);
-    _pDrawBox = std::make_shared<UtilMeshBox>(ctx, &_box, vec3(0, 0, 0), Random::nextVec4(vec4(0, 0, 0, 1), vec4(1, 1, 1, 1)));
+    _pDrawBox = std::make_shared<UtilMeshBox>(ctx, &_box, vec3(0, 0, 0), Gu::getRandom()->nextVec4(vec4(0, 0, 0, 1), vec4(1, 1, 1, 1)));
     _pDrawBox->init();
   }
 }

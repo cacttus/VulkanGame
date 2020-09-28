@@ -22,12 +22,13 @@ add_executable(VulkanGame ${SOURCE} ${HEADERS})
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
 set(VG_BUILD_ARCH ${ARCHITECTURE})
 
-#Project_source_dir is the project root.
+# Directories
 set(VG_BIN_DIR ${PROJECT_SOURCE_DIR}/bin/)
 set(VG_LIB_DIR ${PROJECT_SOURCE_DIR}/lib/)
 set(VG_BIN_DEBUG_DIR ${VG_BIN_DIR})
 set(VG_BIN_RELEASE_DIR ${VG_BIN_DIR})
 
+# Target
 if(GENERATOR_IS_MULTI_CONFIG)
   message("Error: Generator is MULTI CONFIG")
    return()
@@ -51,21 +52,21 @@ set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${VG_OUTPUT_NAME}
   ARCHIVE_OUTPUT_DIRECTORY ${VG_LIB_DIR}
 )
 
+# Packages
 set(OpenGL_GL_PREFERENCE LEGACY) #GLVND or LEGACY
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(Vulkan REQUIRED)  
 find_package(Threads REQUIRED) #This is better than -pthread
 find_package(Lua REQUIRED)
-if(${LUA_FOUND})
-  message("Lua " ${LUA_VERSION_MAJOR} "." ${LUA_VERSION_MINOR} " found.")
-endif()
 
-#This is required in windows to add to the Additional Include Directories.
-target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDLNET_INCLUDE_DIR} ${VULKAN_INCLUDE_DIRS} ${LUA_INCLUDE_DIR})
+set(LUAINTF_INCLUDE_DIR ${PROJECT_SOURCE_DIR} "/ext/")
 
+# Includes
+target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDLNET_INCLUDE_DIR} ${VULKAN_INCLUDE_DIRS} ${LUA_INCLUDE_DIR} ${LUAINTF_INCLUDE_DIR})
+
+# Libraries
 set(ADDL_LIBS "")
-
 if(WIN32)
   find_package(SDL2_net REQUIRED)
 
@@ -91,7 +92,12 @@ elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "C
   set(VULKAN_LIBRARIES vulkan)
   set(SDLNET_LIBRARIES SDL2_net)
 endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS} ${LUA_LIBRARIES})
 
+# Debug
+if(${LUA_FOUND})
+  message("Lua " ${LUA_VERSION_MAJOR} "." ${LUA_VERSION_MINOR} " found.")
+endif()
+message("LUAINTF_INCLUDE_DIR " ${LUAINTF_INCLUDE_DIR})
 message("Vulkan includes:" ${VULKAN_INCLUDE_DIRS})
 message("Vulkan libs:" ${VULKAN_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS} ${LUA_LIBRARIES})

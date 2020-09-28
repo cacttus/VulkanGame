@@ -1,4 +1,5 @@
 #include "../bottle/W25Config.h"
+#include "../base/Gu.h"
 
 
 namespace BR2 {
@@ -14,7 +15,7 @@ int32_t W25Config::getSeed() {
   }
   else {
     if (_iGameSeed == 0) {
-      _iGameSeed = Random::nextInt32();
+      _iGameSeed = Gu::getRandom()->nextInt32();
     }
     return _iGameSeed;
   }

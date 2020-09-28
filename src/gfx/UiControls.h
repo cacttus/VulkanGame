@@ -572,8 +572,6 @@ private:
   std::shared_ptr<UiFlexButton> _pArrowButton = nullptr;
   std::shared_ptr<UiElement> _pSelected = nullptr;
   uDim _uListContainerWidth = "auto";//sets it to be auto size
-
-
 };
 /**
 *  @class UIWindow

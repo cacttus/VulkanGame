@@ -34,7 +34,7 @@ public:
   static std::shared_ptr<EngineConfig> getEngineConfig();
   static std::shared_ptr<GraphicsApi> getGraphicsApi();
   static std::shared_ptr<Net> getNet();
-
+  static std::shared_ptr<Random> getRandom();
 
   static bool isManagerConstructed(ManagerType m) {
     if (m == ManagerType::ShaderMaker) {
@@ -125,6 +125,7 @@ private:
   static std::shared_ptr<GraphicsApi> _pGraphicsApi;
   static std::shared_ptr<Net> _pNet;
   static std::shared_ptr<GLContext> _pActiveContext;
+  static std::shared_ptr<Random> _pRandom;
 };
 
 #define Config Gu::getEngineConfig()

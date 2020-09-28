@@ -4,12 +4,13 @@
 #include <time.h>
 
 namespace BR2 {
-int32_t Random::_last = 1283094874;//Arbitrary
 Random::Random() {
+  setSeed((int32_t)time(NULL));
+}
+Random::Random(int32_t seed) {
+  setSeed(seed);
 #ifdef _USE_C_RAND
-  srand((unsigned int)time(NULL));
-#else
-  _last = (int32_t)time(NULL);
+  srand((unsigned int)_last);
 #endif
 }
 Random::~Random() {

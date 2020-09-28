@@ -210,7 +210,7 @@ void Scene::update(float delta) {
     pts.clear();
     jj = (size_t)10;  // Random::nextUint32(6, 10);
     for (size_t j = 0; j < jj; ++j) {
-      pts.push_back(Random::nextVec3(std::move(vec3(-10, -10, -10)), std::move(vec3(10, 10, 10))));
+      pts.push_back(Gu::getRandom()->nextVec3(std::move(vec3(-10, -10, -10)), std::move(vec3(10, 10, 10))));
     }
     spline = std::make_shared<CubicBezierSpline>(pts, true, false);
     path = std::make_shared<Path>("Path", spline, 4.0f, 0.0f);
@@ -223,14 +223,14 @@ void Scene::update(float delta) {
 
     //2
     pts.clear();
-    jj = (size_t)Random::nextUint32(8, 40);
+    jj = (size_t)Gu::getRandom()->nextUint32(8, 40);
     for (size_t j = 0; j < jj; ++j) {
-      pts.push_back(Random::nextVec3(std::move(vec3(-20, -20, -20)), std::move(vec3(20, 20, 20))));
+      pts.push_back(Gu::getRandom()->nextVec3(std::move(vec3(-20, -20, -20)), std::move(vec3(20, 20, 20))));
     }
     spline = std::make_shared<CubicBezierSpline>(pts, true, false);
     path = std::make_shared<Path>("Path", spline, 9.0f, 0.0f);
     path->setPos(
-        Random::nextVec3(std::move(vec3(-10, y, -10)), std::move(vec3(10, y, 10))));
+        Gu::getRandom()->nextVec3(std::move(vec3(-10, y, -10)), std::move(vec3(10, y, 10))));
     paths.push_back(path);
     attachChild(path);
   }

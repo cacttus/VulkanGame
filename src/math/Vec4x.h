@@ -60,9 +60,10 @@ public:
   FORCE_INLINE Tx       distance2(const Vec4x<Tx>& v1) const;
   FORCE_INLINE void     construct(const Tx& dx, const Tx& dy, const Tx& dz, const Tx& dw);
   FORCE_INLINE Tx       combine() const;
-  FORCE_INLINE string_t toString() const;
+  
+  std::string toString(int precis = -1) const;
 
-  FORCE_INLINE static Vec4x<Tx> zero();
+  FORCE_INLINE static Vec4x<Tx> zero(); 
   FORCE_INLINE static Vec4x<Tx> Vec4x_MIN();
   FORCE_INLINE static Vec4x<Tx> Vec4x_MAX();
 
@@ -554,12 +555,6 @@ bool Vec4x<Tx>::operator<(const Tx& f) {
 template < class Tx >
 bool Vec4x<Tx>::operator<=(const Tx& f) {
   return (x <= f && y <= f && z <= f && w <= f);
-}
-
-
-template < class Tx >
-string_t Vec4x<Tx>::toString() const {
-  return Stz x + "," + y + "," + z + "," + w;
 }
 
 // Constructors

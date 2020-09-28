@@ -28,27 +28,25 @@
 //this file in MSVC because that compiler lazy evaluates template definitions but this is needed for G++.
 //////////////////////////////////////////////////////////////////////////
 
-
 namespace BR2 {
 
-
-template < class Tx >
+template <class Tx>
 Vec2x<Tx>::Vec2x(const Vec3f& a) {
   x = a.x;
   y = a.y;
 }
-template < class Tx >
+template <class Tx>
 Vec2x<Tx>::Vec2x(const Vec4f& a) {
   x = a.x;
   y = a.y;
 }
 //Moving vec3 here because of osx compiler
-template < class Tx >
+template <class Tx>
 Vec3x<Tx>& Vec3x<Tx>::operator*=(const Matrix3x3& m) {
   *this = (*this) * m;
   return *this;
 }
-template < class Tx >
+template <class Tx>
 Vec3x<Tx> Vec3x<Tx>::operator*(const Matrix3x3& m) {
   Vec3x<Tx> ret;
   ret.x = (Tx)(m._m11 * x + m._m21 * x + m._m31 * x);
@@ -56,12 +54,12 @@ Vec3x<Tx> Vec3x<Tx>::operator*(const Matrix3x3& m) {
   ret.z = (Tx)(m._m13 * z + m._m23 * z + m._m33 * z);
   return ret;
 }
-template < class Tx >
+template <class Tx>
 FORCE_INLINE bool Box3x<Tx>::sphereIntersect(Sphere3f* s) {
   return sphereIntersect(&(s->o), s->r);
 }
 
-template < class Tx >
+template <class Tx>
 Vec4x<Tx> Vec4x<Tx>::operator*(const Matrix4x4& m) {
   //**This should yield a matrix not a vector.  Throw!
   throw 0;
@@ -72,7 +70,6 @@ Vec4x<Tx> Vec4x<Tx>::operator*(const Matrix4x4& m) {
   //ret.w = (Tx)(m._m14*w+m._m24*w+m._m34*w+m._m44*w);
   //return ret;
 }
-
 
 /**
 *    @fn minor()
@@ -85,7 +82,7 @@ Vec4x<Tx> Vec4x<Tx>::operator*(const Matrix4x4& m) {
 FORCE_INLINE Matrix3x3 Matrix4x4::minor(int r, int c) {
   Matrix3x3 m;
   m.setIdentity();
-  if (r < 0 || r>3 || c < 0 || c>3) {
+  if (r < 0 || r > 3 || c < 0 || c > 3) {
     return m;
   }
 
@@ -108,7 +105,7 @@ FORCE_INLINE Matrix3x3 Matrix4x4::minor(int r, int c) {
 */
 FORCE_INLINE float Matrix4x4::cofactor(int r, int c) {
   // - return the determinant of the minor.
-  return (float)powf(-1.00f, (float)r + (float)c) * minor(r, c).det();    // ** May be incorrect
+  return (float)powf(-1.00f, (float)r + (float)c) * minor(r, c).det();  // ** May be incorrect
 }
 
 FORCE_INLINE Quaternion Quaternion::operator*(Vector3 v) {
@@ -137,7 +134,6 @@ FORCE_INLINE void Quaternion::getAxisAngle(vec4& v) {
   v.x = x * srw2_1;
   v.y = y * srw2_1;
   v.z = z * srw2_1;
-
 }
 /**
 *    @fn rotate()
@@ -151,7 +147,6 @@ FORCE_INLINE Matrix3x3 Matrix3x3::getRotationRad(float a, const vec3& v) {
 }
 FORCE_INLINE void Matrix3x3::rotateRad(t_radians a, vec3& vec) {
   *this *= getRotationRad(a, vec.x, vec.y, vec.z);
-
 }
 FORCE_INLINE Matrix3x3 Matrix3x3::getRotationRad(t_radians a, float x, float y, float z) {
   // - Reference: The openGL reference.http://pyopengl.sourceforge.net/documentation/manual/reference-GL.html
@@ -202,7 +197,7 @@ FORCE_INLINE Matrix3x3 Matrix3x3::getRotationRad(t_radians a, float x, float y, 
 //
 // - Times Vector3
 //
-FORCE_INLINE Vector3 Matrix3x3::operator*= (const Vector3& v) {
+FORCE_INLINE Vector3 Matrix3x3::operator*=(const Vector3& v) {
   //_MATH_USE_ROW_VECTORS
   Vector3 tmp;
   tmp.x = v.x * _m11 + v.y * _m12 + v.z * _m13;
@@ -217,7 +212,7 @@ FORCE_INLINE Vector3 Matrix3x3::operator*(const Vector3& v) {
   Matrix3x3 m = *this;
   return (m *= v);
 }
-template < class Tx >
+template <class Tx>
 Vec2x<Tx> Vec2x<Tx>::minv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b) {
   Vec2x<Tx> out;
 
@@ -226,7 +221,7 @@ Vec2x<Tx> Vec2x<Tx>::minv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b) {
 
   return out;
 }
-template < class Tx >
+template <class Tx>
 Vec2x<Tx> Vec2x<Tx>::maxv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b) {
   Vec2x<Tx> out;
 
@@ -235,34 +230,40 @@ Vec2x<Tx> Vec2x<Tx>::maxv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b) {
 
   return out;
 }
-template < class Tx >
+template <class Tx>
 string_t Vec2x<Tx>::toString(int precis) const {
-  string_t tmp;
   std::ostringstream out;
-  std::streamsize prec;
   if (precis == -1) {
-    prec = std::numeric_limits<long double>::digits10 + 1;
+    out.precision(std::numeric_limits<float>::max_digits10);
   }
   else {
-    prec = precis;
+    out.precision((std::streamsize)precis);
   }
-
-  out << std::setprecision(prec) << x << "," << y;
+  out << x << "," << y;
   return out.str();
 }
-template < class Tx >
-string_t Vec3x<Tx>::toString(int precis) const {
-  string_t tmp;
+template <class Tx>
+std::string Vec3x<Tx>::toString(int precis) const {
   std::ostringstream out;
-  std::streamsize prec;
   if (precis == -1) {
-    prec = std::numeric_limits<long double>::digits10 + 1;
+    out.precision(std::numeric_limits<float>::max_digits10);
   }
   else {
-    prec = precis;
+    out.precision((std::streamsize)precis);
   }
-
-  out << std::setprecision(prec) << x << "," << y << "," << z;
+  out << x << "," << y << "," << z;
+  return out.str();
+}
+template <class Tx>
+std::string Vec4x<Tx>::toString(int precis) const {
+  std::ostringstream out;
+  if (precis == -1) {
+    out.precision(std::numeric_limits<float>::max_digits10);
+  }
+  else {
+    out.precision((std::streamsize)precis);
+  }
+  out << x << "," << y << "," << z << "," << w;
   return out.str();
 }
 
@@ -271,7 +272,7 @@ string_t Vec3x<Tx>::toString(int precis) const {
 inline size_t vofftos(size_t row, size_t col, size_t items_per_row) {
   return (col * items_per_row + row);
 }
-//    return true if the (x,y) coordinate is within the grid.  
+//    return true if the (x,y) coordinate is within the grid.
 //    the left boundary being zero the right being (size-1) and all indexes positive.
 inline bool in_range(size_t x, size_t y, size_t row_size, size_t col_size) {
   return (((x >= 0) && (x < row_size)) && ((y >= 0) && (y < col_size)));
@@ -286,13 +287,11 @@ inline size_t sofftov_col(size_t off, size_t items_per_row) {
 }
 inline bool fuzzyEquals(float a, float b, float e) {
   //Epsilon cusyhion equals
-  return (((b) <= ((a)+(e))) && ((b) >= ((a)-(e))));
+  return (((b) <= ((a) + (e))) && ((b) >= ((a) - (e))));
 }
 
 typedef Vec4ub Pixel4ub;
 
-
-}//NS Game
-
+}  // namespace BR2
 
 #endif

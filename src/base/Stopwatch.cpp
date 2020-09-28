@@ -31,16 +31,13 @@ t_timeval Stopwatch::deltaMilliseconds() {
 t_timeval Stopwatch::deltaMicroseconds() {
   return (_tB - _tA);
 }
-t_timeval Stopwatch::deltaMicrosecondsRemainder() {
-  return (_tB - _tA) % 1000;
-}
 string_t Stopwatch::toString(bool bFancy) {
   if (bFancy) {
     string_t st = DateTime::fromMilliseconds(deltaMilliseconds()).timeToStr(":");
     return st;
   }
   else {
-    return Stz "" + _strName + " " + StringUtil::format("%.2f", (float)deltaMilliseconds() + ((float)deltaMicrosecondsRemainder() / 1000.0f)) + "ms";
+    return Stz "" + _strName + " " + StringUtil::format("%.2f", (float)deltaMilliseconds() + ((float)(deltaMicroseconds() % 1000) / 1000.0f)) + "ms";
   }
 }
 void Stopwatch::print(string_t& st) {

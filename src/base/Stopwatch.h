@@ -27,7 +27,6 @@ public:
   void setStart(t_timeval a) { _tA = a; }
   void print(string_t& st);//print to stdout
   t_timeval deltaMicroseconds();
-  t_timeval deltaMicrosecondsRemainder();
   t_timeval deltaMilliseconds();
   string_t toString(bool bFancy = true);
   string_t pulse(bool bLog = false, bool bFancy = false);    // convert current delta to string and restart the counter.

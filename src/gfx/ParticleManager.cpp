@@ -1,5 +1,6 @@
 #include "../base/Logger.h"
 #include "../base/GLContext.h"
+#include "../base/Gu.h"
 #include "../math/Random.h"
 #include "../gfx/ParticleManager.h"
 #include "../gfx/Atlas.h"
@@ -56,23 +57,23 @@ void ParticleManager::make(vec3& pos, int count, Hash32 mat,
   for (int i = 0; i < _iMaxParticles; ++i) {
     if (_pParticles[i]._bUsed == false) {
       _pParticles[i]._bUsed = true;
-      t_timeval life = (t_timeval)((minLife + (maxLife - minLife) * Random::frand01()) * 1000000);
+      t_timeval life = (t_timeval)((minLife + (maxLife - minLife) * Gu::getRandom()->frand01()) * 1000000);
       _pParticles[i]._life = life;
       _pParticles[i]._created = tv;
       _pParticles[i]._p = pos;
-      _pParticles[i]._size = minScl + (maxScl - minScl) * Random::frand01();
+      _pParticles[i]._size = minScl + (maxScl - minScl) * Gu::getRandom()->frand01();
       _pParticles[i]._xbl = xbl;
       _pParticles[i]._xbr = xbr;
       _pParticles[i]._xtl = xtl;
       _pParticles[i]._xtr = xtr;
 
-      _pParticles[i]._vRotNormal = Random::rv311().normalize();
-      _pParticles[i]._fRotDelta = Random::frand01() * (float)M_2PI;
-      _pParticles[i]._fRotCur = Random::frand01() * (float)M_2PI;
+      _pParticles[i]._vRotNormal = Gu::getRandom()->rv311().normalize();
+      _pParticles[i]._fRotDelta = Gu::getRandom()->frand01() * (float)M_2PI;
+      _pParticles[i]._fRotCur = Gu::getRandom()->frand01() * (float)M_2PI;
 
-      _pParticles[i]._g = vec3(0, minGrav + (maxGrav - minGrav) * Random::frand01(), 0);
-      float fspd = minSpeed + (maxSpeed - minSpeed) * Random::frand01();
-      vec3 vel = Random::rv311().normalize() * fspd;
+      _pParticles[i]._g = vec3(0, minGrav + (maxGrav - minGrav) * Gu::getRandom()->frand01(), 0);
+      float fspd = minSpeed + (maxSpeed - minSpeed) * Gu::getRandom()->frand01();
+      vec3 vel = Gu::getRandom()->rv311().normalize() * fspd;
       _pParticles[i]._v = vel;
       iCount++;
     }

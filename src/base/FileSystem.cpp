@@ -310,7 +310,7 @@ string_t FileSystem::getCurrentDirectory() {
 #if defined(BR2_OS_WINDOWS)
   _getcwd(buf, BRO_MAX_PATH);
 #elif defined(BR2_OS_LINUX)
-  getcwd(buf, BRO_MAX_PATH);
+  char* r = getcwd(buf, BRO_MAX_PATH);
 #endif
 
   string_t cwd = string_t(buf);
@@ -321,7 +321,10 @@ void FileSystem::setCurrentDirectory(const string_t& str) {
 #if defined(BR2_OR_WINDOWS)
   _chdir(str.c_str());
 #elif defined(BR2_OS_LINUX)
-  chdir(str.c_str());
+  int r = chdir(str.c_str());
+  if(r){
+    //Check errno
+  }
 #endif
 }
 

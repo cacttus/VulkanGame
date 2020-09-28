@@ -58,7 +58,7 @@ void WorldMaker::selectRandomLair() {
     vecs.push_back(p.second);
   }
 
-  size_t rnd = (size_t)Random::nextUint32(0, (uint32_t)vecs.size());
+  size_t rnd = (size_t)Gu::getRandom()->nextUint32(0, (uint32_t)vecs.size());
   _pCurrentLair = vecs[rnd];
 
   vecs.resize(0);
