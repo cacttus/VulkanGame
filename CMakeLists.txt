@@ -6,7 +6,7 @@ project(VulkanGame VERSION 0.1.0 LANGUAGES C CXX)
 message("CMAKE_MODULE_PATH=" ${CMAKE_MODULE_PATH})
 message("CMAKE_PREFIX_PATH=" ${CMAKE_PREFIX_PATH})
 message("CMAKE_TOOLCHAIN_PATH=" ${CMAKE_TOOLCHAIN_PATH})
-
+ 
 if(WIN32)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/ext/")
 message("Set Module Path to " ${CMAKE_MODULE_PATH} "Win32")
@@ -16,7 +16,7 @@ set(VG_TARGET_NAME ${PROJECT_NAME})
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 add_executable(VulkanGame ${SOURCE} ${HEADERS})
-
+ 
 #Architecture Detection. 
 #https://stackoverflow.com/questions/11944060/how-to-detect-target-architecture-using-cmake
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
@@ -59,50 +59,59 @@ find_package(SDL2 REQUIRED)
 find_package(Vulkan REQUIRED)  
 find_package(Threads REQUIRED) #This is better than -pthread
 find_package(Lua REQUIRED)
+if(${LUA_FOUND})
+  message("Lua " ${LUA_VERSION_MAJOR} "." ${LUA_VERSION_MINOR} " found.")
+endif()
 
 if(UNIX)
 find_package(X11 REQUIRED)
-#find_package(Wayland REQUIRED)
 endif()
   
 set(LUAINTF_INCLUDE_DIR ${PROJECT_SOURCE_DIR} "/ext/")
-
+ 
 # Includes
 target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDLNET_INCLUDE_DIR} ${VULKAN_INCLUDE_DIRS} ${LUA_INCLUDE_DIR} ${LUAINTF_INCLUDE_DIR})
 
 # Libraries
 set(ADDL_LIBS "")
 if(WIN32)
-  find_package(SDL2_net REQUIRED)
+  set(VG_WIN32_COMPILE_OPTS "")
 
   #Unicode required for building with Unicode Character Set (vs MBCS)
-  ADD_DEFINITIONS(-DUNICODE)
-  ADD_DEFINITIONS(-D_UNICODE)
+  string(APPEND VG_WIN32_COMPILE_OPTS " -DUNICODE")
+  string(APPEND VG_WIN32_COMPILE_OPTS " -D_UNICODE")
 
   #Suppress error
-  ADD_DEFINITIONS(-D_CRT_NO_VA_START_VALIDATION)
+  string(APPEND VG_WIN32_COMPILE_OPTS " -D_CRT_NO_VA_START_VALIDATION")
 
-  #Enable multicore build.
-  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " /MP ") 
+  #Multicore build
+  string(APPEND VG_WIN32_COMPILE_OPTS /MP) #NOte: originally CMAKE_CXX_FLAGS
 
-  set(ADDL_LIBS "ws2_32.lib" "winmm.lib" "imm32.lib" "version.lib" "dbghelp.lib" "setupapi.lib" "iphlpapi.lib")
+  target_compile_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:RELEASE>:" ${VG_WIN32_COMPILE_OPTS})
+  target_compile_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:DEBUG>:" ${VG_WIN32_COMPILE_OPTS} -D_DEBUG -D_GLIBCXX_DEBUG)
+ 
+  find_package(SDL2_net REQUIRED)
+  set(VG_ADDL_LIBS "ws2_32.lib" "winmm.lib" "imm32.lib" "version.lib" "dbghelp.lib" "setupapi.lib" "iphlpapi.lib")
 elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-  set(ADDL_LIBS ncurses)
-  set(CPP_FLAGS_GLOBAL " -pthread ")
-  #DEBUG flag -D_GLIBCXX_DEBUG enables string visualization in vscode.
-  string(APPEND CMAKE_CXX_FLAGS_DEBUG ${CPP_FLAGS_GLOBAL} " -D_DEBUG -D_GLIBCXX_DEBUG ")
-  string(APPEND CMAKE_CXX_FLAGS_RELEASE ${CPP_FLAGS_GLOBAL} )
+set(VG_GCC_LINK_GLOBAL -pthread) 
 
-  #Not sure
+  target_compile_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:DEBUG>:" -Og -D_DEBUG -D_GLIBCXX_DEBUG ">")
+  target_compile_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:RELEASE>:" -Ofast ">")
+
+  target_link_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:RELEASE>:" ${VG_GCC_LINK_GLOBAL} ">")
+  target_link_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:DEBUG>:" ${VG_GCC_LINK_GLOBAL} ">")
+   
   set(VULKAN_LIBRARIES vulkan)
-  set(SDLNET_LIBRARIES SDL2_net)
+  set(SDLNET_LIBRARIES SDL2_net) 
+  set(VG_ADDL_LIBS ncurses)
 endif()
-target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS} ${LUA_LIBRARIES} ${X11_LIBRARIES})
-
+target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${VG_ADDL_LIBS} ${LUA_LIBRARIES} ${X11_LIBRARIES})
+  
 # Debug
-if(${LUA_FOUND})
-  message("Lua " ${LUA_VERSION_MAJOR} "." ${LUA_VERSION_MINOR} " found.")
-endif()
 message("LUAINTF_INCLUDE_DIR " ${LUAINTF_INCLUDE_DIR})
 message("Vulkan includes:" ${VULKAN_INCLUDE_DIRS})
 message("Vulkan libs:" ${VULKAN_LIBRARIES})
+
+  
+#Process SGEN
+add_subdirectory(${PROJECT_SOURCE_DIR}/utils/sgen)

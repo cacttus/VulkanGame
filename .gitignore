@@ -3,6 +3,7 @@
 /lib/
 /build/
 /bin/VulkanGame-*
+/bin/sgen-*
 /bin/data/games/
 /bin/data/mbi/
 /bin/data/cache/
