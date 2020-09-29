@@ -743,7 +743,7 @@ std::shared_ptr<SpriteSpec> ObFile::getMot(string_t& name) {
   return nullptr;
 }
 
-void ObFile::processMotion(string_t name, std::vector<string_t>& files, float fDuration, bool bLoop, bool bRandomSel) {
+void ObFile::processMotion(const string_t& name, std::vector<string_t>& files, float fDuration, bool bLoop, bool bRandomSel) {
   std::shared_ptr<SpriteSpec> ps = std::make_shared<SpriteSpec>(_pBucket, name, files, fDuration, bLoop, bRandomSel);
   _vecMotionSpecs.push_back(ps);
 }
@@ -755,7 +755,7 @@ void ObFile::processMotion(string_t name, std::vector<string_t>& files, float fD
 //        }
 //    }
 //}
-void ObFile::processTile(string_t name, int32_t index, GridMeshLayer::e eMatterMode,
+void ObFile::processTile(const string_t& name, int32_t index, GridMeshLayer::e eMatterMode,
                          std::shared_ptr<SpriteSpec> pTop, std::shared_ptr<SpriteSpec> pSide, std::shared_ptr<SpriteSpec> pBot, ClimateSpec& cp, float rarity) {
   Tile25Spec* ps = new Tile25Spec(name, index, eMatterMode, pTop, pSide, pBot, cp, rarity);
   _vecTileSpecs.push_back(ps);
@@ -836,7 +836,7 @@ void ObFile::processShiftMotionImage(std::shared_ptr<SpriteSpec> ps, bool shiftH
   }
 }
 
-Tile25Spec* ObFile::getTileSpecByName(string_t name) {
+Tile25Spec* ObFile::getTileSpecByName(const string_t& name) {
   Hash32 h = STRHASH(name);
   for (Tile25Spec* pt : _vecTileSpecs) {
     if (pt->getHashName() == h) {
@@ -845,7 +845,7 @@ Tile25Spec* ObFile::getTileSpecByName(string_t name) {
   }
   return nullptr;
 }
-MorphTile* ObFile::getMorphTileGroupByName(string_t name) {
+MorphTile* ObFile::getMorphTileGroupByName(const string_t& name) {
   Hash32 h = STRHASH(name);
   for (MorphTile* pt : _vecMorphTiles) {
     if (pt->getNameHashed() == h) {
@@ -854,7 +854,7 @@ MorphTile* ObFile::getMorphTileGroupByName(string_t name) {
   }
   return nullptr;
 }
-LairGenLocale::e ObFile::parseGenLocale(string_t str) {
+LairGenLocale::e ObFile::parseGenLocale(const string_t& str) {
   LairGenLocale::e ret = LairGenLocale::e::Glob;
   if (StringUtil::equalsi(str, "G")) {
     ret = LairGenLocale::e::Glob;
@@ -874,7 +874,7 @@ LairGenLocale::e ObFile::parseGenLocale(string_t str) {
   return ret;
 }
 
-LairTile* ObFile::parseLairTile(std::vector<string_t>& tokens, string_t specName, int& iind) {
+LairTile* ObFile::parseLairTile(std::vector<string_t>& tokens, const string_t& specName, int& iind) {
   LairTile* ts = nullptr;
 
   string_t name = getCleanToken(tokens, iind);
@@ -960,7 +960,7 @@ uint32_t ObFile::parseNbr_uint(std::vector<string_t>& tokens, int& iind) {
   }
   return ret;
 }
-MpVec3i ObFile::parse_mxv3(std::vector<string_t>& tokens, string_t specName, int& iind) {
+MpVec3i ObFile::parse_mxv3(std::vector<string_t>& tokens, const string_t& specName, int& iind) {
   MpVec3i uv;
 
   uv.setMin(ivec3(parseNbr_int(tokens, iind),
@@ -979,7 +979,7 @@ MpVec3i ObFile::parse_mxv3(std::vector<string_t>& tokens, string_t specName, int
 
   return uv;
 }
-MpUint ObFile::parse_mxui2(std::vector<string_t>& tokens, string_t specName, int& iind) {
+MpUint ObFile::parse_mxui2(std::vector<string_t>& tokens, const string_t& specName, int& iind) {
   MpUint ui;
 
   int32_t cMin = parseNbr_uint(tokens, iind);
@@ -1005,7 +1005,7 @@ MpUint ObFile::parse_mxui2(std::vector<string_t>& tokens, string_t specName, int
 
   return ui;
 }
-MpFloat ObFile::parse_mxf2(std::vector<string_t>& tokens, string_t specName, int& iind) {
+MpFloat ObFile::parse_mxf2(std::vector<string_t>& tokens, const string_t& specName, int& iind) {
   MpFloat ui;
 
   ui.setMin(parseNbr_float(tokens, iind));
@@ -1018,7 +1018,7 @@ MpFloat ObFile::parse_mxf2(std::vector<string_t>& tokens, string_t specName, int
 
   return ui;
 }
-ClimateSpec ObFile::parseClimate(std::vector<string_t>& tokens, string_t specName, int& iind) {
+ClimateSpec ObFile::parseClimate(std::vector<string_t>& tokens, const string_t& specName, int& iind) {
   ClimateSpec cp;
   cp.getTemp() = parse_mxf2(tokens, specName, iind);
   cp.getPrecip() = parse_mxf2(tokens, specName, iind);
@@ -1027,7 +1027,7 @@ ClimateSpec ObFile::parseClimate(std::vector<string_t>& tokens, string_t specNam
 
   return cp;
 }
-WalkerSpec* ObFile::getWalkerSpecByName(string_t n) {
+WalkerSpec* ObFile::getWalkerSpecByName(const string_t& n) {
   Hash32 h = STRHASH(n);
   for (WalkerSpec* ws : _vecWalkers) {
     if (ws->getNameHashed() == h) {

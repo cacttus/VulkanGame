@@ -126,7 +126,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
     GLContext::setWindowAndOpenGLFlags(prof);
     SDLUtils::checkSDLErr();
 
-    SDL_Window* win = makeSDLWindow(params._title, SDL_WINDOW_OPENGL, false);
+    SDL_Window* win = makeSDLWindow(params, SDL_WINDOW_OPENGL, false);//initially don't show window, we show it later.
     if (win != nullptr) {
       if (params._parent) {
         //Share a context, GBuffer

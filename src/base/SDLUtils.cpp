@@ -26,7 +26,7 @@ void SDLUtils::trySetWindowIcon(SDL_Window* w, string_t iconPath) {
     }
   }
 }
-void SDLUtils::createSurfaceFromImage(const string_t strImage,
+void SDLUtils::createSurfaceFromImage(const string_t& strImage,
   std::shared_ptr<Img32>& __out_ pImage, SDL_Surface*& __out_ pSurface) {
   pImage = nullptr;
   pSurface = nullptr;

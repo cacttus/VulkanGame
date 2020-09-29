@@ -267,7 +267,7 @@ bool ModDataLoad::tkArms(MobFile* mb, std::vector<string_t>& tokens) {
   }
   return true;
 }
-ParentType MobFile::parseParentType(string_t strParentType) {
+ParentType MobFile::parseParentType(const string_t& strParentType) {
   if (StringUtil::equalsi(strParentType, "BONE")) {
     return ParentType::Bone;
   }

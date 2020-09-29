@@ -54,7 +54,7 @@ void ShaderAttribute::parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, in
     }
   }
 }
-bool ShaderAttribute::isOpenGLBuiltInAttrib(string_t strName) {
+bool ShaderAttribute::isOpenGLBuiltInAttrib(const string_t& strName) {
   if (StringUtil::equals(strName, "gl_VertexID")) {
     return true;
   }

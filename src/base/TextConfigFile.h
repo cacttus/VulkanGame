@@ -17,11 +17,11 @@ namespace BR2 {
 class TextConfigFile : public TextDataFile {
 public:
   TextConfigFile() {}
-  TextConfigFile(string_t loc);
+  TextConfigFile(const string_t& loc);
   virtual ~TextConfigFile() override;
 
-  bool lcmp(string_t& tok0, const char* ch, int32_t validateArgCount = -1);
-  bool lcmp(string_t& tok0, const std::string& ch, int32_t validateArgCount = -1);
+  bool lcmp(const string_t& tok0, const char* ch, int32_t validateArgCount = -1);
+  bool lcmp(const string_t& tok0, const std::string& ch, int32_t validateArgCount = -1);
   void parseErr(const string_t& str, bool bDebugBreak = false, bool bFatal = false);
   string_t getCleanToken(std::vector<string_t>& tokens, int& iind);
   string_t getCleanTokenInd(std::vector<string_t>& tokens, int iind);
@@ -34,9 +34,9 @@ protected:
   virtual void pkp(std::vector<string_t>& tokens) = 0;// Must be implemented
 
   //Utils.
-  virtual bool validateArguments(string_t& token, int32_t count = -1);    // throw exception
+  virtual bool validateArguments(const string_t& token, int32_t count = -1);    // throw exception
   void displayError(const string_t& errMsg, bool bThrow = true);
-  bool cmp(string_t& tok0, const char* ch, int32_t validateArgCount);
+  bool cmp(const string_t& tok0, const char* ch, int32_t validateArgCount);
 };
 
 }//ns Game

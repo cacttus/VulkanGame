@@ -18,7 +18,7 @@ namespace BR2 {
 */
 class Path : public SceneNode {
 public:
-  Path(string_t name, std::shared_ptr<Spline> spline, float speed = 3, float accel = 1, PathEasing pe = PathEasing::NoEasing);
+  Path(const string_t& name, std::shared_ptr<Spline> spline, float speed = 3, float accel = 1, PathEasing pe = PathEasing::NoEasing);
   virtual ~Path() override;
 
   void update(float dt);

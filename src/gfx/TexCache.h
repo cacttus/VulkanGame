@@ -15,8 +15,8 @@ class TexFile {
 public:
   string_t _name;
   string_t _loc;
-  TexFile(string_t loc);
-  TexFile(string_t name, string_t loc);
+  TexFile(const string_t& loc);
+  TexFile(const string_t& name, const string_t& loc);
 };
 /**
 *  @class TexCache

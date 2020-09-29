@@ -16,11 +16,11 @@ namespace BR2 {
 */
 class NodeData : public ISerializable<NodeData> {
 public:
-  NodeData(string_t name = "");
+  NodeData(const string_t& name = "");
   virtual ~NodeData() override;
 
   string_t getName() { return _strName; }
-  void setName(string_t n) { _strName = n; }
+  void setName(const string_t& n) { _strName = n; }
   uint32_t getHashedName();
 
   virtual void deserialize(std::shared_ptr<BinaryFile> bf) override;

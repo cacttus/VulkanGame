@@ -44,14 +44,14 @@ class Atlas : public Texture2DSpec {
 public:
   static string_t getGeneratedFileName();
 
-  Atlas(std::shared_ptr<GLContext> ct, string_t name, ivec2& viSpriteSize, string_t strImageLoc);
-  Atlas(std::shared_ptr<GLContext> ct, string_t name, ivec2& ivGridSize);
+  Atlas(std::shared_ptr<GLContext> ct, const string_t& name, ivec2& viSpriteSize, const string_t& strImageLoc);
+  Atlas(std::shared_ptr<GLContext> ct, const string_t& name, ivec2& ivGridSize);
   virtual ~Atlas() override;
 
   static string_t constructPrecompiledSpriteName(int32_t ix, int32_t iy);
 
-  void addImage(Hash32 en, string_t loc);
-  void addImage(Hash32 en, string_t loc, std::shared_ptr<Img32> imgData);
+  void addImage(Hash32 en, const string_t& loc);
+  void addImage(Hash32 en, const string_t& loc, std::shared_ptr<Img32> imgData);
 
   void removeImage(std::shared_ptr<AtlasSprite> ps);
   void compileFiles(bool bMipmaps = true, bool saveAndLoad = true); // Compiles an atlas from a list of sprite files.

@@ -20,9 +20,9 @@ namespace BR2 {
 class CameraNode : public PhysicsNode {
   friend class Scene;
 public:
-  CameraNode(string_t name, std::shared_ptr<RenderViewport> ppViewport);
+  CameraNode(const string_t& name, std::shared_ptr<RenderViewport> ppViewport);
   virtual ~CameraNode() override;
-  static std::shared_ptr<CameraNode> create(string_t name, std::shared_ptr<RenderViewport> ppViewport);
+  static std::shared_ptr<CameraNode> create(const string_t& name, std::shared_ptr<RenderViewport> ppViewport);
 
   void zoom(float amt);
   const vec3 getLookAt();

@@ -21,21 +21,21 @@ public:
   Logger(bool async, bool disabled = false);
   virtual ~Logger() override;
 
-  void init(string_t cacheFolder);
+  void init(const string_t& cacheFolder);
 
   void enableLogToConsole(bool bLogToConsole);
   void enableLogToFile(bool bLogToFile);
 
-  void logInfo(string_t msg);
-  void logInfo(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
-  void logWarn(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
-  void logError(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = false);
-  void logScript(string_t msg, int line, const char* file);
-  void logTODO(string_t msg, int line, const char* file);
-  void logDebug(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
-  void logWarnCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int wait_ms = 1000, bool force = false);
-  void logErrorCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int wait_ms = 1000, bool force = false);
-  void logDebugCycle(string_t msg, int line, const char* file, const BR2::Exception* e = nullptr, int wait_ms = 1000, bool force = false);
+  void logInfo(const string_t& msg);
+  void logInfo(const string_t& msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
+  void logWarn(const string_t& msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
+  void logError(const string_t& msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = false);
+  void logScript(const string_t& msg, int line, const char* file);
+  void logTODO(const string_t& msg, int line, const char* file);
+  void logDebug(const string_t& msg, int line, const char* file, const BR2::Exception* e = nullptr, bool hideStackTrace = true);
+  void logWarnCycle(const string_t& msg, int line, const char* file, const BR2::Exception* e = nullptr, int wait_ms = 1000, bool force = false);
+  void logErrorCycle(const string_t& msg, int line, const char* file, const BR2::Exception* e = nullptr, int wait_ms = 1000, bool force = false);
+  void logDebugCycle(const string_t& msg, int line, const char* file, const BR2::Exception* e = nullptr, int wait_ms = 1000, bool force = false);
 
   string_t getLogPath();
 

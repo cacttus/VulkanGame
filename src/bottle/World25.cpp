@@ -76,7 +76,7 @@ World25::World25(std::shared_ptr<Scene> pscene, std::shared_ptr<BottleScript> pC
   _pWorld25Plane->getBasisU() = vec3(1, 0, 0);
   _pWorld25Plane->getBasisV() = vec3(0, 0, 1);
 
-  Gu::getSoundCache()->tryPlay(Gu::getPackage()->makeAssetPath("sounds", "nature_0.ogg"), SoundPlayInfo(true, 0.1f));
+  Gu::getSound()->tryPlay(Gu::getPackage()->makeAssetPath("sounds", "nature_0.ogg"), SoundPlayInfo(true, 0.1f, 1.0f));
   //_pNoiseField = new W25NoiseField(this, 999); // Test value
 
 //  _pObjectQuads = new TileMesh25(getContext(), 8192);

@@ -203,12 +203,12 @@ void PoundFile::showMessageOnFailure(bool b) {
     displayError("Condition failed.");
 }
 
-mat4 PoundFile::parseMat4(string_t tok) {
+mat4 PoundFile::parseMat4(const string_t& tok) {
   mat4 m;
   mat4::parse(tok.c_str(), m);
   return m;
 }
-bool PoundFile::parsePrs(string_t tok, vec3& pos, vec4& rot, vec3& scl) {
+bool PoundFile::parsePrs(const string_t& tok, vec3& pos, vec4& rot, vec3& scl) {
   // - Parse csv pos3, quat4, scl3.
 
   bool bValid = true;

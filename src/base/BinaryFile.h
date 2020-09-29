@@ -25,8 +25,8 @@ public:
 public:
   Allocator<char>& getData() { return _data; }
 
-  BinaryFile(string_t file_version);
-  BinaryFile(string_t file_version, size_t buffer_size);
+  BinaryFile(const string_t& file_version);
+  BinaryFile(const string_t& file_version, size_t buffer_size);
   virtual ~BinaryFile() override;
 
   void reallocBuffer(size_t i) { _data._alloca(i); }
@@ -81,9 +81,9 @@ public:
   void write(const char* buf, size_t bufsiz, size_t offset = memsize_max);
 
   //- File Operations
-  bool loadFromDisk(string_t fileLoc, bool bAddNull = false);        // - Read the whole file into the buffer.
-  bool loadFromDisk(string_t fileLoc, size_t offset, int64_t length, bool bAddNull = false);        // - Read a part of the file.
-  bool writeToDisk(string_t fileLoc);        // - Read a part of the file.
+  bool loadFromDisk(const string_t& fileLoc, bool bAddNull = false);        // - Read the whole file into the buffer.
+  bool loadFromDisk(const string_t& fileLoc, size_t offset, int64_t length, bool bAddNull = false);        // - Read a part of the file.
+  bool writeToDisk(const string_t& fileLoc);        // - Read a part of the file.
 
   std::string toString();
 

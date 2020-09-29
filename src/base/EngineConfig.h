@@ -21,7 +21,7 @@ protected:
 };
 class BoolProp : BaseProp {
 public:
-  BoolProp(string_t key, bool value) {
+  BoolProp(const string_t& key, bool value) {
     _key = key;
     _value = value;
   }
@@ -31,7 +31,7 @@ private:
 };
 class Int32Prop : BaseProp {
 public:
-  Int32Prop(string_t key, int32_t value) {
+  Int32Prop(const string_t& key, int32_t value) {
     _key = key;
     _value = value;
   }
@@ -42,7 +42,7 @@ private:
 };
 class StringProp : BaseProp {
 public:
-  StringProp(string_t key, string_t value) {
+  StringProp(const string_t& key, string_t value) {
     _key = key;
     _value = value;
   }
@@ -158,9 +158,9 @@ public:
   XMLCONFIG_PROP_INT32_G(GameHostPort, 44244)
 
 public:
-  void int32Prop(string_t a, std::vector<string_t>& toks, int32_t& iind);
-  void boolProp(string_t a, std::vector<string_t>& toks, int32_t& iind);
-  void floatProp(string_t a, std::vector<string_t>& toks, int32_t& iind);
+  void int32Prop(const string_t& a, std::vector<string_t>& toks, int32_t& iind);
+  void boolProp(const string_t& a, std::vector<string_t>& toks, int32_t& iind);
+  void floatProp(const string_t& a, std::vector<string_t>& toks, int32_t& iind);
 
   int32_t getMsaaSamples() { return _iMsaaSamples; }
   bool getEnableLogToConsole() { return _bEnableLogToConsole; }

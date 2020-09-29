@@ -8,7 +8,7 @@ namespace BR2 {
 GLenum VertexComponent::getAttributeType() {
   return VertexFormat::computeAttributeType(_eDataType, _iComponentCount);
 }
-VertexFormat::VertexFormat(string_t strName) {
+VertexFormat::VertexFormat(const string_t& strName) {
   _strName = strName;
 }
 VertexFormat::~VertexFormat() {

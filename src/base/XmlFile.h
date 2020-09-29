@@ -18,10 +18,10 @@ class PackageConfiguration;
 class XmlFile : public TextConfigFile {
 public:
   XmlFile();
-  XmlFile(string_t loc);
+  XmlFile(const string_t& loc);
   virtual ~XmlFile() override;
 
-  static std::shared_ptr<PackageConfiguration> getXMLConfiguration(string_t filepath);
+  static std::shared_ptr<PackageConfiguration> getXMLConfiguration(const string_t& filepath);
 
 protected:
   virtual void parse(char* buf, int64_t size) override;

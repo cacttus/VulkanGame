@@ -9,7 +9,7 @@
 #include "../model/MeshSpec.h"
 
 namespace BR2 {
-CameraNode::CameraNode(string_t name, std::shared_ptr<RenderViewport> ppViewport) : PhysicsNode(name, nullptr) {
+CameraNode::CameraNode(const string_t& name, std::shared_ptr<RenderViewport> ppViewport) : PhysicsNode(name, nullptr) {
   _pViewport = ppViewport;
   _vWorldUp.construct(0, 1, 0);
   _pMainFrustum = std::make_shared<FrustumBase>(ppViewport, _f_hfov);
@@ -19,7 +19,7 @@ CameraNode::CameraNode(string_t name, std::shared_ptr<RenderViewport> ppViewport
 CameraNode::~CameraNode() {
   //DEL_MEM(_pMainFrustum);
 }
-std::shared_ptr<CameraNode> CameraNode::create(string_t name, std::shared_ptr<RenderViewport> ppViewport) {
+std::shared_ptr<CameraNode> CameraNode::create(const string_t& name, std::shared_ptr<RenderViewport> ppViewport) {
   std::shared_ptr<CameraNode> cn = std::make_shared<CameraNode>(name, ppViewport);
   cn->init();
   return cn;

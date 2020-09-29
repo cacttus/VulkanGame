@@ -26,7 +26,7 @@ public:
   static std::shared_ptr<ModelCache> getModelCache();
   static std::shared_ptr<Sequencer> getSequencer();
   static std::shared_ptr<InputManager> getGlobalInput();
-  static std::shared_ptr<SoundCache> getSoundCache();
+  static std::shared_ptr<SoundCache> getSound();
   static std::shared_ptr<ShaderMaker> getShaderMaker();
   static std::shared_ptr<TexCache> getTexCache();
   static std::shared_ptr<EngineConfig> getConfig();
@@ -35,6 +35,7 @@ public:
   static std::shared_ptr<GraphicsApi> getGraphicsApi();
   static std::shared_ptr<Net> getNet();
   static std::shared_ptr<Random> getRandom();
+  static std::shared_ptr<SoundInst> playSound(const string_t& filename, const SoundPlayInfo& inf);
 
   static bool isManagerConstructed(ManagerType m) {
     if (m == ManagerType::ShaderMaker) {
@@ -43,7 +44,7 @@ public:
     BRThrowNotImplementedException();
   }
 
-  static void createLogger(string_t logfile_dir, const std::vector<string_t>& args);
+  static void createLogger(const string_t& logfile_dir, const std::vector<string_t>& args);
   static bool checkArg(const std::vector<string_t>& args, string_t key, string_t value);
   static void initGlobals(const std::vector<std::string>& args);
   static void createManagers(std::shared_ptr<GLContext> ct);

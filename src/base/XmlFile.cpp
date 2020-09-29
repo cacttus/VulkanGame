@@ -9,11 +9,11 @@
 namespace BR2 {
 XmlFile::XmlFile() {
 }
-XmlFile::XmlFile(string_t loc) : TextConfigFile(loc) {
+XmlFile::XmlFile(const string_t& loc) : TextConfigFile(loc) {
 }
 XmlFile::~XmlFile() {
 }
-std::shared_ptr<PackageConfiguration> XmlFile::getXMLConfiguration(string_t filepath) {
+std::shared_ptr<PackageConfiguration> XmlFile::getXMLConfiguration(const string_t& filepath) {
   pugi::xml_document doc;
 
   char* fdata;

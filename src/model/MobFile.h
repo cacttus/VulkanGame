@@ -141,7 +141,7 @@ public:
 
   string_t getMobDir();
   std::vector<std::shared_ptr<ModelSpec>>& getModelSpecs() { return _vecModelSpecs; }
-  ParentType parseParentType(string_t pt);
+  ParentType parseParentType(const string_t& pt);
 private:
   float _fVersion = 0.02f;
 

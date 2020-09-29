@@ -202,6 +202,7 @@ enum class GamePadType { KeyboardAndMouse };
 /************************************************************************/
 class SoundSpec;
 class SoundInst;
+class SoundPlayInfo;
 class Sequence;
 class Sequencer;
 class _NoInheritClassBase {};

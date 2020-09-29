@@ -38,7 +38,7 @@ private:
 };
 class VertexFormat : public VirtualMemory {
 public:
-  VertexFormat( string_t strName);
+  VertexFormat( const string_t& strName);
   virtual ~VertexFormat();
 
   string_t getName() { return _strName; }

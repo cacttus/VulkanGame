@@ -43,15 +43,15 @@ public:
   std::shared_ptr<GraphicsApi> _pGraphicsApi = nullptr;
 
   void initSDLAndCreateGraphicsApi();
-  void doShowError(string_t err, const Exception* const e) const;
+  void doShowError(const string_t& err, const Exception* const e) const;
   void attachToGameHost();
   void printVideoDiagnostics();
   void updateWindowHandleForGamehost();
   void initAudio();
   void initNet();
   void runGameLoopTryCatch();
-  void exitApp(string_t error, int rc);
-  bool argMatch(const std::vector<string_t>& args, string_t arg1, int32_t iCount);
+  void exitApp(const string_t& error, int rc);
+  bool argMatch(const std::vector<string_t>& args, const string_t& arg1, int32_t iCount);
   bool runCommands(const std::vector<string_t>& args);
   void loadAppPackage(const std::vector<string_t>& args);
   void runUnitTests(std::vector<std::function<bool()>>);
@@ -118,7 +118,7 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
 
   BRLogInfo("Apprunner complete.");
 }
-void AppRunner_Internal::doShowError(string_t err, const Exception* const e) const {
+void AppRunner_Internal::doShowError(const string_t& err, const Exception* const e) const {
   if (e != nullptr) {
     OperatingSystem::showErrorDialog(e->what() + err, Stz "Error");
   }
@@ -273,7 +273,7 @@ void AppRunner_Internal::runGameLoopTryCatch() {
   }
 }
 
-void AppRunner_Internal::exitApp(string_t error, int rc) {
+void AppRunner_Internal::exitApp(const string_t& error, int rc) {
   OperatingSystem::showErrorDialog(error + SDLNet_GetError(), Stz "Error");
 
   Gu::debugBreak();
@@ -285,7 +285,7 @@ void AppRunner_Internal::exitApp(string_t error, int rc) {
 
   exit(rc);
 }
-bool AppRunner_Internal::argMatch(const std::vector<string_t>& args, string_t arg1, int32_t iCount) {
+bool AppRunner_Internal::argMatch(const std::vector<string_t>& args, const string_t& arg1, int32_t iCount) {
   if (args.size() <= 1) {
     return false;
   }

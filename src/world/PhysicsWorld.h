@@ -65,7 +65,7 @@ public:
   void addGrid(std::shared_ptr<PhysicsGrid> pGrid, const ivec3& cv);
   void debugMakeSureNoDupes(const ivec3& vv);
 
-  std::shared_ptr<PhysicsNode> findNode(string_t specName);
+  std::shared_ptr<PhysicsNode> findNode(const string_t& specName);
   // template < typename Tx > bool findNode(std::shared_ptr<Tx>& __out_ node) {
   //   for (auto a : _mapObjects) {
   //     if (a.second->findNode(node)) {

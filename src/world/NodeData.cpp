@@ -4,7 +4,7 @@
 
 
 namespace BR2 {
-NodeData::NodeData(string_t name) {
+NodeData::NodeData(const string_t& name) {
   _strName = name;
 }
 NodeData::~NodeData() {

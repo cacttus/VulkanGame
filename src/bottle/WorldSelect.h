@@ -35,8 +35,8 @@ private:
   std::shared_ptr<Texture2DSpec> _pTex = nullptr;
   string_t _strSelectedWorld = "";
   bool _bLoadNextFrame = false;
-  string_t genNewWorldName(string_t baseName);
-  void deleteWorld(string_t worldName);
+  string_t genNewWorldName(const string_t& baseName);
+  void deleteWorld(const string_t& worldName);
   void drawText();
 };
 

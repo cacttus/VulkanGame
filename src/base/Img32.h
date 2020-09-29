@@ -18,7 +18,7 @@ namespace BR2 {
 class Img32 : public VirtualMemoryShared<Img32> {
 public:
   Img32() {}
-  Img32(string_t path, bool bLoad = false);      // - Creates this class with no image data.
+  Img32(const string_t& path, bool bLoad = false);      // - Creates this class with no image data.
   Img32(int w, int h, uint8_t* data = nullptr);  // - Creates this class with no image data.
   virtual ~Img32() override;
 

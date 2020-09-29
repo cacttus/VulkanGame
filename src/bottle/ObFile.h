@@ -59,23 +59,23 @@ protected:
 
   std::shared_ptr<SpriteSpec> getMot(string_t& name);
   void parseGetSetMotion(string_t& tok, string_t& msName, std::shared_ptr<SpriteSpec>& ms);
-  void processMotion(string_t name, std::vector<string_t>& files, float fDuration, bool bLoop, bool bRandomSel);
-  void processTile(string_t name, int32_t index, GridMeshLayer::e eMatterMode,
+  void processMotion(const string_t& name, std::vector<string_t>& files, float fDuration, bool bLoop, bool bRandomSel);
+  void processTile(const string_t& name, int32_t index, GridMeshLayer::e eMatterMode,
     std::shared_ptr<SpriteSpec> pTop, std::shared_ptr<SpriteSpec> pSide, std::shared_ptr<SpriteSpec> pBot, ClimateSpec& cp, float rarity);
   //void removeMotion(Motion25Spec* ps);
   void processShiftMotionImage(std::shared_ptr<SpriteSpec> ps, bool shiftH, bool shiftV);
-  Tile25Spec* getTileSpecByName(string_t name);
-  LairGenLocale::e parseGenLocale(string_t str);
-  LairTile* parseLairTile(std::vector<string_t>& tokens, string_t specName, int& iind);
-  MpVec3i parse_mxv3(std::vector<string_t>& tokens, string_t specName, int& iind);
-  MpUint parse_mxui2(std::vector<string_t>& tokens, string_t specName, int& iind);
-  MpFloat parse_mxf2(std::vector<string_t>& tokens, string_t specName, int& iind);
+  Tile25Spec* getTileSpecByName(const string_t& name);
+  LairGenLocale::e parseGenLocale(const string_t& str);
+  LairTile* parseLairTile(std::vector<string_t>& tokens, const string_t& specName, int& iind);
+  MpVec3i parse_mxv3(std::vector<string_t>& tokens, const string_t& specName, int& iind);
+  MpUint parse_mxui2(std::vector<string_t>& tokens, const string_t& specName, int& iind);
+  MpFloat parse_mxf2(std::vector<string_t>& tokens, const string_t& specName, int& iind);
   int32_t parseNbr_int(std::vector<string_t>& tokens, int& iind);
   uint32_t parseNbr_uint(std::vector<string_t>& tokens, int& iind);
   float parseNbr_float(std::vector<string_t>& tokens, int& iind);
-  MorphTile* getMorphTileGroupByName(string_t);
-  ClimateSpec parseClimate(std::vector<string_t>& tokens, string_t specName, int& iind);
-  WalkerSpec* getWalkerSpecByName(string_t n);
+  MorphTile* getMorphTileGroupByName(const string_t&);
+  ClimateSpec parseClimate(std::vector<string_t>& tokens, const string_t& specName, int& iind);
+  WalkerSpec* getWalkerSpecByName(const string_t& n);
   std::map<PlaceIndex, PlaceMode::e> parsePlacementOptions(std::string strPlace);
   ivec3 parseBoxFit(std::string boxFit);
 

@@ -28,11 +28,11 @@ const std::string TexCache::RopeWd = "./data/tx64-rope.png";
 const std::string TexCache::LadderWd = "./data/tx64-ladder.png";
 
 #pragma region TexFile
-TexFile::TexFile(string_t loc) {
+TexFile::TexFile(const string_t& loc) {
   _loc = loc;
   _name = FileSystem::getFileNameFromPath(loc);
 }
-TexFile::TexFile(string_t name, string_t loc) {
+TexFile::TexFile(const string_t& name, const string_t& loc) {
   _name = name;
   _loc = loc;
 }

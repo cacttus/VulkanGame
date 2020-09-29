@@ -6,13 +6,13 @@
 #include "../base/Logger.h"
 
 namespace BR2 {
-void TextDataFile::msg(string_t msg, bool error) {
+void TextDataFile::msg(const string_t& msg, bool error) {
   _vecMessages.push_back(Stz(error ? "ERROR:" : "") + _fileName + ": " + msg);
 }
 void TextDataFile::loadAndParse() {
   loadAndParse(_fileLoc);
 }
-void TextDataFile::loadAndParse(string_t& loc) {
+void TextDataFile::loadAndParse(const string_t& loc) {
   _fileData = nullptr;
   _fileLoc = loc;
   _fileName = FileSystem::getFilePartOfFileName(loc);
@@ -47,14 +47,14 @@ void TextDataFile::loadAndParse(string_t& loc) {
 
   postLoad(success);
 }
-void TextDataFile::save(string_t& loc) {
+void TextDataFile::save(const string_t& loc) {
   BRThrowNotImplementedException();
 }
 
 //+-- CTOR/DTOR --+
 TextDataFile::TextDataFile() : _fileData(NULL) {
 }
-TextDataFile::TextDataFile(string_t& loc) :
+TextDataFile::TextDataFile(const string_t& loc) :
   _fileLoc(loc) {
 }
 TextDataFile::~TextDataFile() {

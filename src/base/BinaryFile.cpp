@@ -12,10 +12,10 @@
 namespace BR2 {
 
 #pragma region BinaryFile : Methods
-BinaryFile::BinaryFile(string_t file_version) {
+BinaryFile::BinaryFile(const string_t& file_version) {
   _strFileVersion = file_version;
 }
-BinaryFile::BinaryFile(string_t file_version, size_t buffer_size) : BinaryFile(file_version) {
+BinaryFile::BinaryFile(const string_t& file_version, size_t buffer_size) : BinaryFile(file_version) {
   _data._alloca(buffer_size);
 }
 BinaryFile::~BinaryFile() {
@@ -140,10 +140,10 @@ int32_t BinaryFile::get() {
   }
   return (int32_t)(*(getData().ptr() + iFilePos++));
 }
-bool BinaryFile::loadFromDisk(string_t fileLoc, bool bAddNull) {
+bool BinaryFile::loadFromDisk(const string_t& fileLoc, bool bAddNull) {
   return loadFromDisk(fileLoc, 0, -1, bAddNull);
 }
-bool BinaryFile::loadFromDisk(string_t fileLoc, size_t offset, int64_t length, bool bAddNull) {
+bool BinaryFile::loadFromDisk(const string_t& fileLoc, size_t offset, int64_t length, bool bAddNull) {
   rewind();
 
   BRLogInfo("Reading File " + fileLoc);
@@ -196,7 +196,7 @@ std::string BinaryFile::toString() {
   delete[] b2;
   return ret;
 }
-bool BinaryFile::writeToDisk(string_t fileLoc) {
+bool BinaryFile::writeToDisk(const string_t& fileLoc) {
   if (FileSystem::SDLFileWrite(fileLoc, _data.ptr(), _data.count()) == 0) {
     return true;
   }

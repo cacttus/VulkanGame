@@ -21,7 +21,7 @@ namespace BR2 {
 */
 class LightNodeBase : public PhysicsNode {
 public:
-  LightNodeBase(string_t name, bool bShadow);
+  LightNodeBase(const string_t& name, bool bShadow);
   virtual ~LightNodeBase() override;
 
   virtual void update(float delta, std::map<Hash32, std::shared_ptr<Animator>>& mapAnimators) override;
@@ -48,8 +48,8 @@ private:
 */
 class LightNodeDir : public LightNodeBase {
 public:
-  LightNodeDir(string_t name, bool bShadow);
-  static std::shared_ptr<LightNodeDir> create(string_t name, bool bShadow);
+  LightNodeDir(const string_t& name, bool bShadow);
+  static std::shared_ptr<LightNodeDir> create(const string_t& name, bool bShadow);
   virtual ~LightNodeDir() override;
 
   virtual void update(float delta, std::map<Hash32, std::shared_ptr<Animator>>& mapAnimators) override;
@@ -83,10 +83,10 @@ private:
 */
 class LightNodePoint : public LightNodeBase {
 public:
-  LightNodePoint(string_t name, bool bhasShadowBox);
+  LightNodePoint(const string_t& name, bool bhasShadowBox);
   virtual ~LightNodePoint() override;
-  static std::shared_ptr<LightNodePoint> create(string_t name,bool bhasShadowBox);
-  static std::shared_ptr<LightNodePoint> create(string_t name, vec3&& pos, float radius, vec4&& color, string_t action, bool bShadowsEnabled);
+  static std::shared_ptr<LightNodePoint> create(const string_t& name, bool bhasShadowBox);
+  static std::shared_ptr<LightNodePoint> create(const string_t& name, vec3&& pos, float radius, vec4&& color, const string_t& action, bool bShadowsEnabled);
   std::shared_ptr<ShadowBox> getShadowBox() { return _pShadowBox; }
 
   virtual void update(float delta, std::map<Hash32, std::shared_ptr<Animator>>& mapAnimators) override;

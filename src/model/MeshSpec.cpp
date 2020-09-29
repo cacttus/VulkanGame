@@ -24,14 +24,14 @@
 #include <iostream>
 
 namespace BR2 {
-MeshSpec::MeshSpec(string_t strName, std::shared_ptr<VertexFormat> vf, std::shared_ptr<ObjFile> objFile, std::shared_ptr<PhysicsShape> ps) : BaseSpec(strName) {
+MeshSpec::MeshSpec(const string_t& strName, std::shared_ptr<VertexFormat> vf, std::shared_ptr<ObjFile> objFile, std::shared_ptr<PhysicsShape> ps) : BaseSpec(strName) {
   _pVertexFormat = vf;
   _pObjectFile = objFile;
   _pPhysicsShape = ps;
 
   _matLocalMatrix = mat4::identity();
 }
-MeshSpec::MeshSpec(string_t strName,const void* pVerts, size_t vCount,
+MeshSpec::MeshSpec(const string_t& strName,const void* pVerts, size_t vCount,
   const void* pIndexes, size_t iCount,
   std::shared_ptr<VertexFormat> fmt, std::shared_ptr<Material> pm) : MeshSpec(strName, fmt, nullptr, nullptr) {
   _pMaterial = pm;

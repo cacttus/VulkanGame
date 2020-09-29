@@ -34,9 +34,7 @@ GraphicsContext::GraphicsContext(std::shared_ptr<GraphicsApi> api) {
 GraphicsContext::~GraphicsContext() {
 }
 std::shared_ptr<GraphicsWindow> GraphicsContext::createGraphicsWindow(SDL_Window* sdlw, const GraphicsWindowCreateParameters& params) {
-  if (_vecWindows.size() > 0) {
-    BRLogError("Creating duplicate graphics window.");
-  }
+  BRLogDebug("Creating graphics window.");
 
   std::shared_ptr<GraphicsWindow> w = nullptr;
   try {

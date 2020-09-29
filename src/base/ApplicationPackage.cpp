@@ -44,8 +44,8 @@ public:
   std::string parseStr(std::shared_ptr<BinaryFile> fb, int32_t& off);
   ProjectPackageFileEntry* getEntry(std::string fileLoc);
   bool loadExe(std::shared_ptr<BinaryFile> fb);
-  void setSz(string_t name, string_t& value, std::shared_ptr<PackageConfiguration> entries);
-  void load(string_t file_path);
+  void setSz(const string_t& name, string_t& value, std::shared_ptr<PackageConfiguration> entries);
+  void load(const string_t& file_path);
 };
 string_t ApplicationPackage_Internal::_strCacheFolderName = "";
 string_t ApplicationPackage_Internal::_strEngineConfigFileName = "";
@@ -128,7 +128,7 @@ ProjectPackageFileEntry* ApplicationPackage_Internal::getEntry(std::string fileL
 bool ApplicationPackage_Internal::loadExe(std::shared_ptr<BinaryFile> fb) {
   return fb->loadFromDisk(_strExeLoc);
 }
-void ApplicationPackage_Internal::setSz(string_t name, string_t& value, std::shared_ptr<PackageConfiguration> config) {
+void ApplicationPackage_Internal::setSz(const string_t& name, string_t& value, std::shared_ptr<PackageConfiguration> config) {
   bool set = false;
   //Set the given value to the first attribute in the given tag identified by 'name'
   HashMapItem<XmlConfigEntry> ent = config->_entries.find(name);
@@ -144,7 +144,9 @@ void ApplicationPackage_Internal::setSz(string_t name, string_t& value, std::sha
     Gu::debugBreak();
   }
 }
-void ApplicationPackage_Internal::load(string_t file_path) {
+void ApplicationPackage_Internal::load(const string_t& file_path) {
+  BRLogTODO("Application Package Loading");
+  BRThrowNotImplementedException();
 }
 
 #pragma endregion

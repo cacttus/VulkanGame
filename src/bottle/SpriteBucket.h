@@ -27,7 +27,7 @@ public:
   virtual ~SpriteBucket() override;
 
   void update(float dt);
-  std::shared_ptr<SpriteSpec> getSpecByName(string_t name);
+  std::shared_ptr<SpriteSpec> getSpecByName(const string_t& name);
   std::shared_ptr<SpriteSpec> getSpecByName(Hash32 name);
   std::shared_ptr<SpriteSpec> getBlankTile() { return _pBlank; }
   Tile25Spec* getDefaultTile(GridMeshLayer::e mode);
@@ -36,7 +36,7 @@ public:
   SpriteSpecMap& getSpecs() { return _mapSpecs; }
   TileMap& getTileSpecs() { return _mapTiles; }
   Tile25Spec* getTileById(uint8_t id);
-  Tile25Spec* getTileByName(string_t name);
+  Tile25Spec* getTileByName(const string_t& name);
   void addSpec(std::shared_ptr<SpriteSpec> sp);
   void addToAtlas(std::shared_ptr<Atlas> a);
   void loadMotions(std::shared_ptr<ObFile> obFile);
@@ -58,7 +58,7 @@ private:
 class SpriteSpec : public VirtualMemory {
   //typedef std::map<Hash32, Motion25Frame*> FrameMap;
 public:
-  SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, string_t name, std::vector<string_t>& frames,
+  SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, const string_t& name, std::vector<string_t>& frames,
     float fDefaultDuration, bool bDefaultLoop,
     bool bRandomSelect);
   virtual ~SpriteSpec() override;
@@ -79,7 +79,7 @@ public:
   Hash32 getNameHashed() { return _iNameHashed; }
   int32_t numFrames() { return (int32_t)_vecFrames.size(); }
 
-  void addGeneratedFrame(string_t genName, std::shared_ptr<Img32> bi);
+  void addGeneratedFrame(const string_t& genName, std::shared_ptr<Img32> bi);
   bool getRandomSelect() { return _bRandomSelect; }
   string_t getFirstFrameFileName();
 
@@ -100,15 +100,15 @@ private:
 
   bool _bIsGenerated = false;
 
-  SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, string_t name, bool bRandomSelect);
+  SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, const string_t& name, bool bRandomSelect);
 
 };
 
 //Single frame of animation.  Just an image location.
 class SpriteFrame : public VirtualMemory {
 public:
-  SpriteFrame(string_t img);
-  SpriteFrame(string_t img, std::shared_ptr<Img32> pGen);
+  SpriteFrame(const string_t& img);
+  SpriteFrame(const string_t& img, std::shared_ptr<Img32> pGen);
   virtual ~SpriteFrame() override;
 
   std::shared_ptr<Img32> getGenerated() { return _pGenerated; }

@@ -35,9 +35,9 @@
 #include <iostream>
 
 namespace BR2 {
-MeshNode::MeshNode(string_t name, bool pickable, std::shared_ptr<MeshSpec> ms) : MeshNode(name, pickable, ms, nullptr) {
+MeshNode::MeshNode(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> ms) : MeshNode(name, pickable, ms, nullptr) {
 }
-MeshNode::MeshNode(string_t name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn) : SceneNode(name, ps) {
+MeshNode::MeshNode(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn) : SceneNode(name, ps) {
   _pModelNode = mn;
   _bPickable = pickable;
 }
@@ -48,12 +48,12 @@ MeshNode::~MeshNode() {
   _vecBoneNodesOrdered.resize(0);
   _vecArmaturesOrdered.resize(0);
 }
-std::shared_ptr<MeshNode> MeshNode::create(string_t name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn) {
+std::shared_ptr<MeshNode> MeshNode::create(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn) {
   std::shared_ptr<MeshNode> m = std::make_shared<MeshNode>(name, pickable, ps, mn);
   m->init();
   return m;
 }
-std::shared_ptr<MeshNode> MeshNode::create(string_t name, bool pickable, std::shared_ptr<MeshSpec> pd) {
+std::shared_ptr<MeshNode> MeshNode::create(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> pd) {
   std::shared_ptr<MeshNode> m = std::make_shared<MeshNode>(name, pickable, pd);
   m->init();
   return m;

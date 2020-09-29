@@ -334,7 +334,7 @@ float MtFont::fontSizeToFontScale(float fs) {
 //}
 #pragma endregion
 #pragma region MegaTex
-MegaTex::MegaTex(string_t name, std::shared_ptr<GLContext> ctx, bool bCache) : Texture2DSpec(name, TextureFormat::Image4ub, ctx) {
+MegaTex::MegaTex(const string_t& name, std::shared_ptr<GLContext> ctx, bool bCache) : Texture2DSpec(name, TextureFormat::Image4ub, ctx) {
   _bCache = bCache;
 }
 MegaTex::~MegaTex() {

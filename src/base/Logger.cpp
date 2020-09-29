@@ -47,31 +47,32 @@ public:
   std::mutex _mtLogStackAccess;
   std::atomic_bool _kill;
 
-  string_t addStackTrace(string_t msg);
+  string_t addStackTrace(string_t& msg);
   string_t createMessageHead(LogLevel level, const char* file, int line);
-  void log(string_t msg, string_t header, Logger_Internal::LogLevel level, const BR2::Exception* const e);
+  void log(const string_t& msg, const string_t& header, Logger_Internal::LogLevel level, const BR2::Exception* const e);
   void processLogs_Async();
 
   std::unique_ptr<Stopwatch> _cycler;
 
   void log_cycle_mainThread(std::function<void()> f, bool, int wait_ms);
-  void log_wedi_mainThread(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level);
+  void log_wedi_mainThread(const string_t& msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level);
 };
-Logger_Internal::Logger_Internal(){
+Logger_Internal::Logger_Internal() {
   _cycler = std::make_unique<Stopwatch>();
   _cycler->start();
 }
-Logger_Internal::~Logger_Internal(){
+Logger_Internal::~Logger_Internal() {
   _cycler->stop();
   _cycler = nullptr;
 }
-void Logger_Internal::log_wedi_mainThread(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level) {
+void Logger_Internal::log_wedi_mainThread(const string_t& msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace, Logger_Internal::LogLevel level) {
+  string_t msg_cpy = msg;
   if (_bEnabled == false) {
     return;
   }
 
   if (hideStackTrace == false) {
-    msg = addStackTrace(msg);
+    msg_cpy = addStackTrace(msg_cpy);
   }
 
   log(msg, createMessageHead(level, file, line), level, e);
@@ -81,12 +82,14 @@ void Logger_Internal::log_cycle_mainThread(std::function<void()> f, bool force, 
     f();
   }
 }
-string_t Logger_Internal::addStackTrace(string_t msg) {
+string_t Logger_Internal::addStackTrace(string_t& msg) {
   msg += OperatingSystem::newline();
   msg += DebugHelper::getStackTrace();
   return msg;
 }
 string_t Logger_Internal::createMessageHead(LogLevel level, const char* file, int line) {
+  string_t head = "";
+
   string_t logtype;
   if (level == LogLevel::Debug) {
     logtype = "D";
@@ -103,22 +106,30 @@ string_t Logger_Internal::createMessageHead(LogLevel level, const char* file, in
   else if (level == LogLevel::TODO) {
     logtype = "T";
   }
+  else if (level == LogLevel::Script) {
+    logtype = "L";
+  }
   else {
     logtype = "?";
+    Gu::debugBreak();
   }
   string_t file_line = "";
-  if (_bSuppressLineFileDisplay == false) {
+  if (_bSuppressLineFileDisplay == false && level != LogLevel::Script) {
+    file_line += "[";
     if (file != nullptr) {
       file_line += file;
     }
     if (line >= 0) {
       file_line += ":" + TypeConv::intToStr(line);
     }
+    file_line += "]";
   }
 
-  return Stz "" + DateTime::getDateTime().timeToStr() + "[" + logtype + "]" + "[" + file_line + "]";
+  head = Stz "" + DateTime::getDateTime().timeToStr() + "[" + logtype + "]" + file_line;
+
+  return head;
 }
-void Logger_Internal::log(string_t msg, string_t header, Logger_Internal::LogLevel level, const BR2::Exception* const e) {
+void Logger_Internal::log(const string_t& msg, const string_t& header, Logger_Internal::LogLevel level, const BR2::Exception* const e) {
   string_t m = header + " " + msg;
 
   if (e != nullptr) {
@@ -227,7 +238,7 @@ Logger::~Logger() {
   _pint->_kill = true;
   _pint = nullptr;
 }
-void Logger::init(string_t cache) {
+void Logger::init(const string_t& cache) {
   _pint->_logFileName = Stz "Log_" + DateTime::getDateTime().dateToStr(".") + "_" + DateTime::getDateTime().timeToStr(".") + ".txt";
   string_t cache_rooted = FileSystem::getRootedPath(cache);
   _pint->_logDir = FileSystem::combinePath(cache_rooted, _pint->_logFileName);
@@ -258,40 +269,40 @@ void Logger::init(string_t cache) {
 string_t Logger::getLogPath() {
   return _pint->_logDir;
 }
-void Logger::logInfo(string_t msg) {
+void Logger::logInfo(const string_t& msg) {
   logInfo(msg, -1, "", nullptr, true);
 }
-void Logger::logTODO(string_t msg, int line, const char* file) {
+void Logger::logTODO(const string_t& msg, int line, const char* file) {
   _pint->log_wedi_mainThread(msg, line, file, nullptr, true, Logger_Internal::LogLevel::TODO);
 }
-void Logger::logInfo(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
+void Logger::logInfo(const string_t& msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Info);
 }
-void Logger::logError(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
+void Logger::logError(const string_t& msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Error);
 }
-void Logger::logScript(string_t msg, int line, const char* file) {
+void Logger::logScript(const string_t& msg, int line, const char* file) {
   _pint->log_wedi_mainThread(msg, line, file, nullptr, true, Logger_Internal::LogLevel::Script);
 }
-void Logger::logWarn(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
+void Logger::logWarn(const string_t& msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Warn);
 }
-void Logger::logDebug(string_t msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
+void Logger::logDebug(const string_t& msg, int line, const char* file, const BR2::Exception* const e, bool hideStackTrace) {
   _pint->log_wedi_mainThread(msg, line, file, e, hideStackTrace, Logger_Internal::LogLevel::Debug);
 }
-void Logger::logWarnCycle(string_t msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
+void Logger::logWarnCycle(const string_t& msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
   _pint->log_cycle_mainThread([&]() {
     logWarn(msg, line, file, e);
   },
                               force, iCycle);
 }
-void Logger::logErrorCycle(string_t msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
+void Logger::logErrorCycle(const string_t& msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
   _pint->log_cycle_mainThread([&]() {
     logError(msg, line, file, e);
   },
                               force, iCycle);
 }
-void Logger::logDebugCycle(string_t msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
+void Logger::logDebugCycle(const string_t& msg, int line, const char* file, const BR2::Exception* const e, int iCycle, bool force) {
   _pint->log_cycle_mainThread([&]() {
     logDebug(msg, line, file, e);
   },

@@ -16,8 +16,22 @@
 
 #include <SDL_video.h>
 
-namespace BR2 {
+#if defined(BR2_OS_LINUX)
+#if defined(SDL_VIDEO_DRIVER_X11)
+//Xlib manual https://tronche.com/gui/x/xlib/
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xos.h>
+#include <sys/utsname.h>
+#endif
+#if defined(SDL_VIDEO_DRIVER_WAYLAND)
+//Wayland manual https://wayland.freedesktop.org/docs/html/
+//https://gitlab.com/hdante/hello_wayland
+#include <wayland-client.h>
+#endif
+#endif
 
+namespace BR2 {
 GraphicsApi::GraphicsApi() {
 }
 GraphicsApi::~GraphicsApi() {
@@ -44,7 +58,7 @@ void GraphicsApi::updateLoop() {
         for (auto w : ct->getGraphicsWindows()) {
           w->step();
         }
-        ct->chkErrRt(); //**End of loop error -- Don't Remove**
+        ct->chkErrRt();  //**End of loop error -- Don't Remove**
       }
     }
     Perf::popPerf();
@@ -179,50 +193,38 @@ void GraphicsApi::destroyWindow(std::shared_ptr<GraphicsWindow> w) {
   SDL_DestroyWindow(w->getSDLWindow());
   w = nullptr;
 }
-SDL_Window* GraphicsApi::makeSDLWindow(const string_t& windowTitle, int render_system, bool show) {
+SDL_Window* GraphicsApi::makeSDLWindow(const GraphicsWindowCreateParameters& params, int render_system, bool show) {
   string_t title;
   bool bFullscreen = false;
   SDL_Window* ret = nullptr;
 
-  int x = 0, y = 0, w = 800, h = 600, flags = 0;
+  int style_flags = 0;
+  style_flags |= (show ? SDL_WINDOW_SHOWN : SDL_WINDOW_HIDDEN);
+  if (params._type == GraphicsWindowCreateParameters::Wintype_Desktop) {
+    style_flags |= SDL_WINDOW_RESIZABLE;
+  }
+  else if (params._type == GraphicsWindowCreateParameters::Wintype_Utility) {
+  }
+  else if (params._type == GraphicsWindowCreateParameters::Wintype_Noborder) {
+    style_flags |= SDL_WINDOW_BORDERLESS;
+  }
+
+  int x = params._x;
+  int y = params._y;
+  int w = params._width;
+  int h = params._height;
+
 #ifdef BR2_OS_IPHONE
-  x = 0, y = 0, w = 320, h = 480, flags = SDL_WINDOW_BORDERLESS | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL;
+  int flags = SDL_WINDOW_BORDERLESS | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_OPENGL;
   title = "";
-#else
-#ifdef BR2_OS_WINDOWS
-  //SDL_WINDOW_OPENGL | SDL_WINDOW_VULKAN;
-  if (bFullscreen) {
-    x = 0;
-    y = 0;
-    w = 1920;
-    h = 1080;
-    flags = render_system;
-  }
-  else {
-    x = 100, y = 100, w = 800, h = 600, flags = (show ? SDL_WINDOW_SHOWN : SDL_WINDOW_HIDDEN) | render_system | SDL_WINDOW_RESIZABLE;
-  }
-  title = windowTitle;
-#else
-#ifdef BR2_OS_LINUX
-  //SDL_WINDOW_OPENGL | SDL_WINDOW_VULKAN;
-  if (bFullscreen) {
-    x = 0;
-    y = 0;
-    w = 1920;
-    h = 1080;
-    flags = render_system;
-  }
-  else {
-    x = 100, y = 100, w = 800, h = 600, flags = (show ? SDL_WINDOW_SHOWN : SDL_WINDOW_HIDDEN) | render_system | SDL_WINDOW_RESIZABLE;
-  }
-  title = windowTitle;
+#elif defined(BR2_OS_WINDOWS) || defined(BR2_OS_LINUX)
+  int flags = style_flags | render_system;
+  title = params._title;
 #else
   OS_NOT_SUPPORTED_ERROR
 #endif
-#endif
-#endif
 
-  //No0te: This calls SDL_GL_LOADLIBRARY if SDL_WINDOW_OPENGL is set.
+  //Note: This calls SDL_GL_LOADLIBRARY if SDL_WINDOW_OPENGL is set.
   ret = SDL_CreateWindow(title.c_str(), x, y, w, h, flags);
   if (ret != nullptr) {
     //On Linux SDL will set an error if unable to represent a GL/Vulkan profile, as we try different ones. Ignore them for now.
@@ -235,12 +237,94 @@ SDL_Window* GraphicsApi::makeSDLWindow(const string_t& windowTitle, int render_s
     }
     SDLUtils::checkSDLErr();
   }
-  else{
+  else {
     //Linux: Couldn't find matching GLX visual.
     SDLUtils::checkSDLErr(true, false);
   }
 
+  //Customize window (per display system)
+  //setWindowProps(ret, params);
+
   return ret;
+}
+void GraphicsApi::setWindowProps(SDL_Window* win, const GraphicsWindowCreateParameters& params) {
+  //Customize the window based on the supported windowing system.
+
+  //Best way to handle this is likely to just keep the buttons visible and stub their events.
+
+  if (!win) {
+    return;
+  }
+  SDL_SysWMinfo wmInfo;
+  SDL_VERSION(&wmInfo.version);
+  SDL_GetWindowWMInfo(win, &wmInfo);
+
+  if (wmInfo.subsystem == SDL_SYSWM_X11) {
+#if defined(BR2_OS_LINUX)
+#if defined(SDL_VIDEO_DRIVER_X11)
+    auto d = wmInfo.info.x11.display;
+    auto w = wmInfo.info.x11.window;
+    //_NET_WM_WINDOW_TYPE_TOOLBAR - Hides Maximize
+    //_NET_WM_WINDOW_TYPE_DOCK - Hides border
+    //_NET_WM_WINDOW_TYPE_UTILITY - Show only Close
+    //_NET_WM_WINDOW_TYPE_SPLASH - hides maximize
+    //_NET_WM_WINDOW_TYPE_DIALOG - show only close no resize
+    //_NET_WM_WINDOW_TYPE_NOTIFICATION - no border
+    //_NET_WM_WINDOW_TYPE_DESKTOP - sticks window to the desktop background..
+    //https://www.geeks3d.com/20120102/programming-tutorial-simple-x11-x-window-code-sample-for-linux-and-mac-os-x/
+    // Atom WM_DELETE_WINDOW = XInternAtom(d, "WM_DELETE_WINDOW", False);
+    // XSetWMProtocols(d, w, &WM_DELETE_WINDOW, 1);
+
+    // if (params._type == GraphicsWindowCreateParameters.Wintype_Desktop) {
+    //   Atom window_type = XInternAtom(d, "_NET_WM_WINDOW_TYPE", False);
+    //   long value = XInternAtom(d, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
+    //   XChangeProperty(d, w, window_type, XA_ATOM, 32, PropModeReplace, (unsigned char*)&value, 1);
+    // }
+    // else 
+    //Hide min/max for utility windows.
+    // if (params._type == GraphicsWindowCreateParameters.Wintype_Utility) {
+    //   Atom window_type = XInternAtom(d, "_NET_WM_WINDOW_TYPE", False);
+    //   long value = XInternAtom(d, "_NET_WM_WINDOW_TYPE_UTILITY", False);
+    //   XChangeProperty(d, w, window_type, XA_ATOM, 32, PropModeReplace, (unsigned char*)&value, 1);
+    // }
+    //Borderless handled in window create params._type == GraphicsWindowCreateParameters.Wintype_Borderless
+#endif
+#endif
+  }
+  else if (wmInfo.subsystem == SDL_SYSWM_WAYLAND) {
+#if defined(BR2_OS_LINUX)
+#if defined(SDL_VIDEO_DRIVER_WAYLAND)
+    // auto d = wmInfo.info.wl.display;
+    // auto h = wmInfo.info.wl.shell_surface;
+    // auto s = wmInfo.info.wl.surface;
+    // auto registry = wl_display_get_registry(d);
+#endif
+#endif
+  }
+  else if (wmInfo.subsystem == SDL_SYSWM_WINDOWS) {
+#if defined(BR2_OR_WINDOWS)
+#if defined(SDL_VIDEO_DRIVER_WINDOWS)
+    //https://stackoverflow.com/questions/13189791/disable-x-button-icon-on-the-top-of-the-right-in-messagebox-using-c-win32-api
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWindowWMInfo(ret, &wmInfo);
+    HWND hwnd = wmInfo.info.win.window;
+    if (!params._closeButton) {
+      LONG_PTR style = GetWindowLongPtr(hwnd, GWL_STYLE);      //get current style
+      SetWindowLongPtr(hwnd, GWL_STYLE, style & ~WS_SYSMENU);  //remove system menu
+      WaitForSingleObject(thread, INFINITE);                   //view the effects until you close it
+    }
+    if (!params._minButton) {
+      LONG_PTR style = GetWindowLongPtr(hwnd, GWL_STYLE);          //get current style
+      SetWindowLongPtr(hwnd, GWL_STYLE, style & ~WS_MINIMIZEBOX);  //remove system menu
+      WaitForSingleObject(thread, INFINITE);                       //view the effects until you close it
+    }
+#endif
+#endif
+  }
+  else {
+    BRLogWarn("Failed to set window details. Unsupported windowing system: " + wmInfo.subsystem);
+  }
 }
 
 }  // namespace BR2

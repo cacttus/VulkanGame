@@ -18,7 +18,7 @@
 
 namespace BR2 {
 #pragma region LightNodeBase
-LightNodeBase::LightNodeBase(string_t name, bool bShadow) : PhysicsNode(name, nullptr) {
+LightNodeBase::LightNodeBase(const string_t& name, bool bShadow) : PhysicsNode(name, nullptr) {
   _bEnableShadows = bShadow;
   _color = vec4(1, 1, 1, 1);
 }
@@ -44,10 +44,10 @@ bool LightNodeBase::getIsShadowsEnabled() {
 #pragma endregion
 
 #pragma region LightNodeDir
-LightNodeDir::LightNodeDir(string_t name, bool bShadow) : LightNodeBase(name, bShadow) {
+LightNodeDir::LightNodeDir(const string_t& name, bool bShadow) : LightNodeBase(name, bShadow) {
 
 }
-std::shared_ptr<LightNodeDir> LightNodeDir::create(string_t name, bool bShadow) {
+std::shared_ptr<LightNodeDir> LightNodeDir::create(const string_t& name, bool bShadow) {
   std::shared_ptr<LightNodeDir> lp = std::make_shared<LightNodeDir>(name, bShadow);
   lp->init();
   lp->_pSpec = std::make_shared<BaseSpec>("*LightNodeDir");
@@ -132,15 +132,15 @@ void LightNodeDir::calcBoundBox(Box3f& __out_ pBox, const vec3& obPos, float ext
 }
 #pragma endregion
 #pragma region LightNodePoint
-LightNodePoint::LightNodePoint(string_t name, bool bShadowBox) : LightNodeBase(name, bShadowBox) {
+LightNodePoint::LightNodePoint(const string_t& name, bool bShadowBox) : LightNodeBase(name, bShadowBox) {
 }
-std::shared_ptr<LightNodePoint> LightNodePoint::create(string_t name, bool bhasShadowBox) {
+std::shared_ptr<LightNodePoint> LightNodePoint::create(const string_t& name, bool bhasShadowBox) {
   std::shared_ptr<LightNodePoint> lp = std::make_shared<LightNodePoint>(name, bhasShadowBox);
   lp->init();
   lp->_pSpec = std::make_shared<BaseSpec>("*LightNodePoint");
   return lp;
 }
-std::shared_ptr<LightNodePoint> LightNodePoint::create(string_t name, vec3&& pos, float radius, vec4&& color, string_t action, bool bShadowsEnabled) {
+std::shared_ptr<LightNodePoint> LightNodePoint::create(const string_t& name, vec3&& pos, float radius, vec4&& color, const string_t& action, bool bShadowsEnabled) {
   std::shared_ptr<LightNodePoint> lp = LightNodePoint::create(name, bShadowsEnabled);
   std::map<Hash32, std::shared_ptr<Animator>> mp;
   lp->update(0.0f, mp);

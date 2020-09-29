@@ -18,7 +18,7 @@ public:
     float getMass() { return 0.0f; } //PHY_STATIC_MASS
     float getHollow() { return false; }
     PhysicsSpec() { } //deserialize ctor
-    PhysicsSpec(string_t strName) : BaseSpec(strName) { }
+    PhysicsSpec(const string_t& strName) : BaseSpec(strName) { }
     virtual ~PhysicsSpec() override { }
     virtual void serialize( std::shared_ptr<BinaryFile> fb) override;
     virtual void deserialize( std::shared_ptr<BinaryFile> fb) override;
@@ -27,7 +27,7 @@ public:
 //collide with the World Node plane so we need a separate box that isn't an object.
 class PhysicsNode : public SceneNode {
 public:
-  PhysicsNode(string_t name, std::shared_ptr<PhysicsSpec>);
+  PhysicsNode(const string_t& name, std::shared_ptr<PhysicsSpec>);
   virtual ~PhysicsNode();
 
   std::shared_ptr<GridManifold> getManifold() { return _pManifold; }

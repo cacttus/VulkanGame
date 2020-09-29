@@ -8,7 +8,9 @@
 #include "../base/Stopwatch.h"
 #include "../math/Random.h"
 #include "../gfx/GraphicsApi.h"
+#include "../gfx/GfxHeader.h"
 #include "../base/GraphicsWindow.h"
+#include "../base/SoundCache.h"
 #include <iostream>
 
 //https://github.com/SteveKChiu/lua-intf
@@ -17,25 +19,43 @@
 #define LUAINTF_STD_WIDE_STRING 0
 #include "../ext/LuaIntf/LuaIntf.h"
 namespace LuaIntf {
-LUA_USING_SHARED_PTR_TYPE(std::shared_ptr)  // LUA_SP
+LUA_USING_SHARED_PTR_TYPE(std::shared_ptr)
 LUA_USING_LIST_TYPE(std::vector)
 LUA_USING_MAP_TYPE(std::map)
 }  // namespace LuaIntf
 
-
-
 namespace BR2 {
 static int print(lua_State* L) {
-  int n = lua_gettop(L);
-  double sum = 0;
-  int i;
-
   string_t msg = "";
+  int n = lua_gettop(L);
   if (n == 1) {
-    const char* s = lua_tostring(L, i);
-    if(s){
-    msg = string_t(s);
+    double sum = 0;
+    int i;
+    auto argType = lua_type(L, -1);
+    if (argType == LUA_TSTRING) {
+      const char* s = lua_tostring(L, -1);
+      if (s) {
+        msg = string_t(s);
+      }
+      else {
+        int n = 0;
+        n++;
+      }
     }
+    else if (argType == LUA_TBOOLEAN) {
+      bool b = lua_toboolean(L, -1);
+      msg = std::to_string(b);
+    }
+    else if (argType == LUA_TNUMBER) {
+      lua_Number num = lua_tonumber(L, -1);
+      msg = std::to_string(num);
+    }
+    else {
+      msg = Stz "<error: invalid arg type to print() = " + argType + ">";
+    }
+  }
+  else {
+    msg = Stz "<error: invalid call to print()>";
   }
   if (msg.length() > 0) {
     BRLogScript(msg);
@@ -48,27 +68,54 @@ LuaScript::LuaScript() {
   _pState = luaL_newstate();
   luaL_openlibs(_pState);
 
-#define START_CLASS(x) \
-  LuaIntf::LuaBinding(_pState).beginClass<x>(#x)
+//Shortcuts
+#define _START_CLASS(x) LuaIntf::LuaBinding(_pState).beginClass<x>(#x)
 
+//This must be a static class member to work.
+#define _CONSTANT(c,x) .addConstant(#x, c::x)
+//#define _CONSTANT(c,x) .addStaticVariable(#x, c::x, false)
+
+  //Register Script print
   lua_register(_pState, "print", print);
 
+  //shared_ptr
+  //https://github.com/SteveKChiu/lua-intf/issues/109
+  //Note: type ambiguity errors with overloaded (static) member functions happen.
+      int x1 =GraphicsWindowCreateParameters:: Wintype_Desktop;
+      int x2 =GraphicsWindowCreateParameters:: Wintype_Utility;
+      int x3 =GraphicsWindowCreateParameters:: Wintype_Noborder;
   // BR2 Bindings
-  START_CLASS(Gu)
+  _START_CLASS(Gu)
       .addStaticFunction("getGraphicsApi", &Gu::getGraphicsApi)
       .addStaticFunction("getEngineConfig", &Gu::getEngineConfig)
+      .addStaticFunction("playSound", &Gu::playSound, LUA_ARGS(const string_t&, const SoundPlayInfo&))
       .endClass();
-  START_CLASS(EngineConfig)
+  _START_CLASS(SoundPlayInfo)
+      //You can only have 1 constructor
+      .addConstructor(LUA_ARGS(bool, float, float))
       .endClass();
-  START_CLASS(GraphicsApi)
-      .addFunction("createWindow", static_cast<std::shared_ptr<GraphicsWindow> (GraphicsApi::*)(const GraphicsWindowCreateParameters&)>(&GraphicsApi::createWindow), LUA_ARGS(const GraphicsWindowCreateParameters&))
+  _START_CLASS(EngineConfig)
       .endClass();
-  START_CLASS(GraphicsWindowCreateParameters)
-      .addConstructor(LUA_ARGS(const string_t&, int32_t, int32_t, bool, bool, bool, LuaIntf::_opt<std::shared_ptr<GraphicsWindow>>))
+  _START_CLASS(GraphicsApi)
+      .addFunction("createWindow",
+                   static_cast<std::shared_ptr<GraphicsWindow> (GraphicsApi::*)(const GraphicsWindowCreateParameters&)>(&GraphicsApi::createWindow),
+                   LUA_ARGS(const GraphicsWindowCreateParameters&))
       .endClass();
-  START_CLASS(GraphicsWindow)
+  _START_CLASS(GraphicsWindowCreateParameters)
+      .addConstructor(LUA_ARGS(const string_t&,
+                               int32_t, int32_t, int32_t, int32_t, int32_t,
+                               bool, bool, bool,
+                               LuaIntf::_opt<std::shared_ptr<GraphicsWindow>>))
+                               //.addVariable("", &GraphicsWindowCreateParameters::Wintype_Desktop, false)
+                               //.addConstant("Wintype_Desktop", x1)
+                            //   .addConstant("Wintype_Desktop", GraphicsWindowCreateParameters::Wintype_Desktop)
+       _CONSTANT(GraphicsWindowCreateParameters, Wintype_Desktop)
+       _CONSTANT(GraphicsWindowCreateParameters, Wintype_Utility)
+       _CONSTANT(GraphicsWindowCreateParameters, Wintype_Noborder)
       .endClass();
-  START_CLASS(vec3)
+  _START_CLASS(GraphicsWindow)
+      .endClass();
+  _START_CLASS(vec3)
       .addConstructor(LUA_ARGS(float, float, float))  // use _opt<float> for optional
       .addVariableRef("x", &vec3::x)
       .addVariableRef("y", &vec3::y)
@@ -86,13 +133,13 @@ LuaScript::LuaScript() {
       .addFunction("__div", static_cast<vec3 (vec3::*)(const vec3&) const>(&vec3::divide), LUA_ARGS(vec3))
       .addFunction("divs", static_cast<vec3 (vec3::*)(const float&) const>(&vec3::divide), LUA_ARGS(float))
       .endClass();
-  START_CLASS(Stopwatch)
+  _START_CLASS(Stopwatch)
       .addConstructor(LUA_ARGS(LuaIntf::_opt<std::string>, LuaIntf::_opt<bool>))  // use _opt<float> for optional
       .addFunction("start", &Stopwatch::start, LUA_ARGS(LuaIntf::_opt<std::string>))
       .addFunction("stop", &Stopwatch::stop, LUA_ARGS(LuaIntf::_opt<bool>, LuaIntf::_opt<bool>))
       .addFunction("deltaMilliseconds", &Stopwatch::deltaMilliseconds)
       .endClass();
-  START_CLASS(Random)
+  _START_CLASS(Random)
       .addConstructor(LUA_ARGS())
       .addConstructor(LUA_ARGS(int32_t))
       .addFunction("nextFloat", &Random::nextFloat, LUA_ARGS(float, float))

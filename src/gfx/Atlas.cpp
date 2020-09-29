@@ -8,10 +8,10 @@
 #include "../gfx/TexCache.h"
 
 namespace BR2 {
-Atlas::Atlas(std::shared_ptr<GLContext> ct, string_t na, ivec2& ivGridSize) : Texture2DSpec(na, TextureFormat::Image4ub, ct) {
+Atlas::Atlas(std::shared_ptr<GLContext> ct, const string_t& na, ivec2& ivGridSize) : Texture2DSpec(na, TextureFormat::Image4ub, ct) {
   _vGridSize = ivGridSize; //_pSpriteMap->getGridDimensions();
 }
-Atlas::Atlas(std::shared_ptr<GLContext> ct, string_t na, ivec2& viSpriteSize, string_t strImageLoc) : Texture2DSpec(na,TextureFormat::Image4ub, ct) {
+Atlas::Atlas(std::shared_ptr<GLContext> ct, const string_t& na, ivec2& viSpriteSize, const string_t& strImageLoc) : Texture2DSpec(na,TextureFormat::Image4ub, ct) {
   _strPrecompileFileLocation = strImageLoc;
   _vSpriteSize = viSpriteSize;
   //_vGridSize = ivGridSize; //_pSpriteMap->getGridDimensions();
@@ -159,7 +159,7 @@ void Atlas::finishCompile(std::shared_ptr<Img32> sp, bool bMipmaps) {
   Gu::getTexCache()->add(getName(), getThis<Texture2DSpec>());
   Gu::freeImage(sp);
 }
-void Atlas::addImage(Hash32 en, string_t loc) {
+void Atlas::addImage(Hash32 en, const string_t& loc) {
   std::shared_ptr<AtlasSprite> sp = std::make_shared<AtlasSprite>(getThis<Atlas>());
   sp->_iId = en;
   sp->_imgLoc = loc;
@@ -167,7 +167,7 @@ void Atlas::addImage(Hash32 en, string_t loc) {
   AssertOrThrow2(_mapImages.find(en) == _mapImages.end());
   _mapImages.insert(std::make_pair(en, sp));
 }
-void Atlas::addImage(Hash32 en, string_t loc, std::shared_ptr<Img32> imgData) {
+void Atlas::addImage(Hash32 en, const string_t& loc, std::shared_ptr<Img32> imgData) {
   std::shared_ptr<AtlasSprite> sp = std::make_shared<AtlasSprite>(getThis<Atlas>());
   sp->_iId = en;
   sp->_imgLoc = Atlas::getGeneratedFileName();

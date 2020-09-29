@@ -10,7 +10,7 @@
 #include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
-ShaderUniform::ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, string_t name, size_t iArraySize) : GLFramework(ct) {
+ShaderUniform::ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, const string_t& name, size_t iArraySize) : GLFramework(ct) {
   _glType = eType;
   _glLocation = location;
   _strName = name;  //this gets parsed and changed
@@ -438,7 +438,7 @@ void ShaderUniform::bindUniformFast() {
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-ShaderUniformBlock::ShaderUniformBlock(std::shared_ptr<GLContext> ct, string_t name, GLint iBlockIndex, GLint iBindingIndex, size_t iBufferByteSize) : GLFramework(ct),
+ShaderUniformBlock::ShaderUniformBlock(std::shared_ptr<GLContext> ct, const string_t& name, GLint iBlockIndex, GLint iBindingIndex, size_t iBufferByteSize) : GLFramework(ct),
                                                                                                                                                        _iBlockIndex(iBlockIndex),
                                                                                                                                                        _iBindingIndex(iBindingIndex) {
   _strName = name;

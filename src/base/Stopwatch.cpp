@@ -4,7 +4,7 @@
 #include "../base/Gu.h"
 
 namespace BR2 {
-Stopwatch::Stopwatch(string_t strName, bool bStart) : _tA(0), _tB(0) {
+Stopwatch::Stopwatch(const string_t& strName, bool bStart) : _tA(0), _tB(0) {
   _strName = strName;
   if (bStart) {
     start();
@@ -12,7 +12,7 @@ Stopwatch::Stopwatch(string_t strName, bool bStart) : _tA(0), _tB(0) {
 }
 Stopwatch::~Stopwatch() {
 }
-void Stopwatch::start(string_t strName) {
+void Stopwatch::start(const string_t& strName) {
   _strName = strName;
   _tA = Gu::getMicroSeconds();
 }

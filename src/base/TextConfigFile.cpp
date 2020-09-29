@@ -4,7 +4,7 @@
 #include "../base/OperatingSystem.h"
 
 namespace BR2 {
-TextConfigFile::TextConfigFile(string_t loc) : TextDataFile(loc) {
+TextConfigFile::TextConfigFile(const string_t& loc) : TextDataFile(loc) {
 }
 TextConfigFile::~TextConfigFile() {
 }
@@ -39,7 +39,7 @@ void TextConfigFile::parseErr(const string_t& str, bool bDebugBreak, bool bFatal
     }
   }
 }
-bool TextConfigFile::validateArguments(string_t& arg, int32_t count) {
+bool TextConfigFile::validateArguments(const string_t& arg, int32_t count) {
   if (_vecTokens.size() != count) {
     displayError("While parsing '" + _fileLoc + "' invalid number of arguments for '" + arg + "'. Got " + _vecTokens.size() + " expected " + count + ".");
   }
@@ -52,10 +52,10 @@ void TextConfigFile::displayError(const string_t& errMsg, bool bThrow) {
     BRThrowException(strErr);
   }
 }
-bool TextConfigFile::lcmp(string_t& tok0, const std::string& ch, int32_t validateArgCount) {
+bool TextConfigFile::lcmp(const string_t& tok0, const std::string& ch, int32_t validateArgCount) {
   return lcmp(tok0, ch.c_str(), validateArgCount);
 }
-bool TextConfigFile::lcmp(string_t& tok0, const char* ch, int32_t validateArgCount) {
+bool TextConfigFile::lcmp(const string_t& tok0, const char* ch, int32_t validateArgCount) {
   bool ret;
 
   ret = StringUtil::equalsi(tok0, string_t(ch));  //(StringUtil::lowercase(tok0) == StringUtil::lowercase(t_string(ch)));
@@ -68,7 +68,7 @@ bool TextConfigFile::lcmp(string_t& tok0, const char* ch, int32_t validateArgCou
 
   return ret;
 }
-bool TextConfigFile::cmp(string_t& tok0, const char* ch, int32_t validateArgCount) {
+bool TextConfigFile::cmp(const string_t& tok0, const char* ch, int32_t validateArgCount) {
   bool ret = tok0 == string_t(ch);
 
   if (validateArgCount >= 0) {

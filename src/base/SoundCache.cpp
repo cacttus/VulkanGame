@@ -2,27 +2,30 @@
 #include "../base/Hash.h"
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
+#include "../base/ApplicationPackage.h"
+#include "../base/Gu.h"
 
 #include "../base/SDLIncludes.h"
 #include <mutex>
 
 namespace BR2 {
 #pragma region SoundSpec
-SoundSpec::SoundSpec(string_t sFIle) : _sFilePath(sFIle) {
-  load(sFIle);
+SoundSpec::SoundSpec(const string_t& fname) {
+  _sFilePath = fname;
+  load(fname);
 }
 SoundSpec::~SoundSpec() {
   free(_pSoundData);
 }
-void SoundSpec::load(string_t file) {
+void SoundSpec::load(const string_t& file) {
   if (_eLoadState == LoadState::e::NotLoaded) {
+    string_t location = FileSystem::combinePath(Gu::getPackage()->getSoundsFolder(), file);
 
-    if (!FileSystem::fileExists(file)) {
-      BRLogError("File " + file + " does not exist.");
+    if (!FileSystem::fileExists(location)) {
       _eLoadState = LoadState::e::LoadFailed;
     }
     else {
-      int ret = Gu::loadSound(file, _iChannels, _iSampleRate, _pSoundData, _nSamples, _iSoundDataLenBytes);
+      int ret = Gu::loadSound(location, _iChannels, _iSampleRate, _pSoundData, _nSamples, _iSoundDataLenBytes);
       if (ret == 1) {
         _eLoadState = LoadState::e::Loaded;
       }
@@ -32,15 +35,16 @@ void SoundSpec::load(string_t file) {
     }
   }
 }
-std::shared_ptr<SoundInst> SoundSpec::play(SoundPlayInfo inf) {
+std::shared_ptr<SoundInst> SoundSpec::play(const SoundPlayInfo& inf) {
   std::shared_ptr<SoundInst> r = nullptr;
+
 
   if (_eLoadState == LoadState::e::NotLoaded) {
     load(_sFilePath);
   }
 
   if (_eLoadState == LoadState::e::Loaded) {
-    //Create and play a new "sound inst."        
+    //Create and play a new "sound inst."
     r = std::make_shared<SoundInst>(_pSoundData, _iSoundDataLenBytes);
     r->play(inf);
     SDL_LockAudio();
@@ -71,7 +75,7 @@ void SoundSpec::update() {
 
 #pragma region SoundInst
 SoundInst::SoundInst(int16_t* pos, int32_t len) {
-  audio_pos = (int8_t*)pos; //**THIS MUST BE A BYTE BECAUSE WE SUB BYTES
+  audio_pos = (int8_t*)pos;  //**THIS MUST BE A BYTE BECAUSE WE SUB BYTES
   audio_len = len;
 
   start_pos = audio_pos;
@@ -79,7 +83,7 @@ SoundInst::SoundInst(int16_t* pos, int32_t len) {
 }
 SoundInst::~SoundInst() {
 }
-void SoundInst::play(SoundPlayInfo inf) {
+void SoundInst::play(const SoundPlayInfo& inf) {
   _ePlayState = PlayState::e::Playing;
   _playInfo = inf;
 }
@@ -104,11 +108,15 @@ void SoundInst::checkPlayback() {
     if (_playInfo._bLoop) {
       if (_playInfo._fLoopPos < 0.0f) {
         _playInfo._fLoopPos = 0.0f;
-        if (xx == 0) { Gu::debugBreak(); }
+        if (xx == 0) {
+          Gu::debugBreak();
+        }
       }
       if (_playInfo._fLoopPos > 1.0f) {
         _playInfo._fLoopPos = 1.0f;
-        if (xx == 0) { Gu::debugBreak(); }
+        if (xx == 0) {
+          Gu::debugBreak();
+        }
       }
 
       int32_t iOff = (int32_t)((float)start_len * _playInfo._fLoopPos);
@@ -124,7 +132,7 @@ void SoundInst::checkPlayback() {
 #pragma endregion
 
 #pragma region SoundCache
-class SoundCache_Internal { 
+class SoundCache_Internal {
 public:
   typedef std::map<Hash32, std::shared_ptr<SoundSpec>> SoundMap;
   SoundMap _cache;
@@ -166,7 +174,7 @@ void SoundCache::init() {
 
   _pint->_desired.callback = SoundCache_Internal::my_audio_callback;
   _pint->_desired.channels = 2;
-  _pint->_desired.format = AUDIO_S16; //*this is teh stb_vorbis input format
+  _pint->_desired.format = AUDIO_S16;  //*this is teh stb_vorbis input format
   _pint->_desired.freq = 44100;
   _pint->_desired.samples = 1024;
   _pint->_desired.userdata = this;
@@ -206,7 +214,6 @@ void SoundCache_Internal::printSoundInfo() {
   //sample_size = bits / 8 + audio_channels;
   //rate = audio_rate;
   //BroLogInfo("Opened audio at ", audio_rate," Hz ", bits," bit ", audio_channels > 1 ? "stereo" : "mono");
-
 }
 void SoundCache::mixSamplesAsync(uint8_t* stream, int len) {
   SDL_LockAudio();
@@ -227,7 +234,7 @@ void SoundCache::mixSamplesAsync(uint8_t* stream, int len) {
   }
   SDL_UnlockAudio();
 }
-std::shared_ptr<SoundSpec> SoundCache::getOrLoad(std::string file) {
+std::shared_ptr<SoundSpec> SoundCache::getOrLoad(const string_t& file) {
   if (_pint->_bError == true) {
     return nullptr;
   }
@@ -253,11 +260,13 @@ void SoundCache::update() {
     ss->update();
   }
 }
-std::shared_ptr<SoundInst> SoundCache::tryPlay(std::string file) {
-  return tryPlay(file, SoundPlayInfo(false, 0.0f));
-
+std::shared_ptr<SoundInst> SoundCache::tryPlay(const string_t& file) {
+  return tryPlay(file, SoundPlayInfo(false, 0.0f, 1.0f));
 }
-std::shared_ptr<SoundInst> SoundCache::tryPlay(std::string file, SoundPlayInfo inf) {
+std::shared_ptr<SoundInst> SoundCache::tryPlay(const std::string& file, const SoundPlayInfo& inf) {
+  //Try to play the sound.
+  //@param inf - Optional - the info for the sound.
+  // without inf the sound is non-looping and at full volume.
   std::shared_ptr<SoundSpec> ss = getOrLoad(file);
   if (ss != nullptr) {
     return ss->play(inf);
@@ -266,6 +275,4 @@ std::shared_ptr<SoundInst> SoundCache::tryPlay(std::string file, SoundPlayInfo i
 }
 #pragma endregion
 
-
-
-}//ns Game
+}  // namespace BR2

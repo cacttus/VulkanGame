@@ -32,7 +32,7 @@ public:
   std::shared_ptr<GraphicsContext> getCoreContext() { return _contexts.size() ? _contexts[0] : nullptr; }
 
 protected:
-  SDL_Window* makeSDLWindow(const string_t& windowTitle, int render_system, bool show);
+  SDL_Window* makeSDLWindow(const GraphicsWindowCreateParameters& params, int render_system, bool show);
   std::vector<std::shared_ptr<GraphicsContext>>& getContexts() { return _contexts; }
 
 private:
@@ -40,6 +40,7 @@ private:
   bool handleSDLEvents();
   bool handleEvents(SDL_Event* event);
   std::shared_ptr<InputManager> getInputForWindow(uint32_t sdl_windowId);
+  void setWindowProps(SDL_Window* win, const GraphicsWindowCreateParameters& params);
 };
 
 }  // namespace BR2

@@ -41,8 +41,8 @@ std::string operator+(const std::string& str, const float& rhs);
 /************************************************************************/
 /* Exceptions & Errors                                                  */
 /************************************************************************/
-void staticDebugBreak(string_t str);
-void runtimeAssertion(string_t str);
+void staticDebugBreak(const string_t& str);
+void runtimeAssertion(const string_t& str);
 #define TIME_T_MIN (0)
 #ifdef _DEBUG
 #define AssertOrThrow2(x)                                           \
@@ -118,7 +118,7 @@ inline Tx brSafeCast(Ty pb) {
 #define UnsafeCast(pObj, pType) reinterpret_cast<pType>(pObj)
 
 /************************************************************************/
-/* Class                                                                */
+/* FW Class                                                             */
 /************************************************************************/
 
 /**
@@ -147,6 +147,20 @@ public:
   virtual ~ISerializable() override {}
   virtual void deserialize(std::shared_ptr<BinaryFile> fb) = 0;
   virtual void serialize(std::shared_ptr<BinaryFile> fb) = 0;
+};
+
+class SoundPlayInfo : public VirtualMemory {
+public:
+  bool _bLoop = false;
+  float _fLoopPos = 0.0f;  // [0,1]
+  float _fVolume = 1.0f;   // [0,1]
+  SoundPlayInfo() {}
+  SoundPlayInfo(bool loop, float fLoopPos, float fVolume) {
+    _bLoop = loop;
+    _fLoopPos = fLoopPos;
+    _fVolume = fVolume;
+  }
+  virtual ~SoundPlayInfo() override {}
 };
 
 }  // namespace BR2

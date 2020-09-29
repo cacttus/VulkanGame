@@ -108,7 +108,7 @@ void KeyFrame::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeVec3(std::move(_scl));
 }
 //////////////////////////////////////////////////////////////////////////
-ActionKeys::ActionKeys(string_t objName) {
+ActionKeys::ActionKeys(const string_t& objName) {
   _iNameHashed = STRHASH(objName);
   // _strName = actName;
   _strObjectName = objName;
@@ -196,7 +196,7 @@ void ActionKeys::serialize(std::shared_ptr<BinaryFile> fb) {
 
 }
 //////////////////////////////////////////////////////////////////////////
-ActionGroup::ActionGroup(string_t strName, int32_t iBaseFps) {
+ActionGroup::ActionGroup(const string_t& strName, int32_t iBaseFps) {
   _strName = strName;
   _iBaseFps = iBaseFps;
   _iNameHashed = STRHASH(_strName);
@@ -256,7 +256,7 @@ void ActionGroup::serialize(std::shared_ptr<BinaryFile> fb) {
 
 }
 //////////////////////////////////////////////////////////////////////////
-BoneSpec::BoneSpec(string_t name, int32_t id) : BaseSpec(name) {
+BoneSpec::BoneSpec(const string_t& name, int32_t id) : BaseSpec(name) {
   _iBoneId = id;
 }
 BoneSpec::~BoneSpec() {
@@ -306,12 +306,12 @@ void BoneSpec::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeVec3(std::move(_vTail));
 }
 //////////////////////////////////////////////////////////////////////////
-BoneNode::BoneNode(string_t name, std::shared_ptr<BoneSpec> b, std::shared_ptr<ArmatureNode> pa) : SceneNode(name, b) {
+BoneNode::BoneNode(const string_t& name, std::shared_ptr<BoneSpec> b, std::shared_ptr<ArmatureNode> pa) : SceneNode(name, b) {
   _pBone = b;
   _pArmatureNode = pa;
   _mLocal.setIdentity();
 }
-std::shared_ptr<BoneNode> BoneNode::create(string_t name, std::shared_ptr<BoneSpec> b, std::shared_ptr<ArmatureNode> pa) {
+std::shared_ptr<BoneNode> BoneNode::create(const string_t& name, std::shared_ptr<BoneSpec> b, std::shared_ptr<ArmatureNode> pa) {
   std::shared_ptr<BoneNode> bn = std::make_shared<BoneNode>(name, b, pa);
   bn->init();
   return bn;
@@ -359,7 +359,7 @@ void Animator::update(float delta) {
 }
 
 //////////////////////////////////////////////////////////////////////////
-Armature::Armature(string_t strName, int32_t iId) : BaseSpec(strName), _iArmatureId(iId) {
+Armature::Armature(const string_t& strName, int32_t iId) : BaseSpec(strName), _iArmatureId(iId) {
 }
 Armature::~Armature() {
   //for (BoneCache::iterator it = _mapBoneCacheOrdered.begin();
@@ -501,7 +501,7 @@ bool Armature::tkArmFile(MobFile* pMobFile, std::vector<string_t>& tokens) {
 
   return true;
 }
-std::shared_ptr<BoneSpec> Armature::getBoneSpec(string_t boneName) {
+std::shared_ptr<BoneSpec> Armature::getBoneSpec(const string_t& boneName) {
   Hash32 hash = Hash::computeStringHash32bit(boneName);
   BoneCache::iterator it = _mapBoneCacheOrdered.find(hash);
 
@@ -510,7 +510,7 @@ std::shared_ptr<BoneSpec> Armature::getBoneSpec(string_t boneName) {
   }
   return nullptr;
 }
-std::shared_ptr<BoneSpec> Armature::getCachedBoneByName(string_t name) {
+std::shared_ptr<BoneSpec> Armature::getCachedBoneByName(const string_t& name) {
   Hash32 par = STRHASH(name);
   for (std::pair<int32_t, std::shared_ptr<BoneSpec>> p : _mapBoneCacheOrdered) {
     if (p.second->getNameHashed() == par) {
@@ -549,9 +549,9 @@ void Armature::compileHierarchy() {
 }
 
 //////////////////////////////////////////////////////////////////////////
-ArmatureNode::ArmatureNode(string_t name, std::shared_ptr<Armature> ps) : SceneNode(name, ps) {
+ArmatureNode::ArmatureNode(const string_t& name, std::shared_ptr<Armature> ps) : SceneNode(name, ps) {
 }
-std::shared_ptr<ArmatureNode> ArmatureNode::create(string_t name, std::shared_ptr<Armature> ps) {
+std::shared_ptr<ArmatureNode> ArmatureNode::create(const string_t& name, std::shared_ptr<Armature> ps) {
   std::shared_ptr<ArmatureNode> a = std::make_shared<ArmatureNode>(name, ps);
   a->init();
   return a;
@@ -654,7 +654,7 @@ void ArmatureNode::calcBoundBox(Box3f& __out_ pBox, const vec3& obPos, float ext
   SceneNode::calcBoundBox(pBox, obPos, extra_pad);
 }
 //////////////////////////////////////////////////////////////////////////
-ModelSpec::ModelSpec(string_t name, int32_t frameRate) : PhysicsSpec(name), _iFrameRate(frameRate) {
+ModelSpec::ModelSpec(const string_t& name, int32_t frameRate) : PhysicsSpec(name), _iFrameRate(frameRate) {
   //_iNameHash = STRHASH(name);
 }
 ModelSpec::~ModelSpec() {
@@ -807,7 +807,7 @@ std::shared_ptr<BoneSpec> ModelSpec::getBoneByArmJointOffset(int32_t ijo) {
   return nullptr;
 }
 //////////////////////////////////////////////////////////////////////////
-std::shared_ptr<ModelNode> ModelNode::create(string_t name, std::shared_ptr<ModelSpec> ps) {
+std::shared_ptr<ModelNode> ModelNode::create(const string_t& name, std::shared_ptr<ModelSpec> ps) {
   std::shared_ptr<ModelNode> m = std::make_shared<ModelNode>(name, ps);
   m->init();
   m->stopAllActions();
@@ -816,7 +816,7 @@ std::shared_ptr<ModelNode> ModelNode::create(string_t name, std::shared_ptr<Mode
   return m;
 }
 
-ModelNode::ModelNode(string_t name, std::shared_ptr<ModelSpec> pModelSpec) : PhysicsNode(name, pModelSpec) {
+ModelNode::ModelNode(const string_t& name, std::shared_ptr<ModelSpec> pModelSpec) : PhysicsNode(name, pModelSpec) {
 
 }
 ModelNode::~ModelNode() {
@@ -935,7 +935,7 @@ void ModelNode::addNodeToCache(std::shared_ptr<SceneNode> bn) {
     _mapNodes.insert(std::make_pair(bnName, bn));
   }
 }
-std::shared_ptr<SceneNode> ModelNode::getNodeByName(string_t name) {
+std::shared_ptr<SceneNode> ModelNode::getNodeByName(const string_t& name) {
   Hash32 h = STRHASH(name);
   std::map<Hash32, std::shared_ptr<SceneNode>>::iterator it = _mapNodes.find(h);
   if (it == _mapNodes.end()) {
@@ -1034,7 +1034,7 @@ void ModelNode::drawForward(RenderParams& rp) {
 void ModelNode::playAction(std::shared_ptr<ActionGroup> act) {
   playAction(act->getName());
 }
-void ModelNode::playAction(string_t actName) {
+void ModelNode::playAction(const string_t& actName) {
   Hash32 anh = STRHASH(actName);
   std::map<Hash32, std::shared_ptr<Animator>>::iterator it = _mapAnimators.find(anh);
   if (it != _mapAnimators.end()) {
@@ -1062,7 +1062,7 @@ void ModelNode::playAction(string_t actName) {
     }
   }
 }
-std::shared_ptr<Animator> ModelNode::getAnimator(string_t actName) {
+std::shared_ptr<Animator> ModelNode::getAnimator(const string_t& actName) {
   Hash32 anh = STRHASH(actName);
   std::map<Hash32, std::shared_ptr<Animator>>::iterator it = _mapAnimators.find(anh);
   if (it != _mapAnimators.end()) {
@@ -1070,7 +1070,7 @@ std::shared_ptr<Animator> ModelNode::getAnimator(string_t actName) {
   }
   return nullptr;
 }
-bool ModelNode::isPlaying(string_t actName) {
+bool ModelNode::isPlaying(const string_t& actName) {
   std::shared_ptr<Animator> pa = getAnimator(actName);
   return pa && pa->getState() == PlayState::e::Playing;
 }
@@ -1089,7 +1089,7 @@ void ModelNode::stopAllActions() {
   }
   _mapAnimators.clear();
 }
-void ModelNode::stopAction(string_t actName) {
+void ModelNode::stopAction(const string_t& actName) {
   Hash32 anh = STRHASH(actName);
   std::map<Hash32, std::shared_ptr<Animator>>::iterator it = _mapAnimators.find(anh);
   if (it != _mapAnimators.end()) {

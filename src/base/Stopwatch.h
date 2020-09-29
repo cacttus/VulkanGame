@@ -16,10 +16,10 @@ namespace BR2 {
 */
 class Stopwatch : public VirtualMemory {
 public:
-  Stopwatch(string_t name = "", bool bStart = false);
+  Stopwatch(const string_t& name = "", bool bStart = false);
   virtual ~Stopwatch() override;
 
-  void start(string_t name = "");
+  void start(const string_t& name = "");
   virtual string_t stop(bool bLogMillis = false, bool bFancy = false);
   bool pulse(t_timeval isGreaterThanMs);
 

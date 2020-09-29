@@ -338,7 +338,7 @@ void GameUi::createToolbar() {
   std::weak_ptr<UiWindow> winObjects_wekak = winObjects;
   tbObjects->setClick([winObjects_wekak, sk]() {
     if (std::shared_ptr<UiWindow> win = winObjects_wekak.lock()) {
-      Gu::getSoundCache()->tryPlay(sk->pButtonClickSound);
+      Gu::getSound()->tryPlay(sk->pButtonClickSound);
       win->show();
     }
     });
@@ -355,7 +355,7 @@ void GameUi::createToolbar() {
   std::weak_ptr<UiWindow> winConfig_weak = winConfig;
   tbConfig->setClick([winConfig_weak, sk]() {
     if (std::shared_ptr<UiWindow> win = winConfig_weak.lock()) {
-      Gu::getSoundCache()->tryPlay(sk->pButtonClickSound);
+      Gu::getSound()->tryPlay(sk->pButtonClickSound);
       win->show();
     }
     });
@@ -372,7 +372,7 @@ void GameUi::createToolbar() {
   std::weak_ptr<UiWindow> winMenu_wekak = winMenu;
   tbMenu->setClick([winMenu_wekak, sk]() {
     if (std::shared_ptr<UiWindow> win = winMenu_wekak.lock()) {
-      Gu::getSoundCache()->tryPlay(sk->pButtonClickSound);
+      Gu::getSound()->tryPlay(sk->pButtonClickSound);
       win->show();
 
 
@@ -392,7 +392,7 @@ void GameUi::createToolbar() {
   tbGrid->setClick([r_w, img_w, sk]() {
     if (std::shared_ptr<UiImage> img = img_w.lock()) {
       if (std::shared_ptr<BottleScript> bs = r_w.lock()) {
-        Gu::getSoundCache()->tryPlay(sk->pButtonClickSound);
+        Gu::getSound()->tryPlay(sk->pButtonClickSound);
         GridShow::e eShow = bs->toggleShowGrid();
         if (eShow == GridShow::e::NoShow) {
           img->setTexture(sk->pTbGrid0);
@@ -424,7 +424,7 @@ void GameUi::createToolbar() {
   std::weak_ptr<UiWindow> winTer_wekak = winTer;
   tbTerrain->setClick([winTer_wekak, sk]() {
     if (std::shared_ptr<UiWindow> win = winTer_wekak.lock()) {
-      Gu::getSoundCache()->tryPlay(sk->pButtonClickSound);
+      Gu::getSound()->tryPlay(sk->pButtonClickSound);
       win->show();
     }
     });
@@ -440,7 +440,7 @@ void GameUi::createToolbar() {
   tbHouse->getContentContainer()->addChild(himg);
 
   tbHouse->setClick([sk]() {
-    Gu::getSoundCache()->tryPlay(sk->pButtonClickSound);
+    Gu::getSound()->tryPlay(sk->pButtonClickSound);
     //if (br) {
     //  br->getGodCam()->setTarget(vec3(0, 0, 0));
     //}

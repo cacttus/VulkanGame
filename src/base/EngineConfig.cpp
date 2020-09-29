@@ -17,7 +17,7 @@ EngineConfig::EngineConfig() {
 }
 EngineConfig::~EngineConfig() {
 }
-void EngineConfig::int32Prop(string_t prop_key, std::vector<string_t>& tokens, int32_t& iind) {
+void EngineConfig::int32Prop(const string_t& prop_key, std::vector<string_t>& tokens, int32_t& iind) {
   if (lcmp(tokens[0], prop_key.c_str(), 2)) {
     int32_t prop_value = TypeConv::strToInt(getCleanToken(tokens, iind));
     Int32Prop* p = new Int32Prop(prop_key, prop_value);

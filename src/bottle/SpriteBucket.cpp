@@ -67,7 +67,7 @@ void SpriteBucket::addSpec(std::shared_ptr<SpriteSpec> sp) {
   Hash32 hash = sp->getNameHashed();
   _mapSpecs.insert(std::make_pair(hash, sp));
 }
-std::shared_ptr<SpriteSpec> SpriteBucket::getSpecByName(string_t name) {
+std::shared_ptr<SpriteSpec> SpriteBucket::getSpecByName(const string_t& name) {
   Hash32 h = STRHASH(name);
   return getSpecByName(h);
 }
@@ -226,7 +226,7 @@ Tile25Spec* SpriteBucket::getTileById(uint8_t id) {
   }
   return nullptr;
 }
-Tile25Spec* SpriteBucket::getTileByName(string_t name) {
+Tile25Spec* SpriteBucket::getTileByName(const string_t& name) {
   Hash32 h = STRHASH(name);
   for (TileMap::iterator ite = _mapTiles.begin(); ite != _mapTiles.end(); ite++) {
     if (ite->second->getHashName() == h) { return ite->second; }
@@ -236,11 +236,11 @@ Tile25Spec* SpriteBucket::getTileByName(string_t name) {
 ////////////////////////1///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-SpriteSpec::SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, string_t strName, bool bRandomSelect) :
+SpriteSpec::SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, const string_t& strName, bool bRandomSelect) :
   _strName(strName), _bRandomSelect(bRandomSelect), _pBucket(pBucket) {
   _iNameHashed = STRHASH(_strName);
 }
-SpriteSpec::SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, string_t strName,
+SpriteSpec::SpriteSpec(std::shared_ptr<SpriteBucket> pBucket, const string_t& strName,
   std::vector<string_t>& frames, float fDefaultDuration, bool bDefaultLoop, bool bRandomSelect) :
   SpriteSpec(pBucket, strName, bRandomSelect) {
 
@@ -260,7 +260,7 @@ SpriteSpec::~SpriteSpec() {
     DEL_MEM(_vecFrames[i]);
   }
 }
-void SpriteSpec::addGeneratedFrame(string_t strName, std::shared_ptr<Img32> bi) {
+void SpriteSpec::addGeneratedFrame(const string_t& strName, std::shared_ptr<Img32> bi) {
   SpriteFrame* pFrame = new SpriteFrame(strName, bi);
   _vecFrames.push_back(pFrame);
 }
@@ -273,11 +273,11 @@ string_t SpriteSpec::getFirstFrameFileName() {
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-SpriteFrame::SpriteFrame(string_t img) {
+SpriteFrame::SpriteFrame(const string_t& img) {
   _iHash = STRHASH(img);
   _strImage = img;
 }
-SpriteFrame::SpriteFrame(string_t img, std::shared_ptr<Img32> pGen) : SpriteFrame(img) {
+SpriteFrame::SpriteFrame(const string_t& img, std::shared_ptr<Img32> pGen) : SpriteFrame(img) {
   _pGenerated = pGen;
 }
 SpriteFrame::~SpriteFrame() {

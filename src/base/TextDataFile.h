@@ -17,13 +17,13 @@ namespace BR2 {
 class TextDataFile : public VirtualMemoryShared<TextDataFile> {
 public:
   TextDataFile();
-  TextDataFile(string_t& loc);
+  TextDataFile(const string_t&loc);
   virtual ~TextDataFile() override;
 
   string_t& getFileLoc() { return _fileLoc; } //This is used don't change
   void loadAndParse();// - If empty is specified then we use _fileLoc
-  void loadAndParse(string_t& loc);// - If empty is specified then we use _fileLoc
-  virtual void save(string_t& loc);
+  void loadAndParse(const string_t& loc);// - If empty is specified then we use _fileLoc
+  virtual void save(const string_t& loc);
 
 protected:
   string_t _fileName;
@@ -36,7 +36,7 @@ protected:
   virtual void preLoad() = 0;
   virtual void parse(char* buf, int64_t filesize) = 0;
   virtual void postLoad(bool success) = 0;
-  void msg(string_t msg, bool error = false);
+  void msg(const string_t& msg, bool error = false);
 };
 
 }//ns game

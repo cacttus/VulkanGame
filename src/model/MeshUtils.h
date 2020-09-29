@@ -60,7 +60,7 @@ public:
   static std::shared_ptr<MeshSpec> makeBox(const Box3f* pCube, const vec4* color, const Matrix4x4* applyMat, const vec3* offset);
   static std::shared_ptr<MeshSpec> makeBox(float length, const vec4* color, const mat4* applyMat, const vec3* offset);
   static std::shared_ptr<MeshSpec> makeBox(vec3 (&extents)[8], const Color4f* color, const Matrix4x4* applyMat, const vec3* offset);
-  static bool parseGenParams(string_t genString, MeshGenParams& __out_ params);
+  static bool parseGenParams(const string_t& genString, MeshGenParams& __out_ params);
   static std::shared_ptr<MeshSpec> generateFromParameters(MeshGenParams* pgp);
   static std::shared_ptr<MeshNode> createScreenQuadMesh(int w, int h);
   static vec3* getVertexElementOffset(vec3* verts, size_t iElementIndex, size_t vOffBytes, size_t vStrideBytes, size_t vCount);

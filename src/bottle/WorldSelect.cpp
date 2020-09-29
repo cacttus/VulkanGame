@@ -50,7 +50,7 @@ void WorldSelect::update() {
     }
   }
 }
-string_t WorldSelect::genNewWorldName(string_t baseName) {
+string_t WorldSelect::genNewWorldName(const string_t& baseName) {
   //Get a new world name
   string_t strNewWorld = "NewWorld";
   int iNewWorldIdx = 0;
@@ -70,7 +70,7 @@ string_t WorldSelect::genNewWorldName(string_t baseName) {
   }
   return strNewWorldIdx;
 }
-void WorldSelect::deleteWorld(string_t worldName) {
+void WorldSelect::deleteWorld(const string_t& worldName) {
   string_t gameDir = _pCongaRoom->getGameDirectory(worldName);
   std::vector<string_t> fileExts{ ".dat", ".g" };
   FileSystem::deleteDirectoryRecursive(gameDir, fileExts);

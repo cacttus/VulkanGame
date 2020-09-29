@@ -18,11 +18,11 @@ namespace BR2 {
 */
 class MeshNode : public SceneNode {
 public:
-  static std::shared_ptr<MeshNode> create(string_t name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn);
-  static std::shared_ptr<MeshNode> create(string_t name, bool pickable, std::shared_ptr<MeshSpec> pd);
+  static std::shared_ptr<MeshNode> create(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn);
+  static std::shared_ptr<MeshNode> create(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> pd);
 
-  MeshNode(string_t name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn);
-  MeshNode(string_t name, bool pickable, std::shared_ptr<MeshSpec> pd);
+  MeshNode(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn);
+  MeshNode(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> pd);
   virtual ~MeshNode() override;
 
   virtual void init() override;

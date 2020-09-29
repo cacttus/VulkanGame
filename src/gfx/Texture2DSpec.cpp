@@ -12,28 +12,28 @@
 #include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
-Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : GLFramework(ct) {
+Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : GLFramework(ct) {
   _strName = name;
   _eFormat = fmt;
 }
-Texture2DSpec::Texture2DSpec(string_t name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV) : GLFramework(ctx) {
+Texture2DSpec::Texture2DSpec(const string_t& name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV) : GLFramework(ctx) {
   _strName = name;
   _eFormat = TextureFormat::Image4ub;
   loadPng(loc, bRepeatU, bRepeatV);
 }
-Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : GLFramework(ctx) {
+Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : GLFramework(ctx) {
   _strName = name;
   create(fmt, (unsigned char*)sp->getData()->ptr(), sp->getWidth(), sp->getHeight(), false, false, false);
   setFilter(eFilter);
 }
-Texture2DSpec::Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps) : GLFramework(ctx) {
+Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps) : GLFramework(ctx) {
   _strName = name;
   create(fmt, texData, iWidth, iHeight, mipmaps, false, false);
 }
 Texture2DSpec::~Texture2DSpec() {
   getContext()->glDeleteTextures(1, &_glId);
 }
-void Texture2DSpec::loadPng(string_t imgLoc, bool bRepeatU, bool bRepeatV) {
+void Texture2DSpec::loadPng(const string_t& imgLoc, bool bRepeatU, bool bRepeatV) {
   _strLocation = imgLoc;
   std::shared_ptr<Img32> sp = Gu::loadImage(imgLoc);
   if (sp != nullptr) {

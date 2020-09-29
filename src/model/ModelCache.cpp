@@ -42,7 +42,7 @@ void ModelCache::addSpec(std::shared_ptr<ModelSpec> ms) {
     BRLogError("Tried to add duplicate model name '" + ms->getName() + "'");
   }
 }
-std::shared_ptr<ModelSpec> ModelCache::getModelByName(string_t name) {
+std::shared_ptr<ModelSpec> ModelCache::getModelByName(const string_t& name) {
   Hash32 h = STRHASH(name);
   return getModelByName(h);
 }
@@ -91,7 +91,7 @@ std::shared_ptr<ModelSpec> ModelCache::getModelByName(Hash32 hash) {
 //    }
 //    return it->second;
 //}
-string_t ModelCache::getFilePathForMobName(string_t mobName, bool bUseBinary, bool own_folder) {
+string_t ModelCache::getFilePathForMobName(const string_t& mobName, bool bUseBinary, bool own_folder) {
   string_t fileExt;
   string_t modelsDir;
   if (bUseBinary) {
@@ -112,7 +112,7 @@ string_t ModelCache::getFilePathForMobName(string_t mobName, bool bUseBinary, bo
 
   return filename;
 }
-std::shared_ptr<ModelSpec> ModelCache::getOrLoadModel(string_t mobName, bool bUseBinary) {
+std::shared_ptr<ModelSpec> ModelCache::getOrLoadModel(const string_t& mobName, bool bUseBinary) {
   std::shared_ptr<ModelSpec> ms = getModelByName(STRHASH(mobName));
   if (ms == nullptr) {
     string_t filename = getFilePathForMobName(mobName, bUseBinary);
@@ -167,7 +167,7 @@ string_t ModelCache::debugPrintAllModelNames() {
 
   return strOut;
 }
-void ModelCache::convertMobToBin(string_t strMobName, bool bOnlyIfNewer, std::string strFriendlyName) {
+void ModelCache::convertMobToBin(const string_t& strMobName, bool bOnlyIfNewer, std::string strFriendlyName) {
   string_t filepathText = getFilePathForMobName(strMobName, false);
   string_t filepathBin = getFilePathForMobName(strMobName, true);
 
@@ -208,7 +208,7 @@ void ModelCache::convertMobToBin(string_t strMobName, bool bOnlyIfNewer, std::st
     unloadModel(strMobName);
   }
 }
-void ModelCache::unloadModel(string_t strMobName, bool bErrorIfFailed) {
+void ModelCache::unloadModel(const string_t& strMobName, bool bErrorIfFailed) {
   std::map<Hash32, std::shared_ptr<ModelSpec>>::iterator it = _mapModels.find(STRHASH(strMobName));
 
   if (it == _mapModels.end()) {

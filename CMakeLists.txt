@@ -60,6 +60,11 @@ find_package(Vulkan REQUIRED)
 find_package(Threads REQUIRED) #This is better than -pthread
 find_package(Lua REQUIRED)
 
+if(UNIX)
+find_package(X11 REQUIRED)
+#find_package(Wayland REQUIRED)
+endif()
+  
 set(LUAINTF_INCLUDE_DIR ${PROJECT_SOURCE_DIR} "/ext/")
 
 # Includes
@@ -92,7 +97,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "C
   set(VULKAN_LIBRARIES vulkan)
   set(SDLNET_LIBRARIES SDL2_net)
 endif()
-target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS} ${LUA_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${ADDL_LIBS} ${LUA_LIBRARIES} ${X11_LIBRARIES})
 
 # Debug
 if(${LUA_FOUND})

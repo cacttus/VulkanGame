@@ -32,11 +32,11 @@ HANDLE hCrtLog;
 
 bool _bDoDebug = false;
 
-void staticDebugBreak(string_t str) {
+void staticDebugBreak(const string_t& str) {
   BRLogError(str);
   Gu::debugBreak();
 }
-void runtimeAssertion(string_t str) {
+void runtimeAssertion(const string_t& str) {
   BRThrowException(str);
 }
 DebugHelper::DebugHelper() {

@@ -43,7 +43,7 @@ private:
   VertexUserType parseUserType(string_t& name);
   void parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, int32_t attribIndex);
   bool _bIsBuiltInAttrib = false;
-  static bool isOpenGLBuiltInAttrib(string_t strName);
+  static bool isOpenGLBuiltInAttrib(const string_t& strName);
 
 
 };

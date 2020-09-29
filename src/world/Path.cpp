@@ -11,7 +11,7 @@
 #include <algorithm>
 
 namespace BR2 {
-Path::Path(string_t name, std::shared_ptr<Spline> spline, float speed, float accel, PathEasing pe) : SceneNode(name, nullptr) {
+Path::Path(const string_t& name, std::shared_ptr<Spline> spline, float speed, float accel, PathEasing pe) : SceneNode(name, nullptr) {
   init();
 
   _easing = pe;

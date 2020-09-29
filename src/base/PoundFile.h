@@ -20,8 +20,8 @@ public:
   PoundFile();
   PoundFile(string_t& loc);
   virtual ~PoundFile() override;
-  mat4 parseMat4(string_t tok);
-  bool parsePrs(string_t tok, vec3& pos, vec4& quat, vec3& scl);
+  mat4 parseMat4(const string_t& tok);
+  bool parsePrs(const string_t& tok, vec3& pos, vec4& quat, vec3& scl);
   int32_t getCurrentParseLine() { return _iCurrentParseLine; }
 
 protected:

@@ -22,10 +22,10 @@ enum class TextureFormat { Image4ub,     //png image from disk
 */
 class Texture2DSpec : public GLFramework {
 public:
-  Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ct);
-  Texture2DSpec(string_t name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV);
-  Texture2DSpec(string_t name, TextureFormat fmt, const std::shared_ptr<Img32>, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter = TexFilter::e::Nearest);
-  Texture2DSpec(string_t name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps);
+  Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ct);
+  Texture2DSpec(const string_t& name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV);
+  Texture2DSpec(const string_t& name, TextureFormat fmt, const std::shared_ptr<Img32>, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter = TexFilter::e::Nearest);
+  Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps);
   virtual ~Texture2DSpec() override;
 
   void create(TextureFormat fmt, unsigned char* imageData, uint32_t w, uint32_t h, bool genMipmaps, bool bRepeatU, bool bRepeatV);
@@ -70,7 +70,7 @@ private:
   bool _bLoadFailed = false;
   bool _bTransparent = false;
 
-  void loadPng(string_t loc, bool bRepeatU, bool bRepeatV);
+  void loadPng(const string_t& loc, bool bRepeatU, bool bRepeatV);
   void calculateGLTextureFormat(TextureFormat type);
 };
 

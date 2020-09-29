@@ -16,7 +16,7 @@ namespace BR2 {
 */
 class ShaderUniform : public GLFramework {
 public:
-  ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, string_t name, size_t iArraySize);
+  ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, const string_t& name, size_t iArraySize);
   virtual ~ShaderUniform() override;
 
   Hash32 getNameHashed() { return _iNameHashed; }
@@ -103,7 +103,7 @@ private:
 */
 class ShaderUniformBlock : public GLFramework {
 public:
-  ShaderUniformBlock(std::shared_ptr<GLContext> ct, string_t name, GLint iBlockIndex, GLint iBindingIndex, size_t iBufferByteSize);
+  ShaderUniformBlock(std::shared_ptr<GLContext> ct, const string_t& name, GLint iBlockIndex, GLint iBindingIndex, size_t iBufferByteSize);
   virtual ~ShaderUniformBlock() override;
   string_t getName() { return _strName; }
   void copyUniformData(void* value, size_t copySizeBytes);

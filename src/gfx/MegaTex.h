@@ -130,7 +130,7 @@ class MegaTex : public Texture2DSpec {
                                    Compiled };
 
 public:
-  MegaTex(string_t name, std::shared_ptr<GLContext> ct, bool bCache);
+  MegaTex(const string_t& name, std::shared_ptr<GLContext> ct, bool bCache);
   virtual ~MegaTex() override;
 
   void update();

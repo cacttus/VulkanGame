@@ -2,7 +2,7 @@
 #include "../base/Logger.h"
 
 namespace BR2 {
-Exception::Exception(string_t c, int line, const char* file, bool bLogError) {
+Exception::Exception(const string_t& c, int line, const char* file, bool bLogError) {
   _line = line;
   _msg = c;
   _file = file;

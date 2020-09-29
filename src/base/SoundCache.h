@@ -10,24 +10,14 @@
 #include "../base/BaseHeader.h"
 
 namespace BR2 {
-class SoundPlayInfo : public VirtualMemory {
-public:
-  bool _bLoop = false;
-  float _fLoopPos = 0.0f;// [0,1]
-  SoundPlayInfo() {}
-  SoundPlayInfo(bool loop, float fLoopPos) {
-    _bLoop = loop;
-    _fLoopPos = fLoopPos;
-  }
-};
 class SoundSpec : public VirtualMemory {
 public:
-  SoundSpec(string_t sFile);
+  SoundSpec(const string_t& sFile);
   virtual ~SoundSpec() override;
 
   void update();
-  void load(string_t file);
-  std::shared_ptr<SoundInst> play(SoundPlayInfo inf);
+  void load(const string_t& file);
+  std::shared_ptr<SoundInst> play(const SoundPlayInfo& inf);
   std::vector<std::shared_ptr<SoundInst>>& getInstances() { return _vecInstances; }
 private:
   std::vector<std::shared_ptr<SoundInst>> _vecInstances;
@@ -47,7 +37,7 @@ public:
   SoundInst(int16_t* pos, int32_t len);
   virtual ~SoundInst() override;
 
-  void play(SoundPlayInfo inf);
+  void play(const SoundPlayInfo& inf);
   void mixIntoBuffer(uint8_t* buf, int buflen);
 
 public:
@@ -74,10 +64,10 @@ public:
   virtual ~SoundCache() override;
 
   void init();
-  std::shared_ptr<SoundSpec> getOrLoad(std::string file);
+  std::shared_ptr<SoundSpec> getOrLoad(const string_t& file);
   void update();
-  std::shared_ptr<SoundInst> tryPlay(std::string file);
-  std::shared_ptr<SoundInst> tryPlay(std::string file, SoundPlayInfo inf);
+  std::shared_ptr<SoundInst> tryPlay(const string_t& file);
+  std::shared_ptr<SoundInst> tryPlay(const string_t& file, const SoundPlayInfo& inf);
   void mixSamplesAsync(uint8_t* stream, int len);
 
 private:

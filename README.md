@@ -1,6 +1,8 @@
 # VulkanGame
 This is a game demo utilizing the SDL2 Vulkan API.
 
+Renamed SoundCache to Sound in Gu
+
 # Building 
 ### Visual Studio - Windows
 * Open VulkanGame.sln with Visual Studio 2019.
