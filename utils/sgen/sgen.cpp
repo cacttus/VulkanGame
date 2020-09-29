@@ -1,9 +1,3 @@
-//- Generates a source code file ( to my format ) with a given name parameter,
-// and extension ( .cpp .h )
-/**
- *  20150213 added pragma once, and globalutils.
- *  20160815 modified java generator
- */
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -15,14 +9,12 @@
 #include <filesystem>
 #include <sys/unistd.h>
 
-typedef unsigned int
-    t_Date;  // - Date information [m][d][y1][y2] = [8][27][198][7]
+typedef unsigned int t_Date;
 
 typedef enum { ext_none, ext_h, ext_cc, ext_hpp, ext_cpp, ext_java } t_ext;
 
 std::string outp;
 
-// - The switches for this program
 struct SWITCHES {
   static std::string company_name;
 };
