@@ -68,7 +68,7 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
     else {
       ConsoleColorWhite();
     }
-    std::cout << str << std::endl;
+    std::cout << str;
     ConsoleColorWhite();
 
 #elif defined(BR2_OS_LINUX)

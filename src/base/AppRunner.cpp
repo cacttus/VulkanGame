@@ -55,6 +55,7 @@ public:
   bool runCommands(const std::vector<string_t>& args);
   void loadAppPackage(const std::vector<string_t>& args);
   void runUnitTests(std::vector<std::function<bool()>>);
+  void loadDebugPackage();
 };
 
 void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
@@ -79,12 +80,10 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   }
   Gu::setGraphicsApi(_pGraphicsApi);
 
-#ifdef _DEBUG
   // Run Tests
   std::shared_ptr<LuaScript> math_test = std::make_shared<LuaScript>();
   math_test->compile(FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/test_math.lua"));
   math_test = nullptr;
-#endif
 
   std::shared_ptr<LuaScript> editor = std::make_shared<LuaScript>();
   editor->compile(FileSystem::combinePath(Gu::getPackage()->getAssetsFolder(), "/Editor.lua"));
@@ -312,16 +311,18 @@ bool AppRunner_Internal::runCommands(const std::vector<string_t>& args) {
     return false;
   }
 }
+void AppRunner_Internal::loadDebugPackage() {
+  BRLogInfo("Building Debug ApplicationPackage");
+  std::shared_ptr<ApplicationPackage> def = std::make_shared<ApplicationPackage>();
+  def->build(FileSystem::getExecutableFullPath());
+  SDLUtils::checkSDLErr();
+
+  Gu::setPackage(def);
+}
 void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
   if (Gu::checkArg(args, "package_loc", "_debug")) {
     BRLogInfo("Application package set to debug.");
-
-    BRLogInfo("Building Debug ApplicationPackage");
-    std::shared_ptr<ApplicationPackage> def = std::make_shared<ApplicationPackage>();
-    def->build(FileSystem::getExecutableFullPath());
-    SDLUtils::checkSDLErr();
-
-    Gu::setPackage(def);
+    loadDebugPackage();
   }
   else {
     BRLogInfo("Select App Package: Use package_loc=_debug to skip the file selector.");
@@ -336,7 +337,8 @@ void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
       Gu::setPackage(pack);
     }
     else {
-      BRThrowException("Package could not be loaded.  Folder not selected, or invalid path.");
+      BRLogWarn("Package not selected. Loading debug package.");
+      loadDebugPackage();
     }
   }
 }

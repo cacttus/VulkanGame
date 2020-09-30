@@ -174,7 +174,7 @@ print("distance = " .. (v5:distanceTo(v6)))
 
 ---
 
-local count = 100000
+local count = 1000000
 local avgDist
 local sw
 local fixedSeed = 1206905993
