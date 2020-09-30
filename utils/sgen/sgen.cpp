@@ -102,7 +102,7 @@ void printHeaderInfo(const std::string& cwd) {
   std::cout << "|**************************************************************"
                "***************"
             << std::endl;
-  std::cout << "|  C++/Java Class Generator v" << CMAKE_PROJECT_VERSION << "  "
+  std::cout << "|  C++/Java Class Generator v" << PROJECT_VERSION << "  "
             << std::endl;
   std::cout << "|  Created by github/MetalMario971" << std::endl;
   std::cout << "|      Type filenames separated by spaces. " << std::endl;
