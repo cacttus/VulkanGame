@@ -1,5 +1,5 @@
 # VulkanGame
-This is a game demo utilizing the SDL2 Vulkan API.
+A demo game engine which uses the SDL2 Vulkan API.
 
 # Building 
 ### Visual Studio - Windows
