@@ -15,6 +15,7 @@ namespace BR2 {
 /**
 *  @class Mat3x
 *  @brief A 3x3 Matrix. Column major.
+*  @note This class must not have any virtual functions (vtable).
 */
 template <typename Tx>
 class Mat3x {
@@ -25,7 +26,6 @@ public:
 
   FORCE_INLINE Mat3x<Tx>();
   FORCE_INLINE Mat3x<Tx>(Tx (&f)[9]);
-  FORCE_INLINE NOT_VIRTUAL ~Mat3x<Tx>() DOES_NOT_OVERRIDE;
 
   FORCE_INLINE Tx& Mat(size_t i) { return (Tx&)*((Tx*)(this) + i); }
   FORCE_INLINE const Tx& Mat(size_t i) const { return (Tx&)*((Tx*)(this) + i); }

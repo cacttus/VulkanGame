@@ -10,7 +10,11 @@
 #include "../math/MathHeader.h"
 
 namespace BR2 {
-
+/** 
+ * @class Vec3x
+ * @brief Generic 3-vector class.
+ * @note This class must not have any virtual functions (vtable).
+ */
 template <class Tx>
 class Vec3x {
   constexpr static std::size_t CompSize = 3;
@@ -26,7 +30,6 @@ public:
   FORCE_INLINE Vec3x<Tx>(const Vec3x<uint32_t>& rhs);
   FORCE_INLINE Vec3x<Tx>(const Vec3ub& rhs);
   FORCE_INLINE Vec3x<Tx>(const Tx (&init_list)[Vec3x<Tx>::CompSize]);
-  FORCE_INLINE NOT_VIRTUAL ~Vec3x<Tx>() DOES_NOT_OVERRIDE {}
 
   //Aliases
   FORCE_INLINE Tx& u() { return x; }
