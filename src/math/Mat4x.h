@@ -390,9 +390,9 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(Tx x, Tx y, Tx z) {
 }
 
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov, Tx viewport_w, Tx viewport_h, Tx z_near, Tx z_far) {
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx viewport_h, Tx z_near, Tx z_far) {
   //setup a 3D projection matrix.
-  //fov = field of view
+  //fov = field of view (radians)
   //viewport_w - width of viewport (swapchain image)
   //viewport_h - height of viewport.
   //near, far = near and far clipping planes.
@@ -405,7 +405,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov, Tx viewport_w, Tx viewport_
   if (fov < 1) {
     fov = 1;
   }
-  Tx vpWidth_2 = (Tx)tan(fov*(Tx)0.5) * z_near;
+  Tx vpWidth_2 = (Tx)tan(fov_radians*(Tx)0.5) * z_near;
   Tx arat_1 =  viewport_h / viewport_w; // 1 / (w/h)
   Tx vw = vpWidth_2;
   Tx vh = vpWidth_2 * arat_1;
