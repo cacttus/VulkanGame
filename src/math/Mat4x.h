@@ -396,14 +396,15 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx v
   //viewport_w - width of viewport (swapchain image)
   //viewport_h - height of viewport.
   //near, far = near and far clipping planes.
+  Tx e = (Tx)0.000001;
   if (viewport_w == 0) {
     viewport_w = 1;
   }
-  if (fov > 179) {
-    fov = 179;
+  if (fov_radians > M_PI_2-e) {
+    fov_radians = M_PI_2-e;
   }
-  if (fov < 1) {
-    fov = 1;
+  if (fov_radians < 1+e) {
+    fov_radians = 1+e;
   }
   Tx vpWidth_2 = (Tx)tan(fov_radians*(Tx)0.5) * z_near;
   Tx arat_1 =  viewport_h / viewport_w; // 1 / (w/h)
@@ -1040,7 +1041,7 @@ FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>
 
   q.getAxisAngle(rot);
   if (bDegreeRotation) {
-    rot.w = MathUtils::radToDeg(rot.w);
+    rot.w = MathUtils::degrees(rot.w);
   }
 }
 template <typename Tx>

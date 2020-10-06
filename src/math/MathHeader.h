@@ -310,10 +310,10 @@ public:
   FORCE_INLINE static float sqrf(float x) {
     return x * x;
   }
-  static constexpr double degToRad(double d) {
+  static constexpr double radians(double d) {
     return (double)((d * (double)(M_PI)) / (double)180.0);
   }
-  FORCE_INLINE static float radToDeg(float d) {
+  FORCE_INLINE static float degrees(float d) {
     return (float)((d * (float)(180.0)) / (float)M_PI);
   }
   FORCE_INLINE static int32_t getNumberOfDigits(int32_t i) {

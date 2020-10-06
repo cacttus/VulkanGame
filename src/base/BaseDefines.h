@@ -31,7 +31,7 @@ constexpr const char* BR_GET_FILENAME(const char* path) {
 //#define BR_SRC_FNAME __FILE__
 //#define BR_SRC_FLINE __LINE__
 //#elif defined(BR2_OS_LINUX)
-#define BR_SRC_FNAME (BR_GET_FILENAME(__FILE__))
+#define BR_SRC_FNAME (BR2::BR_GET_FILENAME(__FILE__))
 #define BR_SRC_FLINE (__LINE__)
 //#else
 //  OS_METHOD_NOT_IMPLEMENTED;
