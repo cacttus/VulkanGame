@@ -91,12 +91,13 @@ void ShadowBoxSide::updateView(/*send junk in instead*/) {
     , vLookAt
     , vCamUp);
 
-  // _projMatrix = _pFrustum->getProjectionMatrix();
+
+  //**TODO: replace this stuff with the fov version of mat4::projection
   float vpWidth_2 = _pFrustum->getTanFov2() * fNear;
   float arat_1 = 1.0 / _pViewport->getAspectRatio();
   float vw = vpWidth_2;
   float vh = vpWidth_2 * arat_1;
-  _projMatrix = mat4::getProjection(
+  _projMatrix = mat4::projection(
     fNear, fFar,
     vw, -vw,
     -vh, vh

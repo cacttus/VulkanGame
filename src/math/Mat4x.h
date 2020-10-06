@@ -32,22 +32,22 @@ public:
   FORCE_INLINE Mat4x<Tx>(const Tx (&init_list)[Mat4x<Tx>::CompSize]);
   FORCE_INLINE Mat4x<Tx>(Tx t0, Tx t1, Tx t2, Tx t3, Tx t4, Tx t5, Tx t6, Tx t7, Tx t8, Tx t9, Tx t10, Tx t11, Tx t12, Tx t13, Tx t14, Tx t15);
 
-  FORCE_INLINE static Mat4x<Tx> identity();
-
   FORCE_INLINE int32_t nRows() { return 4; }
   FORCE_INLINE int32_t nCols() { return 4; }
   FORCE_INLINE int32_t size() { return 16; }  // - Returns the number of entries in this matrix.
 
   FORCE_INLINE void copyTo(Mat4x<Tx>& to);
   FORCE_INLINE void values(Tx* m);
-  FORCE_INLINE Mat4x<Tx>& setTranslation(Tx x, Tx y, Tx z);
   FORCE_INLINE Quaternion<Tx> getQuaternion();
 
   FORCE_INLINE void lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
+
+  //These can be confusing due to the matrix Order operations. They should be removed in favor of matrix::
+  FORCE_INLINE Mat4x<Tx>& setTranslation(Tx x, Tx y, Tx z);
   FORCE_INLINE Mat4x<Tx>& translate(Tx x, Tx y, Tx z);
   FORCE_INLINE Mat4x<Tx>& translate(const Vec3x<Tx>& v);
-  FORCE_INLINE void scale(Tx x, Tx y, Tx z);
   FORCE_INLINE void rotateRad(Tx radians, Tx x, Tx y, Tx z);
+
   FORCE_INLINE Mat4x<Tx>& transpose();
   FORCE_INLINE Mat4x<Tx> transposed();
   FORCE_INLINE void clear();
@@ -63,7 +63,6 @@ public:
   FORCE_INLINE Mat4x<Tx> inverseOf();
   FORCE_INLINE Vec4x<Tx> row(int row);
   FORCE_INLINE Vec4x<Tx> col(int col);
-  FORCE_INLINE Mat4x<Tx>& projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b);  // set up a projection matrix.
 
   FORCE_INLINE std::string toString(int precision = -1) const;
 
@@ -90,25 +89,21 @@ public:
   FORCE_INLINE const Mat4x<Tx> operator*(const Mat4x<Tx>& m) const;
 #pragma endregion
 
-#pragma region Static Matrix Constructors
-  FORCE_INLINE static Mat4x<Tx> getIdentity();
-
-  FORCE_INLINE static Mat4x<Tx> getTranslation(Vec3x<Tx>& vTrans);
-  FORCE_INLINE static Mat4x<Tx> getTranslation(Tx x, Tx y, Tx z);
-
-  FORCE_INLINE static Mat4x<Tx> getRotation(Tx radians, const Vec3x<Tx>& vAxis);
-  FORCE_INLINE static Mat4x<Tx> getRotation(Tx radians, Tx x, Tx y, Tx z);
-
-  FORCE_INLINE static Mat4x<Tx> getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up);
-
-  FORCE_INLINE static Mat4x<Tx> getScale(const Vec3x<Tx>& vScale);
-  FORCE_INLINE static Mat4x<Tx> getScale(Tx x, Tx y, Tx z);
-
-  FORCE_INLINE static Mat4x<Tx> getProjection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b);
+#pragma region Static Matrix Creators
+  FORCE_INLINE static Mat4x<Tx> identity();
+  FORCE_INLINE static Mat4x<Tx> translation(Vec3x<Tx>& vTrans);
+  FORCE_INLINE static Mat4x<Tx> translation(Tx x, Tx y, Tx z);
+  FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, const Vec3x<Tx>& vAxis);
+  FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, Tx x, Tx y, Tx z);
+  FORCE_INLINE static Mat4x<Tx> scaling(const Vec3x<Tx>& vScale);
+  FORCE_INLINE static Mat4x<Tx> scaling(Tx x, Tx y, Tx z);
   FORCE_INLINE static Mat4x<Tx> getOrientToVector(Vec3x<Tx> v, Vec3x<Tx> up);
   FORCE_INLINE static Mat4x<Tx> getLookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
   FORCE_INLINE static Mat4x<Tx> getOrtho(Tx left, Tx right, Tx top, Tx bottom, Tx neard, Tx fard);
+  FORCE_INLINE static Mat4x<Tx> getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up);
   FORCE_INLINE static bool parse(std::string, Mat4x<Tx>& mOut);
+  FORCE_INLINE static Mat4x<Tx> projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b);                     // set up a projection matrix.
+  FORCE_INLINE static Mat4x<Tx> projection(Tx fov, Tx viewport_w, Tx viewport_h, Tx near, Tx far);  // set up a projection matrix.
 #pragma endregion
 
   FORCE_INLINE void decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>& scale) const;
@@ -291,17 +286,11 @@ FORCE_INLINE Quaternion<Tx> Mat4x<Tx>::getQuaternion() {
   return ret;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getIdentity() {
-  Mat4x<Tx> m;
-  m.setIdentity();
-  return m;
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(Vec3x<Tx>& vTrans) {
+  return translation(vTrans.x, vTrans.y, vTrans.z);
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getTranslation(Vec3x<Tx>& vTrans) {
-  return getTranslation(vTrans.x, vTrans.y, vTrans.z);
-}
-template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getTranslation(Tx x, Tx y, Tx z) {
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(Tx x, Tx y, Tx z) {
   Mat4x<Tx> m = Mat4x<Tx>::identity();
 
   m._m41 = x;
@@ -311,11 +300,11 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getTranslation(Tx x, Tx y, Tx z) {
   return m;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getRotation(Tx radians, const Vec3x<Tx>& vAxis) {
-  return getRotation(radians, vAxis.x, vAxis.y, vAxis.z);
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::rotation(Tx radians, const Vec3x<Tx>& vAxis) {
+  return rotation(radians, vAxis.x, vAxis.y, vAxis.z);
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getRotation(Tx radians, Tx x, Tx y, Tx z) {
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::rotation(Tx radians, Tx x, Tx y, Tx z) {
   // - Reference: The openGL reference.http://pyopengl.sourceforge.net/documentation/manual/reference-GL.html
   Mat4x<Tx> Temp = Mat4x<Tx>::identity();
 
@@ -387,11 +376,11 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up)
 *
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getScale(const Vec3x<Tx>& vScale) {
-  return getScale(vScale.x, vScale.y, vScale.z);
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(const Vec3x<Tx>& vScale) {
+  return scaling(vScale.x, vScale.y, vScale.z);
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getScale(Tx x, Tx y, Tx z) {
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(Tx x, Tx y, Tx z) {
   Mat4x<Tx> m = Mat4x<Tx>::identity();
   m._m11 = x;
   m._m22 = y;
@@ -399,48 +388,70 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getScale(Tx x, Tx y, Tx z) {
 
   return m;
 }
-/*
-*  This is a projection matrix
-*  see: http://www.opengl.org/sdk/docs/man/xhtml/glFrustum.xml
-*/
+
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getProjection(Tx fNearClip, Tx fFarClip, Tx fLeft, Tx fRight, Tx fTop, Tx fBottom) {
-  Mat4x<Tx> m;
-  m.projection(fNearClip, fFarClip, fLeft, fRight, fTop, fBottom);
-  return m;
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov, Tx viewport_w, Tx viewport_h, Tx z_near, Tx z_far) {
+  //setup a 3D projection matrix.
+  //fov = field of view
+  //viewport_w - width of viewport (swapchain image)
+  //viewport_h - height of viewport.
+  //near, far = near and far clipping planes.
+  if (viewport_w == 0) {
+    viewport_w = 1;
+  }
+  if (fov > 179) {
+    fov = 179;
+  }
+  if (fov < 1) {
+    fov = 1;
+  }
+  Tx vpWidth_2 = (Tx)tan(fov*(Tx)0.5) * z_near;
+  Tx arat_1 =  viewport_h / viewport_w; // 1 / (w/h)
+  Tx vw = vpWidth_2;
+  Tx vh = vpWidth_2 * arat_1;
+
+  return mat4::projection(
+      z_near, z_far,
+      vw, -vw,
+      vh, -vh);
 }
 /*
 *  This is a projection matrix
 *  see: http://www.opengl.org/sdk/docs/man/xhtml/glFrustum.xml
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b) {
-  _m11 = (Tx)(2 * n) / (r - l);
-  _m21 = (Tx)0;
-  _m31 = (Tx)0;
-  _m41 = (Tx)0;
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b) {
+  Mat4x<Tx> m;
 
-  _m12 = (Tx)0;
-  _m22 = (Tx)(2 * n) / (t - b);  // *-1.0f; // we added a neagtive here because IDK WHY this is not right
-  _m32 = (Tx)0;
-  _m42 = (Tx)0;
+  m._m11 = (Tx)(2 * n) / (r - l);
+  m._m11 = (Tx)(2 * n) / (r - l);
+  m._m21 = (Tx)0;
+  m._m21 = (Tx)0;
+  m._m31 = (Tx)0;
+  m._m31 = (Tx)0;
+  m._m41 = (Tx)0;
+  m._m41 = (Tx)0;
 
-  _m13 = (Tx)(r + l) / (r - l);
-  _m23 = (Tx)(t + b) / (t - b);
-  _m33 = (Tx) - (f + n) / (f - n);
-  _m43 = (Tx)-1;
+  m._m12 = (Tx)0;
+  m._m22 = (Tx)(2 * n) / (t - b);  // *-1.0f; // we added a neagtive here because IDK WHY this is not right
+  m._m32 = (Tx)0;
+  m._m42 = (Tx)0;
 
-  _m14 = (Tx)0;
-  _m24 = (Tx)0;
-  _m34 = (Tx) - (2 * f * n) / (f - n);
-  _m44 = (Tx)0;
+  m._m13 = (Tx)(r + l) / (r - l);
+  m._m23 = (Tx)(t + b) / (t - b);
+  m._m33 = (Tx) - (f + n) / (f - n);
+  m._m43 = (Tx)-1;
+
+  m._m14 = (Tx)0;
+  m._m24 = (Tx)0;
+  m._m34 = (Tx) - (2 * f * n) / (f - n);
+  m._m44 = (Tx)0;
 
 #ifdef COORDINATE_SYSTEM_RHS
-  //m = m.transposed();
-  transpose();
+  m.transpose();
 #endif
 
-  return *this;
+  return m;
 }
 
 //untested
@@ -536,22 +547,11 @@ FORCE_INLINE void Mat4x<Tx>::lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& cente
 */
 template <typename Tx>
 FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::translate(Tx x, Tx y, Tx z) {
-  return (*this *= getTranslation(x, y, z));
+  return (*this *= translation(x, y, z));
 }
 template <typename Tx>
 FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::translate(const Vec3x<Tx>& v) {
-  return (*this *= getTranslation(v.x, v.y, v.z));
-}
-
-/**
-*  @fn scaleCat()
-*  @details Scales the values of this matrix.
-*  @param x,y,z the scale value.
-*
-*/
-template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::scale(Tx x, Tx y, Tx z) {
-  *this *= getScale(x, y, z);
+  return (*this *= translation(v.x, v.y, v.z));
 }
 /**
 *  @fn rotateCat()

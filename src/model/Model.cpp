@@ -62,9 +62,9 @@ mat4 KeyFrame::compile(vec3& p, quat& r, vec3& s) {
   mat4 mScl;
   mat4 mPos;
 
-  mPos = mat4::getTranslation(p);
+  mPos = mat4::translation(p);
   mRot = r.toMat4(); //mat4::getRotationRad(_fRotation, _vRotationNormal);
-  mScl = mat4::getScale(s);
+  mScl = mat4::scaling(s);
 
   //Taken from Node3base
   mat4 mRet = mScl * mRot * mPos;

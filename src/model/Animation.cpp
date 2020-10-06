@@ -13,7 +13,7 @@ bool RotateTo::update(float delta) {
     _fCur = _fAmount;
   }
 
-  _mFinal = mat4::getRotation(_fCur, _vAxis);
+  _mFinal = mat4::rotation(_fCur, _vAxis);
   return bDone;
 }
 

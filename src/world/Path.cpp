@@ -138,7 +138,7 @@ void Path::drawForwardDebug(RenderParams& rp) {
     }
     if (_pDrawBox) {
       mat4 w = getWorld();
-      w *= mat4::getTranslation(_curPoint);
+      w *= mat4::translation(_curPoint);
       _pDrawBox->setModelMatrix(w);
       _pDrawBox->draw(rp.getCamera());
     }

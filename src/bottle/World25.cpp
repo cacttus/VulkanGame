@@ -487,8 +487,8 @@ void World25::updateHandCursorAndAddToRenderList(float delta) {
   m._m41 = 0; m._m42 = 0; m._m43 = 0; m._m44 = 1;
 
   // *  these confusing because we apply the transforms in reverse so we have to be in the other basis before multiplying
-  mat4 mrot = mat4::getRotation(M_PI_2, 1, 0, 0);
-  mat4 mrot_tilt = mat4::getRotation(-M_PI / 4.0, 0, 1, 0);
+  mat4 mrot = mat4::rotation(M_PI_2, 1, 0, 0);
+  mat4 mrot_tilt = mat4::rotation(-M_PI / 4.0, 0, 1, 0);
 }
 
 void World25::updateTouch(std::shared_ptr<InputManager> pFingers) {
@@ -681,7 +681,7 @@ void World25::drawSky(RenderParams& rp) {
   std::shared_ptr<CameraNode> bc = rp.getCamera();
 
   //Translate the sky up
-  mat4 model = mat4::getTranslation(vCamPos.x, vCamPos.y, vCamPos.z);
+  mat4 model = mat4::translation(vCamPos.x, vCamPos.y, vCamPos.z);
 
   //Gu::getShaderMaker()->getDiffuseShader(v_v3n3x2::getVertexFormat())->setCameraUf(bc, &model);
 

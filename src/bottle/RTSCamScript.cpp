@@ -161,7 +161,7 @@ void RTSCamScript::updateRotateAndZoom(std::shared_ptr<CameraNode> cam, float de
   }
 }
 void RTSCamScript::doRotate(std::shared_ptr<CameraNode> cam, float dRot) {
-  mat4 rot = mat4::getRotation(dRot, vec3(0, 1, 0));
+  mat4 rot = mat4::rotation(dRot, vec3(0, 1, 0));
 
   vec3 origPos = cam->getPos();
 
@@ -179,7 +179,7 @@ void RTSCamScript::doRotate(std::shared_ptr<CameraNode> cam, float dRot) {
 void RTSCamScript::doRotateZ(std::shared_ptr<CameraNode> cam, float dRot) {
   vec3 rn = cam->getRightNormal();
 
-  mat4 rot = mat4::getRotation(dRot, rn);
+  mat4 rot = mat4::rotation(dRot, rn);
 
   vec3 origPos = cam->getPos();
 

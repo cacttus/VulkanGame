@@ -117,7 +117,7 @@ void ParticleManager::update(float delta) {
 
         //Calcualate Rotation
         _pParticles[ipt]._fRotCur = fmodf(_pParticles[ipt]._fRotCur + _pParticles[ipt]._fRotDelta * delta, (float)M_2PI);
-        mRot = mat4::getRotation(_pParticles[ipt]._fRotCur, _pParticles[ipt]._vRotNormal);
+        mRot = mat4::rotation(_pParticles[ipt]._fRotCur, _pParticles[ipt]._vRotNormal);
 
         normal = (mRot * vec4(0, 0, -1, 1)).xyz();
 
