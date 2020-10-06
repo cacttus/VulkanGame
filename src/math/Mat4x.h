@@ -17,6 +17,7 @@ namespace BR2 {
 /**
 *  @stuct Mat4x
 *  @brief Row major 4x4 matrix. (64 bytes)
+*  @note This class must not have any virtual functions (vtable).
 */
 template <typename Tx>
 class Mat4x {
@@ -35,38 +36,35 @@ public:
   FORCE_INLINE int32_t nRows() { return 4; }
   FORCE_INLINE int32_t nCols() { return 4; }
   FORCE_INLINE int32_t size() { return 16; }  // - Returns the number of entries in this matrix.
+  FORCE_INLINE Vec4x<Tx> row(int row);
+  FORCE_INLINE Vec4x<Tx> col(int col);
 
   FORCE_INLINE void copyTo(Mat4x<Tx>& to);
-  FORCE_INLINE void values(Tx* m);
-  FORCE_INLINE Quaternion<Tx> getQuaternion();
-
-  FORCE_INLINE void lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
 
   //These can be confusing due to the matrix Order operations. They should be removed in favor of matrix::
-  FORCE_INLINE Mat4x<Tx>& setTranslation(Tx x, Tx y, Tx z);
+  FORCE_INLINE void lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
   FORCE_INLINE Mat4x<Tx>& translate(Tx x, Tx y, Tx z);
   FORCE_INLINE Mat4x<Tx>& translate(const Vec3x<Tx>& v);
   FORCE_INLINE void rotateRad(Tx radians, Tx x, Tx y, Tx z);
-
   FORCE_INLINE Mat4x<Tx>& transpose();
   FORCE_INLINE Mat4x<Tx> transposed();
   FORCE_INLINE void clear();
   FORCE_INLINE void setIdentity();
+  FORCE_INLINE void decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>& scale) const;
+  FORCE_INLINE void decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>& scale, bool bDegreeRotation = false) const;
   FORCE_INLINE Tx at(int row, int col) const;
   FORCE_INLINE int32_t colNum(int ind);
   FORCE_INLINE int32_t rowNum(int ind);
   FORCE_INLINE Tx det();
   FORCE_INLINE Mat3x<Tx> minor(int r, int c);
-  Tx cofactor(int r, int c);
+  FORCE_INLINE Tx cofactor(int r, int c);
   FORCE_INLINE Mat4x<Tx> adj();
   FORCE_INLINE Mat4x<Tx> invert();
   FORCE_INLINE Mat4x<Tx> inverseOf();
-  FORCE_INLINE Vec4x<Tx> row(int row);
-  FORCE_INLINE Vec4x<Tx> col(int col);
 
-  FORCE_INLINE std::string toString(int precision = -1) const;
-
+  FORCE_INLINE Quaternion<Tx> getQuaternion();
   FORCE_INLINE Vec3x<Tx> getTranslation() const;
+  FORCE_INLINE Mat4x<Tx>& setTranslation(Tx x, Tx y, Tx z);
   FORCE_INLINE void setTranslation(const Vec3x<Tx>& vec);
   FORCE_INLINE void setTranslationX(Tx x);
   FORCE_INLINE void setTranslationY(Tx y);
@@ -75,6 +73,8 @@ public:
   FORCE_INLINE Tx getTranslationY() const;
   FORCE_INLINE Tx getTranslationZ() const;
   FORCE_INLINE Vec4x<Tx> getTranslationVector() const;
+
+  FORCE_INLINE std::string toString(int precision = -1) const;
 
 #pragma region Operators
   FORCE_INLINE Mat4x<Tx> operator+(const Mat4x<Tx>& m) const;
@@ -106,8 +106,6 @@ public:
   FORCE_INLINE static Mat4x<Tx> projection(Tx fov, Tx viewport_w, Tx viewport_h, Tx near, Tx far);  // set up a projection matrix.
 #pragma endregion
 
-  FORCE_INLINE void decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>& scale) const;
-  FORCE_INLINE void decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>& scale, bool bDegreeRotation = false) const;
 } CACHE_ALIGN_16;
 
 //////////////////////////////////////////////////////////////////////////
@@ -185,29 +183,6 @@ FORCE_INLINE void Mat4x<Tx>::copyTo(Mat4x<Tx>& __out_ to) {
   to._m42 = _m42;
   to._m43 = _m43;
   to._m44 = _m44;
-}
-template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::values(Tx* m) {
-  int x = 0;
-  m[x++] = _m11;
-  m[x++] = _m21;
-  m[x++] = _m31;
-  m[x++] = _m41;
-
-  m[x++] = _m12;
-  m[x++] = _m22;
-  m[x++] = _m32;
-  m[x++] = _m42;
-
-  m[x++] = _m13;
-  m[x++] = _m23;
-  m[x++] = _m33;
-  m[x++] = _m43;
-
-  m[x++] = _m14;
-  m[x++] = _m24;
-  m[x++] = _m34;
-  m[x++] = _m44;
 }
 template <typename Tx>
 FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::setTranslation(Tx x, Tx y, Tx z) {
@@ -400,14 +375,14 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx v
   if (viewport_w == 0) {
     viewport_w = 1;
   }
-  if (fov_radians > M_PI_2-e) {
-    fov_radians = M_PI_2-e;
+  if (fov_radians > M_PI_2 - e) {
+    fov_radians = M_PI_2 - e;
   }
-  if (fov_radians < 1+e) {
-    fov_radians = 1+e;
+  if (fov_radians < 1 + e) {
+    fov_radians = 1 + e;
   }
-  Tx vpWidth_2 = (Tx)tan(fov_radians*(Tx)0.5) * z_near;
-  Tx arat_1 =  viewport_h / viewport_w; // 1 / (w/h)
+  Tx vpWidth_2 = (Tx)tan(fov_radians * (Tx)0.5) * z_near;
+  Tx arat_1 = viewport_h / viewport_w;  // 1 / (w/h)
   Tx vw = vpWidth_2;
   Tx vh = vpWidth_2 * arat_1;
 
@@ -416,12 +391,9 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx v
       vw, -vw,
       vh, -vh);
 }
-/*
-*  This is a projection matrix
-*  see: http://www.opengl.org/sdk/docs/man/xhtml/glFrustum.xml
-*/
 template <typename Tx>
 FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b) {
+  //Alternative projection matrix speicfying the viewport bounds.
   Mat4x<Tx> m;
 
   m._m11 = (Tx)(2 * n) / (r - l);

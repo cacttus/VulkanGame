@@ -10,7 +10,11 @@
 #include "../math/MathHeader.h"
 
 namespace BR2 {
-
+/** 
+ * @class Vec4x
+ * @brief Generic 4-vector class.
+ * @note This class must not have any virtual functions (vtable).
+ */
 template <class Tx>
 class Vec4x {
   constexpr static std::size_t CompSize = 4;

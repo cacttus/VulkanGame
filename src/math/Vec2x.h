@@ -10,7 +10,10 @@
 #include "../math/MathHeader.h"
 
 namespace BR2 {
-
+/** 
+ * @class Vec2x
+ * @note This class must not have any virtual functions (vtable).
+ */
 template <class Tx>
 class Vec2x {
   constexpr static std::size_t CompSize = 2;
@@ -21,8 +24,6 @@ public:
   FORCE_INLINE Vec2x<Tx>();
   FORCE_INLINE Vec2x<Tx>(const Tx& dx, const Tx& dy);
   FORCE_INLINE Vec2x<Tx>(const Tx (&init_list)[Vec2x<Tx>::CompSize]);
-
-  FORCE_INLINE NOT_VIRTUAL ~Vec2x<Tx>() DOES_NOT_OVERRIDE {}
 
   FORCE_INLINE Tx& u() { return x; }
   FORCE_INLINE Tx& v() { return y; }
