@@ -689,7 +689,10 @@ FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::col(int col) {
 }
 template <typename Tx>
 FORCE_INLINE const Tx& Mat4x<Tx>::operator[](size_t i) const {
-  AssertOrThrow2(i < Mat4x<Tx>::CompSize);
+  //TODO: get AssertOrThrow2 here without dependnecies.
+  if (i >= Mat4x<Tx>::CompSize) {
+    throw 0;
+  }
   if (i == 0) {
     return this->_m11;
   }
@@ -741,7 +744,10 @@ FORCE_INLINE const Tx& Mat4x<Tx>::operator[](size_t i) const {
 }
 template <typename Tx>
 FORCE_INLINE Tx& Mat4x<Tx>::operator[](size_t i) {
-  AssertOrThrow2(i < Mat4x<Tx>::CompSize);
+  //TODO: get AssertOrThrow2 here without dependnecies.
+  if (i >= Mat4x<Tx>::CompSize) {
+    throw 0;
+  }
   if (i == 0) {
     return this->_m11;
   }
