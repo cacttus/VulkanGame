@@ -45,18 +45,18 @@ void staticDebugBreak(const string_t& str);
 void runtimeAssertion(const string_t& str);
 #define TIME_T_MIN (0)
 #ifdef _DEBUG
-#define AssertOrThrow2(x)                                           \
-  do {                                                              \
-    if (!(x)) {                                                     \
-      staticDebugBreak(Stz "Debug Time Assertion: '" + #x + "'. "); \
-    }                                                               \
+#define AssertOrThrow2(x)                                                \
+  do {                                                                   \
+    if (!(x)) {                                                          \
+      BR2::staticDebugBreak(Stz "Debug Time Assertion: '" + #x + "'. "); \
+    }                                                                    \
   } while (0)
 #else
-#define AssertOrThrow2(x)                                        \
-  do {                                                           \
-    if (!(x)) {                                                  \
-      runtimeAssertion(Stz "Runtime Assertion: '" + #x + "'. "); \
-    }                                                            \
+#define AssertOrThrow2(x)                                             \
+  do {                                                                \
+    if (!(x)) {                                                       \
+      BR2::runtimeAssertion(Stz "Runtime Assertion: '" + #x + "'. "); \
+    }                                                                 \
   } while (0)
 #endif
 
@@ -65,7 +65,7 @@ void runtimeAssertion(const string_t& str);
 //if you use '-fpermissive', G++ will accept your code, but allowing the use of an undeclared name is deprecated
 //https://stackoverflow.com/questions/10948316/throw-new-stdexception-vs-throw-stdexception
 #define BRTestFL(x) (Stz x + BR_SRC_FLINE + BR_SRC_FNAME)
-#define BRThrowException(x) throw Exception(Stz x, BR_SRC_FLINE, BR_SRC_FNAME, true)
+#define BRThrowException(x) throw BR2::Exception(Stz x, BR_SRC_FLINE, BR_SRC_FNAME, true)
 #define BRThrowNotImplementedException() BRThrowException("The method is not implemented.")
 #define BRThrowNotImplementedExceptionMsg(sz) \
   do {                                        \
@@ -77,7 +77,7 @@ void runtimeAssertion(const string_t& str);
   do {                                \
     if (!(expr)) BRThrowException(x); \
   } while (0)
-#define CheckGpuErrorsDbg() Gu::checkErrors()
+#define CheckGpuErrorsDbg() BR2::Gu::checkErrors()
 #define ShowMessageBoxOnce(msg)           \
   {                                       \
     static bool __show = false;           \
