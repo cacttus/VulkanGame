@@ -13,7 +13,7 @@
 #include "../model/ModelHeader.h"
 #include "../world/WorldHeader.h"
 #include "../math/Vec3x.h"
-#include "../math/Matrix4x4.h"
+#include "../math/Mat4x.h"
 #include "../base/TreeNode.h"
 
 namespace BR2 {

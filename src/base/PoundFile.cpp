@@ -170,14 +170,14 @@ void PoundFile::gatherArgs(string_t* _a, size_t _size) {
       _a[ixx] = _vecTokens[ixx];
 }
 
-vec3 PoundFile::rdVec3f(string_t* t, int32_t offset) {
+vec3 PoundFile::rdvec3(string_t* t, int32_t offset) {
   vec3 v;
   v.x = TypeConv::strToFloat(t[offset + 0]);
   v.y = TypeConv::strToFloat(t[offset + 1]);
   v.z = TypeConv::strToFloat(t[offset + 2]);
   return v;
 }
-ivec3 PoundFile::rdVec3i(string_t* t, int32_t offset) {
+ivec3 PoundFile::rdivec3(string_t* t, int32_t offset) {
   ivec3 v;
   v.x = TypeConv::strToInt(t[offset + 0]);
   v.y = TypeConv::strToInt(t[offset + 1]);

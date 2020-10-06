@@ -29,8 +29,8 @@ protected:
   string_t* getTempArgs() { return _tempArgs; }
   void gatherArgs();
   void gatherArgs(string_t* _a, size_t _size);
-  vec3 rdVec3f(string_t* t, int32_t offset);
-  ivec3 rdVec3i(string_t* t, int32_t offset);
+  vec3 rdvec3(string_t* t, int32_t offset);
+  ivec3 rdivec3(string_t* t, int32_t offset);
   bool getYesOrNo(string_t& x);
   string_t tryGetArg(int32_t arg);
   void showMessageOnFailure(bool b);

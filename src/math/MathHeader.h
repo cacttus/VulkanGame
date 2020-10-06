@@ -19,9 +19,9 @@
 #include <algorithm>
 
 //TODO: we have to replace the defines everywhere.
-#define brMax(a,b) std::max((a), (b))
-#define brMin(a,b) std::min((a), (b))
-#define brClamp(x,a,b) std::clamp((x), (a), (b));
+#define brMax(a, b) std::max((a), (b))
+#define brMin(a, b) std::min((a), (b))
+#define brClamp(x, a, b) std::clamp((x), (a), (b));
 
 #endif
 
@@ -31,55 +31,55 @@ namespace BR2 {
 #ifndef _MATH_DEFINES_DEFINED
 #define _MATH_DEFINES_DEFINED
 #ifndef M_E
-#define M_E            2.71828182845904523536
+#define M_E 2.71828182845904523536
 #endif
 #ifndef M_LOG2E
-#define M_LOG2E        1.44269504088896340736
+#define M_LOG2E 1.44269504088896340736
 #endif
 #ifndef M_LOG10E
-#define M_LOG10E    0.434294481903251827651
+#define M_LOG10E 0.434294481903251827651
 #endif
 #ifndef M_LN2
-#define M_LN2        0.693147180559945309417
+#define M_LN2 0.693147180559945309417
 #endif
 #ifndef M_LN10
-#define M_LN10        2.30258509299404568402
+#define M_LN10 2.30258509299404568402
 #endif
 #ifndef M_PI
-#define M_PI        3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 #ifndef M_2PI
-#define M_2PI        6.283185307179586476925286766559
+#define M_2PI 6.283185307179586476925286766559
 #endif
 #ifndef M_PI_2
-#define M_PI_2        1.57079632679489661923
+#define M_PI_2 1.57079632679489661923
 #endif
 #ifndef M_PI_4
-#define M_PI_4        0.785398163397448309616
+#define M_PI_4 0.785398163397448309616
 #endif
 #ifndef M_1_PI
-#define M_1_PI        0.318309886183790671538
+#define M_1_PI 0.318309886183790671538
 #endif
 #ifndef M_2_PI
-#define M_2_PI        0.636619772367581343076
+#define M_2_PI 0.636619772367581343076
 #endif
 #ifndef M_2_SQRTPI
-#define M_2_SQRTPI    1.12837916709551257390
+#define M_2_SQRTPI 1.12837916709551257390
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880
+#define M_SQRT2 1.41421356237309504880
 #endif
 #ifndef M_SQRT1_2
-#define M_SQRT1_2    0.707106781186547524401
+#define M_SQRT1_2 0.707106781186547524401
 #endif
 
-#define M_SIN45        0.70710678118654752440084436210485
+#define M_SIN45 0.70710678118654752440084436210485
 #endif
 
 #define PERCENT(x) ((x)*0.01f)
 
 //*** Matrix Multiplication Order
-#define MATRIX_ORDER(a,b) ((b)*(a))
+#define MATRIX_ORDER(a, b) ((b) * (a))
 
 #define FUZZY_EQUALS_EPSILON (0.0002f)
 
@@ -92,42 +92,113 @@ namespace BR2 {
 
 #ifdef COORDINATE_SYSTEM_LHS
 #ifdef COORDINATE_SYSTEM_RHS
-    //You cannot have two coordinate systems dude
+//You cannot have two coordinate systems dude
 1 / 0
 #endif
 #endif
 
-#define VEC3_MIN (Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX))
-#define VEC3_MAX (Vec3f(FLT_MAX,FLT_MAX,FLT_MAX))
-//////////////////////////////////////////////////////////////////////////
+#define VEC3_MIN (vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX))
+#define VEC3_MAX (vec3(FLT_MAX, FLT_MAX, FLT_MAX))
+    //////////////////////////////////////////////////////////////////////////
 
-enum class CollisionResult { Stuck, Avoided, Collided };
-namespace box_point_index { typedef enum { box_nbr, box_nbl, box_ntr, box_ntl, box_fbr, box_fbl, box_ftr, box_ftl }e; }
-namespace box_plane_index { typedef enum { bp_near, bp_far, bp_left, bp_right, bp_top, bp_bottom }e; }
+    enum class CollisionResult { Stuck,
+                                 Avoided,
+                                 Collided };
+namespace box_point_index {
+typedef enum { box_nbr,
+               box_nbl,
+               box_ntr,
+               box_ntl,
+               box_fbr,
+               box_fbl,
+               box_ftr,
+               box_ftl } e;
+}
+namespace box_plane_index {
+typedef enum { bp_near,
+               bp_far,
+               bp_left,
+               bp_right,
+               bp_top,
+               bp_bottom } e;
+}
 //2018/1/22 changed thiss
 //Face_Right, Face_Left, Face_Bottom, Face_Top, Face_Back, Face_Front
-namespace BoxSide { typedef enum { Right, Left, Bottom, Top, Back, Front }e; }
+namespace BoxSide {
+typedef enum { Right,
+               Left,
+               Bottom,
+               Top,
+               Back,
+               Front } e;
+}
 //////////////////////////////////////////////////////////////////////////
 //FWDDCL
-template < class Tx >
-class Vec2x;
-template < class Tx >
-class Vec3x;
-template < class Tx >
-class Vec4x;
-template < class Tx >
-class Box2x;
-template < class Tx >
-class Box3x;
-template < class Tx >
-class Quad3x;
-template < class Tx >
-class MinimaxParam;
 
-class Matrix4x4;
+//Vector
+template <class Tx>
+class Vec2x;
+template <class Tx>
+class Vec3x;
+template <class Tx>
+class Vec4x;
+template <class Tx>
+class Box2x;
+template <class Tx>
+class Box3x;
+template <class Tx>
+class Quad3x;
+template <class Tx>
+class MinimaxParam;
+template <typename Tx>
+class Mat4x;
+template <typename Tx>
+class Mat3x;
+template< typename Tx>
+class Quaternion;
+
+typedef Vec2x<float> vec2;
+typedef Vec2x<double> dvec2;
+typedef Vec2x<int32_t> ivec2;
+typedef Vec2x<uint32_t> uvec2;
+typedef Vec2x<unsigned char> Vec2ub;
+
+typedef Vec3x<float> vec3;
+typedef Vec3x<double> dvec3;
+typedef Vec3x<int32_t> ivec3;
+typedef Vec3x<uint32_t> uvec3;
+typedef Vec3x<unsigned char> Vec3ub;
+
+typedef Vec4x<float> vec4;
+typedef Vec4x<double> dvec4;
+typedef Vec4x<int32_t> ivec4;
+typedef Vec4x<uint32_t> uvec4;
+typedef Vec4x<unsigned char> Vec4ub;
+
+//Noise & Minimax
+class Noise;
+class SimplexNoise;
+template <class Tx>
+class MatrixStack3x;
+class RaycastHitList;
+class v_v3n3x2;
+class MpFloat;
+class MpVec3;
+class Mpivec3;
+class MpVec4;
+class MpUint;
+class MpInt;
+class Spline;
+class CubicBezierSpline;
+
+//Geom
+typedef Box3x<int32_t> Box3i;
+typedef Box3x<float> Box3f;
+typedef Box2x<float> Box2f;
+typedef Box2x<int32_t> Box2i;
+typedef Quad3x<float> Quad3f;  //Basically this would be the same
 class Line3f;
 class Plane3f;
-class Matrix3x3;
 class Polar3;
 class Poly3f;
 class QuadraticAttenuator;
@@ -139,76 +210,26 @@ class Hash;
 class Polar3;
 class Sphere3f;
 class Vec3Basis;
-class Quaternion;
-class Noise;
-class SimplexNoise;
-template< class Tx >
-class MatrixStack3x;
-class RaycastHitList;
-class v_v3n3x2;
-class MpFloat;
-class MpVec3;
-class MpVec3i;
-class MpVec4;
-class MpUint;
-class MpInt;
-class Spline;
-class CubicBezierSpline;
 
-//TYPEDEFS
-typedef Vec2x<double> Vec2d;
-typedef Vec2x<float> Vec2f;
-typedef Vec2x<t_byte> Vec2ub;
-typedef Vec2x<int32_t> Vec2i;
-typedef Vec2x<uint32_t> Vec2ui;
-typedef Vec3x<double> Vec3d;
-typedef Vec3x<float> Vec3f;
-typedef Vec3x<t_byte> Vec3ub;
-typedef Vec3x<int32_t> Vec3i;
-typedef Vec3x<uint32_t> Vec3ui;
-typedef Vec4x<double> Vec4d;
-typedef Vec4x<float> Vec4f;
-typedef Vec4x<t_byte> Vec4ub;
-typedef Vec4x<int32_t> Vec4i;
-typedef Vec4x<uint32_t> Vec4ui;
-typedef Box3x<int32_t> Box3i32;
-typedef Box3x<float> Box3f;
-typedef Box2x<float> Box2f;
-typedef Box2x<int32_t> Box2i;
-typedef Quad3x<float> Quad3f; //Basically this would be the same
-typedef Vec3f Vector3;
-typedef Vec4f Vector4;
-typedef Matrix4x4 Mat44;
-typedef Matrix3x3 Mat33;
-typedef MatrixStack3x<Mat44> Mat4Stack;
-typedef Box3i32 Box3i;
-typedef Vec3f Color3f;
+//Matrix
+typedef Mat4x<float> mat4;
+typedef Mat3x<float> mat3;
+typedef Quaternion<float> quat;
+typedef MatrixStack3x<mat4> Mat4Stack;
+
+//Pixel
+typedef vec2 Pixel3f;
+
+typedef vec2 Color3f;
 typedef Vec3ub Color3ub;
-typedef Vec4f Color4f;
-typedef Vec4ub Color4ub;
-typedef Vec3f Pixel3f;
 typedef Vec3ub Pixel3ub;
+
+typedef vec4 Color4f;
+typedef Vec4ub Color4ub;
 typedef Vec4ub Pixel4ub;
-typedef float t_radian;
-typedef float t_radians;
-typedef float t_degree;
-typedef float t_degrees;
-typedef Vec2f vec2;
-typedef Vec2i ivec2;
-typedef Vec2ui uvec2;
-typedef Vec3f vec3;
-typedef Vec3d dvec3;
-typedef Vec3i ivec3;
-typedef Vec3ui uvec3;
-typedef Vec4f vec4;
-typedef Vec4i ivec4;
-typedef Vec4ui uvec4;
-typedef Mat44 mat4;
-typedef Mat33 mat3;
-typedef Quaternion quat;
+
 
 //String conversion
-
 std::string operator+(const std::string& str, const vec2& rhs);
 std::string operator+(const std::string& str, const vec3& rhs);
 std::string operator+(const std::string& str, const vec4& rhs);
@@ -222,7 +243,7 @@ std::string operator+(const std::string& str, const mat3& rhs);
 std::string operator+(const std::string& str, const mat4& rhs);
 
 //////////////////////////////////////////////////////////////////////////
-// Syntax helper.
+// Classes
 
 // Collision Results
 class LineHit : public VirtualMemory {
@@ -233,7 +254,7 @@ public:
 };
 class PlanePoint : public VirtualMemory {
 public:
-  float t;            // - Position along the vector that was hit
+  float t;  // - Position along the vector that was hit
   bool contained;
   PlanePoint() {}
   virtual ~PlanePoint() override {}
@@ -256,14 +277,12 @@ public:
 // for quads
 class DualPlaneHit : public VirtualMemory {
 public:
-  bool hit;                // True if either of the planes were hit.
+  bool hit;  // True if either of the planes were hit.
   PlaneHit planeHit0;
   PlaneHit planeHit1;
   DualPlaneHit() {}
   virtual ~DualPlaneHit() override {}
 };
-
-//////////////////////////////////////////////////////////////////////////
 
 class MathUtils : public VirtualMemory {
 public:
@@ -279,7 +298,7 @@ public:
     return std::sqrt(x);
   }
   FORCE_INLINE static float brSqrt(float x) {
-    //sqrtf undefined in clang.. 
+    //sqrtf undefined in clang..
     return (float)std::sqrt((double)x);
   }
   FORCE_INLINE static float brRsqrt(float x) {
@@ -291,12 +310,8 @@ public:
   FORCE_INLINE static float sqrf(float x) {
     return x * x;
   }
-  FORCE_INLINE static double sqrd(double x) {
-    return x * x;
-  }
-  FORCE_INLINE static float degToRad(float d) {
-
-    return (float)((d * (float)(M_PI)) / (float)180.0);
+  static constexpr double degToRad(double d) {
+    return (double)((d * (double)(M_PI)) / (double)180.0);
   }
   FORCE_INLINE static float radToDeg(float d) {
     return (float)((d * (float)(180.0)) / (float)M_PI);
@@ -319,12 +334,12 @@ public:
     //http://stackoverflow.com/questions/3237247/c-rounding-to-the-nths-place
     //TODO: std::round()
     const int adjustment = (int)pow(10, precision);
-    return floorf(value * (adjustment)+0.5f) / adjustment;
+    return floorf(value * (adjustment) + 0.5f) / adjustment;
   }
   FORCE_INLINE static double round(double value, int precision) {
     //TODO: std::round()
     const int adjustment = (int)pow(10, precision);
-    return floor(value * (adjustment)+0.5f) / adjustment;
+    return floor(value * (adjustment) + 0.5f) / adjustment;
   }
   //btMin/max copied from bullet.
   template <class T>
@@ -333,7 +348,7 @@ public:
   }
   template <class T>
   FORCE_INLINE static const T& brMax(const T& a, const T& b) {
-    return  a > b ? a : b;
+    return a > b ? a : b;
   }
   template <class T>
   FORCE_INLINE static T& brMin(T& a, T& b) {
@@ -341,7 +356,7 @@ public:
   }
   template <class T>
   FORCE_INLINE static T& brMax(T& a, T& b) {
-    return  a > b ? a : b;
+    return a > b ? a : b;
   }
   template <class T>
   FORCE_INLINE static T& brClamp(T& x, T& a, T& b) {
@@ -371,13 +386,13 @@ public:
   }
   FORCE_INLINE static float modulateGridValue(float f_value, float f_grid_unit, float f_1_grid_unit) {
     // - Modulate the given value.
-    // Returns the fractional part of f for the given 
+    // Returns the fractional part of f for the given
     // f_1_grid_unit - 1/f_grid_unit    - supply this as an optimization
     // f_grid_unit - size of grid cubes
     // f_value - value to modulate.
     f_value = fmodf(f_value, f_grid_unit) * f_1_grid_unit;
     f_value += 1.0;
-    f_value = fmodf(f_value, 1.0f);// this works for -.25 etc.  see complaint comment below
+    f_value = fmodf(f_value, 1.0f);  // this works for -.25 etc.  see complaint comment below
     return f_value;
   }
   FORCE_INLINE static int signi(float x) {
@@ -392,12 +407,8 @@ public:
     //  return ceil of a number in the given direction. 0.6 = 1.0, -0.6 = -1.0
     return ((float)ceil(fabs(x))) * (signf(x));
   }
-
 };
 
-
-}//ns game
-
-
+}  // namespace BR2
 
 #endif

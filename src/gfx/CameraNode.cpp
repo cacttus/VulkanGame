@@ -91,8 +91,8 @@ ProjectedRay CameraNode::projectPoint(vec2& mouse) {
 
   return pr;
 }
-void CameraNode::setFOV(t_radians fov) {
-  _f_hfov = fov;
+void CameraNode::setFOV(float fov_radians) {
+  _f_hfov = fov_radians;
   //_pViewport->updateChanged(true);
   _pMainFrustum->setFov(_f_hfov);
 }

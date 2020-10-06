@@ -247,7 +247,7 @@ void SceneNode::compileWorldMatrix() {
   mat4 mPos;
 
   mPos = mat4::getTranslation(_vPos);
-  mRot = mat4::getRotationRad(_fRotation, _vRotationNormal);
+  mRot = mat4::getRotation(_fRotation, _vRotationNormal);
   mScl = mat4::getScale(_vScale);
   _mWorld = mScl * mRot * mPos;
 }

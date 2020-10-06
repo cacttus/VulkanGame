@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 
 #include "../math/Vec3x.h"
-//#include "../math/Vector3.h"
+//#include "../math/vec3.h"
 //#include "../math/MathHeader.h"
 #include "../math/ProjectedRay.h"
 //#include "../math/Sphere3.h"
@@ -75,7 +75,7 @@ public:
   FORCE_INLINE const Vec3x<Tx>& bounds(int32_t in__) const;
   FORCE_INLINE Vec3x<Tx> center();
   FORCE_INLINE Vec3x<Tx> diagonal();
-  FORCE_INLINE void closestPoint(const Vec3x<Tx>& point, Vec3f& __out_ closestPt) const;
+  FORCE_INLINE void closestPoint(const Vec3x<Tx>& point, vec3& __out_ closestPt) const;
   FORCE_INLINE float distance2(const Vec3x<Tx>& point) const;  // Accurate distance to a point.
   FORCE_INLINE float getVolumeArbitrary();
   FORCE_INLINE float getVolumePositiveOnly();
@@ -617,7 +617,7 @@ FORCE_INLINE Vec3x<Tx> Box3x<Tx>::diagonal() {
 *             we return the interpolated closest point from the projection of the point on the plane .
 */
 template < class Tx >
-FORCE_INLINE void Box3x<Tx>::closestPoint(const Vec3x<Tx>& point, Vec3f& __out_ closestPt) const {
+FORCE_INLINE void Box3x<Tx>::closestPoint(const Vec3x<Tx>& point, vec3& __out_ closestPt) const {
 #define CubeVertCount  8
 
   Vec3x<Tx> cp[CubeVertCount];
@@ -661,7 +661,7 @@ FORCE_INLINE void Box3x<Tx>::closestPoint(const Vec3x<Tx>& point, Vec3f& __out_ 
     AssertOrThrow2(closest[1] >= 0 && closest[1] < CubeVertCount);
 
     // 2 points were equally close to the given point. (cube edge)
-    Vec3f v1 = cp[closest[0]] + (cp[closest[1]] - cp[closest[0]]) * 0.5f;
+    vec3 v1 = cp[closest[0]] + (cp[closest[1]] - cp[closest[0]]) * 0.5f;
     closestPt = v1.distance2(point);
   }
   else if (nClosest == 3) {
@@ -670,7 +670,7 @@ FORCE_INLINE void Box3x<Tx>::closestPoint(const Vec3x<Tx>& point, Vec3f& __out_ 
     AssertOrThrow2(closest[2] >= 0 && closest[2] < CubeVertCount);
 
     //3 points were equally closest to the given point
-    Vec3f avg;
+    vec3 avg;
     vec3::bilinear_interpolate(cp[closest[0]],
       cp[closest[1]],
       cp[closest[0]],
@@ -690,7 +690,7 @@ FORCE_INLINE void Box3x<Tx>::closestPoint(const Vec3x<Tx>& point, Vec3f& __out_ 
 
     //4 points were equally closest (cube face)
     //Bilinear interpolate 
-    Vec3f avg;
+    vec3 avg;
     vec3::bilinear_interpolate(cp[closest[0]],
       cp[closest[1]],
       cp[closest[2]],
@@ -711,7 +711,7 @@ FORCE_INLINE void Box3x<Tx>::closestPoint(const Vec3x<Tx>& point, Vec3f& __out_ 
 */
 template < class Tx >
 FORCE_INLINE float Box3x<Tx>::distance2(const Vec3x<Tx>& point) const {
-  Vec3f retPt;
+  vec3 retPt;
   closestPoint(point, retPt);
   return point.distance2(retPt);
 }

@@ -131,7 +131,7 @@ int32_t Img32::vwrap(int32_t off) {
 *    TODO: this wraps no matter WHAT!!!!!!!!!
 *
 */
-std::shared_ptr<Img32> Img32::applyFilter(const Matrix3x3& kernel, size_t nPasses, bool wrap) {
+std::shared_ptr<Img32> Img32::applyFilter(const mat3& kernel, size_t nPasses, bool wrap) {
   if (!_pData)
     return 0;
 
@@ -416,24 +416,24 @@ Pixel4ub Img32::normalizePixel32(int32_t x, int32_t y, float depth) {
   // This doesn't work they smooth out to zero in both directions
   //float fH = (fH1 + fH2) *.5;
   //float fV = (fV1 + fV2) *.5;
-  //static Vec3f sum(0,0,0);
+  //static vec3 sum(0,0,0);
 
   //**Due to the problems with normal mapping the y really can't be any different from 1 or else the
   //filter will skew the bump map in +z or +x
-  Vec3f v(fH1, .67f, fV1);  //problem with bump mapping normals being negative forced us to do this. they are negative when you have a high depth magnitude +-1.0
+  vec3 v(fH1, .67f, fV1);  //problem with bump mapping normals being negative forced us to do this. they are negative when you have a high depth magnitude +-1.0
                             //no values below or at .5
                             // 1 = little or no bump
                             //.58 - .8
   v = (v * 2.0f) - 1.0f;    //untranslate in order to normalize
 
   //salt
-  v += vec3::normalize(Vec3f(Alg::meft11(x | rand()), 0, Alg::meft11(y | rand()))) * 0.002262058f;
+  v += vec3::normalize(vec3(Alg::meft11(x | rand()), 0, Alg::meft11(y | rand()))) * 0.002262058f;
 
   v.normalize();
 
   v = (v + 1.0f) / 2.0f;  //translate back
 
-  //v = Vec3f(0,1,0);//debug
+  //v = vec3(0,1,0);//debug
   //v = (v+1.0f)*0.5f;//store translated so we can convert it in shader. (v+1) / 2
   v *= 255.0f;
 
@@ -641,14 +641,14 @@ void Img32::flipRB32() {
     }
   }
 }
-std::shared_ptr<Img32> Img32::copySubImageTo(const Vec2i& off, const Vec2i& size) {
+std::shared_ptr<Img32> Img32::copySubImageTo(const ivec2& off, const ivec2& size) {
   std::shared_ptr<Img32> ret = std::make_shared<Img32>();
   ret->create(size.x, size.y);
   ret->copySubImageFrom(ivec2(0, 0), off, size, shared_from_this());
   return ret;
 }
 //Image formats must be identical
-void Img32::copySubImageFrom(const Vec2i& myOff, const Vec2i& otherOff, const Vec2i& size, std::shared_ptr<Img32> pOtherImage) {
+void Img32::copySubImageFrom(const ivec2& myOff, const ivec2& otherOff, const ivec2& size, std::shared_ptr<Img32> pOtherImage) {
   if (getData() == NULL) {
     BRThrowException("Copy SubImage 2 - From image was not allocated");
   }
@@ -673,7 +673,7 @@ void Img32::copySubImageFrom(const Vec2i& myOff, const Vec2i& otherOff, const Ve
     BRThrowException("Copy SubImage 7");
   }
 
-  Vec2i scanPos = myOff;
+  ivec2 scanPos = myOff;
   int32_t scanLineByteSize = size.x * getBytesPerPixel();
   int32_t nLines = size.y;
 

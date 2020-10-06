@@ -67,7 +67,7 @@ protected:
   Tile25Spec* getTileSpecByName(const string_t& name);
   LairGenLocale::e parseGenLocale(const string_t& str);
   LairTile* parseLairTile(std::vector<string_t>& tokens, const string_t& specName, int& iind);
-  MpVec3i parse_mxv3(std::vector<string_t>& tokens, const string_t& specName, int& iind);
+  Mpivec3 parse_mxv3(std::vector<string_t>& tokens, const string_t& specName, int& iind);
   MpUint parse_mxui2(std::vector<string_t>& tokens, const string_t& specName, int& iind);
   MpFloat parse_mxf2(std::vector<string_t>& tokens, const string_t& specName, int& iind);
   int32_t parseNbr_int(std::vector<string_t>& tokens, int& iind);

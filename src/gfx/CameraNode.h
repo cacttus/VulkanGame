@@ -41,7 +41,7 @@ public:
   void setupViewMatrix();    // - Manipulate the modelview matrix to orient the camera
   ProjectedRay projectPoint(vec2& mouse);    // - Project a ray into the screen.
   Ray_t projectPoint2(vec2& mouse);
-  void setFOV(t_radians fov);        // - Set Field of View
+  void setFOV(float fov_radians);        // - Set Field of View
   float getFOV() const { return _f_hfov; }
   std::shared_ptr<RenderViewport> getViewport() { return _pViewport; }
   const vec3& getRightNormal() { return _vRight; }

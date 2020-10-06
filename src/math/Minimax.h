@@ -65,10 +65,10 @@ public:
   virtual ~MpVec3() override {}
   vec3 next();
 };
-class MpVec3i : public MinimaxParam<ivec3> {
+class Mpivec3 : public MinimaxParam<ivec3> {
 public:
-  MpVec3i() {}
-  virtual ~MpVec3i() override {}
+  Mpivec3() {}
+  virtual ~Mpivec3() override {}
   ivec3 next();
 };
 class MpVec4 : public MinimaxParam<vec4> {

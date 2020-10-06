@@ -28,9 +28,9 @@ KeyFrame::KeyFrame(mat4& mat, int32_t iSeq) : KeyFrame(iSeq) {
   //We're removing matrices because it's damn impossible to use them.
   vec4 pos, rot, scl;
   mat.decompose(pos, rot, scl);
-  _pos = pos;
+  _pos = pos.xyz();
   _rot.construct(rot.x, rot.y, rot.z, rot.w);
-  _scl = scl;
+  _scl = scl.xyz();
 }
 KeyFrame::KeyFrame(vec3& p, quat& r, vec3& s, int32_t iSeq) : KeyFrame(iSeq) {
   _pos = p;

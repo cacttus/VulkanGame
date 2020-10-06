@@ -960,8 +960,8 @@ uint32_t ObFile::parseNbr_uint(std::vector<string_t>& tokens, int& iind) {
   }
   return ret;
 }
-MpVec3i ObFile::parse_mxv3(std::vector<string_t>& tokens, const string_t& specName, int& iind) {
-  MpVec3i uv;
+Mpivec3 ObFile::parse_mxv3(std::vector<string_t>& tokens, const string_t& specName, int& iind) {
+  Mpivec3 uv;
 
   uv.setMin(ivec3(parseNbr_int(tokens, iind),
                   parseNbr_int(tokens, iind),

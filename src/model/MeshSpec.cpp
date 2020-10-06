@@ -337,7 +337,7 @@ void MeshSpec::computeBox() {
 //    for (size_t i = 0; i < _pFrags->count(); ++i)
 //    {
 //        //t_vertex_v3c4n3x2 vx = *(((t_vertex_v3c4n3x2*)getFragPtr())+i);
-//        Vec3f v = v3f(i);
+//        vec3 v = v3f(i);
 //        if (bListFormat) {
 //            std::cout << "v " << i << " ";
 //        }

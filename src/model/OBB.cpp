@@ -12,7 +12,7 @@ void OBB::calc(const mat4& mat, const Box3f* base) {
   //calc transform.
   base->getPoints(_verts, 8);
   for (int i = 0; i < 8; ++i) {
-    vec3 v = mat * vec4(_verts[i], 1);
+    vec3 v = (mat * vec4(_verts[i], 1)).xyz();
     _verts[i] = v;
   }
   _bInvalid = false;

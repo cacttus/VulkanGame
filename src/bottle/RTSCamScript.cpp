@@ -161,7 +161,7 @@ void RTSCamScript::updateRotateAndZoom(std::shared_ptr<CameraNode> cam, float de
   }
 }
 void RTSCamScript::doRotate(std::shared_ptr<CameraNode> cam, float dRot) {
-  mat4 rot = mat4::getRotationRad(dRot, vec3(0, 1, 0));
+  mat4 rot = mat4::getRotation(dRot, vec3(0, 1, 0));
 
   vec3 origPos = cam->getPos();
 
@@ -179,7 +179,7 @@ void RTSCamScript::doRotate(std::shared_ptr<CameraNode> cam, float dRot) {
 void RTSCamScript::doRotateZ(std::shared_ptr<CameraNode> cam, float dRot) {
   vec3 rn = cam->getRightNormal();
 
-  mat4 rot = mat4::getRotationRad(dRot, rn);
+  mat4 rot = mat4::getRotation(dRot, rn);
 
   vec3 origPos = cam->getPos();
 
@@ -255,13 +255,15 @@ void RTSCamScript::moveCameraWSAD(std::shared_ptr<CameraNode> cam, std::shared_p
   std::weak_ptr<CameraNode> cam_w = cam;
   std::function<void()> moveUp = [this, strafeAmt, cam_w]() {
     if (std::shared_ptr<CameraNode> cam_lock = cam_w.lock()) {
-      vec3 dir = cam_lock->getViewNormal().xz().normalized();
+      vec3 dir = cam_lock->getViewNormal();
+      dir = vec3(dir.x, 0, dir.z).normalized();
       _vLookAt += dir * strafeAmt;
     }
   };
   std::function<void()> moveDown = [this, strafeAmt, cam_w]() {
     if (std::shared_ptr<CameraNode> cam_lock = cam_w.lock()) {
-      vec3 dir = cam_lock->getViewNormal().xz().normalized();
+      vec3 dir = cam_lock->getViewNormal();
+      dir = vec3(dir.x, 0, dir.z).normalized();
       _vLookAt += dir * -strafeAmt;
     }
   };

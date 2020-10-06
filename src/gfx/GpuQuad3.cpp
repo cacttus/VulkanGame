@@ -50,10 +50,10 @@ void GpuQuad3::copyQuadColor(Color4f* color) {
   debugValidate();
   //Color is for font color
 
-  //_vertex[0]->c = *(static_cast<Vec4f*>(color));
-  //_vertex[1]->c = *(static_cast<Vec4f*>(color));
-  //_vertex[2]->c = *(static_cast<Vec4f*>(color));
-  //_vertex[3]->c = *(static_cast<Vec4f*>(color));
+  //_vertex[0]->c = *(static_cast<vec4*>(color));
+  //_vertex[1]->c = *(static_cast<vec4*>(color));
+  //_vertex[2]->c = *(static_cast<vec4*>(color));
+  //_vertex[3]->c = *(static_cast<vec4*>(color));
 }
 
 }//ns game

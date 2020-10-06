@@ -11,7 +11,7 @@
 #include "../base/RetCode.h"
 #include "../base/Allocator.h"
 #include "../math/Vec3x.h"
-#include "../math/Matrix4x4.h"
+#include "../math/Mat4x.h"
 
 namespace BR2 {
 /**
@@ -51,7 +51,7 @@ public:
   void readVec2(vec2& val, size_t offset = memsize_max);
   void readVec3(vec3& val, size_t offset = memsize_max);
   void readVec4(vec4& val, size_t offset = memsize_max);
-  void readVec3i(ivec3& val, size_t offset = memsize_max);
+  void readivec3(ivec3& val, size_t offset = memsize_max);
   void readByte(int8_t& val, size_t offset = memsize_max);
   void readInt32(int32_t& val, size_t offset = memsize_max);
   void readInt16(int16_t& val, size_t offset = memsize_max);
@@ -67,7 +67,7 @@ public:
   void writeVec2(vec2&& val, size_t offset = memsize_max);
   void writeVec3(vec3&& val, size_t offset = memsize_max);
   void writeVec4(vec4&& val, size_t offset = memsize_max);
-  void writeVec3i(ivec3&& val, size_t offset = memsize_max);
+  void writeivec3(ivec3&& val, size_t offset = memsize_max);
   void writeByte(int8_t&& val, size_t offset = memsize_max);
   void writeInt32(int32_t&& val, size_t offset = memsize_max);
   void writeInt16(int16_t&& val, size_t offset = memsize_max);

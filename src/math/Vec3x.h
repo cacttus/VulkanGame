@@ -4,31 +4,28 @@
 *  @author MetalMario971
 */
 #pragma once
-#ifndef __VEC3I_1793212932844915478412_H__
-#define __VEC3I_1793212932844915478412_H__
+#ifndef __ivec3_1793212932844915478412_H__
+#define __ivec3_1793212932844915478412_H__
 
 #include "../math/MathHeader.h"
 
 namespace BR2 {
-/**
-*  @struct Vec3x
-*  @brief 3 Component Generic vector
-*  @details A structure to deal with vectors in 3 dimensions.
-*/
+
 template <class Tx>
-class Vec3x : public PureMemory {
+class Vec3x {
+  constexpr static std::size_t CompSize = 3;
+
 public:
-  Tx x, y, z;
+  Tx x = 0, y = 0, z = 0;
 
   FORCE_INLINE Vec3x<Tx>();
   FORCE_INLINE Vec3x<Tx>(const Tx& dx, const Tx& dy, const Tx& dz);
-  FORCE_INLINE Vec3x<Tx>(const Vec2x<Tx>& a);
-  FORCE_INLINE Vec3x<Tx>(const Vec4x<Tx>& a);
-  FORCE_INLINE Vec3x<Tx>(const Vec3i& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Vec3ui& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Vec3f& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Vec3d& rhs);
+  FORCE_INLINE Vec3x<Tx>(const Vec3x<float>& rhs);
+  FORCE_INLINE Vec3x<Tx>(const Vec3x<double>& rhs);
+  FORCE_INLINE Vec3x<Tx>(const Vec3x<int32_t>& rhs);
+  FORCE_INLINE Vec3x<Tx>(const Vec3x<uint32_t>& rhs);
   FORCE_INLINE Vec3x<Tx>(const Vec3ub& rhs);
+  FORCE_INLINE Vec3x<Tx>(const Tx (&init_list)[Vec3x<Tx>::CompSize]);
   FORCE_INLINE NOT_VIRTUAL ~Vec3x<Tx>() DOES_NOT_OVERRIDE {}
 
   //Aliases
@@ -47,8 +44,8 @@ public:
   FORCE_INLINE const Tx& b() const { return z; }
 
   //Swizzle ops
-  FORCE_INLINE Vec3x<Tx> xz();
-  FORCE_INLINE Vec3x<Tx> xy();
+  FORCE_INLINE Vec2x<Tx> xz();
+  FORCE_INLINE Vec2x<Tx> xy();
 
   FORCE_INLINE Tx length() const;
   FORCE_INLINE Tx length2() const;
@@ -91,32 +88,31 @@ public:
   //remove unary negation
   FORCE_INLINE Vec3x<Tx> operator-() const;
 
-  FORCE_INLINE Vec3x<Tx>& operator*=(const Matrix3x3& m);
-  FORCE_INLINE Vec3x<Tx> operator*(const Matrix3x3& m);
+  FORCE_INLINE Vec3x<Tx> operator*(const Mat3x<Tx>& m);
 
   // Script callbacks
   FORCE_INLINE Vec3x<Tx> plus(const Vec3x<Tx>& v) const {
     return *this + v;
   }
-  FORCE_INLINE Vec3x<Tx> plus(const Tx& f) const  {
+  FORCE_INLINE Vec3x<Tx> plus(const Tx& f) const {
     return *this + f;
   }
-  FORCE_INLINE Vec3x<Tx> minus(const Vec3x<Tx>& v) const  {
+  FORCE_INLINE Vec3x<Tx> minus(const Vec3x<Tx>& v) const {
     return *this - v;
   }
-  FORCE_INLINE Vec3x<Tx> minus(const Tx& f)  const {
+  FORCE_INLINE Vec3x<Tx> minus(const Tx& f) const {
     return *this - f;
   }
-  FORCE_INLINE Vec3x<Tx> times(const Vec3x<Tx>& v)  const {
+  FORCE_INLINE Vec3x<Tx> times(const Vec3x<Tx>& v) const {
     return *this * v;
   }
-  FORCE_INLINE Vec3x<Tx> times(const Tx& f) const  {
+  FORCE_INLINE Vec3x<Tx> times(const Tx& f) const {
     return *this * f;
   }
-  FORCE_INLINE Vec3x<Tx> divide(const Vec3x<Tx>& v) const  {
+  FORCE_INLINE Vec3x<Tx> divide(const Vec3x<Tx>& v) const {
     return *this / v;
   }
-  FORCE_INLINE Vec3x<Tx> divide(const Tx& f) const  {
+  FORCE_INLINE Vec3x<Tx> divide(const Tx& f) const {
     return *this / f;
   }
   FORCE_INLINE Vec3x<Tx>& operator=(const Vec3x<Tx>& v);
@@ -141,11 +137,6 @@ public:
   FORCE_INLINE bool operator<(const Tx& f) const;
   FORCE_INLINE bool operator<=(const Tx& f) const;
 
-  //TODO:
-  //const Vec3x<Tx> operator*(const Mat3<Tx> &m) const;
-
-  //For some reason it MSVC doesn't like the scope resolution operator in front of templated methods with teh
-  // same return type
   FORCE_INLINE Vec3x<Tx> operator+(const Vec3x<Tx>& v) const;
   FORCE_INLINE Vec3x<Tx> operator-(const Vec3x<Tx>& v) const;
   FORCE_INLINE Vec3x<Tx> operator*(const Vec3x<Tx>& v) const;
@@ -198,46 +189,53 @@ Vec3x<Tx>::Vec3x(const Tx& dx, const Tx& dy, const Tx& dz) {
   z = (Tx)dz;
 }
 template <class Tx>
-Vec3x<Tx>::Vec3x(const Vec3ui& rhs) {
+Vec3x<Tx>::Vec3x(const Vec3x<uint32_t>& rhs) {
   x = (Tx)rhs.x;
   y = (Tx)rhs.y;
   z = (Tx)rhs.z;
 }
 template <class Tx>
-Vec3x<Tx>::Vec3x(const Vec3i& rhs) {
+Vec3x<Tx>::Vec3x(const Vec3x<int32_t>& rhs) {
   x = (Tx)rhs.x;
   y = (Tx)rhs.y;
   z = (Tx)rhs.z;
 }
 template <class Tx>
-Vec3x<Tx>::Vec3x(const Vec3f& rhs) {
+Vec3x<Tx>::Vec3x(const Vec3x<float>& rhs) {
   x = (Tx)rhs.x;
   y = (Tx)rhs.y;
   z = (Tx)rhs.z;
 }
 template <class Tx>
-Vec3x<Tx>::Vec3x(const Vec3d& rhs) {
+Vec3x<Tx>::Vec3x(const Vec3x<unsigned char>& rhs) {
   x = (Tx)rhs.x;
   y = (Tx)rhs.y;
   z = (Tx)rhs.z;
 }
+// template <class Tx>
+// Vec3x<Tx>::Vec3x(const Vec2x<float>& rhs) {
+//   x = (Tx)rhs.x;
+//   y = (Tx)rhs.y;
+//   z = 0;  // This isn't correct. The problem is we get auto casted when we add.
+// }
+// template <class Tx>
+// Vec3x<Tx>::Vec3x(const Vec2x<double>& rhs) {
+//   x = (Tx)rhs.x;
+//   y = (Tx)rhs.y;
+//   z = 0;  // This isn't correct. The problem is we get auto casted when we add.
+// }
+// template <class Tx>
+// Vec3x<Tx>::Vec3x(const Vec4x<Tx>& rhs) {
+//   x = (Tx)rhs.x;
+//   y = (Tx)rhs.y;
+//   z = (Tx)rhs.z;
+// }
 template <class Tx>
-Vec3x<Tx>::Vec3x(const Vec3ub& rhs) {
-  x = (Tx)rhs.x;
-  y = (Tx)rhs.y;
-  z = (Tx)rhs.z;
-}
-template <class Tx>
-Vec3x<Tx>::Vec3x(const Vec2x<Tx>& rhs) {
-  x = (Tx)rhs.x;
-  y = (Tx)rhs.y;
-  z = 0;  // This isn't correct. The problem is we get auto casted when we add.
-}
-template <class Tx>
-Vec3x<Tx>::Vec3x(const Vec4x<Tx>& rhs) {
-  x = (Tx)rhs.x;
-  y = (Tx)rhs.y;
-  z = (Tx)rhs.z;
+Vec3x<Tx>::Vec3x(const Tx (&init_list)[Vec3x<Tx>::CompSize]) {
+  static_assert(Vec3x<Tx>::CompSize == 3, "Invalid number of initializer list elements.");
+  x = init_list[0];
+  y = init_list[1];
+  z = init_list[2];
 }
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -278,12 +276,12 @@ Tx Vec3x<Tx>::maxf_a(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b) {
   return max(fabs(tmp.x), max(fabs(tmp.y), fabs(tmp.z)));
 }
 template <class Tx>
-Vec3x<Tx> Vec3x<Tx>::xz() {
-  return Vec3x<Tx>(x, 0, z);
+Vec2x<Tx> Vec3x<Tx>::xz() {
+  return Vec2x<Tx>(x, z);
 }
 template <class Tx>
-Vec3x<Tx> Vec3x<Tx>::xy() {
-  return Vec3x<Tx>(x, y, 0);
+Vec2x<Tx> Vec3x<Tx>::xy() {
+  return Vec2x<Tx>(x, y);
 }
 
 template <class Tx>
@@ -294,8 +292,8 @@ template <class Tx>
 Vec3x<Tx> Vec3x<Tx>::VEC3X_MAX() {
   return Vec3x<Tx>(COMP_MAX<Tx>::m(), COMP_MAX<Tx>::m(), COMP_MAX<Tx>::m());
 }
-//#define VEC3_MIN (Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX))
-//#define VEC3_MAX (Vec3f(FLT_MAX,FLT_MAX,FLT_MAX))
+//#define VEC3_MIN (vec3(-FLT_MAX,-FLT_MAX,-FLT_MAX))
+//#define VEC3_MAX (vec3(FLT_MAX,FLT_MAX,FLT_MAX))
 
 template <class Tx>
 Tx Vec3x<Tx>::length() const {
@@ -439,31 +437,16 @@ template <class Tx>
 bool Vec3x<Tx>::operator!=(const Tx& f) const {
   return (x != f ? 1 : (y != f ? 1 : (z != f ? 1 : 0)));
 }
-
 template <class Tx>
 Vec3x<Tx> Vec3x<Tx>::operator-() const {
   return Vec3x<Tx>(-x, -y, -z);
 }
-//
-
-//
-// row vector times matrix
-//
-//template < class Tx >
-//Vec3x<Tx> & Vec3x<Tx>::operator*=( const Mat3<Tx>& m )
-//{
-//    x=m._m11*x + m._m12*y + m._m13*z;
-//    y=m._m21*x + m._m22*y + m._m23*z;
-//    z=m._m31*x + m._m32*y + m._m33*z;
-//    return *this;
-//}
-//
-//
-//
 template <class Tx>
 Vec3x<Tx>& Vec3x<Tx>::operator=(const Vec3x<Tx>& v) {
   //Check for self-reassignment
-  if (this == &v) return *this;
+  if (this == &v) {
+    return *this;
+  }
 
   x = v.x;
   y = v.y;
@@ -472,7 +455,9 @@ Vec3x<Tx>& Vec3x<Tx>::operator=(const Vec3x<Tx>& v) {
 }
 template <class Tx>
 Vec3x<Tx>& Vec3x<Tx>::operator+=(const Vec3x<Tx>& v) {
-  if (this == &v) return *this;
+  if (this == &v) {
+    return *this;
+  }
   x += v.x;
   y += v.y;
   z += v.z;
@@ -480,7 +465,9 @@ Vec3x<Tx>& Vec3x<Tx>::operator+=(const Vec3x<Tx>& v) {
 }
 template <class Tx>
 Vec3x<Tx>& Vec3x<Tx>::operator-=(const Vec3x<Tx>& v) {
-  if (this == &v) return *this;
+  if (this == &v) {
+    return *this;
+  }
   x -= v.x;
   y -= v.y;
   z -= v.z;
@@ -488,7 +475,9 @@ Vec3x<Tx>& Vec3x<Tx>::operator-=(const Vec3x<Tx>& v) {
 }
 template <class Tx>
 Vec3x<Tx>& Vec3x<Tx>::operator*=(const Vec3x<Tx>& v) {
-  if (this == &v) return *this;
+  if (this == &v) {
+    return *this;
+  }
   x *= v.x;
   y *= v.y;
   z *= v.z;
@@ -496,7 +485,9 @@ Vec3x<Tx>& Vec3x<Tx>::operator*=(const Vec3x<Tx>& v) {
 }
 template <class Tx>
 Vec3x<Tx>& Vec3x<Tx>::operator/=(const Vec3x<Tx>& v) {
-  if (this == &v) return *this;
+  if (this == &v) {
+    return *this;
+  }
   x /= v.x;
   y /= v.y;
   z /= v.z;
@@ -695,11 +686,11 @@ bool Vec3x<Tx>::compareTo(const Vec3x<Tx>* rhs) const {
 }
 
 //template < class Tx >
-//Vec3x<Tx>::Vec3x( const Vec3d& rhs )
+//Vec3x<Tx>::Vec3x( const dvec3& rhs )
 //{
-//    x = (Tx)rhs.x;
-//    y = (Tx)rhs.y;
-//    z = (Tx)rhs.z;
+//  x = (Tx)rhs.x;
+//  y = (Tx)rhs.y;
+//  z = (Tx)rhs.z;
 //}
 
 // - Vector shorthands
@@ -714,11 +705,11 @@ Vec3x<Tx> Vec3x<Tx>::cross(const Vec3x<Tx>& v1, const Vec3x<Tx>& v2) {
 //template < typename Tx >
 //Vec3x<Tx> Vec3x<Tx>::rotate(const Vec3x<Tx>& v1, const float& angle, const Vec3x<Tx>& normal)
 //{
-//    //TODO: test.
-//    mat3 m = mat3::getRotationRad(angle, normal);
-//    Vec3x<Tx> ret = v1;
-//    ret = ret*m;
-//    return ret;
+//  //TODO: test.
+//  mat3 m = mat3::getRotationRad(angle, normal);
+//  Vec3x<Tx> ret = v1;
+//  ret = ret*m;
+//  return ret;
 //}
 template <typename Tx>
 Tx Vec3x<Tx>::dot(const Vec3x<Tx>& v1, const Vec3x<Tx>& v2) {
@@ -802,6 +793,11 @@ void Vec3x<Tx>::checkNormalOrZeroAndLimitVector(float fMaxLength, bool bShowWarn
     *this = normalized() * fMaxLength;
   }
 }
+
+class Vec3Basis : public VirtualMemory {
+public:
+    vec3 _x, _y, _z;
+};
 
 }  // namespace BR2
 

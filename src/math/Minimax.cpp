@@ -11,7 +11,7 @@ vec3 MpVec3::next() {
   checkWasSet();
   return Gu::getRandom()->nextVec3(_min, _max);
 }
-ivec3 MpVec3i::next() {
+ivec3 Mpivec3::next() {
   checkWasSet();
   return Gu::getRandom()->nextIVec3(_min, _max);
 }

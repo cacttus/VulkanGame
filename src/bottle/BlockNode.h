@@ -35,7 +35,7 @@ public:
   void setIndexCount(GridMeshLayer::e eMatterMode, int32_t ind) { _iIndexCount[eMatterMode] = ind; }
 
   void divide(t_timeval startTime, std::shared_ptr<WorldGrid> _pMyGlob, int32_t& nNodes, int32_t& nLeaves, int32_t treeLevel,
-    Vec3f* ptPointToDivideTo, BlockNode** ptFoundNode, bool bCreate);
+    vec3* ptPointToDivideTo, BlockNode** ptFoundNode, bool bCreate);
   void createCells(WorldCellFile* pFile, int32_t& iCell, World25GridGen::e eg,
     WipGrid* nf, std::shared_ptr<WorldGrid> pGrid, size_t(&nVerts)[GridMeshLayer::e::MaxMatters],
     int32_t& nCells);

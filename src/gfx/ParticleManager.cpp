@@ -117,9 +117,9 @@ void ParticleManager::update(float delta) {
 
         //Calcualate Rotation
         _pParticles[ipt]._fRotCur = fmodf(_pParticles[ipt]._fRotCur + _pParticles[ipt]._fRotDelta * delta, (float)M_2PI);
-        mRot = mat4::getRotationRad(_pParticles[ipt]._fRotCur, _pParticles[ipt]._vRotNormal);
+        mRot = mat4::getRotation(_pParticles[ipt]._fRotCur, _pParticles[ipt]._vRotNormal);
 
-        normal = mRot * vec4(0, 0, -1, 1);
+        normal = (mRot * vec4(0, 0, -1, 1)).xyz();
 
         //Calculate Size
         float sz = _pParticles[ipt]._size * (1.0f - lifeVal);
@@ -135,7 +135,7 @@ void ParticleManager::update(float delta) {
 
         //Rotate vertex, then translate
         for (int iv = 0; iv < 4; ++iv) {
-          pQuad._vertex[iv]->v = mRot * vec4(pQuad._vertex[iv]->v, 1);
+          pQuad._vertex[iv]->v = (mRot * vec4(pQuad._vertex[iv]->v, 1)).xyz();
           pQuad._vertex[iv]->v += _pParticles[ipt]._p;
           pQuad._vertex[iv]->n = normal; //Normals - Assume here that normal gets normalized in the shader.
         }

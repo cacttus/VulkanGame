@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../math/Vec3x.h"
 #include "../math/Vec4x.h"
-#include "../math/Matrix4x4.h"
+#include "../math/Mat4x.h"
 
 namespace BR2 {
 // - Channel 1 is depth texture, 0 is base textures

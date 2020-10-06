@@ -41,8 +41,8 @@ public:
   void clearTo(const Pixel4ub&);                      // Clear the image to a single color
   void copyParams(const std::shared_ptr<Img32> rhs);  // - Copy parameters from another image, allocates data, does not copy the data
   void create(int w, int h);                          // - Discards the old data for this image and creates a new image.
-  void copySubImageFrom(const Vec2i& myOff, const Vec2i& otherOff, const Vec2i& otherSize, std::shared_ptr<Img32> pOtherImage);
-  std::shared_ptr<Img32> copySubImageTo(const Vec2i& off, const Vec2i& size);
+  void copySubImageFrom(const ivec2& myOff, const ivec2& otherOff, const ivec2& otherSize, std::shared_ptr<Img32> pOtherImage);
+  std::shared_ptr<Img32> copySubImageTo(const ivec2& off, const ivec2& size);
 
   Pixel4ub* pixelOff(int32_t x, int32_t y);
   Pixel4ub& pixelAt32(int32_t x, int32_t y);  // - Returns 32-bit pixel (warning: must be a 32-bit image)
@@ -51,7 +51,7 @@ public:
   void fillWithColor(Color4ub c);  // - Fills the image with the given color.
 
   // Filters / Ops
-  std::shared_ptr<Img32> applyFilter(const Matrix3x3& kernel, size_t nPasses = 1, bool wrap = true);  // - Returns a new image which is the filtered image ** note that the new image will be the same size as the original image.
+  std::shared_ptr<Img32> applyFilter(const mat3& kernel, size_t nPasses = 1, bool wrap = true);  // - Returns a new image which is the filtered image ** note that the new image will be the same size as the original image.
   RetCode normalize(std::shared_ptr<Img32>& _in, float depth = 1.0);                                  // - Returns an image that is normalized.  Useful for normal maps.
   std::shared_ptr<Img32> normalized(float depth = 1.0);                                               // - Returns an image that is normalized.  Useful for normal maps.
   RetCode normalize(float depth = 1.0);                                                               // - Returns an image that is normalized.  Useful for normal maps.

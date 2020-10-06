@@ -11,8 +11,8 @@ namespace BR2 {
 *    @return returns the minimum and maximum "t" along the normal wehre (Normal * t)=extent
 */
 void ConvexUtils::convex_proj_t_3f(
-  Vec3f* norm,
-  Vec3f* pt,
+  vec3* norm,
+  vec3* pt,
   int32_t n_pt,
   float* __out_ t_min_out,
   float* __out_ t_max_out,
@@ -65,14 +65,14 @@ void ConvexUtils::convex_proj_t_3f(
 */
 int32_t ConvexUtils::convex_n_proj_box(
   Plane3f* pf,        //proj line
-  Vec3f* pt1,    //pts
+  vec3* pt1,    //pts
   //int32_t npt1,
-  Vec3f* pt2,        //pts
+  vec3* pt2,        //pts
   //int32_t npt2, 
-  Vec3f* v_h1,    //hulls
-  Vec3f* v_h2,
-  Vec3f* v_n_h1,    //vels
-  Vec3f* v_n_h2,
+  vec3* v_h1,    //hulls
+  vec3* v_h2,
+  vec3* v_n_h1,    //vels
+  vec3* v_n_h2,
   float* __out_ out_t    // time along Velocity vectors that we collide.
 ) {
   float
@@ -89,7 +89,7 @@ int32_t ConvexUtils::convex_n_proj_box(
     ;        // point indexes
 
 // THis must have something to do with the componentized velocity.
-//Vec3f 
+//vec3 
 //    comp_v_h1 = v_n_h1.dot(pf->n)*v_h1,
 //    comp_v_h2 = v_n_h2.dot(pf->n)*v_h2
 //    ;    // componentized velocities.
@@ -113,15 +113,15 @@ int32_t ConvexUtils::convex_n_proj_box(
 }
 // - boc 
 int32_t ConvexUtils::boxBoxConvex(
-  Vec3f* pt_h1,        // points hull 1
+  vec3* pt_h1,        // points hull 1
   Plane3f* pf_h1,    // planes hull 1
-  Vec3f* v_h1,        // velocity
-  Vec3f* v_n_h1,        // normalized vl
+  vec3* v_h1,        // velocity
+  vec3* v_n_h1,        // normalized vl
 
-  Vec3f* pt_h2,        // points hull 2
+  vec3* pt_h2,        // points hull 2
   Plane3f* pf_h2,    // planes hull 2
-  Vec3f* v_h2,        // velocity
-  Vec3f* v_n_h2,
+  vec3* v_h2,        // velocity
+  vec3* v_n_h2,
 
   float* t_out,    // time till collision
 
@@ -175,17 +175,17 @@ int32_t ConvexUtils::boxBoxConvex(
 int32_t ConvexUtils::convexConvexTest(
   int32_t n_pt_h1,        // num points hull 1
   int32_t n_pf_h1,        // num planes hull 1
-  Vec3f* pt_h1,        // points hull 1
+  vec3* pt_h1,        // points hull 1
   Plane3f* pf_h1,    // planes hull 1
-  Vec3f* v_h1,        // velocity
-  Vec3f* v_n_h1,        // normalized velocity 1
+  vec3* v_h1,        // velocity
+  vec3* v_n_h1,        // normalized velocity 1
 
   int32_t n_pt_h2,        // num points hull 2
   int32_t n_pf_ht,        // num planes hull 2
-  Vec3f* pt_h2,        // points hull 2
+  vec3* pt_h2,        // points hull 2
   Plane3f* pf_h2,    // planes hull 2
-  Vec3f* v_h2,        // velocity
-  Vec3f* v_n_h2,
+  vec3* v_h2,        // velocity
+  vec3* v_n_h2,
 
   float* t_out,    // time till collision
 
@@ -202,13 +202,13 @@ int32_t ConvexUtils::convexConvexTest(
 
   return 0;
 }
-Vec3f ConvexUtils::closestPointOnHull(Vec3f& point, Vec3f* hullPoints, int32_t nPoints) {
+vec3 ConvexUtils::closestPointOnHull(vec3& point, vec3* hullPoints, int32_t nPoints) {
   BRThrowNotImplementedException();
-  return Vec3f(0, 0, 0);
+  return vec3(0, 0, 0);
   // Abandoned
   // we need either normals or indexes in order to verify topology -- just points alone doesn't work.
   /*
-  Vec3f cp[nPoints];
+  vec3 cp[nPoints];
   int32_t closest[nPoints];    // if we have similars we will have to interpolate the centers.
   int32_t nClosest;
   float lastMax;
@@ -243,12 +243,12 @@ Vec3f ConvexUtils::closestPointOnHull(Vec3f& point, Vec3f* hullPoints, int32_t n
   }
   else if(nClosest==2)
   {
-      Vec3f v1 = cp[closest[0]] + (cp[closest[1]] - cp[closest[0]]) * 0.5f;
+      vec3 v1 = cp[closest[0]] + (cp[closest[1]] - cp[closest[0]]) * 0.5f;
       closestPt = v1.distance2(point);
   }
   else if(nClosest==3)
   {
-      Vec3f avg;
+      vec3 avg;
       bilinear_interpolate(    cp[closest[0]],
                               cp[closest[1]],
                               cp[closest[0]],
@@ -262,7 +262,7 @@ Vec3f ConvexUtils::closestPointOnHull(Vec3f& point, Vec3f* hullPoints, int32_t n
   else if(nClosest==4)
   {
       //Bilinear interpolate
-      Vec3f avg;
+      vec3 avg;
       bilinear_interpolate(    cp[closest[0]],
                               cp[closest[1]],
                               cp[closest[2]],

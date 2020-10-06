@@ -104,7 +104,7 @@ std::future<bool> LightNodeDir::cullShadowVolumesAsync(CullParams& cp) {
       _pGpuLight->_vPos = getFinalPos();
       _pGpuLight->_vDir = _vDir;
       _pGpuLight->_fMaxDistance = _pShadowFrustum->getFrustum()->getZFar();
-      _pGpuLight->_vDiffuseColor = _color;
+      _pGpuLight->_vDiffuseColor = {_color.x, _color.y, _color.z};
       _pGpuLight->_fLinearAttenuation = 0.0f;
       _pGpuLight->_mView = *_pShadowFrustum->getViewMatrixPtr();
       _pGpuLight->_mProj = *_pShadowFrustum->getProjMatrixPtr();
@@ -188,7 +188,7 @@ std::future<bool> LightNodePoint::cullShadowVolumesAsync(CullParams& cp) {
       //update
       _pGpuLight->_vPos = getFinalPos();
       _pGpuLight->_fRadius = _fRadius;
-      _pGpuLight->_vDiffuseColor = _color;
+      _pGpuLight->_vDiffuseColor = {_color.x, _color.y, _color.z};
     }
     Perf::popPerf();
     return true;

@@ -79,7 +79,6 @@ public:
   static string_t slice(string_t& __inout_ str, char a, char b, bool includeDelims = false, bool modify_input_sring = false);
 
 };
-#define StrLn(a,...) TStr(a,__VA_ARGS__,"\n");
 
 
 

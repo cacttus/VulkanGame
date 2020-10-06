@@ -260,7 +260,7 @@ void BinaryFile::readVec4(vec4& val, size_t offset) {
   read((char*)&val, readSize, readSize, offset == memsize_max ? iFilePos : offset);
   iFilePos += readSize;
 }
-void BinaryFile::readVec3i(ivec3& val, size_t offset) {
+void BinaryFile::readivec3(ivec3& val, size_t offset) {
   int32_t readSize = sizeof(ivec3);
   read((char*)&val, readSize, readSize, offset == memsize_max ? iFilePos : offset);
   iFilePos += readSize;
@@ -381,7 +381,7 @@ void BinaryFile::writeVec4(vec4&& val, size_t offset) {
   write((char*)&val, writeSize, writeSize, offset == memsize_max ? iFilePos : offset);
   iFilePos += writeSize;
 }
-void BinaryFile::writeVec3i(ivec3&& val, size_t offset) {
+void BinaryFile::writeivec3(ivec3&& val, size_t offset) {
   int32_t writeSize = sizeof(ivec3);
   write((char*)&val, writeSize, writeSize, offset == memsize_max ? iFilePos : offset);
   iFilePos += writeSize;

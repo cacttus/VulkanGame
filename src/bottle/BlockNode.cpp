@@ -41,7 +41,7 @@ void BlockNode::deleteCells() {
     _pCells = nullptr;
   }
 }
-void BlockNode::divide(t_timeval startTime, std::shared_ptr<WorldGrid> _pMyGlob, int32_t& nNodes, int32_t& nLeaves, int32_t treeLevel, Vec3f* ptPointToDivideTo, BlockNode** ptFoundNode, bool bCreate) {
+void BlockNode::divide(t_timeval startTime, std::shared_ptr<WorldGrid> _pMyGlob, int32_t& nNodes, int32_t& nLeaves, int32_t treeLevel, vec3* ptPointToDivideTo, BlockNode** ptFoundNode, bool bCreate) {
   // This is an optional param
   if (ptPointToDivideTo != nullptr) {
     if (_box.containsInclusive(*ptPointToDivideTo) == false) {

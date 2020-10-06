@@ -17,8 +17,8 @@ namespace BR2 {
 typedef int32_t GpuInt;
 typedef float GpuFloat;
 typedef mat4 GpuMat4f;
-typedef vec3 GpuVec3f;
-typedef ivec3 GpuVec3i;    // X Y Z size of the block.  This actually is square
+typedef vec3 Gpuvec3;
+typedef ivec3 Gpuivec3;    // X Y Z size of the block.  This actually is square
 typedef uint32_t GpuUInt;
 //typedef std::future<bool> GpuFuture;
 //typedef GLuint GpuTexId;
@@ -147,9 +147,9 @@ public:
 
 class GpuAnimatedMeshBoundBox : public GpuMemory {
 public:
-  GpuVec3f _min;
+  Gpuvec3 _min;
   float f0;
-  GpuVec3f _max;
+  Gpuvec3 _max;
   float f1;
 };
 

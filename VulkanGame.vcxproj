@@ -221,8 +221,8 @@
     <ClInclude Include="src\math\Line3.h" />
     <ClInclude Include="src\math\MathAll.h" />
     <ClInclude Include="src\math\MathHeader.h" />
-    <ClInclude Include="src\math\Matrix3x3.h" />
-    <ClInclude Include="src\math\Matrix4x4.h" />
+    <ClInclude Include="src\math\Mat3x.h" />
+    <ClInclude Include="src\math\Mat4x.h" />
     <ClInclude Include="src\math\Minimax.h" />
     <ClInclude Include="src\math\Plane3.h" />
     <ClInclude Include="src\math\PlaneEx3.h" />
@@ -236,7 +236,6 @@
     <ClInclude Include="src\math\Spline.h" />
     <ClInclude Include="src\math\TriPlane.h" />
     <ClInclude Include="src\math\Vec2x.h" />
-    <ClInclude Include="src\math\Vec3Basis.h" />
     <ClInclude Include="src\math\Vec3x.h" />
     <ClInclude Include="src\math\Vec4x.h" />
     <ClInclude Include="src\model\Animation.h" />
@@ -433,7 +432,7 @@
     <ClCompile Include="src\math\ConvexAlgorithms.cpp" />
     <ClCompile Include="src\math\CubicBezierSpline.cpp" />
     <ClCompile Include="src\math\MathUtils.cpp" />
-    <ClCompile Include="src\math\Matrix3x3.cpp" />
+    <ClCompile Include="src\math\Mat3x.cpp" />
     <ClCompile Include="src\math\Minimax.cpp" />
     <ClCompile Include="src\math\Plane3.cpp" />
     <ClCompile Include="src\math\ProjectedRay.cpp" />

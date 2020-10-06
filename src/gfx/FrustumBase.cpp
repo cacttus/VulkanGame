@@ -17,10 +17,17 @@ FrustumBase::~FrustumBase() {
 }
 
 // - Returns the center of this frustum's near plane.
-Vec3f FrustumBase::getNearPlaneCenterPoint() {
+vec3 FrustumBase::getNearPlaneCenterPoint() {
   return PointAt(BR2::fpt_nbl) + (PointAt(BR2::fpt_ntr) - PointAt(BR2::fpt_nbl)) / 2.0f;
 }
-
+const QuadPlane* FrustumBase::getPlane(int32_t i) {
+  AssertOrThrow2((i >= 0) && (i < NumPlanes));
+  return &(Planes[i]);
+}
+const vec3* FrustumBase::getPoint(int32_t i) {
+  AssertOrThrow2((i >= 0) && (i < NumPoints));
+  return &(Points[i]);
+}
 /**
 *    @fn hasBox()
 *    @return true if the frustum collides with an axis-aligned bound-box
@@ -28,7 +35,7 @@ Vec3f FrustumBase::getNearPlaneCenterPoint() {
 */
 bool FrustumBase::hasBox(const Box3f* pCube) {
   bool ret = false;  // Inside the frustum
-  Vector3 min, max;
+  vec3 min, max;
   float d1, d2;
   if (pCube->_max < pCube->_min) {
     AssertOrThrow2(pCube->_max >= pCube->_min);
@@ -72,8 +79,8 @@ bool FrustumBase::hasBox(const Box3f* pCube) {
 */
 Line3f FrustumBase::getCenterAxis() {
   // /
-  Vector3 center_far = (Points[fpt_fbl] - Points[fpt_ftr]) * 0.5f;
-  Vector3 center_near = (Points[fpt_nbl] - Points[fpt_ntr]) * 0.5f;
+  vec3 center_far = (Points[fpt_fbl] - Points[fpt_ftr]) * 0.5f;
+  vec3 center_near = (Points[fpt_nbl] - Points[fpt_ntr]) * 0.5f;
   return Line3f(center_near, center_far);
 }
 /**
@@ -81,16 +88,16 @@ Line3f FrustumBase::getCenterAxis() {
 *    @brief returns the normalized view vector that would be projecting out of the face of the camera.
 *
 */
-Vector3 FrustumBase::getViewVector() {
+vec3 FrustumBase::getViewVector() {
   // /
-  Vector3 center_far = (Points[fpt_fbl] - Points[fpt_ftr]) * 0.5f;
-  Vector3 center_near = (Points[fpt_nbl] - Points[fpt_ntr]) * 0.5f;
+  vec3 center_far = (Points[fpt_fbl] - Points[fpt_ftr]) * 0.5f;
+  vec3 center_near = (Points[fpt_nbl] - Points[fpt_ntr]) * 0.5f;
   return (center_far - center_near).normalize();
 }
 /**
 *    Update frustum planes
 */
-void FrustumBase::update(const Vector3& NormalizedView, const Vector3& CamPos, const Vector3& upVec, ProjectionMode::e fpt) {
+void FrustumBase::update(const vec3& NormalizedView, const vec3& CamPos, const vec3& upVec, ProjectionMode::e fpt) {
   FrustumProjectionParameters params;
   params._camPos = CamPos;
   params._camView = NormalizedView;
@@ -122,7 +129,7 @@ void FrustumBase::update(const Vector3& NormalizedView, const Vector3& CamPos, c
 *    @brief Sets up an orthographic projection given the parameters
 */
 void FrustumBase::setupOrthographic(FrustumProjectionParameters* params) {
-  Vec3f nc, fc;
+  vec3 nc, fc;
 
   nc = params->_camPos + (params->_camView * z_near);
   fc = params->_camPos + (params->_camView * z_far);
@@ -152,10 +159,10 @@ void FrustumBase::setupPerspective(FrustumProjectionParameters* params, bool bPr
   float h_far_2 = w_far_2 * ar;
 
   //fixed X product
-  Vector3 right = params->_v3basis._x;  //params->_camView.cross(params->_upVec);//_upVec.cross(NormalizedView);
+  vec3 right = params->_v3basis._x;  //params->_camView.cross(params->_upVec);//_upVec.cross(NormalizedView);
 
-  Vector3 nearCenter;
-  Vector3 farCenter;
+  vec3 nearCenter;
+  vec3 farCenter;
 
   nearCenter = params->_camPos;
   farCenter = params->_camPos;
@@ -175,8 +182,8 @@ void FrustumBase::setupPerspective(FrustumProjectionParameters* params, bool bPr
 void FrustumBase::setupBox(FrustumProjectionParameters* params) {
   setupPerspective(params, true);
 }
-void FrustumBase::constructPointsAndPlanes(Vec3f& farCenter, Vec3f& nearCenter,
-                                           Vec3f& upVec, Vec3f& rightVec,
+void FrustumBase::constructPointsAndPlanes(vec3& farCenter, vec3& nearCenter,
+                                           vec3& upVec, vec3& rightVec,
                                            float w_near_2, float w_far_2,
                                            float h_near_2, float h_far_2) {
   // - Points are right
@@ -193,12 +200,12 @@ void FrustumBase::constructPointsAndPlanes(Vec3f& farCenter, Vec3f& nearCenter,
   Points[fpt_ftr] = (farCenter + (upVec * h_far_2) + (rightVec * w_far_2));
 
   // - Construct AA bound box
-  _minimax->_min = Vec3f::VEC3X_MAX();
-  _minimax->_max = Vec3f::VEC3X_MIN();
+  _minimax->_min = vec3::VEC3X_MAX();
+  _minimax->_max = vec3::VEC3X_MIN();
 
   for (int i = 0; i < 8; ++i) {
-    _minimax->_min = Vec3f::minv(_minimax->_min, Points[i]);
-    _minimax->_max = Vec3f::maxv(_minimax->_max, Points[i]);
+    _minimax->_min = vec3::minv(_minimax->_min, Points[i]);
+    _minimax->_max = vec3::maxv(_minimax->_max, Points[i]);
   }
   //TODO: Optimize:
   //        1) we don't use the fourth value of the QuadPlane4 at all
@@ -219,46 +226,8 @@ void FrustumBase::constructPointsAndPlanes(Vec3f& farCenter, Vec3f& nearCenter,
 
   // makeSatLine(nearCenter,farCenter);
 }
-//void FrustumBase::makeSatLine(Vec3f& nearCenter, Vec3f& farCenter)
-//{
-//    _satLine->p0() = nearCenter;
-//    _satLine->p1() = farCenter;
-//}
-//bool FrustumBase::intersectLine2D( Vec2f lp1, Vec2f lp2 )
-//{
-//    if( hasPointXZ(lp1) )
-//        return true;
-//    if( hasPointXZ(lp2) )
-//        return true;
-//
-//    if( Ceq::lineCol2D(
-//        Vec2f( Points[fpt_fbr].x, Points[fpt_fbr].z ),
-//        Vec2f( Points[fpt_fbl].x, Points[fpt_fbl].z ),
-//        lp1,lp2)
-//        )
-//        return true;
-//    if( Ceq::lineCol2D(
-//        Vec2f( Points[fpt_fbl].x, Points[fpt_fbl].z ),
-//        Vec2f( Points[fpt_nbl].x, Points[fpt_nbl].z ),
-//        lp1,lp2)
-//        )
-//        return true;
-//    if( Ceq::lineCol2D(
-//        Vec2f( Points[fpt_nbl].x, Points[fpt_nbl].z ),
-//        Vec2f( Points[fpt_nbr].x, Points[fpt_nbr].z ),
-//        lp1,lp2)
-//        )
-//        return true;
-//    if( Ceq::lineCol2D(
-//        Vec2f( Points[fpt_nbr].x, Points[fpt_nbr].z ),
-//        Vec2f( Points[fpt_fbr].x, Points[fpt_fbr].z ),
-//        lp1,lp2)
-//        )
-//        return true;
-//    return false;//??? put here to disable warning
-//}
-bool FrustumBase::hasPointXZ(Vec2f& dp) {
-  Vector3 p = Vector3(dp.x, 0, dp.y);
+bool FrustumBase::hasPointXZ(vec2& dp) {
+  vec3 p = vec3(dp.x, 0, dp.y);
   if (Planes[fp_near].dist(p) < 0.0f) return false;
   if (Planes[fp_far].dist(p) < 0.0f) return false;
   if (Planes[fp_left].dist(p) < 0.0f) return false;
@@ -271,7 +240,7 @@ bool FrustumBase::hasPointXZ(Vec2f& dp) {
         Returns true if a point is in
         the frustum, false otherwise.
 --------------------------------------------*/
-bool FrustumBase::hasPoint(Vector3& p) {
+bool FrustumBase::hasPoint(vec3& p) {
   if (Planes[fp_near].dist(p) < 0.0f) return false;
   if (Planes[fp_far].dist(p) < 0.0f) return false;
   if (Planes[fp_left].dist(p) < 0.0f) return false;
@@ -286,7 +255,7 @@ bool FrustumBase::hasPoint(Vector3& p) {
 *    @brief Returns true if the triangle intersects the frustum, or is inside at all.
 *
 */
-bool FrustumBase::hasTri(Vector3& p1, Vector3& p2, Vector3& p3) {
+bool FrustumBase::hasTri(vec3& p1, vec3& p2, vec3& p3) {
   //-- 20160528 This algorithm is WAY incorrect.
   //--  this isn't needed at all however >:(
 
@@ -328,7 +297,7 @@ bool FrustumBase::hasTri(Vector3& p1, Vector3& p2, Vector3& p3) {
 *
 *    Don't know if this works.  I think i've tested it before, but should probably make sure.
 */
-bool FrustumBase::hasQuad(Vector3& p1, Vector3& p2, Vector3& p3, Vector3& p4) {
+bool FrustumBase::hasQuad(vec3& p1, vec3& p2, vec3& p3, vec3& p4) {
   //-- 20160528 This algorithm is WAY incorrect.
   //--  this isn't needed at all however >:(
 
@@ -370,7 +339,7 @@ bool FrustumBase::hasQuad(Vector3& p1, Vector3& p2, Vector3& p3, Vector3& p4) {
 *        We project a set of points onto the light's plane surface.
 *        We then calculate the orthographic viewport size based on the minimum and maximum points.
 */
-void FrustumBase::projectFrom(std::shared_ptr<FrustumBase> pOther, Vec3f& viewNormal, Vec3f& viewPos, float nearDist, float farDist, bool bOrthographic) {
+void FrustumBase::projectFrom(std::shared_ptr<FrustumBase> pOther, vec3& viewNormal, vec3& viewPos, float nearDist, float farDist, bool bOrthographic) {
   FrustumProjectionParameters params;
   float vmin, vmax, hmin, hmax;
 
@@ -391,10 +360,10 @@ void FrustumBase::projectFrom(std::shared_ptr<FrustumBase> pOther, Vec3f& viewNo
   float vpHeight_2 = vpHeight * 0.5f;
   float vpWidth_2 = vpWidth * 0.5f;
 
-  Vec3f bottom_right_corner_of_viewport =
+  vec3 bottom_right_corner_of_viewport =
       viewPos + params._v3basis._x * hmin + params._v3basis._y * vmin;
 
-  Vec3f newCenter =
+  vec3 newCenter =
       bottom_right_corner_of_viewport + params._v3basis._x * (vpWidth_2)  // x * width / 2
       + params._v3basis._y * (vpHeight_2)                                 //y * height/2
       ;
@@ -494,7 +463,7 @@ mat4 FrustumBase::getProjectionMatrix() {
     int iOrthoWidth = _pViewportRef->getWidth() - 1;
     int iOrthoHeight = _pViewportRef->getHeight() - 1;
     //_mProj = mat4::getLHOrtho(0, (float)iOrthoWidth, 0, (float)iOrthoHeight, -1.0f, 1.0f);
-    Matrix4x4 mm;
+    mat4 mm;
     float left = 0;
     float right = (float)iOrthoWidth;
     float top = 0;

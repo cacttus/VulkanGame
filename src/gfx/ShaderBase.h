@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../base/BaseHeader.h"
 #include "../model/ModelHeader.h"
-#include "../math/Matrix4x4.h"
+#include "../math/Mat4x.h"
 #include "../math/Vec4x.h"
 
 namespace BR2 {

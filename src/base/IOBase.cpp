@@ -50,9 +50,9 @@ void IOBase<char>::readUint32(uint32_t& val, size_t offset) {
   read((char*)&val, readSiz, readSiz, offset);
 }
 template <>
-void IOBase<char>::readVec3i(ivec3& val) {
+void IOBase<char>::readivec3(ivec3& val) {
   int32_t readSiz;
-  readSiz = sizeof(Vec3i);
+  readSiz = sizeof(ivec3);
   AssertGoodRead(readSiz);
 
   read((char*)&val, readSiz, readSiz, memsize_max);
@@ -60,9 +60,9 @@ void IOBase<char>::readVec3i(ivec3& val) {
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 template <>
-void IOBase<char>::writeVec3i(ivec3& val) {
+void IOBase<char>::writeivec3(ivec3& val) {
   int32_t readSiz;
-  readSiz = sizeof(Vec3i);
+  readSiz = sizeof(ivec3);
   AssertGoodWrite(readSiz);
 
   write((char*)&val, readSiz, memsize_max);

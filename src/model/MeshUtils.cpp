@@ -233,7 +233,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
     size_t fn_index;  //face normal index
     // Done calculating vertices, calculate the indices
     int index = 0;
-    Vec3f va, vb, vc, d1, d2;
+    vec3 va, vb, vc, d1, d2;
     //Indices = new unsigned short[NumIndices];
     for (int i = 0; i < slices; i++) {
       for (int j = 0; j < slices; j++) {
@@ -297,7 +297,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
 
   return ma;
 }
-std::shared_ptr<MeshSpec> MeshUtils::makeBox(const Box3f* pCube, const vec4* color, const Matrix4x4* applyMat, const vec3* offset) {
+std::shared_ptr<MeshSpec> MeshUtils::makeBox(const Box3f* pCube, const vec4* color, const mat4* applyMat, const vec3* offset) {
   vec3 vi = pCube->_min;
   vec3 va = pCube->_max;
 
@@ -330,7 +330,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBox(float length, const vec4* color, co
 
   return makeBox(f, color, applyMat, offset);
 }
-std::shared_ptr<MeshSpec> MeshUtils::makeBox(vec3 (&extents)[8], const Color4f* color, const Matrix4x4* applyMat, const vec3* offset) {
+std::shared_ptr<MeshSpec> MeshUtils::makeBox(vec3 (&extents)[8], const Color4f* color, const mat4* applyMat, const vec3* offset) {
   std::shared_ptr<MeshSpec> ms = std::make_shared<MeshSpec>(StringUtil::generate(), MeshMakerVert::getVertexFormat());
   ms->allocMesh(6 * 4, 2 * 6 * 3);
   // - Instantiate everything
@@ -345,11 +345,11 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBox(vec3 (&extents)[8], const Color4f* 
 
     //Mat
     if (applyMat) {
-      Matrix4x4 m = *applyMat;
-      Vector4 v4;
+      mat4 m = *applyMat;
+      vec4 v4;
       for (int i = 0; i < 8; ++i) {
-        v4 = Vector4(extents[i], 1);
-        extents[i] = (m * v4);
+        v4 = vec4(extents[i], 1);
+        extents[i] = (m * v4).xyz();
       }
     }
 
@@ -479,8 +479,8 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
   std::shared_ptr<MeshSpec> ma = std::make_shared<MeshSpec>(StringUtil::generate(), MeshMakerVert::getVertexFormat());
 
   //Store Minimax for contact box
-  vec3 vmin = Vec3f::VEC3X_MAX();
-  vec3 vmax = Vec3f::VEC3X_MIN();
+  vec3 vmin = vec3::VEC3X_MAX();
+  vec3 vmax = vec3::VEC3X_MIN();
   int frag = 0;
   int cur_ind = 0;
   float theta;
@@ -513,8 +513,8 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
     ma->v3f(frag).z = -radius * sinf(phi) * sinf(theta);  //OpenGL...
     ma->v3f(frag).y = radius * cosf(phi);
 
-    vmin = Vec3f::minv(ma->v3f(frag), vmin);
-    vmax = Vec3f::maxv(ma->v3f(frag), vmax);
+    vmin = vec3::minv(ma->v3f(frag), vmin);
+    vmax = vec3::maxv(ma->v3f(frag), vmax);
 
     ma->c4f(frag) = myc;
     if (blnDoNormals == true) {
@@ -590,8 +590,8 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
           ma->v3f(frag).z = -radius * sinf(phi) * sinf(theta);  //OpenGL...
           ma->v3f(frag).y = radius * cosf(phi);
 
-          vmin = Vec3f::minv(ma->v3f(frag), vmin);
-          vmax = Vec3f::maxv(ma->v3f(frag), vmax);
+          vmin = vec3::minv(ma->v3f(frag), vmin);
+          vmax = vec3::maxv(ma->v3f(frag), vmax);
 
           if (blnDoNormals == true) {
             ma->n3f(frag) = ma->v3f(frag);
@@ -612,8 +612,8 @@ std::shared_ptr<MeshSpec> MeshUtils::makeSphere(float radius, int32_t slices, in
     ma->v3f(bottomVert).y = -radius;
     ma->v3f(bottomVert).z = 0.0;
 
-    vmin = Vec3f::minv(ma->v3f(frag), vmin);
-    vmax = Vec3f::maxv(ma->v3f(frag), vmax);
+    vmin = vec3::minv(ma->v3f(frag), vmin);
+    vmax = vec3::maxv(ma->v3f(frag), vmax);
 
     if (blnDoNormals == true) {
       ma->n3f(bottomVert) = ma->v3f(bottomVert);
@@ -798,26 +798,26 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBillboardXY(float xscale, float yscale,
   ma->beginEdit();
   {
     int ip = 0;
-    ma->v3f(0) = Vector3(+xscale, -yscale, 0);
-    ma->v3f(1) = Vector3(-xscale, -yscale, 0);
-    ma->v3f(2) = Vector3(-xscale, +yscale, 0);
-    ma->v3f(3) = Vector3(+xscale, +yscale, 0);
+    ma->v3f(0) = vec3(+xscale, -yscale, 0);
+    ma->v3f(1) = vec3(-xscale, -yscale, 0);
+    ma->v3f(2) = vec3(-xscale, +yscale, 0);
+    ma->v3f(3) = vec3(+xscale, +yscale, 0);
 
     //Reverse Side
-    ma->v3f(4) = Vector3(-xscale, -yscale, 0);
-    ma->v3f(5) = Vector3(+xscale, -yscale, 0);
-    ma->v3f(6) = Vector3(+xscale, +yscale, 0);
-    ma->v3f(7) = Vector3(-xscale, +yscale, 0);
+    ma->v3f(4) = vec3(-xscale, -yscale, 0);
+    ma->v3f(5) = vec3(+xscale, -yscale, 0);
+    ma->v3f(6) = vec3(+xscale, +yscale, 0);
+    ma->v3f(7) = vec3(-xscale, +yscale, 0);
 
-    ma->x2f(0) = Vec2f(0, 0);
-    ma->x2f(1) = Vec2f(1, 0);
-    ma->x2f(2) = Vec2f(1, 1);
-    ma->x2f(3) = Vec2f(0, 1);
+    ma->x2f(0) = vec2(0, 0);
+    ma->x2f(1) = vec2(1, 0);
+    ma->x2f(2) = vec2(1, 1);
+    ma->x2f(3) = vec2(0, 1);
 
-    ma->x2f(4) = Vec2f(1, 0);
-    ma->x2f(5) = Vec2f(0, 0);
-    ma->x2f(6) = Vec2f(0, 1);
-    ma->x2f(7) = Vec2f(1, 1);
+    ma->x2f(4) = vec2(1, 0);
+    ma->x2f(5) = vec2(0, 0);
+    ma->x2f(6) = vec2(0, 1);
+    ma->x2f(7) = vec2(1, 1);
 
     ma->c4f(0) = Color4f(1, 1, 1, 1);
     ma->c4f(1) = Color4f(1, 1, 1, 1);
@@ -829,15 +829,15 @@ std::shared_ptr<MeshSpec> MeshUtils::makeBillboardXY(float xscale, float yscale,
     ma->c4f(6) = Color4f(1, 1, 1, 1);
     ma->c4f(7) = Color4f(1, 1, 1, 1);
 
-    ma->n3f(0) = Vec3f(0, 0, -1);
-    ma->n3f(1) = Vec3f(0, 0, -1);
-    ma->n3f(2) = Vec3f(0, 0, -1);
-    ma->n3f(3) = Vec3f(0, 0, -1);
+    ma->n3f(0) = vec3(0, 0, -1);
+    ma->n3f(1) = vec3(0, 0, -1);
+    ma->n3f(2) = vec3(0, 0, -1);
+    ma->n3f(3) = vec3(0, 0, -1);
 
-    ma->n3f(4) = Vec3f(0, 0, 1);
-    ma->n3f(5) = Vec3f(0, 0, 1);
-    ma->n3f(6) = Vec3f(0, 0, 1);
-    ma->n3f(7) = Vec3f(0, 0, 1);
+    ma->n3f(4) = vec3(0, 0, 1);
+    ma->n3f(5) = vec3(0, 0, 1);
+    ma->n3f(6) = vec3(0, 0, 1);
+    ma->n3f(7) = vec3(0, 0, 1);
 
     // Translate if necessary
     if (translateYToBottomOfBillboard) {
@@ -878,13 +878,13 @@ std::shared_ptr<MeshSpec> MeshUtils::makeCrossboardXY(float xscale, float yscale
   std::shared_ptr<MeshSpec> a = makeBillboardXY(xscale, yscale, translateYToBottomOfBillboard);
   std::shared_ptr<MeshSpec> b = makeBillboardXY(xscale, yscale, translateYToBottomOfBillboard);
 
-  mat4 m = mat4::getRotationDeg(90, 0, 1, 0);
+  mat4 m = mat4::getRotation(MathUtils::degToRad(90), 0, 1, 0);
 
   b->beginEdit();
   {
     for (int i = 0; i < 8; ++i) {
-      b->v3f(i) = m * vec4(b->v3f(i), 1);
-      b->n3f(i) = m * vec4(b->n3f(i), 1);
+      b->v3f(i) = (m * vec4(b->v3f(i), 1)).xyz();
+      b->n3f(i) = (m * vec4(b->n3f(i), 1)).xyz();
       b->n3f(i).normalize();
     }
   }

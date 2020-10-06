@@ -236,6 +236,10 @@ SDL_Window* GraphicsApi::makeSDLWindow(const GraphicsWindowCreateParameters& par
       SDL_SetWindowFullscreen(ret, SDL_WINDOW_FULLSCREEN);
     }
     SDLUtils::checkSDLErr();
+    if (show) {
+      SDL_ShowWindow(ret);
+    }
+    SDLUtils::checkSDLErr();
   }
   else {
     //Linux: Couldn't find matching GLX visual.
@@ -280,7 +284,7 @@ void GraphicsApi::setWindowProps(SDL_Window* win, const GraphicsWindowCreatePara
     //   long value = XInternAtom(d, "_NET_WM_WINDOW_TYPE_DESKTOP", False);
     //   XChangeProperty(d, w, window_type, XA_ATOM, 32, PropModeReplace, (unsigned char*)&value, 1);
     // }
-    // else 
+    // else
     //Hide min/max for utility windows.
     // if (params._type == GraphicsWindowCreateParameters.Wintype_Utility) {
     //   Atom window_type = XInternAtom(d, "_NET_WM_WINDOW_TYPE", False);

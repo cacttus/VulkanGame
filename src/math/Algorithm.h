@@ -13,7 +13,6 @@
 #include "../math/Vec3x.h"
 #include "../math/Box3x.h"
 #include "../math/BitHacks.h"
-#include "../math/Vec3Basis.h"
 namespace BR2 {
 class Alg {
 public:
@@ -113,9 +112,9 @@ static FORCE_INLINE float pointOnRay_t( const vec3& a, const vec3& p ) {
     return t;
 }
 //Static version of above function
-//static FORCE_INLINE float pointOnRay_tSTA( Vector3& a, Vector3& p ) {
-//    static Vector3 AP = p - a;    
-//    static Vector3 AB = a*-1.0f;    
+//static FORCE_INLINE float pointOnRay_tSTA( vec3& a, vec3& p ) {
+//    static vec3 AP = p - a;    
+//    static vec3 AB = a*-1.0f;    
 //    static float ab2 = AB.x*AB.x + AB.y*AB.y + AB.z*AB.z;   
 //    static float ap_ab = AP.x*AB.x + AP.y*AB.y + AP.z*AB.z;   
 //    static float t = ap_ab / ab2;   
@@ -127,9 +126,9 @@ static FORCE_INLINE float pointOnRay_t( const vec3& a, const vec3& p ) {
 *
 *    TESTED _ WORKS 1.19.14
 */
-static Vec3f pointOnLine_SLOW( const vec3& a, const vec3& b, const vec3& p ) {
+static vec3 pointOnLine_SLOW( const vec3& a, const vec3& b, const vec3& p ) {
     
-    Vector3 n = b-a;
+    vec3 n = b-a;
     n.normalize();
     float pdist = n.dot(p) - n.dot(a);
     return (a+ n*pdist);
@@ -143,13 +142,13 @@ static Vec3f pointOnLine_SLOW( const vec3& a, const vec3& b, const vec3& p ) {
 *    ALSO NOTE: 
 *
 */
-FORCE_INLINE static Vec3f ClosestPointOnAACubeFromPoint( Vec3f& p, Box3f& cc )
+FORCE_INLINE static vec3 ClosestPointOnAACubeFromPoint( vec3& p, Box3f& cc )
 {
-    Vec3f outPt;
+    vec3 outPt;
     cc.closestPoint(p,outPt);
     return outPt;
     //This algorithm is incorrect
-    //Vec3f pa = cc.min - p, 
+    //vec3 pa = cc.min - p, 
     //      pb = cc.max - p, 
     //      pc;
     //
@@ -301,34 +300,34 @@ static FORCE_INLINE double ssdevf(std::vector<double>& vin)
 *    @brief Given a normal vector in 3 dimensions this returns the tangent and binormal basis vectors
 *    The vectors point in the relative positive direction in the given LHS or RHS coordinate system.
 */
-static FORCE_INLINE void getNormalBasisZ(const Vec3f& __in_ normal, Vec3f& __out_ left, Vec3f& __out_ up)
+static FORCE_INLINE void getNormalBasisZ(const vec3& __in_ normal, vec3& __out_ left, vec3& __out_ up)
 {
-    Vec3f worldUp = Vec3f(0,1,0);
+    vec3 worldUp = vec3(0,1,0);
 #ifdef COORDINATE_SYSTEM_RHS
     
     if(normal.dot(worldUp)==-1)
         //vectors are oppposing
-        worldUp=Vec3f(0,0,1);
+        worldUp=vec3(0,0,1);
     else if(normal.dot(worldUp)==1)
         //vectors are the same
-        worldUp=Vec3f(0,0,-1);
+        worldUp=vec3(0,0,-1);
 
     left = worldUp.cross( normal ).normalize();
     up = normal.cross(left).normalize();
 #else
     if (normal.dot(worldUp) == -1)
         //vectors are oppposing
-        worldUp = Vec3f(0, 0, 1);
+        worldUp = vec3(0, 0, 1);
     else if (normal.dot(worldUp) == 1)
         //vectors are the same
-        worldUp = Vec3f(0, 0, -1);
+        worldUp = vec3(0, 0, -1);
 
     left = worldUp.cross(normal).normalize();
     up = normal.cross(left).normalize();
 #endif
 
 }
-static FORCE_INLINE Vec3Basis getNormalBasisZ(const Vec3f& __in_ normal_z)
+static FORCE_INLINE Vec3Basis getNormalBasisZ(const vec3& __in_ normal_z)
 {
     Vec3Basis ret;
     ret._z = normal_z;
@@ -349,9 +348,9 @@ static FORCE_INLINE Vec3Basis getNormalBasisZ(const Vec3f& __in_ normal_z)
 *    @param out localMaximum - The returned local maximum value.
 */
 static FORCE_INLINE void getSolidVolumeProjectionBounds(
-    const Vec3f& __in_ viewNormal,
-    const Vec3f& __in_ viewPos,
-    const Vec3f* __in_ points,
+    const vec3& __in_ viewNormal,
+    const vec3& __in_ viewPos,
+    const vec3* __in_ points,
     const int32_t __in_ nPoints,
     float* __out_ hmin,
     float* __out_ hmax,
@@ -361,7 +360,7 @@ static FORCE_INLINE void getSolidVolumeProjectionBounds(
     )
 {
     float dist, d;
-    Vec3f pt, projectedPoint, localH, localV;
+    vec3 pt, projectedPoint, localH, localV;
     
     d = viewNormal.dot(viewPos)*-1;
 
@@ -384,7 +383,7 @@ static FORCE_INLINE void getSolidVolumeProjectionBounds(
     float fMinH = FLT_MAX;
     int32_t iMinH = INT_MAX;
 
-    Vec3f tmp;
+    vec3 tmp;
 
     //Gather the min/max h/v distances 
     for(int ip=0; ip<nPoints; ++ip)
@@ -428,21 +427,21 @@ static FORCE_INLINE void getSolidVolumeProjectionBounds(
 }
 //See above comment
 static FORCE_INLINE void getSolidVolumeProjectionBounds(
-    const Vec3f& __in_ viewNormal,
-    const Vec3f& __in_ viewPos,
-    const Vec3f* __in_ points,
+    const vec3& __in_ viewNormal,
+    const vec3& __in_ viewPos,
+    const vec3* __in_ points,
     const int32_t __in_ nPoints,
-    Vec3f* __out_ localMinimum,
-    Vec3f* __out_ localMaximum,
+    vec3* __out_ localMinimum,
+    vec3* __out_ localMaximum,
     Vec3Basis* __out_ v3basis_in=NULL
     )
 {
     float minH, minV, maxH, maxV;
-    Vec3f VminH, VminV, VmaxH, VmaxV;
+    vec3 VminH, VminV, VmaxH, VmaxV;
     Vec3Basis v3basis;
-    //const Vec3f& __in_ viewNormal,
-    //const Vec3f& __in_ viewPos,
-    //const Vec3f* __in_ points,
+    //const vec3& __in_ viewNormal,
+    //const vec3& __in_ viewPos,
+    //const vec3* __in_ points,
     //const int32_t __in_ nPoints,
     //float* __out_ hmin,
     //float* __out_ hmax,
@@ -523,9 +522,9 @@ static FORCE_INLINE void getSolidVolumeProjectionBounds(
 
 //*/
 //*/
-//FORCE_INLINE static Vec3f bezier3v( std::vector<Vec3f>& controlPoints, float t )
+//FORCE_INLINE static vec3 bezier3v( std::vector<vec3>& controlPoints, float t )
 //{
-//    Vec3f v(0.0f,0.0f,0.0f);
+//    vec3 v(0.0f,0.0f,0.0f);
 //
 //    if(controlPoints.size()<2)
 //        return v;

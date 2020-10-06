@@ -43,8 +43,8 @@ class LairSpec : public VirtualMemory {
     string_t _name;
     Hash32 _iNameHashed;
     bool _bDefault = false;
-    //MpVec3i _mxPos; //This doesn't matter for default lair
-    MpVec3i _mxGlobBounds; //min /max glob bounds size.
+    //Mpivec3 _mxPos; //This doesn't matter for default lair
+    Mpivec3 _mxGlobBounds; //min /max glob bounds size.
     int32_t _nGlobs = 0;
     std::vector<LairTile*> _vecLairTiles;
     std::vector<LairWalker*> _vecLairWalkers;
@@ -64,7 +64,7 @@ public:
 
     Hash32 getLairId() { return _iNameHashed; }
     int32_t getNumGlobs() { return _nGlobs; }
-    MpVec3i& getGlobBounds() { return _mxGlobBounds; }
+    Mpivec3& getGlobBounds() { return _mxGlobBounds; }
     //  LairFile* getLairFile() { return _pLairFile; }
     // std::vector<LairSpawnPoint*>* getSpawnPoints() { return &_vecSpawnPoints; }
     uint32_t getPriority() { return _iPriority; }
@@ -82,7 +82,7 @@ class Lair : public VirtualMemory {
     friend class LairMapFile;
     LairSpec* _pLairSpec = nullptr;
     // Walked area.
-    MpVec3i        _mxGlobBounds; //min /max glob bounds size.
+    Mpivec3        _mxGlobBounds; //min /max glob bounds size.
     int32_t        _nGlobs;
 
 public:
@@ -90,7 +90,7 @@ public:
     virtual ~Lair();
 
     int32_t getNumGlobs() { return _nGlobs; }
-    MpVec3i& getGlobBounds() { return _mxGlobBounds; }
+    Mpivec3& getGlobBounds() { return _mxGlobBounds; }
     //LairFile* getLairFile() { return _pLairFile; }
     //std::vector<LairSpawnPoint*>* getSpawnPoints() { return &_vecSpawnPoints; }
 };

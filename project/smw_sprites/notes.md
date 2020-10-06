@@ -65,12 +65,25 @@ How to specify camera?
             * Initializes new window
             
       * Tasks
-        * Phase1 - Adding Phase
+        * Phase1 - Vulkan Phase
+          * Get vulkan rendering to work. with Sandbox
+          * This is the main point of the project.. vulkan..
+          * Create 2 windows with vulkan.
+          * Shared context windows (childrne)
+          * Parent context windows.
+
+        * Phase2 Add Phase
           * New system - don't remove stuff yet.
+          * Make Genren
+            * Duplicate RenderPipe
+            * Add flags to Renderpipe creation that allows for the creation of only 
+             forward buffer for drawing the UI
+
+
           * Create GManager on Gu. GWindow, GElement, GTitlebar
           * GManager holds the events that UI elements communicate with.
           
-        * Phase2 - Breaking Phase
+        * Phase 3- Replace (break) Phase
           * Move Ui out of RenderPipe
           * Move renderpipe to GSurface.
           * Change rendering algorithm to GPP (infinite updates -> render)
@@ -80,6 +93,9 @@ How to specify camera?
           * The OPENGL Context owns GManager.
           * GDesktop -- Global UI manager for the editor
             * GWindow
+            ** NOTE: SDL_WindowFlags
+                    SDL_WINDOW_POPUP_MENU    = 0x00080000,      /**< window should be treated as a popup menu */
+                    Various menus and such can be created in SDL
                 GStackPanel
                   GTitlebar
                     ::height

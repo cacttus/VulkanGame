@@ -18,24 +18,24 @@ class Sphere3f : public VirtualMemory {
 public:
   FORCE_INLINE Sphere3f();
   FORCE_INLINE virtual ~Sphere3f() override;
-  FORCE_INLINE Vec3f project(const Vec3f& x, Vec3f* outNormal = NULL); // project a point onto the sphere.  May return the normal to the point.
+  FORCE_INLINE vec3 project(const vec3& x, vec3* outNormal = NULL); // project a point onto the sphere.  May return the normal to the point.
 
-  Vec3f o;    //origin
+  vec3 o;    //origin
   float r;    //radius
 };
 /**
 *    @fn
 *    @brief Project point onto sphere.  possibly a faster way to do this would be to get the squared length of both vectors and multiply the one by the fraction of the other
 */
-FORCE_INLINE Vec3f Sphere3f::project(const Vec3f& x, Vec3f* outNormal) {
-  Vec3f diff = x - o;
+FORCE_INLINE vec3 Sphere3f::project(const vec3& x, vec3* outNormal) {
+  vec3 diff = x - o;
   float len = diff.length();
-  Vec3f n;
+  vec3 n;
 
   if (len == 0) {
     diff = o;
     if (outNormal)
-      *outNormal = Vec3f(0, 0, 0);
+      *outNormal = vec3(0, 0, 0);
   }
   else {
     // origin + normalized * radius

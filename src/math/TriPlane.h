@@ -17,7 +17,7 @@ namespace BR2 {
 */
 class TriPlane : public PlaneEx3 {
 public:
-  Vector3 p1, p2, p3;
+  vec3 p1, p2, p3;
 
   FORCE_INLINE TriPlane();
   FORCE_INLINE TriPlane(const vec3&, const  vec3&, const vec3&);
@@ -57,7 +57,7 @@ FORCE_INLINE PlaneHit TriPlane::hitTest(const vec3& p1, const vec3& p2) const {
 
   // - Test to see if point is within triangle boundaries.
   if (t >= 0.0 && t <= 1.0) {
-    Vector3 v = p1 + ((p2 - p1) * t);
+    vec3 v = p1 + ((p2 - p1) * t);
     ret._fHitTime = t;
     ret._bContained = containsPoint(v);
   }

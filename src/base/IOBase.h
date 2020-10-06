@@ -11,7 +11,7 @@
 #include "../base/Allocator.h"
 #include "../base/RetCode.h"
 #include "../math/Vec3x.h"
-#include "../math/Matrix4x4.h"
+#include "../math/Mat4x.h"
 namespace BR2 {
 /**
 *   @class IOBase
@@ -35,7 +35,7 @@ public:
 
   //**Char only template members.
   void readVec3(vec3& val);
-  void readVec3i(ivec3& val);
+  void readivec3(ivec3& val);
   void readByte(t_byte& val);
   void readInt32(int32_t& val, size_t offset = memsize_max);
   void readInt16(int16_t& val);
@@ -43,7 +43,7 @@ public:
   void readUint32(uint32_t& val, size_t offset = memsize_max);
 
   void writeVec3(vec3& val);
-  void writeVec3i(ivec3& val);
+  void writeivec3(ivec3& val);
   void writeByte(t_byte& val);
   void writeInt16(int16_t& val);
   void writeInt32(int32_t& val, size_t offset = memsize_max);

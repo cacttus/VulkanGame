@@ -53,13 +53,13 @@ public:
   virtual ~MeshUtils() override {}
   static std::shared_ptr<MeshSpec> makeCone(float radius, float h, int32_t slices);                                                                               //YOU MUST ADD THE SPEC TO THE MESH MANAGER!!!!! @cMeshFactory
   static std::shared_ptr<MeshSpec> makeSphere(float radius, int32_t slices, int32_t stacks, vec4* color = NULL, vec3* vOffset = NULL, bool blnDoNormals = true);  //YOU MUST ADD THE SPEC TO THE MESH MANAGER!!!!! @cMeshFactory
-  static std::shared_ptr<MeshSpec> makeArcSegment(float radius, float radius2, float refHeight, Vec3f refPos, int32_t slices);
+  static std::shared_ptr<MeshSpec> makeArcSegment(float radius, float radius2, float refHeight, vec3 refPos, int32_t slices);
   static std::shared_ptr<MeshSpec> makeBillboardXY(float xscale, float yscale, bool translateYToBottomOfBillboard = false);
   static std::shared_ptr<MeshSpec> makeCrossboardXY(float xscale, float yscale, bool translateYToBottomOfBillboard = false);
   static std::shared_ptr<MeshSpec> makeCircle(float radius, int32_t slices);
-  static std::shared_ptr<MeshSpec> makeBox(const Box3f* pCube, const vec4* color, const Matrix4x4* applyMat, const vec3* offset);
+  static std::shared_ptr<MeshSpec> makeBox(const Box3f* pCube, const vec4* color, const mat4* applyMat, const vec3* offset);
   static std::shared_ptr<MeshSpec> makeBox(float length, const vec4* color, const mat4* applyMat, const vec3* offset);
-  static std::shared_ptr<MeshSpec> makeBox(vec3 (&extents)[8], const Color4f* color, const Matrix4x4* applyMat, const vec3* offset);
+  static std::shared_ptr<MeshSpec> makeBox(vec3 (&extents)[8], const Color4f* color, const mat4* applyMat, const vec3* offset);
   static bool parseGenParams(const string_t& genString, MeshGenParams& __out_ params);
   static std::shared_ptr<MeshSpec> generateFromParameters(MeshGenParams* pgp);
   static std::shared_ptr<MeshNode> createScreenQuadMesh(int w, int h);
