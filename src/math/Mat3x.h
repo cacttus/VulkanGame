@@ -73,12 +73,8 @@ FORCE_INLINE Mat3x<Tx>::Mat3x(Tx (&f)[9]) {
   _m33 = f[8];  
 }
 template <typename Tx>
-FORCE_INLINE NOT_VIRTUAL Mat3x<Tx>::~Mat3x<Tx>() {
-}
-
-// - The expanded cofactor adjoint.
-template <typename Tx>
 FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::adj() {
+  // - The expanded cofactor adjoint.
   Mat3x<Tx> m;
   m._m11 = 0.0f * ((_m22 * _m33) - (_m23 * _m32));
   m._m12 = 1.0f * ((_m21 * _m33) - (_m23 * _m31));
