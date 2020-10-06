@@ -450,7 +450,8 @@ mat4 FrustumBase::getProjectionMatrix() {
     float vw = vpWidth_2;
     float vh = vpWidth_2 * arat_1;
 
-    return mat4::getProjection(
+    //TODO: we can replace this with the FOV version of project and remove tan_fov_2
+    return mat4::projection(
         z_near, z_far,
         vw, -vw,
         vh, -vh);

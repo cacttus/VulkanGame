@@ -246,9 +246,9 @@ void SceneNode::compileWorldMatrix() {
   mat4 mScl;
   mat4 mPos;
 
-  mPos = mat4::getTranslation(_vPos);
-  mRot = mat4::getRotation(_fRotation, _vRotationNormal);
-  mScl = mat4::getScale(_vScale);
+  mPos = mat4::translation(_vPos);
+  mRot = mat4::rotation(_fRotation, _vRotationNormal);
+  mScl = mat4::scaling(_vScale);
   _mWorld = mScl * mRot * mPos;
 }
 bool SceneNode::isPathNode() {

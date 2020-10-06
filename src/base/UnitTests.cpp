@@ -76,22 +76,22 @@ void UnitTests::mathTest() {
   PRINT(m1 * v3);
   PRINT(m2 * v3);
   std::cout << "Rotate a z=1 vector about the y axis 90 degrees." << std::endl;
-  PRINT(mat4::getRotation(M_PI / 2 * 1, vec3(0, 1, 0)));
-  PRINT(mat4::getRotation(M_PI / 2 * 1, vec3(0, 1, 0)) * v3);
-  PRINT(mat4::getRotation(M_PI / 2 * 2, vec3(0, 1, 0)) * v3);
-  PRINT(mat4::getRotation(M_PI / 2 * 3, vec3(0, 1, 0)) * v3);
+  PRINT(mat4::rotation(M_PI / 2 * 1, vec3(0, 1, 0)));
+  PRINT(mat4::rotation(M_PI / 2 * 1, vec3(0, 1, 0)) * v3);
+  PRINT(mat4::rotation(M_PI / 2 * 2, vec3(0, 1, 0)) * v3);
+  PRINT(mat4::rotation(M_PI / 2 * 3, vec3(0, 1, 0)) * v3);
   PRINT(v3);
   PRINT(
-    mat4::getRotation(M_PI, vec3(1, 0, 0)) *
-    mat4::getRotation(M_PI, vec3(0, 0, 1)) *
-    mat4::getRotation(M_PI, vec3(0, 1, 0)) *
+    mat4::rotation(M_PI, vec3(1, 0, 0)) *
+    mat4::rotation(M_PI, vec3(0, 0, 1)) *
+    mat4::rotation(M_PI, vec3(0, 1, 0)) *
      v3);
 
   std::cout << "Rotate a z=1 vector about the y axis 90 degrees (double)." << std::endl;
-  PRINT(Mat4x<double>::getRotation(M_PI / 2 * 1, Vec3x<double>(0, 1, 0)));
-  PRINT(Mat4x<double>::getRotation(M_PI / 2 * 1, Vec3x<double>(0, 1, 0)) * v3);
-  PRINT(Mat4x<double>::getRotation(M_PI / 2 * 2, Vec3x<double>(0, 1, 0)) * v3);
-  PRINT(Mat4x<double>::getRotation(M_PI / 2 * 3, Vec3x<double>(0, 1, 0)) * v3);
+  PRINT(Mat4x<double>::rotation(M_PI / 2 * 1, Vec3x<double>(0, 1, 0)));
+  PRINT(Mat4x<double>::rotation(M_PI / 2 * 1, Vec3x<double>(0, 1, 0)) * v3);
+  PRINT(Mat4x<double>::rotation(M_PI / 2 * 2, Vec3x<double>(0, 1, 0)) * v3);
+  PRINT(Mat4x<double>::rotation(M_PI / 2 * 3, Vec3x<double>(0, 1, 0)) * v3);
 }
 
 }  // namespace BR2

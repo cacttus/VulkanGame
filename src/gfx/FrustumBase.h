@@ -67,12 +67,12 @@ public:
 protected:
   QuadPlane Planes[NumPlanes];
   vec3 Points[NumPoints];  //nbl fbl fbr nbr ntl ftl ftr ntr
-  float tan_fov_2;
+  float tan_fov_2 = 1;
   float z_near = 1.0f;
   float z_far = 1000.0f;
-  ProjectionMode::e _eProjectionMode;
-  std::shared_ptr<RenderViewport> _pViewportRef;  // - Reference to camera viewport.
-  Box3f* _minimax;
+  ProjectionMode::e _eProjectionMode = ProjectionMode::e::Perspective;
+  std::shared_ptr<RenderViewport> _pViewportRef = nullptr;  // - Reference to camera viewport.
+  Box3f* _minimax = nullptr;
 
   void constructPointsAndPlanes(vec3& farCenter, vec3& nearCenter, vec3& upVec, vec3& rightVec,
                                 float w_near_2, float w_far_2,
