@@ -91,7 +91,7 @@ public:
 
 #pragma region Static Matrix Creators
   FORCE_INLINE static Mat4x<Tx> identity();
-  FORCE_INLINE static Mat4x<Tx> translation(Vec3x<Tx>& vTrans);
+  FORCE_INLINE static Mat4x<Tx> translation(const Vec3x<Tx>& vTrans);
   FORCE_INLINE static Mat4x<Tx> translation(Tx x, Tx y, Tx z);
   FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, const Vec3x<Tx>& vAxis);
   FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, Tx x, Tx y, Tx z);
@@ -261,7 +261,7 @@ FORCE_INLINE Quaternion<Tx> Mat4x<Tx>::getQuaternion() {
   return ret;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(Vec3x<Tx>& vTrans) {
+FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(const Vec3x<Tx>& vTrans) {
   return translation(vTrans.x, vTrans.y, vTrans.z);
 }
 template <typename Tx>
