@@ -394,15 +394,12 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx v
 template <typename Tx>
 FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b) {
   //Alternative projection matrix speicfying the viewport bounds.
+  //TODO: [-1,1] OpenGL, [0,1] Vulkan
   Mat4x<Tx> m;
 
   m._m11 = (Tx)(2 * n) / (r - l);
-  m._m11 = (Tx)(2 * n) / (r - l);
-  m._m21 = (Tx)0;
   m._m21 = (Tx)0;
   m._m31 = (Tx)0;
-  m._m31 = (Tx)0;
-  m._m41 = (Tx)0;
   m._m41 = (Tx)0;
 
   m._m12 = (Tx)0;
