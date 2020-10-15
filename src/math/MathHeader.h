@@ -154,7 +154,7 @@ template <typename Tx>
 class Mat4x;
 template <typename Tx>
 class Mat3x;
-template< typename Tx>
+template <typename Tx>
 class Quaternion;
 
 typedef Vec2x<float> vec2;
@@ -174,6 +174,24 @@ typedef Vec4x<double> dvec4;
 typedef Vec4x<int32_t> ivec4;
 typedef Vec4x<uint32_t> uvec4;
 typedef Vec4x<unsigned char> Vec4ub;
+
+template <typename Tx>
+class Extent2d {
+public:
+  Tx x;
+  Tx y;
+  Tx width;
+  Tx height;
+  Extent2d() {}
+  Extent2d(Tx dx, Tx dy, Tx dw, Tx dh) {
+    x = dx;
+    y = dy;
+    width = dw;
+    height = dh;
+  }
+};
+typedef Extent2d<uint32_t> uext2;
+typedef Extent2d<int32_t> iext2;
 
 //Noise & Minimax
 class Noise;
@@ -196,6 +214,7 @@ typedef Box3x<int32_t> Box3i;
 typedef Box3x<float> Box3f;
 typedef Box2x<float> Box2f;
 typedef Box2x<int32_t> Box2i;
+typedef Box2x<uint32_t> Box2ui;
 typedef Quad3x<float> Quad3f;  //Basically this would be the same
 class Line3f;
 class Plane3f;
@@ -227,7 +246,6 @@ typedef Vec3ub Pixel3ub;
 typedef vec4 Color4f;
 typedef Vec4ub Color4ub;
 typedef Vec4ub Pixel4ub;
-
 
 //String conversion
 std::string operator+(const std::string& str, const vec2& rhs);
