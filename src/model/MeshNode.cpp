@@ -79,7 +79,7 @@ std::shared_ptr<MeshSpec> MeshNode::getMeshSpec() { return std::dynamic_pointer_
 void MeshNode::printDataToStdout() {
   GpuAnimatedMeshWeightData* wdat = new GpuAnimatedMeshWeightData[getMeshSpec()->getWeightOffsetsGpu()->getNumElements()];
   getMeshSpec()->getWeightOffsetsGpu()->copyDataServerClient(getMeshSpec()->getWeightOffsetsGpu()->getNumElements(), wdat);
-  std::cout << "WDAT" << std::endl;
+  std::cout << "Weight Data" << std::endl;
   for (size_t i = 0; i < getMeshSpec()->getWeightOffsetsGpu()->getNumElements(); ++i) {
     std::cout << " (" << wdat[i]._offset << ", " << wdat[i]._count << ") ";
   }
@@ -89,7 +89,7 @@ void MeshNode::printDataToStdout() {
 
   GpuAnimatedMeshWeight* weights = new GpuAnimatedMeshWeight[getMeshSpec()->getWeightsGpu()->getNumElements()];
   getMeshSpec()->getWeightsGpu()->copyDataServerClient(getMeshSpec()->getWeightsGpu()->getNumElements(), weights);
-  std::cout << "Weihts" << std::endl;
+  std::cout << "Weights" << std::endl;
   for (size_t i = 0; i < getMeshSpec()->getWeightsGpu()->getNumElements(); ++i) {
     std::cout << " (" << weights[i]._iArmJointOffset << ", " << weights[i]._weight << ") ";
   }
@@ -99,7 +99,7 @@ void MeshNode::printDataToStdout() {
 
   GpuAnimatedMeshSkinMatrix* arms = new GpuAnimatedMeshSkinMatrix[_pArmJoints->getNumElements()];
   _pArmJoints->copyDataServerClient(_pArmJoints->getNumElements(), arms);
-  std::cout << "ARM MATS" << std::endl;
+  std::cout << "Armature Matrices" << std::endl;
   for (size_t i = 0; i < _pArmJoints->getNumElements(); ++i) {
     std::cout << " (" << arms[i]._matrix.toString() << ") ";
   }

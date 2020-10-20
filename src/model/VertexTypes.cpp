@@ -3,6 +3,7 @@
 
 namespace BR2 {
 
+//TODO: unique_ptr these.
 std::shared_ptr<VertexFormat> v_v2c4x2::_pVertexFormat = nullptr;
 std::shared_ptr<VertexFormat> v_v3c4x2::_pVertexFormat = nullptr;
 std::shared_ptr<VertexFormat> v_v3n3x2::_pVertexFormat = nullptr;

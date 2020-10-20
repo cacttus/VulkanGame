@@ -52,8 +52,6 @@ protected:
   std::shared_ptr<ShaderStorageBuffer> _pArmJoints = nullptr; //Skin 12/9/2017
   std::vector<std::shared_ptr<BoneNode>> _vecBoneNodesOrdered;//Bone nodes ordered by, for each armature, Armature ID, then Bone ID 
   std::vector<std::shared_ptr<ArmatureNode>> _vecArmaturesOrdered;//Bone nodes ordered by, for each armature, Armature ID, then Bone ID 
- // std::shared_ptr<GpuComputeSync> _pSkinCompute = nullptr;
-  //std::shared_ptr<VaoDataGeneric> _pVaoData = nullptr;
 
   virtual void afterAddedToScene(std::shared_ptr<Scene> scene) override;
 
