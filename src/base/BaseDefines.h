@@ -77,13 +77,16 @@ OS_ERROR_NOT_IMPLEMENTED
 #define NOT_VIRTUAL
 #define FORCE_INLINE inline
 #define CONST_EXPR constexpr
-#ifdef BR2_OS_WINDOWS
-#define CACHE_ALIGN_16 __declspec(align(16))
-#elif defined(BR2_OS_LINUX)
-#define CACHE_ALIGN_16 __attribute__ ((aligned(16)))
-#else
-#define CACHE_ALIGN CACHE_ALIGN_16
 
+//Cache alignment needed for GPU memory (std430)
+//Note in MSVC the alignment comes before structure, after with GCC
+#ifdef BR2_OS_WINDOWS
+#define CACHE_ALIGN_16_WIN __declspec(align(16))
+#define CACHE_ALIGN_16_GCC
+#elif defined(BR2_OS_LINUX)
+#define CACHE_ALIGN_16_WIN 
+#define CACHE_ALIGN_16_GCC __attribute__((aligned(16)))
+#else
 OS_METHOD_NOT_IMPLEMENTED
 #endif
 #define STATIC static

@@ -16,9 +16,9 @@
 using namespace BR2;
 
 int main(int argc, char **argv) {
-#ifdef _DEBUG
-  UnitTests::run(true);
-#endif
+//#ifdef _DEBUG
+//  UnitTests::run(true);
+//#endif
 
   DebugHelper::debugHeapBegin(false);
   {

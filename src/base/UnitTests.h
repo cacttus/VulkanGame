@@ -12,20 +12,6 @@ private:
   static void mathTest();
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }  // namespace BR2
 
 #endif

@@ -19,8 +19,9 @@ namespace BR2 {
 *  @brief Row major 4x4 matrix. (64 bytes)
 *  @note This class must not have any virtual functions (vtable).
 */
+
 template <typename Tx>
-class Mat4x {
+class CACHE_ALIGN_16_WIN Mat4x {
   constexpr static std::size_t CompSize = 16;
 
 public:
@@ -106,8 +107,7 @@ public:
   FORCE_INLINE static Mat4x<Tx> projection(Tx fov, Tx viewport_w, Tx viewport_h, Tx near, Tx far);  // set up a projection matrix.
 #pragma endregion
 
-} CACHE_ALIGN_16;
-
+} CACHE_ALIGN_16_GCC;
 //////////////////////////////////////////////////////////////////////////
 
 template <typename Tx>
@@ -376,7 +376,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx v
     viewport_w = 1;
   }
   if (fov_radians > M_PI_2 - e) {
-    fov_radians = M_PI_2 - e;
+    fov_radians = (Tx)M_PI_2 - e;
   }
   if (fov_radians < 1 + e) {
     fov_radians = 1 + e;

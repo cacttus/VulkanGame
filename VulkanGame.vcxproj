@@ -320,7 +320,6 @@
     <ClCompile Include="src\base\IOBase.cpp" />
     <ClCompile Include="src\base\Logger.cpp" />
     <ClCompile Include="src\base\LuaScript.cpp" />
-    <ClCompile Include="src\base\Main.cpp" />
     <ClCompile Include="src\base\Net.cpp" />
     <ClCompile Include="src\base\ObjFile.cpp" />
     <ClCompile Include="src\base\OglErr.cpp" />
@@ -344,6 +343,7 @@
     <ClCompile Include="src\base\TouchInfo.cpp" />
     <ClCompile Include="src\base\TreeNode.cpp" />
     <ClCompile Include="src\base\TypeConv.cpp" />
+    <ClCompile Include="src\base\UnitTests.cpp" />
     <ClCompile Include="src\base\VulkanWindow.cpp" />
     <ClCompile Include="src\base\XmlFile.cpp" />
     <ClCompile Include="src\bottle\BlockNode.cpp" />
@@ -432,11 +432,9 @@
     <ClCompile Include="src\math\ConvexAlgorithms.cpp" />
     <ClCompile Include="src\math\CubicBezierSpline.cpp" />
     <ClCompile Include="src\math\MathUtils.cpp" />
-    <ClCompile Include="src\math\Mat3x.cpp" />
     <ClCompile Include="src\math\Minimax.cpp" />
     <ClCompile Include="src\math\Plane3.cpp" />
     <ClCompile Include="src\math\ProjectedRay.cpp" />
-    <ClCompile Include="src\math\Quaternion.cpp" />
     <ClCompile Include="src\math\Random.cpp" />
     <ClCompile Include="src\math\Spline.cpp" />
     <ClCompile Include="src\model\Animation.cpp" />
@@ -499,7 +497,7 @@
     <ProjectGuid>{0D38EE0E-3375-49FF-84EA-9CC4488BA6ED}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>core</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>VulkanGame</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -517,13 +515,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -556,9 +554,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>.\bin\</OutDir>
+    <OutDir>.\lib\</OutDir>
     <TargetName>VulkanGame_x64d</TargetName>
-    <IncludePath>.\ext\SDL2_net;.\ext\SDL2\include;.\ext\lua-5.4.0\src;.\ext\LunarG\VulkanSDK\1.1.114.0\Include;.\ext\OpenGL\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\ext\SDL2_net;.\ext\SDL2\include;.\ext\lua-5.4.0\src;.\ext\LunarG\VulkanSDK\1.1.114.0\Include;.\ext\OpenGL\include;.\ext\glm-0.9.9.8;$(IncludePath)</IncludePath>
     <IntDir>.\tmp\vulkangame\debug64</IntDir>
     <LibraryPath>.\ext\LunarG\VulkanSDK\1.1.114.0\Lib;.\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
@@ -571,9 +569,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>.\bin\</OutDir>
+    <OutDir>.\lib\</OutDir>
     <TargetName>VulkanGame_x64r</TargetName>
-    <IncludePath>.\ext\SDL2_net;.\ext\SDL2\include;.\ext\lua-5.4.0\src;.\ext\LunarG\VulkanSDK\1.1.114.0\Include;.\ext\OpenGL\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\ext\SDL2_net;.\ext\SDL2\include;.\ext\lua-5.4.0\src;.\ext\LunarG\VulkanSDK\1.1.114.0\Include;.\ext\OpenGL\include;.\ext\glm-0.9.9.8;$(IncludePath)</IncludePath>
     <IntDir>.\tmp\vulkangame\release64</IntDir>
     <LibraryPath>.\ext\LunarG\VulkanSDK\1.1.114.0\Lib;.\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
@@ -614,6 +612,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2_x64d.lib;SDL2_Net_x64d.lib;Lua_x64d.lib;opengl32.lib;vulkan-1.lib;ws2_32.lib;winmm.lib;imm32.lib;version.lib;dbghelp.lib;setupapi.lib;iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -661,6 +663,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2_x64r.lib;SDL2_Net_x64r.lib;Lua_x64r.lib;vulkan-1.lib;opengl32.lib;ws2_32.lib;winmm.lib;imm32.lib;version.lib;dbghelp.lib;setupapi.lib;iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
