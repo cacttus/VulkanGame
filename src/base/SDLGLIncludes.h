@@ -9,7 +9,7 @@
 
 #include "../base/BuildConfig.h"
 
-//#define NO_SDL_GLEXT --TODO: for linux we should define this.
+//#define NO_SDL_GLEXT //--TODO: for linux we should define this.
 #include <SDL_opengl.h>
 #if defined (BR2_OS_LINUX)
   #include <GL/glext.h>  

@@ -33,13 +33,11 @@ endfunction()
   
 message("CMAKE_MODULE_PATH='" ${CMAKE_MODULE_PATH} "' CMAKE_PREFIX_PATH='" ${CMAKE_PREFIX_PATH} "' CMAKE_TOOLCHAIN_PATH='" ${CMAKE_TOOLCHAIN_PATH} "'")
 
-    
 # ** Global Directories **  
 set(VG_BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
 set(VG_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
 set(VG_BIN_DEBUG_DIR ${VG_BIN_DIR})
 set(VG_BIN_RELEASE_DIR ${VG_BIN_DIR})
-
 
 # VG 
 set(VG_PROJECT_VERSION 0.4.1)
@@ -47,23 +45,23 @@ set(VG_TARGET_NAME VulkanGame)
 project(${VG_TARGET_NAME} VERSION ${VG_PROJECT_VERSION} LANGUAGES C CXX)
 
 if(WIN32) 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/ext/") 
-message("Set Module Path to " ${CMAKE_MODULE_PATH} "Win32")
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/ext/") 
+  message("Set Module Path to " ${CMAKE_MODULE_PATH} "Win32")
 endif() 
-   
+  
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Lua 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/lua-5.4.0) 
- 
+
 # VG
 add_executable(${VG_TARGET_NAME} ${VG_SOURCE_FILES} ${VG_HEADER_FILES})
-  
+
 get_arch_config()  
- 
+
 set(VG_OUTPUT_NAME ${VG_TARGET_NAME}-${PROJECT_VERSION}${ARCH_CONFIG})
 message("Output: " ${VG_OUTPUT_NAME})
- 
+
 set_target_properties(${PROJECT_NAME} PROPERTIES 
   OUTPUT_NAME ${VG_OUTPUT_NAME}
   RUNTIME_OUTPUT_DIRECTORY_DEBUG ${VG_BIN_DEBUG_DIR}
@@ -72,7 +70,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${VG_BIN_DEBUG_DIR}
   ARCHIVE_OUTPUT_DIRECTORY ${VG_LIB_DIR}
 )
-  
+
 # Packages
 set(OpenGL_GL_PREFERENCE LEGACY) #GLVND or LEGACY
 find_package(OpenGL REQUIRED)
@@ -86,7 +84,7 @@ find_package(Threads REQUIRED) #This is better than -pthread
 if(UNIX)
 find_package(X11 REQUIRED)
 endif()
- 
+
 # Includes
 target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS} ${SDLNET_INCLUDE_DIR} ${VULKAN_INCLUDE_DIRS} ${LUA_INCLUDE_DIR} ${LUAINTF_INCLUDE_DIR})
 
@@ -107,7 +105,7 @@ if(WIN32)
 
   target_compile_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:RELEASE>:" ${VG_WIN32_COMPILE_OPTS})
   target_compile_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:DEBUG>:" ${VG_WIN32_COMPILE_OPTS} -D_DEBUG -D_GLIBCXX_DEBUG)
- 
+
   find_package(SDL2_net REQUIRED)
   set(VG_ADDL_LIBS "ws2_32.lib" "winmm.lib" "imm32.lib" "version.lib" "dbghelp.lib" "setupapi.lib" "iphlpapi.lib")
 elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
@@ -118,18 +116,31 @@ set(VG_GCC_LINK_GLOBAL -pthread)
 
   target_link_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:RELEASE>:" ${VG_GCC_LINK_GLOBAL} ">")
   target_link_options(${VG_TARGET_NAME} PRIVATE "$<$<CONFIG:DEBUG>:" ${VG_GCC_LINK_GLOBAL} ">")
-   
+  
   set(VULKAN_LIBRARIES vulkan)
   set(SDLNET_LIBRARIES SDL2_net) 
   set(VG_ADDL_LIBS ncurses)
 endif() 
 target_link_directories(${PROJECT_NAME} PRIVATE ${VG_LIB_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${VULKAN_LIBRARIES} ${OPENGL_LIBRARIES} ${SDL2_LIBRARIES} ${SDLNET_LIBRARIES} ${VG_ADDL_LIBS} ${X11_LIBRARIES} ${LUA_LIBRARIES})
-  
+
 # Debug
 #message("LUAINTF_INCLUDE_DIR " ${LUAINTF_INCLUDE_DIR})
 #message("Vulkan includes:" ${VULKAN_INCLUDE_DIRS})   
 #message("Vulkan libs:" ${VULKAN_LIBRARIES})
-   
+
+
+
+# set(VG_LIB_EXTENSION "")
+# if(WIN32)
+#   set(VG_LIB_EXTENSION ".lib")
+# elseif(CMAKE_COMPILER_IS_GNUCXX OR MINGW OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+#   set(VG_LIB_EXTENSION ".so")
+# endif()
+# 
+# project(${VG_TARGET_NAME}${VG_LIB_EXTENSION} VERSION ${VG_PROJECT_VERSION} LANGUAGES C CXX)
+# add_library(${VG_TARGET_NAME}${VG_LIB_EXTENSION} STATIC ${VG_SOURCE_FILES} ${VG_HEADER_FILES})
+# VG_LIBS_AND_PACKAGES()
+
 # SGEN
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/utils/sgen)
