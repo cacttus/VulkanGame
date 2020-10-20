@@ -23,30 +23,6 @@ A demo game engine which uses the SDL2 Vulkan API.
   * libluabind-dev
 * Build with Cmake / VSCode.
 
-# Tasks
-
-### Important
-* DestroyWindow is not wired up correctly (SDL_DestroyWindow is not gbeing called)
-* Fix the exit in GraphicsApi if user closes child window.
-* Get Windows build to work (VS).
-* Fix UI to show debug text
-* The width/height of the window is messed up somewhere in the engineconfig props.
-
-### Enhancments
-* Make RenderUtils be a class instance and hold the instantiated renders that we add to it.
-  * Later - Add them to scene instead of using RenderUtils.
-* Import Mobmaker into the app itself. We can compile it with mono or just convert the code.
-* Simplified Engineconfig Properties
-* Removing Default Width/Height - use percentage of screen.
-* also add default X/Y
-* Show window in center of screen (windowed mode)
-* Test this build on Windows to make sure it still works.
-* Fix the "unrecognized parameter" in the console.
-* Turn Random into an instance.
-
-### Backlog
-* Change props from preprocessor to "debuggable" props.
-
 # Design
 
 ## Folders
