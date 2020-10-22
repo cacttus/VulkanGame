@@ -176,18 +176,28 @@ typedef Vec4x<uint32_t> uvec4;
 typedef Vec4x<unsigned char> Vec4ub;
 
 template <typename Tx>
-class Extent2d {
+class Size2d { 
 public:
-  Tx x;
-  Tx y;
   Tx width;
   Tx height;
+  Size2d(){}
+  Size2d(Tx dw, Tx dh){width=dw;height=dh;}
+};
+typedef Size2d<uint32_t> usize2;
+typedef Size2d<int32_t> isize2;
+
+template <typename Tx>
+class Extent2d {
+public:
+  Vec2x<Tx> pos;
+  Size2d<Tx> size;
+
   Extent2d() {}
   Extent2d(Tx dx, Tx dy, Tx dw, Tx dh) {
-    x = dx;
-    y = dy;
-    width = dw;
-    height = dh;
+    pos.x = dx;
+    pos.y = dy;
+    size.width = dw;
+    size.height = dh;
   }
 };
 typedef Extent2d<uint32_t> uext2;

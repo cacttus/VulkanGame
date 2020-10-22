@@ -77,7 +77,8 @@ public:
   static wstring_t strToWStr(std::string str);
   static string_t floatToStr2d(float f);
   static string_t slice(string_t& __inout_ str, char a, char b, bool includeDelims = false, bool modify_input_sring = false);
-
+  static bool startsWith(const string_t& str, const string_t& sub);
+  static bool endsWith(const string_t& str, const string_t& sub);
 };
 
 

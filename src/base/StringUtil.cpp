@@ -199,7 +199,7 @@ string_t StringUtil::getPaddedNumber(int32_t number, int32_t maxNumberOfChars, c
   if (rightAlignNumber == (bool)true) {
     snprintf(cbuf, maxNumberOfChars + 1, "%0*d", maxNumberOfChars, number);
   }
-  else {  
+  else {
     //right pad
     //TODO: make sure this is alright. In Windows this worked.
     //snprintf(cbuf, maxNumberOfChars + 1, "%-0*d", maxNumberOfChars, number);
@@ -572,11 +572,21 @@ string_t StringUtil::slice(string_t& str, char a, char b, bool includeDelims, bo
     if (a_p < b_p) {
       res = str.substr(a_p + 1, b_p - (a_p + 1));
       if (modify_input_sring) {
-        str.erase(a_p+1, (b_p-(a_p+1)));
+        str.erase(a_p + 1, (b_p - (a_p + 1)));
       }
     }
   }
 
   return res;
 }
+bool StringUtil::startsWith(const string_t& str, const string_t& sub) {
+  bool ret = (str.rfind(sub, 0) == 0);
+  return ret;
+}
+bool StringUtil::endsWith(const std::string& str, const std::string& sub) {
+  bool ret = (sub.length() <= str.length()) &&
+             (str.rfind(sub) + sub.length() == str.length());
+  return ret;
+}
+
 }  // namespace BR2
