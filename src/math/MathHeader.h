@@ -187,21 +187,27 @@ typedef Size2d<uint32_t> usize2;
 typedef Size2d<int32_t> isize2;
 
 template <typename Tx>
-class Extent2d {
+class Rect2d {
 public:
   Vec2x<Tx> pos;
   Size2d<Tx> size;
 
-  Extent2d() {}
-  Extent2d(Tx dx, Tx dy, Tx dw, Tx dh) {
+  Rect2d() {}
+  Rect2d(Tx dx, Tx dy, Tx dw, Tx dh) {
     pos.x = dx;
     pos.y = dy;
     size.width = dw;
     size.height = dh;
   }
+    Rect2d(const Vec2x<Tx>& p, const Size2d<Tx>& s) {
+    pos.x = p.x;
+    pos.y = p.y;
+    size.width = s.width;
+    size.height = s.height;
+  }
 };
-typedef Extent2d<uint32_t> uext2;
-typedef Extent2d<int32_t> iext2;
+typedef Rect2d<uint32_t> urect2;
+typedef Rect2d<int32_t> irect2;
 
 //Noise & Minimax
 class Noise;
