@@ -71,9 +71,6 @@ protected:
 
   vec4 _vClear;
 
-  //PipeBit::e _ePipeBit = PipeBit::e::Full;
-  //std::bitset<8> _pipeBits;
-
   std::shared_ptr<GraphicsWindow> _pWindow = nullptr;
   std::shared_ptr<Picker> _pPicker = nullptr;
 

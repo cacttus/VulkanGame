@@ -375,8 +375,8 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx v
   if (viewport_w == 0) {
     viewport_w = 1;
   }
-  if (fov_radians > M_PI_2 - e) {
-    fov_radians = M_PI_2 - e;
+  if (fov_radians > (Tx)M_PI_2 - e) {
+    fov_radians = (Tx)M_PI_2 - e;
   }
   if (fov_radians < 1 + e) {
     fov_radians = 1 + e;

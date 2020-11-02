@@ -178,10 +178,21 @@ typedef Vec4x<unsigned char> Vec4ub;
 template <typename Tx>
 class Size2d { 
 public:
+  //TODO: duplicate Vec2x to use Width and Height as a mnemonic
+  // #define Vec2_Class_Mnemonic(classname, xtype, ytype) class classname .. Tx xtype, ytype; .. ugly. debuggable? no
   Tx width;
   Tx height;
   Size2d(){}
   Size2d(Tx dw, Tx dh){width=dw;height=dh;}
+  bool operator==(const Size2d<Tx>& rhs) const {
+    bool ret = ((width == rhs.width) && (height == rhs.height));
+    return ret;
+  }
+  bool operator!=(const Size2d<Tx>& rhs) const {
+    bool ret = ((width != rhs.width) || (height != rhs.height));
+    return ret;
+  }
+
 };
 typedef Size2d<uint32_t> usize2;
 typedef Size2d<int32_t> isize2;
