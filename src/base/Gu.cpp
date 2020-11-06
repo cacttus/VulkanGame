@@ -23,7 +23,6 @@
 #include "../base/EngineConfig.h"
 #include "../base/GLContext.h"
 #include "../base/Net.h"
-#include "../base/ProjectFile.h"
 #include "../base/ColoredConsole.h"
 #include "../math/Algorithm.h"
 #include "../gfx/TexCache.h"

@@ -7,7 +7,6 @@
 #ifndef __NODEDATA_15818089813247272835_H__
 #define __NODEDATA_15818089813247272835_H__
 #include "../model/ModelHeader.h"
-#include "../base/Serializable.h"
 
 namespace BR2 {
 /**
