@@ -14,6 +14,7 @@ namespace BR2 {
 /**
 *  @class StreamBuffer
 *  @brief A buffer that streams data in and out.  Grows/shrinks.  ADDS - To the end.  REMOVES - From the beginning.
+*   This is to be used for networking.
 */
 class StreamBuffer : public IOBase<char> {
 public:

@@ -12,7 +12,7 @@
 namespace BR2 {
 /**
 *  @class Sequencer
-*  @brief Manages sequences of lambas.
+*  @brief Manages sequences of lambdas.
 */
 class Sequencer : public VirtualMemory {
 public:
