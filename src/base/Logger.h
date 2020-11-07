@@ -8,7 +8,6 @@
 #define __LOGGER_16421047220665463212149_H__
 
 #include "../base/BaseHeader.h"
-#include "../base/Gu.h"
 
 namespace BR2 {
 /**
@@ -16,7 +15,7 @@ namespace BR2 {
 *  @brief Logs to a text file in /log/ and/or the console.
 */
 class Logger_Internal;
-class Logger : public OperatingSystemMemory {
+class Logger : public Singleton<Logger>{
 public:
   Logger(bool async, bool disabled = false);
   virtual ~Logger() override;
@@ -50,20 +49,20 @@ private:
 
 
 //from Clang: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
-#define BRLogDebug(x) BR2::Gu::getLogger()->logDebug(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
-#define BRLogInfo(x) BR2::Gu::getLogger()->logInfo(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
-#define BRLogWarn(x) BR2::Gu::getLogger()->logWarn(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr)
-#define BRLogError(x) BR2::Gu::getLogger()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr)
-#define BRLogScript(x) BR2::Gu::getLogger()->logScript(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
-#define BRLogErrorNoStack(x) BR2::Gu::getLogger()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, true)
-#define BRLogErrorEx(x, aex) BR2::Gu::getLogger()->logError(x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, aex)
+#define BRLogDebug(x) BR2::Logger::instance()->logDebug(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
+#define BRLogInfo(x) BR2::Logger::instance()->logInfo(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
+#define BRLogWarn(x) BR2::Logger::instance()->logWarn(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr)
+#define BRLogError(x) BR2::Logger::instance()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr)
+#define BRLogScript(x) BR2::Logger::instance()->logScript(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME)
+#define BRLogErrorNoStack(x) BR2::Logger::instance()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, true)
+#define BRLogErrorEx(x, aex) BR2::Logger::instance()->logError(x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, aex)
 
 #define BRLogErrorOnce(x)                                                              \
   {                                                                                    \
     static bool ___logged_ = false;                                                    \
     if (___logged_ == false) {                                                         \
       ___logged_ = true;                                                               \
-      BR2::Gu::getLogger()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr); \
+      BR2::Logger::instance()->logError(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr); \
     }                                                                                  \
   }
 #define BRLogWarnOnce(x)                                                     \
@@ -71,7 +70,7 @@ private:
     static bool ___logged_ = false;                                          \
     if (___logged_ == false) {                                               \
       ___logged_ = true;                                                     \
-      BR2::Gu::getLogger()->logWarn(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME); \
+      BR2::Logger::instance()->logWarn(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME); \
     }                                                                        \
   }
 #define BRLogDebugOnce(x)                                                     \
@@ -79,13 +78,13 @@ private:
     static bool ___logged_ = false;                                           \
     if (___logged_ == false) {                                                \
       ___logged_ = true;                                                      \
-      BR2::Gu::getLogger()->logDebug(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME); \
+      BR2::Logger::instance()->logDebug(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME); \
     }                                                                         \
   }
 #define BRLogWarnCycle(x)                                                                                \
   {                                                                                                      \
     static bool ___logged_ = true;                                                                       \
-    BR2::Gu::getLogger()->logWarnCycle(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, 1000, ___logged_); \
+    BR2::Logger::instance()->logWarnCycle(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, 1000, ___logged_); \
     if (___logged_ == true) {                                                                            \
       ___logged_ = false;                                                                                \
     }                                                                                                    \
@@ -93,7 +92,7 @@ private:
 #define BRLogErrorCycle(x)                                                                                \
   {                                                                                                       \
     static bool ___logged_ = true;                                                                        \
-    BR2::Gu::getLogger()->logErrorCycle(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, 1000, ___logged_); \
+    BR2::Logger::instance()->logErrorCycle(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, 1000, ___logged_); \
     if (___logged_ == true) {                                                                             \
       ___logged_ = false;                                                                                 \
     }                                                                                                     \
@@ -101,7 +100,7 @@ private:
 #define BRLogDebugCycle(x)                                                                                \
   {                                                                                                       \
     static bool ___logged_ = true;                                                                        \
-    BR2::Gu::getLogger()->logDebugCycle(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, 1000, ___logged_); \
+    BR2::Logger::instance()->logDebugCycle(Stz x, BR_SRC_FLINE, (char* const)BR_SRC_FNAME, nullptr, 1000, ___logged_); \
     if (___logged_ == true) {                                                                             \
       ___logged_ = false;                                                                                 \
     }                                                                                                     \
@@ -112,7 +111,7 @@ private:
     static bool ___logged_ = false;                                          \
     if (___logged_ == false) {                                               \
       ___logged_ = true;                                                     \
-      BR2::Gu::getLogger()->logTODO(Stz BR_LogImportantStr + "* " + x + BR_LogImportantStr, BR_SRC_FLINE, (char* const)BR_SRC_FNAME); \
+      BR2::Logger::instance()->logTODO(Stz BR_LogImportantStr + "* " + x + BR_LogImportantStr, BR_SRC_FLINE, (char* const)BR_SRC_FNAME); \
     }                                                                        \
   }
 #endif

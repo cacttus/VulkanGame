@@ -163,6 +163,21 @@ public:
   virtual ~SoundPlayInfo() override {}
 };
 
+template <typename Tx>
+class Singleton : public VirtualMemoryShared {
+public:
+  std::shared_ptr<Tx> instance() {
+    if (_instance == nullptr) {
+      _instance = std::make_shared<Tx>();
+    }
+    return _instance;
+  }
+
+private:
+  static std::shared_ptr<Tx> _instance ;
+};
+template<typename Tx> Tx Singleton<Tx>::_instance = nullptr;
+
 }  // namespace BR2
 
 /************************************************************************/

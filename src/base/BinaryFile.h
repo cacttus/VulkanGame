@@ -8,7 +8,6 @@
 #define __BUFFERED_FILE_H__
 
 #include "../base/BaseHeader.h"
-#include "../base/RetCode.h"
 #include "../base/Allocator.h"
 #include "../math/Vec3x.h"
 #include "../math/Mat4x.h"
@@ -93,8 +92,8 @@ private:
   string_t _strFileVersion = "<not_set>";
 
   void validateRead(size_t outSize, size_t readCount);
-  RetCode read(const char* buf, size_t count, size_t bufcount, size_t offset);
-  RetCode write(const char* buf, size_t count, size_t bufcount, size_t offset);
+  bool read(const char* buf, size_t count, size_t bufcount, size_t offset);
+  bool write(const char* buf, size_t count, size_t bufcount, size_t offset);
 };
 
 }//ns game

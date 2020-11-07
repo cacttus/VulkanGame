@@ -10,7 +10,6 @@
 #include "../base/BaseHeader.h"
 #include "../base/MachineTypes.h"
 #include "../base/Exception.h"
-#include "../base/TypeCast.h"
 
 namespace BR2 {
 #define frameStampToStr(x) uint64ToStr(x)

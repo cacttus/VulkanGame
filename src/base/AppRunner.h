@@ -3,7 +3,6 @@
 #define __57823905782390589020_AppRunner_h_2298357238957238957129348__
 
 #include "../base/BaseHeader.h"
-#include "../gfx/GfxHeader.h"
 
 namespace BR2 {
 class AppRunner_Internal;

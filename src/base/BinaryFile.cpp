@@ -304,7 +304,7 @@ void BinaryFile::read(const char* buf, size_t readSize, size_t offset) {
   read((char*)buf, readSize, readSize, offset == memsize_max ? iFilePos : offset);
   iFilePos += readSize;
 }
-RetCode BinaryFile::read(const char* buf, size_t count, size_t bufcount, size_t offset) {
+bool BinaryFile::read(const char* buf, size_t count, size_t bufcount, size_t offset) {
   AssertOrThrow2((offset >= 0) || (offset == memsize_max));
 
   if (count > bufcount) {
@@ -316,7 +316,7 @@ RetCode BinaryFile::read(const char* buf, size_t count, size_t bufcount, size_t 
 
   _data.copyTo(buf, count, offset, 0);
 
-  return GR_OK;
+  return true;
 }
 bool BinaryFile::readVersion() {
   std::string version;
@@ -417,7 +417,7 @@ void BinaryFile::write(const char* buf, size_t writeSize, size_t offset) {
   write(buf, writeSize, writeSize, offset == memsize_max ? iFilePos : offset);
   iFilePos += writeSize;
 }
-RetCode BinaryFile::write(const char* buf, size_t count, size_t bufcount, size_t offset) {
+bool BinaryFile::write(const char* buf, size_t count, size_t bufcount, size_t offset) {
   AssertOrThrow2((offset >= 0) || (offset == memsize_max));
 
   if (count > bufcount) {
@@ -433,7 +433,7 @@ RetCode BinaryFile::write(const char* buf, size_t count, size_t bufcount, size_t
   }
   _data.copyFrom(buf, count, offset, 0);
 
-  return GR_OK;
+  return true;
 }
 
 void BinaryFile::writeVersion() {

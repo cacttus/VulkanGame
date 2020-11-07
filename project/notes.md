@@ -1,5 +1,25 @@
 # Tasks
 
+# GWindow integration
+  1. Move src to src_stage and move files over 1-by-1
+  1. System decoupling.
+    * base, math will be independent .so now and have no external dependencies besides /ext
+    * graphics, model, world depend on base & math
+      * this will help us write the utility applications without duplicating code
+        * shaderc_poll..
+  1. Global coupled classes
+    * Depend on multiple libraries.
+    * AppRunner 
+    * Gu
+  1. Renderer decoupling.
+    * OpenGL & dependent classes move to /opengl
+      * buffers, models, VAOData & etc
+      * RenderPipe
+    * Vulkan classes in /vulkan
+  1. Remove old systems -> component systems.
+    * Spec system, NodeData &c
+    * World
+
 ### Important
 * DestroyWindow is not wired up correctly (SDL_DestroyWindow is not gbeing called)
 * Fix the exit in GraphicsApi if user closes child window.
