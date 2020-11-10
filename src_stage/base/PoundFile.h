@@ -10,7 +10,7 @@
 #include "../base/TextConfigFile.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class PoundFile
 *  @brief A file that uses # as comments.

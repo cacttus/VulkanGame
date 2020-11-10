@@ -31,7 +31,7 @@
 #endif
 #endif
 
-namespace BR2 {
+namespace VG {
 GraphicsApi::GraphicsApi() {
 }
 GraphicsApi::~GraphicsApi() {
@@ -331,4 +331,4 @@ void GraphicsApi::setWindowProps(SDL_Window* win, const GraphicsWindowCreatePara
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

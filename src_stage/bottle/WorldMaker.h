@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *    The former lair manager.
 * This makes the dungeons "lairs".

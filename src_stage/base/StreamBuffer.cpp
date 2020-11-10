@@ -1,6 +1,6 @@
 #include "../base/StreamBuffer.h"
 
-namespace BR2 {
+namespace VG {
 StreamBuffer::StreamBuffer(int32_t chunkSizeBytes) : _iChunkSizeBytes(chunkSizeBytes) {
   AssertOrThrow2(_iChunkSizeBytes > 0);
   clear();
@@ -96,4 +96,4 @@ void StreamBuffer::copyFrom(StreamBuffer* rhs) {
   this->_data = rhs->_data;
 }
 
-}  // namespace BR2
+}  // namespace VG

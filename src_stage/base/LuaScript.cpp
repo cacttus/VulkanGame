@@ -24,7 +24,7 @@ LUA_USING_LIST_TYPE(std::vector)
 LUA_USING_MAP_TYPE(std::map)
 }  // namespace LuaIntf
 
-namespace BR2 {
+namespace VG {
 static int print(lua_State* L) {
   string_t msg = "";
   int n = lua_gettop(L);
@@ -87,7 +87,7 @@ LuaScript::LuaScript() {
   // BR2 Bindings
   _START_CLASS(Gu)
       .addStaticFunction("getGraphicsApi", &Gu::getGraphicsApi)
-      .addStaticFunction("getEngineConfig", &Gu::getEngineConfig)
+      .addStaticFunction("getEngineConfig", &Core::config)
       .addStaticFunction("playSound", &Gu::playSound, LUA_ARGS(const string_t&, const SoundPlayInfo&))
       .endClass();
   _START_CLASS(SoundPlayInfo)
@@ -152,12 +152,12 @@ LuaScript::~LuaScript() {
 void LuaScript::runtimeError(const string_t& msg) {
   string_t msg_m = Stz "LUA Runtime Error:" + OperatingSystem::newline() + "  " + _filename + OperatingSystem::newline() + msg + OperatingSystem::newline();
   BRLogError(msg_m);
-  Gu::debugBreak();
+  Base::debugBreak();
 }
 void LuaScript::compileError(const string_t& msg) {
   string_t msg_m = Stz "LUA Compile Error:" + OperatingSystem::newline() + "  " + _filename + OperatingSystem::newline() + msg + OperatingSystem::newline();
   BRLogError(msg_m);
-  Gu::debugBreak();
+  Base::debugBreak();
 }
 
 void LuaScript::onStart() {
@@ -215,7 +215,7 @@ void LuaScript::compile(const string_t& filename) {
 }
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG
 
 //Parse file.
 // for (auto line : lines) {

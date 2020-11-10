@@ -3,7 +3,7 @@
 #include "../world/NodeData.h"
 
 
-namespace BR2 {
+namespace VG {
 NodeData::NodeData(const string_t& name) {
   _strName = name;
 }

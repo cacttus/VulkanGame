@@ -13,7 +13,7 @@
 #include "../world/WorldHeader.h"
 #include "../model/SceneNode.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Scene
 *  @brief The scenegraph holding all relevant objects.

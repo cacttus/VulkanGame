@@ -11,7 +11,7 @@
 //#include "../gfx/GfxHeader.h"
 #include "../base/XmlFile.h"
 
-namespace BR2 {
+namespace VG {
 class BaseProp : public VirtualMemoryShared<BaseProp> {
 public:
   string_t key() { return _key; }
@@ -233,6 +233,6 @@ private:
   bool _bEnableDebugErrorChecking = false;
 #endif
 };
-}  // namespace BR2
+}  // namespace VG
 
 #endif

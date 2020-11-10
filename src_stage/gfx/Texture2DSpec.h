@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 enum class TextureFormat { Image4ub,     //png image from disk
                            DepthShadow,  //shadow map - Resolution & BPP, can be changed in the config.xml
                            CubeShadow    //cube shadow map. -  Resolution & BPP, can be changed in the config.xml
@@ -74,6 +74,6 @@ private:
   void calculateGLTextureFormat(TextureFormat type);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

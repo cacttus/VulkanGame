@@ -11,7 +11,7 @@
 #include "../gfx/RenderTarget.h"
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class GraphicsWindow
 *  @brief Manages rendering to window.

@@ -25,7 +25,7 @@
 
 #endif
 
-namespace BR2 {
+namespace VG {
 //Define this to use the STL for max, min, etc.
 
 #ifndef _MATH_DEFINES_DEFINED
@@ -331,6 +331,6 @@ public:
 };
 
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

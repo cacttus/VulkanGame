@@ -5,7 +5,7 @@
 #include "../base/FileSystem.h"
 #include "../base/Logger.h"
 
-namespace BR2 {
+namespace VG {
 void TextDataFile::msg(const string_t& msg, bool error) {
   _vecMessages.push_back(Stz(error ? "ERROR:" : "") + _fileName + ": " + msg);
 }

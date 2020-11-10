@@ -1,7 +1,7 @@
 #include "../base/Sequencer.h"
 #include "../base/Gu.h"
 
-namespace BR2 {
+namespace VG {
 Sequence* Sequencer::exec(
   std::function<void()> begin, std::function<void()> run, std::function<void()> end,
   float delaySeconds, float durationSeconds) {
@@ -108,11 +108,11 @@ Sequence* Sequence::exec(std::function<void()> begin, std::function<void()> run,
 
   if (durationSeconds < 0) {
     durationSeconds = 0;
-    Gu::debugBreak();//errr
+    Base::debugBreak();//errr
   }
   if (delaySeconds < 0) {
     delaySeconds = 0;
-    Gu::debugBreak();//errr
+    Base::debugBreak();//errr
   }
 
   _started = 0;

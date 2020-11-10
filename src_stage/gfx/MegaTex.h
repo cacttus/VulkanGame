@@ -10,7 +10,7 @@
 #include "../gfx/Texture2DSpec.h"
 #include "../ext/stb_truetype.h"
 
-namespace BR2 {
+namespace VG {
 namespace MtTexType {
 typedef enum { Image,
                Font } e;
@@ -155,6 +155,6 @@ private:
   bool _bCache = false;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

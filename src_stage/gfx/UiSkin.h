@@ -9,7 +9,7 @@
 
 #include "../gfx/UiBase.h"
 
-namespace BR2 {
+namespace VG {
 class UiSkinElement : public VirtualMemoryShared<UiSkinElement> {
 public:
   Hash32 _iNameHash;

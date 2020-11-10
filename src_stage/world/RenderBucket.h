@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 //class BvhCollectionParams : public VirtualMemory {
 //public:
 //  std::shared_ptr<FrustumBase> _pFrustum = nullptr;    // the frustum to collect from

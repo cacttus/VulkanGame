@@ -34,7 +34,7 @@
 #include "../bottle/BlockNode.h"
 #include "../bottle/W25GridMesh.h"
 
-namespace BR2 {
+namespace VG {
 WorldGrid::WorldGrid(std::shared_ptr<World25> pworld, ivec3& viPos, bool bEmpty) : 
 PhysicsGrid(pworld->getPhysics(), viPos, BottleUtils::getNodeWidth(), BottleUtils::getNodeHeight(), bEmpty),
                                                                                    _pWorld25(pworld) {
@@ -183,14 +183,14 @@ void WorldGrid::fillObjects() {
   //        //it from sprites.dat
   //        pSolid = getWorld25()->getMotionBucket()->getDefaultTile(MatterMode::e::Solid);
   //        BRLogError("Couldn't find solid base tile, Index:", pData->_iBaseTileIdx);
-  //        Gu::debugBreak();
+  //        Base::debugBreak();
   //    }
   //    if(pLiquid == nullptr){
   //        //We couldn't find the texture.  You probably renamed it or deleted
   //        //it from sprites.dat
   //        pLiquid = getWorld25()->getMotionBucket()->getDefaultTile(MatterMode::e::Liquid);
   //        BRLogError("Couldn't find liquid base tile, Index:", pData->_iLiquidTileIdx);
-  //            Gu::debugBreak();
+  //            Base::debugBreak();
   //    }
 
   //    pCell->setTile(MatterMode::e::Solid, pSolid);
@@ -440,7 +440,7 @@ void WorldGrid::getObjData(WorldCellFile* pFile) {
   //  else {
   //    //Cannot be zero, but store the object so we can tell it's an error
   //    BRLogError("Error, object was null or not found while saving glob");
-  //    Gu::debugBreak();
+  //    Base::debugBreak();
   //    obd->_iType = 0;
   //    obd->_vPos = vec3(0, 0, 0);
   //  }
@@ -604,7 +604,7 @@ void WorldGrid::debugVerifyAllInternalCellsLinked(BlockNode* parent) {
           if (!WorldCell::isBorderCellPos(iRPos)) {
             //Neighbor is internal, but it's null.  All internals must be linked.
             //Assuming we didn't call consolidate before this
-            Gu::debugBreak();
+            Base::debugBreak();
           }
         }
       }
@@ -643,7 +643,7 @@ void WorldGrid::deflateCellIndexes(GridMeshLayer::e eMatter, int32_t iOldOff, in
         if (noff > iOldOff) {
           int32_t new_off = noff - iOldCount;
           if (new_off < 0) {
-            Gu::debugBreak();
+            Base::debugBreak();
             new_off = 0;  //**Error
           }
           pc->getVisibleCell()->setMeshIndexOffset(eMatter, new_off);
@@ -926,11 +926,11 @@ void WorldGrid::stitchBoundaries_r(BlockNode* giver, BlockNode* taker, bool bUnl
     return;
   }
   if (giver == taker) {
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   if (giver->getIsLeaf() && !taker->getIsLeaf() || taker->getIsLeaf() && !giver->getIsLeaf()) {
     //Error
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   //Get the opposite cell for the given axis. 0=x, 1=y 2=z
@@ -994,7 +994,7 @@ void WorldGrid::linkBlocks(WorldCell* b1, WorldCell* b2, PhysicsGridSide::e nrp,
   else {
     if (b1->getNeighbor(nrp) != nullptr) {
       if (b1->getNeighbor(nrp) != b2) {
-        Gu::debugBreak();
+        Base::debugBreak();
         BRLogError("1 Tried to link block when block already had link.");
       }
     }
@@ -1004,7 +1004,7 @@ void WorldGrid::linkBlocks(WorldCell* b1, WorldCell* b2, PhysicsGridSide::e nrp,
     PhysicsGridSide::e opp = PhysicsGrid::getOppNeighborIndex(nrp);
     if (b2->getNeighbor(opp) != nullptr) {
       if (b2->getNeighbor(PhysicsGrid::getOppNeighborIndex(nrp)) != b1) {
-        Gu::debugBreak();
+        Base::debugBreak();
         BRLogError("2 Tried to link block when block already had link.");
       }
     }
@@ -1070,4 +1070,4 @@ void WorldGrid::updateRedoMesh(GridMeshLayer::e eMatter) {
 std::shared_ptr<MeshNode> WorldGrid::getMesh() {
   return _pMeshes[GridMeshLayer::e::Opaque]->getMesh();
 }
-}  // namespace BR2
+}  // namespace VG

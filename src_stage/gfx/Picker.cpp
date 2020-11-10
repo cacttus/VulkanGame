@@ -12,7 +12,7 @@
 #include "../gfx/CameraNode.h"
 #include "../gfx/OpenGLUtils.h"
 
-namespace BR2 {
+namespace VG {
 Picker::Picker(std::shared_ptr<GLContext> pc, std::shared_ptr<RenderPipe> rp) : GLFramework(pc) {
   _pRenderPipe = rp;
 }
@@ -87,4 +87,4 @@ BRLogTODO("Serious hack right here- fix it");
   selectedId = pixel;
 }
 
-}  // namespace BR2
+}  // namespace VG

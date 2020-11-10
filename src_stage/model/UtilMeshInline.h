@@ -9,7 +9,7 @@
 
 #include "../model/UtilMesh.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class UtilMeshInline
 *  @brief
@@ -66,6 +66,6 @@ private:
   vec4 _vDefaultColor;
   void pushCurVert();
 };
-}  // namespace BR2
+}  // namespace VG
 
 #endif

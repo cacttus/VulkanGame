@@ -1,7 +1,7 @@
 #include "../model/VertexAdjacencyMap.h"
 
 
-namespace BR2 {
+namespace VG {
 VertexAdjacencyMap::VertexAdjacencyMap() {
   _vmap = new AdjacencyMap();
 }

@@ -9,7 +9,7 @@
 #include "../gfx/RenderUtils.h"
 #include "../gfx/OpenGLUtils.h"
 
-namespace BR2 {
+namespace VG {
 ShaderUniform::ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, const string_t& name, size_t iArraySize) : GLFramework(ct) {
   _glType = eType;
   _glLocation = location;
@@ -46,7 +46,7 @@ void ShaderUniform::copyUniformData(void* pData, GLint count) {
                 " NOTE: There are " + _iArraySize + " elements in the uniform array '" + getName() +
                 "', and you did not explicitly set the count. Setting count to 1");
       bAlreadyLogged = true;
-      Gu::debugBreak();
+      Base::debugBreak();
     }
 
     count = 1;  //prevent buffer overruns.
@@ -427,7 +427,7 @@ void ShaderUniform::bindUniformFast() {
     default:
       BRLogError("Uniform type binding method has not been implemented for uniform " + getName() +
                  " of type " + ShaderMaker::systemTypeToSTring(_systemType) + " (" + _systemType + ") ");
-      Gu::debugBreak();
+      Base::debugBreak();
       break;
   }
   getContext()->chkErrDbg();
@@ -488,4 +488,4 @@ void ShaderUniformBlock::bindUniformFast() {
   getContext()->glBindBuffer(GL_UNIFORM_BUFFER, _iUboId);
 }
 
-}  // namespace BR2
+}  // namespace VG

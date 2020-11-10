@@ -21,7 +21,7 @@
 #include "../world/NodeUtils.h"
 #include "../world/PhysicsWorld.h"
 
-namespace BR2 {
+namespace VG {
 #pragma region ShadowFrustum_Internal
 class ShadowFrustum_Internal {
 public:
@@ -152,7 +152,7 @@ void ShadowFrustum_Internal::cullObjectsAsync(CullParams& cp) {
 
   _pVisibleSet->start(Math::brMin(
                           cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
-                          Gu::getEngineConfig()->getMaxPointLightShadowDistance() * Gu::getEngineConfig()->getMaxPointLightShadowDistance()),
+                          Core::config()->getMaxPointLightShadowDistance() * Core::config()->getMaxPointLightShadowDistance()),
                       cp.getCamera());
 
   physics->collectVisibleNodes(_pVisibleSet);
@@ -358,4 +358,4 @@ void ShadowFrustum::endRenderShadowFrustum() {
 }
 
 #pragma endregion
-}  // namespace BR2
+}  // namespace VG

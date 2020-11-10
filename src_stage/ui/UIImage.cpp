@@ -53,7 +53,7 @@
 //    else {
 //      _q2Tex._p1.x = _pTexture->tex()->uv1().x;
 //      static int x = 0;
-//      if (x == 0) { Gu::debugBreak(); }
+//      if (x == 0) { Base::debugBreak(); }
 //    }
 //  }
 //  else if (_eSizeModeX == UiImageSizeMode::e::Computed) {
@@ -77,7 +77,7 @@
 //    else {
 //      _q2Tex._p1.y = _pTexture->tex()->uv0().y;
 //      static int x = 0;
-//      if (x == 0) { Gu::debugBreak(); }//Texture height was zero
+//      if (x == 0) { Base::debugBreak(); }//Texture height was zero
 //    }
 //  }
 //  else if (_eSizeModeY == UiImageSizeMode::e::Computed) {

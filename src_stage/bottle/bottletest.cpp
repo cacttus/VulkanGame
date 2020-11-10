@@ -3,7 +3,7 @@
 #include "../base/Allocator.h"
 
 #include <iostream>
-namespace BR2 {
+namespace VG {
 
 class BTest {
 public:

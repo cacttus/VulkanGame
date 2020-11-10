@@ -11,7 +11,7 @@
 #include "../world/WorldHeader.h"
 #include "../world/CSharpScript.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class FlyingCameraControls
 *  @brief A camera that lets you fly around.  This is actually a control class for the camera and not the camera itself.

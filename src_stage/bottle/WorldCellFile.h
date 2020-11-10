@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 class World25GlobData : public VirtualMemory {
   friend class WorldCellFile;
   Hash32 _iLairId = 0; ///The lair that this glob belongs to

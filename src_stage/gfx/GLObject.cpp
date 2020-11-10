@@ -2,7 +2,7 @@
 // #include "../base/GLContext.h"
 // #include "../base/Gu.h"
 // 
-// namespace BR2 {
+// namespace VG {
 // GLObject::GLObject(GLenum type) {
 //   _type = type;
 // }
@@ -17,4 +17,4 @@
 // // GLenum _type;
 // // string_t _name;
 // 
-// }  // namespace BR2
+// }  // namespace VG

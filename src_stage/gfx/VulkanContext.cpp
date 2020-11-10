@@ -1,7 +1,7 @@
 #include "VulkanContext.h"
 
 
-namespace BR2 {
+namespace VG {
 VulkanContext::VulkanContext(std::shared_ptr<GraphicsApi> api) : GraphicsContext(api) {
 
 }

@@ -9,7 +9,7 @@
 #include <term.h>
 #endif
 
-namespace BR2 {
+namespace VG {
 void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
   //Check colored terminal support.
   static int g_colors_supported = -1;  //-1=unset 0=no 1=yes
@@ -121,4 +121,4 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

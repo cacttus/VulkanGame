@@ -2,7 +2,7 @@
 // #include "./App.h"
 // 
 // 
-// namespace BR2 {
+// namespace VG {
 // App::App() {
 // 
 // }

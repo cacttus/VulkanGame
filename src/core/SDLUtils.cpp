@@ -1,13 +1,13 @@
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
-#include "../base/OglErr.h"
-#include "../base/SDLUtils.h"
 #include "../base/Img32.h"
 #include "../base/Allocator.h"
+#include "../core/Core.h"
+#include "../core/OglErr.h"
+#include "../core/SDLUtils.h"
 
-
-namespace BR2 {
+namespace VG {
 
 void SDLUtils::trySetWindowIcon(SDL_Window* w, string_t iconPath) {
   if (iconPath.length()) {
@@ -22,7 +22,7 @@ void SDLUtils::trySetWindowIcon(SDL_Window* w, string_t iconPath) {
     }
     if (img != nullptr) {
       //SDL uses the image pointer, so you have to free the image AFTER you free the surface.
-      Gu::freeImage(img);
+      Base::freeImage(img);
     }
   }
 }
@@ -31,7 +31,7 @@ void SDLUtils::createSurfaceFromImage(const string_t& strImage,
   pImage = nullptr;
   pSurface = nullptr;
   if (FileSystem::fileExists(strImage)) {
-    pImage = Gu::loadImage(strImage);
+    pImage = Base::loadImage(strImage);
     pSurface = createSurfaceFromImage(pImage);
   }
   else {
@@ -57,8 +57,8 @@ void SDLUtils::checkSDLErr(bool bLog, bool bBreak) {
       BRLogError("SDL: " + c);
     }
 
-    if (Gu::getEngineConfig()->getBreakOnSDLError() == true && bBreak) {
-      Gu::debugBreak();
+    if (Core::config()->getBreakOnSDLError() == true && bBreak) {
+      Base::debugBreak();
     }
     SDL_ClearError();
   }

@@ -5,7 +5,7 @@
 #include "../base/Exception.h"
 #include "../base/HashMap.h"
 
-namespace BR2 {
+namespace VG {
 class EngineConfig_Internal {
 public:
   HashMap<BaseProp*> _props;
@@ -271,4 +271,4 @@ void EngineConfig::postLoad(bool success) {
   n++;
 }
 
-}  // namespace BR2
+}  // namespace VG

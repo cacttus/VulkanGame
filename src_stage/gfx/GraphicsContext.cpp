@@ -23,7 +23,7 @@
 #include "../world/PhysicsWorld.h"
 #include "../world/Scene.h"
 
-namespace BR2 {
+namespace VG {
 GraphicsContext::GraphicsContext(std::shared_ptr<GraphicsApi> api) {
   _pGraphicsApi = api;
   _fClearR = 0.02f;
@@ -50,4 +50,4 @@ std::shared_ptr<GraphicsWindow> GraphicsContext::createGraphicsWindow(SDL_Window
   return w;
 }
 
-}  // namespace BR2
+}  // namespace VG

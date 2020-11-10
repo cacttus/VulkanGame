@@ -1,33 +1,36 @@
-#include "../base/AppRunner.h"
-#include "../base/SoundCache.h"
-#include "../base/GLContext.h"
+//#include "../base/SoundCache.h"
+//#include "../base/GLContext.h"
 #include "../base/ApplicationPackage.h"
-#include "../base/InputManager.h"
+//#include "../base/InputManager.h"
 #include "../base/Logger.h"
-#include "../base/SDLIncludes.h"
-#include "../base/GraphicsWindow.h"
-#include "../base/SDLUtils.h"
-#include "../base/Gu.h"
-#include "../base/OglErr.h"
+//#include "../base/SDLIncludes.h"
+//#include "../base/GraphicsWindow.h"
+//#include "../base/SDLUtils.h"
+//#include "../base/Gu.h"
+//#include "../base/OglErr.h"
 #include "../base/OperatingSystem.h"
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
 #include "../math/MathAll.h"
-#include "../gfx/GraphicsApi.h"
-#include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLApi.h"
-#include "../gfx/VulkanApi.h"
-#include "../model/ModelCache.h"
-#include "../world/Scene.h"
-#include "../world/PhysicsWorld.h"
-#include "../bottle/BottleScript.h"
-#include "../base/LuaScript.h"
+// #include "../gfx/GraphicsApi.h"
+// #include "../gfx/RenderUtils.h"
+// #include "../gfx/OpenGLApi.h"
+// #include "../gfx/VulkanApi.h"
+// #include "../model/ModelCache.h"
+// #include "../world/Scene.h"
+// #include "../world/PhysicsWorld.h"
+// #include "../bottle/BottleScript.h"
+// #include "../base/LuaScript.h"
+#include "../core/CoreHeader.h"
+#include "../core/Core.h"
+#include "../core/SDLIncludes.h"
+#include "../core/AppRunner.h"
 
 #include <signal.h>
 #include <chrono>
 #include <thread>
 
-namespace BR2 {
+namespace VG {
 //////////////////////////////////////////////////////////////////////////
 void SignalHandler(int signal) {
   BRThrowException(Stz "VC Access Violation. signal=" + signal + "  This shouldn't work in release build.");
@@ -69,33 +72,33 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   printVideoDiagnostics();
 
   //Create graphics API
-  if (Gu::getEngineConfig()->getRenderSystem() == RenderSystem::OpenGL) {
+  if (Core::config()->getRenderSystem() == RenderSystem::OpenGL) {
     _pGraphicsApi = std::make_shared<OpenGLApi>();
   }
-  else if (Gu::getEngineConfig()->getRenderSystem() == RenderSystem::Vulkan) {
+  else if (Core::config()->getRenderSystem() == RenderSystem::Vulkan) {
     _pGraphicsApi = std::make_shared<VulkanApi>();
   }
   else {
     BRThrowException("Invalid render engine.");
   }
-  Gu::setGraphicsApi(_pGraphicsApi);
+  Base::setGraphicsApi(_pGraphicsApi);
 
   // Run Tests
   std::shared_ptr<LuaScript> math_test = std::make_shared<LuaScript>();
-  math_test->compile(FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/test_math.lua"));
+  math_test->compile(FileSystem::combinePath(Base::getPackage()->getScriptsFolder(), "/test_math.lua"));
   math_test = nullptr;
 
   std::shared_ptr<LuaScript> editor = std::make_shared<LuaScript>();
-  editor->compile(FileSystem::combinePath(Gu::getPackage()->getAssetsFolder(), "/Editor.lua"));
+  editor->compile(FileSystem::combinePath(Base::getPackage()->getAssetsFolder(), "/Editor.lua"));
 
   //** Editor.lua
   //
   //   std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window",
-  //                                                                                                           Gu::getConfig()->getDefaultScreenWidth(),
-  //                                                                                                           Gu::getConfig()->getDefaultScreenHeight(),
-  //                                                                                                           Gu::getConfig()->getStartFullscreen(),
+  //                                                                                                           Base::getConfig()->getDefaultScreenWidth(),
+  //                                                                                                           Base::getConfig()->getDefaultScreenHeight(),
+  //                                                                                                           Base::getConfig()->getStartFullscreen(),
   //                                                                                                           true,
-  //                                                                                                           Gu::getConfig()->getForceAspectRatio(),
+  //                                                                                                           Base::getConfig()->getForceAspectRatio(),
   //                                                                                                           nullptr));  //Just avoid title
   //
   //   initNet();
@@ -130,14 +133,14 @@ void AppRunner_Internal::runUnitTests(std::vector<std::function<bool()>> unit_te
   for (auto test : unit_tests) {
     if (!test()) {
       BRLogError("Unit test " + x + " failed.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     x++;
   }
 }
 
 void AppRunner_Internal::attachToGameHost() {
-  int GameHostPort = Gu::getEngineConfig()->getGameHostPort();
+  int GameHostPort = Core::config()->getGameHostPort();
 
   IPaddress ip;
   if (SDLNet_ResolveHost(&ip, NULL, GameHostPort) == -1) {
@@ -150,12 +153,12 @@ void AppRunner_Internal::attachToGameHost() {
   }
 
   //Wait a few, then exit if we don't get a response.
-  t_timeval t0 = Gu::getMilliSeconds();
+  t_timeval t0 = Base::getMilliSeconds();
 
   while (true) {
-    int timeout = Gu::getEngineConfig()->getGameHostTimeoutMs();
+    int timeout = Core::config()->getGameHostTimeoutMs();
 
-    if (Gu::getMilliSeconds() - t0 > timeout) {
+    if (Base::getMilliSeconds() - t0 > timeout) {
       exitApp(Stz "Failed to connect to game host, timeout " + timeout + "ms exceeded.", -1);
       break;  //Unreachable, but just in case.
     }
@@ -175,7 +178,7 @@ void AppRunner_Internal::attachToGameHost() {
       break;
     }
     else {
-      Gu::sleepThread(50);
+      Base::sleepThread(50);
     }
   }
 }
@@ -220,7 +223,7 @@ void AppRunner_Internal::updateWindowHandleForGamehost() {
   //https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.mainwindowhandle?view=netframework-4.8
   //SDL_SysWMinfo wmInfo;
   //SDL_VERSION(&wmInfo.version);
-  //SDL_GetWindowWMInfo(Gu::getWindow(), &wmInfo);
+  //SDL_GetWindowWMInfo(Base::getWindow(), &wmInfo);
   //HWND hwnd = wmInfo.info.win.window;
   //HWND old = GetActiveWindow();
   //SetActiveWindow(hwnd);
@@ -239,7 +242,7 @@ void AppRunner_Internal::initNet() {
     exitApp(Stz "SDL Net could not be initialized: " + SDL_GetError(), -1);
   }
 
-  if (Gu::getEngineConfig()->getGameHostAttached()) {
+  if (Core::config()->getGameHostAttached()) {
     updateWindowHandleForGamehost();
     attachToGameHost();
   }
@@ -255,10 +258,10 @@ void AppRunner_Internal::runGameLoopTryCatch() {
   previousHandler = signal(SIGSEGV, SignalHandler);
 
   //test the globals before starting the game loop
-  Gu::updateManagers();
+  Base::updateManagers();
 
   //Print the setup time.
-  BRLogInfo(Stz "**Total initialization time: " + Math::round((float)((Gu::getMicroSeconds() - _tvInitStartTime) / 1000) / 1000.0f, 2) + " seconds" + OperatingSystem::newline());
+  BRLogInfo(Stz "**Total initialization time: " + Math::round((float)((Base::getMicroSeconds() - _tvInitStartTime) / 1000) / 1000.0f, 2) + " seconds" + OperatingSystem::newline());
 
   BRLogInfo("Entering Game Loop");
   try {
@@ -275,9 +278,9 @@ void AppRunner_Internal::runGameLoopTryCatch() {
 void AppRunner_Internal::exitApp(const string_t& error, int rc) {
   OperatingSystem::showErrorDialog(error + SDLNet_GetError(), Stz "Error");
 
-  Gu::debugBreak();
+  Base::debugBreak();
 
-  Gu::getGraphicsApi()->cleanup();
+  Base::getGraphicsApi()->cleanup();
 
   SDLNet_Quit();
   SDL_Quit();
@@ -298,7 +301,7 @@ bool AppRunner_Internal::runCommands(const std::vector<string_t>& args) {
     //Convert Mob
     string_t strMob = args[2];
     string_t strFriendlyName = args[3];
-    Gu::getModelCache()->convertMobToBin(strMob, false, strFriendlyName);
+    Base::getModelCache()->convertMobToBin(strMob, false, strFriendlyName);
     return true;
   }
   else if (argMatch(args, "/s", 3)) {
@@ -317,10 +320,10 @@ void AppRunner_Internal::loadDebugPackage() {
   def->build(FileSystem::getExecutableFullPath());
   SDLUtils::Base::checkErrors()();
 
-  Gu::setPackage(def);
+  Base::setPackage(def);
 }
 void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
-  if (Gu::checkArg(args, "package_loc", "_debug")) {
+  if (Base::checkArg(args, "package_loc", "_debug")) {
     BRLogInfo("Application package set to debug.");
     loadDebugPackage();
   }
@@ -334,7 +337,7 @@ void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
       BRLogInfo("Building Package");
       std::shared_ptr<ApplicationPackage> pack = std::make_shared<ApplicationPackage>();
       pack->build(FileSystem::getExecutableFullPath());
-      Gu::setPackage(pack);
+      Base::setPackage(pack);
     }
     else {
       BRLogWarn("Package not selected. Loading debug package.");
@@ -350,18 +353,18 @@ AppRunner::~AppRunner() {
   _pint = nullptr;
 }
 void AppRunner::runApp(const std::vector<string_t>& args, std::vector<std::function<bool()>> unit_tests) {
-  _pint->_tvInitStartTime = Gu::getMicroSeconds();
+  _pint->_tvInitStartTime = Base::getMicroSeconds();
 
   //Root the engine FIRST so we can find the EngineConfig.dat
   FileSystem::init(args[0]);
 
   //Start logger
-  Gu::createLogger("./logs", args);
+  Base::createLogger("./logs", args);
 
   _pint->loadAppPackage(args);
 
   //Load Engine Config, and make globals
-  Gu::initGlobals(args);
+  Base::initGlobals(args);
   {
     _pint->initSDLAndCreateGraphicsApi();
 
@@ -370,7 +373,7 @@ void AppRunner::runApp(const std::vector<string_t>& args, std::vector<std::funct
       _pint->runGameLoopTryCatch();
     }
   }
-  Gu::deleteManagers();
+  Base::deleteManagers();
 }
 
 //        //Init SDL ?? DO we need?
@@ -421,4 +424,4 @@ void AppRunner::runApp(const std::vector<string_t>& args, std::vector<std::funct
 
 //}
 
-}  // namespace BR2
+}  // namespace VG

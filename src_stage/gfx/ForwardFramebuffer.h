@@ -9,7 +9,7 @@
 
 #include "../gfx/FramebufferBase.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ForwardFramebuffer
 *  @brief Framebuffer used in forward rendering.
@@ -29,6 +29,6 @@ public:
   void clearFb();
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

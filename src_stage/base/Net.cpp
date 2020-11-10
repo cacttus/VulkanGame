@@ -6,7 +6,7 @@
 
 #include <SDL_net.h>
 
-namespace BR2 {
+namespace VG {
 class Net_Internal {
 public:
   bool _bError = false;
@@ -79,4 +79,4 @@ void Net::update() {
   });
 }
 
-}  // namespace BR2
+}  // namespace VG

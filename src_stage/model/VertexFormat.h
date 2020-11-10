@@ -14,7 +14,7 @@
 
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 
 class VertexComponent : public VirtualMemory {
 public:

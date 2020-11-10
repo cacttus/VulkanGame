@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../base/IOBase.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class StreamBuffer
 *  @brief A buffer that streams data in and out.  Grows/shrinks.  ADDS - To the end.  REMOVES - From the beginning.

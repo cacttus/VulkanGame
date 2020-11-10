@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../math/MathHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class String
 *  @brief String util.

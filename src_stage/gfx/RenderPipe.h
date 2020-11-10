@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 class DOFFbo : public GLFramework {
 public:
   GLuint _uiDOFFboId;
@@ -102,6 +102,6 @@ protected:
   void enableDisablePipeBits();
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

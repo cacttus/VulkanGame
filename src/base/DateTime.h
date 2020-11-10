@@ -11,7 +11,7 @@
 
 struct tm;
 
-namespace BR2 {
+namespace VG {
 // #define TIME_HH_RSH (0)
 // #define TIME_MM_RSH (6)
 // #define TIME_SS_RSH (13)
@@ -65,6 +65,6 @@ public:
   static DateTime fromMilliseconds(uint_fast64_t milliseconds);   //time as string. hh:mm:ss:uuuu
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

@@ -1,6 +1,6 @@
 #include "../base/IOBase.h"
 
-namespace BR2 {
+namespace VG {
 template <>
 void IOBase<char>::readVec3(vec3& val) {
   int32_t readSiz;

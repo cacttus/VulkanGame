@@ -5,7 +5,7 @@
 #include "../model/MeshUtils.h"
 #include "../model/MeshSpec.h"
 
-namespace BR2 {
+namespace VG {
 UtilMeshSphere::UtilMeshSphere(std::shared_ptr<GLContext> ctx, float radius, const vec3& vOffset, const vec4& vColor, int32_t nSlices, int32_t nStacks) :
   UtilMesh(ctx, MeshUtils::MeshMakerVert::getVertexFormat(), nullptr, GL_TRIANGLES)
   , _fRadius(radius)

@@ -7,7 +7,7 @@
 #include "../bottle/SpriteBucket.h"
 #include "../bottle/BottleUtils.h"
 
-namespace BR2 {
+namespace VG {
 Goal25MoveTo::Goal25MoveTo(Brain25* pBrain, WorldCell* q) : Goal25(pBrain) {
   _pDestinationQuad = q;
 }

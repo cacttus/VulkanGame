@@ -1,7 +1,7 @@
 #include "../base/Hash.h"
 #include "../bottle/Lair.h"
 
-namespace BR2 {
+namespace VG {
 Lair::Lair(LairSpec* ps) : _nGlobs(0), _pLairSpec(ps) {
   //DELETE_VECTOR_ELEMENTS(_vecSpawnPoints);
 }

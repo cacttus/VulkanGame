@@ -19,7 +19,7 @@
 #include "../model/UtilMeshInline.h"
 #include <iostream>
 
-namespace BR2 {
+namespace VG {
 
 RenderUtils::RenderUtils(std::shared_ptr<GLContext> ctx){
   _pContext=ctx;
@@ -347,4 +347,4 @@ void RenderUtils::makeVertexFormats() {
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

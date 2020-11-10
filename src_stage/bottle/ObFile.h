@@ -10,7 +10,7 @@
 #include "../base/PoundFile.h"
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 
 class ObFile : public PoundFile {
   typedef std::map<Hash32, std::shared_ptr<SpriteSpec>> MotionSpecMap;

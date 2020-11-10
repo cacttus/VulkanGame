@@ -11,7 +11,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *    @class Context
 *    @brief Graphics state information.
@@ -57,6 +57,6 @@ private:
   float _fClearA = 1.0f;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

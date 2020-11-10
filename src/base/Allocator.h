@@ -10,7 +10,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Allocator
 *  @brief Base class that manages the allocation of user-defined memory blocks.
@@ -655,6 +655,6 @@ void Allocator<Tx>::swapChunk(size_t iOff, size_t iCountToRemove,
   copyFrom(pDataToSwap, iCountToSwap, iOff, 0);
 }
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

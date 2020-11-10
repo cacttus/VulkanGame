@@ -11,7 +11,7 @@
 #include "../world/WorldHeader.h"
 #include "../world/Component.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class BaseCollider
 *  @brief Movement and physics properties for node objects.

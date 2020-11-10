@@ -23,7 +23,7 @@
 #include "../bottle/BottleUtils.h"
 #include "../bottle/W25MeshMaker.h"
 
-namespace BR2 {
+namespace VG {
 W25GridMesh::W25GridMesh(std::shared_ptr<WorldGrid> pGrid, GridMeshLayer::e eMatter) :
   _eMatterMode(eMatter), _pGrid(pGrid) {
 }
@@ -104,7 +104,7 @@ void W25GridMesh::draw(RenderParams& rp, int& iDbgNumTrisDrawn) {
         //This should never hit.
         //This means we are drawing a node that is not visible.
         BRLogError("**FAILURE** Grid mesh is not visible, but is being drawn.  Fix this (previously a DebugBreak here).");
-        //Gu::debugBreak();
+        //Base::debugBreak();
       }
     }
 #endif

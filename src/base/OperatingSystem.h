@@ -10,7 +10,7 @@
 #include "../base/OperatingSystemHeader.h"
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class OperatingSystem
 *  @brief Wraps OS kernel calls. Provides OS information. Put all OS methods in this class.

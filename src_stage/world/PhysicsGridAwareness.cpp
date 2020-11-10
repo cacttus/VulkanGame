@@ -6,7 +6,7 @@
 #include "../world/NodeUtils.h"
 
 
-namespace BR2 {
+namespace VG {
 PhysicsGridAwareness::PhysicsGridAwareness(std::shared_ptr<PhysicsWorld> pw, MpFloat rxz, float incXZ, MpFloat ry, float incY) {
   _pPhysics = pw;
   _vLastAwarenessPos = vec3(0, 0, 0);// getAwarenessPos();

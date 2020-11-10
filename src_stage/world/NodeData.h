@@ -9,7 +9,7 @@
 #include "../model/ModelHeader.h"
 #include "../base/Serializable.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class NodeData
 *  @brief The base class for all node data blocks.  See NodeDataManager for instance.

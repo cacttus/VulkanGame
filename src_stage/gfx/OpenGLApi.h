@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../gfx/GraphicsApi.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class OpenGLApi
 *  @brief Handles the OpenGL API.
@@ -35,6 +35,6 @@ private:
   std::shared_ptr<GraphicsWindow> createWindowFromProfile(std::shared_ptr<GLProfile> prof, const GraphicsWindowCreateParameters& params);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

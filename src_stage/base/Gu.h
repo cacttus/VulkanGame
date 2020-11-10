@@ -13,7 +13,7 @@
 #include "../world/WorldHeader.h"
 #include "../base/Stopwatch.h"
 
-namespace BR2 {
+namespace VG {
 enum class ManagerType { ShaderMaker };
 /**
 *  @class Gu
@@ -129,9 +129,9 @@ private:
   static std::shared_ptr<Random> _pRandom;
 };
 
-#define Config Base::getEngineConfig()
+#define Config Core::config()
 
-}  // namespace BR2
+}  // namespace VG
 
 
 

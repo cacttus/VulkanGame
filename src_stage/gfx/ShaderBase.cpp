@@ -32,7 +32,7 @@
 #include "../world/PhysicsWorld.h"
 #include "../world/RenderBucket.h"
 
-namespace BR2 {
+namespace VG {
 ShaderBase::ShaderBase(std::shared_ptr<GLContext> ctx, string_t strName) : GLFramework(ctx) {
   setProgramName(strName);
 }
@@ -44,7 +44,7 @@ ShaderBase::~ShaderBase() {
   }
   else {
     BRLogError("Could not get graphics context in dtor.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 }
 void ShaderBase::init() {
@@ -213,7 +213,7 @@ void ShaderBase::setUf(string_t name, void* value, GLint count, bool bIgnore) {
 void ShaderBase::verifyBound() {
   //This is a sanity system.
 
-  if (Gu::getEngineConfig()->getEnableRuntimeErrorChecking()) {
+  if (Core::config()->getEnableRuntimeErrorChecking()) {
     //This should be debug only/
     GLint prog = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &prog);
@@ -324,7 +324,7 @@ string_t ShaderBase::debugGetUniformValues() {
     str += "Uniform '" + uf.second->getName() + "':" + OperatingSystem::newline();
     if (uf.second->hasBeenSet() == false) {
       str += " was not set." + OperatingSystem::newline();
-      // Gu::debugBreak();
+      // Base::debugBreak();
     }
     else {
       str += " " + uf.second->debugGetUniformValueAsString(true) + " " + OperatingSystem::newline();
@@ -484,4 +484,4 @@ void ShaderBase::bindSsbo(std::shared_ptr<GpuBufferData> pDat, const char* shade
   //}
 }
 
-}  // namespace BR2
+}  // namespace VG

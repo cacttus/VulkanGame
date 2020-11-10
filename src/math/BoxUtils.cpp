@@ -4,7 +4,7 @@
 #include "../base/Exception.h"
 //#include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 vec3 BoxUtils::normalForSide(BoxSide::e side) {
   vec3 vret;
   switch (side) {

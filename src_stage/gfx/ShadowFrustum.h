@@ -10,7 +10,7 @@
 #include "../math/MathHeader.h"
 #include "../gfx/GfxHeader.h"
 #include "../world/WorldHeader.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShadowFrustum
 *  @brief Frustum for rendering shadows.
@@ -39,6 +39,6 @@ private:
   std::unique_ptr<ShadowFrustum_Internal> _pint;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

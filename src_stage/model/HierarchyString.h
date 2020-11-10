@@ -10,7 +10,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class HierarchyString
 *  @brief A string "flat file" hierarchy.  Sort of like an L system string it parses data between nodes demarcated by (..) with values separated by commas and push and pop operations are demarcated by [...]

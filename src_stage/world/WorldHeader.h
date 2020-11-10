@@ -9,7 +9,7 @@
 
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 #define PHY_MIN_VEL_LEN_2 (0.00003f)
 #define PHY_DELTA_P_LEN_2 (0.000003f)
 #define PHY_COLLIDE_PADDING_EPSILON (0.0003f)

@@ -2,7 +2,7 @@
 #include "../base/Gu.h"
 
 
-namespace BR2 {
+namespace VG {
 
 bool FpsMeter::deltaMs(t_timeval& __inout_ last, t_timeval ms) {
   t_timeval cur = Gu::getMicroSeconds();

@@ -9,7 +9,7 @@
 
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class PhysicsGridAwareness
 *  @brief  Manages what the player can see in the physical world.

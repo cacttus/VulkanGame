@@ -10,7 +10,7 @@
 #include "../base/PoundFile.h"
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class GameFile
 *  @brief 

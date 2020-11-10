@@ -1,7 +1,7 @@
 //#include "VulkanWindow.h"
 //
 //
-//namespace BR2 {
+//namespace VG {
 //VulkanWindow::VulkanWindow(bool ismain) : GraphicsWindow(ismain) {
 //
 //}

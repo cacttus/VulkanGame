@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 #include "../math/MathHeader.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class GpuQuad3
 *  @brief  Quad, stored on the GPU

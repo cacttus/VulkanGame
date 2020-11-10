@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 //MorphTile with gen params for lair
 class LairTile : public VirtualMemory {
     friend class ObFile;

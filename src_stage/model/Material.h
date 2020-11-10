@@ -10,7 +10,7 @@
 #include "../model/ModelHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 class TextureSlot : public VirtualMemory {
 public:
   Hash32 _iTexFileHashed = 0;
@@ -84,5 +84,5 @@ protected:
   float _fTpFilter = 0.5f;  //Filter for diffuse color
 };
 
-}  // namespace BR2
+}  // namespace VG
 #endif

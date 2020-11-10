@@ -9,7 +9,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Sequencer
 *  @brief Manages sequences of lambas.

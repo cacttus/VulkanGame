@@ -9,7 +9,7 @@
 
 #include "../base/SDLGLIncludes.h"
 
-namespace BR2 {
+namespace VG {
 class RenderParams_Internal {
 public:
   std::shared_ptr<ShaderBase> _pShader = nullptr;
@@ -117,4 +117,4 @@ void RenderParams::draw() {
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

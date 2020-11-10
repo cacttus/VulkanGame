@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../base/IOBase.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *   @class DynamicBuffer
 *   @details
@@ -168,6 +168,6 @@ size_t DynamicBuffer<Tx>::getNumUsedChunks() {
   return getNumChunksNeeded(_iAddCountItems);
 }
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

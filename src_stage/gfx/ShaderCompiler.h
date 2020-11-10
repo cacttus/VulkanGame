@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 struct ShaderIncludeRef {
   string_t* str;
   size_t lineNo;
@@ -45,6 +45,6 @@ private:
   void addSourceLineAt(size_t pos, std::vector<string_t>& vec, string_t line);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

@@ -12,7 +12,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShadowFrustumSide
 *  @brief Side of a shadow cube frustum.  This is basically a camera with a view frustum. Analogous to BaseCamera3D - without the extra node system overhead.

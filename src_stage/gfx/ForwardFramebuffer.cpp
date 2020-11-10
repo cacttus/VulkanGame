@@ -7,7 +7,7 @@
 #include "../gfx/BufferRenderTarget.h"
 
 
-namespace BR2 {
+namespace VG {
 ForwardFramebuffer::ForwardFramebuffer(std::shared_ptr<GLContext> pc, int32_t w, int32_t h, bool bMsaa, int nMsaa, vec4& vClear) :
   FramebufferBase("Forward_Framebuffer", pc, bMsaa, nMsaa, vClear) {
 }

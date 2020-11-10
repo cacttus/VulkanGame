@@ -3,7 +3,7 @@
 #include "../gfx/FrustumProjectionParameters.h"
 #include "../gfx/RenderViewport.h"
 
-namespace BR2 {
+namespace VG {
 // - CONSTRUCTOR/ DESTRUCTOR
 FrustumBase::FrustumBase(std::shared_ptr<RenderViewport> pv, float fov) : _pViewportRef(pv) {
   //_satLine = new Line3f();
@@ -18,7 +18,7 @@ FrustumBase::~FrustumBase() {
 
 // - Returns the center of this frustum's near plane.
 vec3 FrustumBase::getNearPlaneCenterPoint() {
-  return PointAt(BR2::fpt_nbl) + (PointAt(BR2::fpt_ntr) - PointAt(BR2::fpt_nbl)) / 2.0f;
+  return PointAt(VG::fpt_nbl) + (PointAt(VG::fpt_ntr) - PointAt(VG::fpt_nbl)) / 2.0f;
 }
 const QuadPlane* FrustumBase::getPlane(int32_t i) {
   AssertOrThrow2((i >= 0) && (i < NumPlanes));
@@ -513,4 +513,4 @@ void FrustumBase::setFov(float fov) {
 //        getBoundBoxObject()->genExpandByPoint(Points[i]);
 //}
 
-}  // namespace BR2
+}  // namespace VG

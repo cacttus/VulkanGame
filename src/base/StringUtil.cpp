@@ -16,7 +16,7 @@
 #include <stdarg.h>
 #include <sstream>
 
-namespace BR2 {
+namespace VG {
 
 StringUtil::StringUtil() {
 }
@@ -591,4 +591,4 @@ bool StringUtil::endsWith(const std::string& str, const std::string& sub) {
   return ret;
 }
 
-}  // namespace BR2
+}  // namespace VG

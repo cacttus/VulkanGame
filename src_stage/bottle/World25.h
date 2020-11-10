@@ -10,7 +10,7 @@
 
 #include "../world/PhysicsWorld.h"
 #include "../bottle/BottleHeader.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class World25d
 *  @brief Manages the Bottle world grid hierarchy, and physics interaction with world.  Inherits generic physics management for iterative physics solutions.

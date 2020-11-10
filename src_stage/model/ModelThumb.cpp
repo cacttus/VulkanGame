@@ -17,7 +17,7 @@
 #include "../world/PhysicsWorld.h"
 #include "../world/Scene.h"
 
-namespace BR2 {
+namespace VG {
 ///////////////////////////////////////////////////////////////////
 //We need to generate 8 thumbs.
 

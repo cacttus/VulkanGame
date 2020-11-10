@@ -13,7 +13,7 @@
 #undef main
 #endif
 
-using namespace BR2;
+using namespace VG;
 
 int main(int argc, char **argv) {
 //#ifdef _DEBUG
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
   DebugHelper::debugHeapBegin(false);
   {
-    //BR2::DebugHelper::setBreakAlloc(221975);
+    //VG::DebugHelper::setBreakAlloc(221975);
     std::shared_ptr<AppRunner> ar = std::make_shared<AppRunner>();
     ar->runApp(Gu::argsToVectorOfString(argc, argv),
                std::vector<std::function<bool()>>({[]() {
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
                  //string_t str = CSharpScript::tokensToString(toks);
                  //std::cout << str << std::endl;
 
-                 //Gu::debugBreak();
+                 //Base::debugBreak();
                  return true;
                }}));
   }

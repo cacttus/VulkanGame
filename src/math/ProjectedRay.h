@@ -9,7 +9,7 @@
 
 #include "../math/MathHeader.h"
 #include "../math/Vec3x.h"
-namespace BR2 {
+namespace VG {
 
 class ProjectedRay : public VirtualMemory {
 public:

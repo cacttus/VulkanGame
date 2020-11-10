@@ -2,7 +2,7 @@
 #include "./NodeDataManager.h"
 
 
-namespace BR2 {
+namespace VG {
 NodeDataManager::NodeDataManager() {
 
 }

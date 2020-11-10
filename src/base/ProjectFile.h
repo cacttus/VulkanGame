@@ -10,7 +10,7 @@
 //#include "../base/AppHeader.h"
 //#include "../base/XmlFile.h"
 //
-//namespace BR2 {
+//namespace VG {
 ///**
 //*  @class ProjectFile
 //*  @brief

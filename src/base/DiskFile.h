@@ -8,7 +8,7 @@
 #define __DISKFILE_22684246896097193333998_H__
 
 #include "../base/IOBase.h"
-namespace BR2 {
+namespace VG {
 class DiskFile_Internal;
 /**
 *  @class DiskFile
@@ -51,6 +51,6 @@ private:
   std::unique_ptr<DiskFile_Internal> _internal;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

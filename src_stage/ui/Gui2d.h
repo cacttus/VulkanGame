@@ -10,7 +10,7 @@
 
 
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Gui2d
 *  @brief

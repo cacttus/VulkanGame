@@ -7,7 +7,7 @@
 #include "../model/IboData.h"
 #include "../model/TileMesh25.h"
 
-namespace BR2 {
+namespace VG {
 TileMesh25::TileMesh25(std::shared_ptr<GLContext> c, int32_t nQuads) : _pContext(c), _nQuads(nQuads) {
 
   _pVaoData = std::make_shared<VaoDataGeneric>("TileMesh25", c, TileMeshVert::getVertexFormat());

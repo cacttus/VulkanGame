@@ -10,7 +10,7 @@
 #include "../gfx/GraphicsContext.h"
 #include "../base/SDLIncludes.h"
 
-namespace BR2 {
+namespace VG {
 class OglErr;
 /**
 *  @class GLProfile
@@ -275,6 +275,6 @@ public:
   //PFNGLGETTEXTUREPARAMETERIVEXTPROC glGetTextureParameteriv = nullptr;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

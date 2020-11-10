@@ -8,7 +8,7 @@
 
 #include "../math/Vec2x.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Box2x
 *  @brief Basic rect class.

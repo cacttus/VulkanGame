@@ -9,7 +9,7 @@
 #include "../math/MathAll.h"
 #include "../math/Vec2x.h"
 
-namespace BR2 {
+namespace VG {
 
 #pragma region BinaryFile : Methods
 BinaryFile::BinaryFile(const string_t& file_version) {
@@ -442,4 +442,4 @@ void BinaryFile::writeVersion() {
 
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG

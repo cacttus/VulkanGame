@@ -5,7 +5,7 @@
 #define __PLANE_3_2938572938692980329_H__
 #include "../math/Vec3x.h"
 #include "../math/Vec2x.h"
-namespace BR2 {
+namespace VG {
 class Ray_t;
 /**
 *  @class Plane3f

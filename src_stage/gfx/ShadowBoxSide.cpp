@@ -20,7 +20,7 @@
 #include "../world/PhysicsGrid.h"
 #include "../world/NodeUtils.h"
 
-namespace BR2 {
+namespace VG {
 ShadowBoxSide::ShadowBoxSide(std::shared_ptr<ShadowBox> pParentBox, std::shared_ptr<LightNodePoint> pLightSource, BoxSide::e eSide) {
   _eSide = eSide;
   _pParentBox = pParentBox;
@@ -118,7 +118,7 @@ void ShadowBoxSide::cullObjectsAsync(CullParams& cp) {
 
   _pVisibleSet->start(Math::brMin(
     cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
-    Gu::getEngineConfig()->getMaxPointLightShadowDistance() * Gu::getEngineConfig()->getMaxPointLightShadowDistance()),
+    Core::config()->getMaxPointLightShadowDistance() * Core::config()->getMaxPointLightShadowDistance()),
     cp.getCamera());
 
   if (std::shared_ptr<PhysicsWorld> physics = NodeUtils::getPhysicsWorld(_pLightSource)) {

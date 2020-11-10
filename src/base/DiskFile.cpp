@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-namespace BR2 {
+namespace VG {
 class DiskFile_Internal {
 public:
   size_t off = 0;        // - offset in the file
@@ -428,4 +428,4 @@ RetCode DiskFile::writeAllBytes(const string_t& loc, Allocator<char>& __out_ out
   return GR_OK;
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -14,7 +14,7 @@
 
 #include <future>
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class LightNodeBase
 *  @brief Base class for lights.

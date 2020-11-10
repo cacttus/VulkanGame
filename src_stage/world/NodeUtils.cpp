@@ -8,7 +8,7 @@
 #include "../world/Scene.h"
 
 
-namespace BR2 {
+namespace VG {
 std::shared_ptr<Scene> NodeUtils::getScene(std::shared_ptr<SceneNode> lm) {
   std::shared_ptr<TreeNode> p = std::dynamic_pointer_cast<TreeNode>(lm);
 

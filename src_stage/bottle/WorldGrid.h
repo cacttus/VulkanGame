@@ -13,7 +13,7 @@
 #include <future> 
 #include <atomic>
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class World25Grid
 *  @brief World25Grid owns Gn2 owns  WorldCell

@@ -1,7 +1,7 @@
 #include "../model/FragmentBufferData.h"
 #include "../model/VertexFormat.h"
 
-namespace BR2 {
+namespace VG {
 FragmentBufferData::FragmentBufferData(std::shared_ptr<VertexFormat> vft) :  _pVertexFormat(vft)
 {
     _v2f1 = _pVertexFormat->getComponentForUserType(VertexUserType::v2_01);

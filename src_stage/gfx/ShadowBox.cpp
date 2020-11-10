@@ -22,7 +22,7 @@
 #include "../world/RenderBucket.h"
 #include "../model/MeshUtils.h"
 
-namespace BR2 {
+namespace VG {
 #pragma region ShadowBox_Internal
 class ShadowBox_Internal {
 public:
@@ -421,4 +421,4 @@ void ShadowBox::endRenderShadowBox() {
 
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG

@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class TreeNode
 *  @brief Represents generic node of a DAG tree. *Not sorted
@@ -191,6 +191,6 @@ std::shared_ptr<TCopy> TreeNode::duplicateBreadthFirst(std::function<std::shared
   return pParentCopy;
 }
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

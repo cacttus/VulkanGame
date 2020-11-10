@@ -3,7 +3,7 @@
 #include "../model/UtilMeshBox.h"
 #include "../model/MeshUtils.h"
 
-namespace BR2 {
+namespace VG {
 
 UtilMeshBox::UtilMeshBox(std::shared_ptr<GLContext> ctx, const Box3f* pCube, const vec3& vOffset, const Color4f& color) : 
 UtilMesh(ctx, MeshUtils::MeshMakerVert::getVertexFormat(), nullptr, GL_TRIANGLES) {
@@ -39,4 +39,4 @@ void UtilMeshBox::postDraw() {
   //_indexes = NULL;
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -4,7 +4,7 @@
 
 #include "../base/Logger.h"
 //#endif
-namespace BR2 {
+namespace VG {
 //Explicit versions
 bool TypeConv::strToBool(const string_t& s1, bool bThrowIfInvalid) {
   string_t s = StringUtil::lowercase(s1);
@@ -213,4 +213,4 @@ string_t TypeConv::intToStr(const int_fast64_t i, const char* const fmt) {
   return string_t((char*)buf);
 }
 
-}  // namespace BR2
+}  // namespace VG

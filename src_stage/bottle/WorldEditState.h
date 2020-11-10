@@ -10,7 +10,7 @@
 #include "../gfx/UiControls.h"
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 class WorldEditState : public VirtualMemoryShared<WorldEditState> {
 public:
   WorldEditState();

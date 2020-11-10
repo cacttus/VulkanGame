@@ -3,7 +3,7 @@
 // 
 // #include "../gfx/GfxHeader.h"
 // 
-// namespace BR2 {
+// namespace VG {
 // 
 // class GLObject : public VirtualMemoryShared<GLObject> {
 // public:
@@ -19,5 +19,5 @@
 // };
 // 
 // 
-// }  // namespace BR2
+// }  // namespace VG
 // #endif

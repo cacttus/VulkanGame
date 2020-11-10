@@ -9,7 +9,7 @@
 
 #include "../base/BaseDefines.h"
 
-namespace BR2 {
+namespace VG {
 
 /************************************************************************/
 /* String                                                               */
@@ -48,14 +48,14 @@ void runtimeAssertion(const string_t& str);
 #define AssertOrThrow2(x)                                                \
   do {                                                                   \
     if (!(x)) {                                                          \
-      BR2::staticDebugBreak(Stz "Debug Time Assertion: '" + #x + "'. "); \
+      VG::staticDebugBreak(Stz "Debug Time Assertion: '" + #x + "'. "); \
     }                                                                    \
   } while (0)
 #else
 #define AssertOrThrow2(x)                                             \
   do {                                                                \
     if (!(x)) {                                                       \
-      BR2::runtimeAssertion(Stz "Runtime Assertion: '" + #x + "'. "); \
+      VG::runtimeAssertion(Stz "Runtime Assertion: '" + #x + "'. "); \
     }                                                                 \
   } while (0)
 #endif
@@ -65,7 +65,7 @@ void runtimeAssertion(const string_t& str);
 //if you use '-fpermissive', G++ will accept your code, but allowing the use of an undeclared name is deprecated
 //https://stackoverflow.com/questions/10948316/throw-new-stdexception-vs-throw-stdexception
 #define BRTestFL(x) (Stz x + BR_SRC_FLINE + BR_SRC_FNAME)
-#define BRThrowException(x) throw BR2::Exception(Stz x, BR_SRC_FLINE, BR_SRC_FNAME, true)
+#define BRThrowException(x) throw VG::Exception(Stz x, BR_SRC_FLINE, BR_SRC_FNAME, true)
 #define BRThrowNotImplementedException() BRThrowException("The method is not implemented.")
 #define BRThrowNotImplementedExceptionMsg(sz) \
   do {                                        \
@@ -77,7 +77,7 @@ void runtimeAssertion(const string_t& str);
   do {                                \
     if (!(expr)) BRThrowException(x); \
   } while (0)
-#define CheckGpuErrorsDbg() BR2::Base::checkErrors()
+#define CheckGpuErrorsDbg() VG::Base::checkErrors()
 #define ShowMessageBoxOnce(msg)           \
   {                                       \
     static bool __show = false;           \
@@ -170,7 +170,7 @@ public:
 };
 
 
-}  // namespace BR2
+}  // namespace VG
 
 /************************************************************************/
 /* SDL Defines                                                          */

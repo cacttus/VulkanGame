@@ -11,7 +11,7 @@
 #include "../base/PoundFile.h"
 #include "../model/ModelHeader.h"
 #include "../world/WorldHeader.h"
-namespace BR2 {
+namespace VG {
 
 class MatData : public VirtualMemory {
 public:

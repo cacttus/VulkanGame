@@ -15,7 +15,7 @@
 #include "../model/VertexTypes.h"
 #include "../model/VertexFormat.h"
 
-namespace BR2 {
+namespace VG {
 ShaderMaker::ShaderMaker(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
 }
 ShaderMaker::~ShaderMaker() {
@@ -254,7 +254,7 @@ bool ShaderMaker::checkForErrors(std::vector<std::shared_ptr<ShaderSubProgram>>&
       // If there were no errors there still may be warnings and we want to print those to
       // the console
       BRLogError(errStr);
-      Gu::debugBreak();
+      Base::debugBreak();
       return true;
     }
   }
@@ -421,7 +421,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
     //delete pProgram;
     pProgram = nullptr;
 
-    Gu::debugBreak();
+    Base::debugBreak();
 
     return nullptr;
   }
@@ -558,7 +558,7 @@ void ShaderMaker::parseUniforms(std::shared_ptr<ShaderBase> sb) {
       }
       else if (StringUtil::findFirstOf(name, std::vector<char>{'.', '[', ']'}) != string_t::npos) {
         BRLogWarn("Uniform name '" + name + "' was not valid but was parsed as a basic uniform. Could be a buffer. (parse error).");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
 
       if (StringUtil::equals(uniformName, "gl_NumWorkGroups")) {
@@ -613,7 +613,7 @@ void ShaderMaker::parseUniformBlocks(std::shared_ptr<ShaderBase> sb) {
 
       if (bindingIndex > iMaxUniformBufferBindings) {
         BRLogWarn("The binding index " + bindingIndex + " was greater than the maximum number of UBO bindings: " + iMaxUniformBufferBindings + ".");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
 
       //set the program's buffer to be bound to this one.
@@ -653,7 +653,7 @@ void ShaderMaker::parseAttributes(std::shared_ptr<ShaderBase> sb) {
         if (attrOther->getUserType() != VertexUserType::NoVertexType) {
           err += Stz "  " + sb->getProgramName() +
                  " - Duplicate shader attribute '" + VertexFormat::getUserTypeName(attrOther->getUserType()) + "'.";
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
     }
@@ -810,4 +810,4 @@ void ShaderMaker::addGeneralError(string_t str) {
   _vecGeneralErrors.push_back(str);
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -1,5 +1,5 @@
 #include "../base/Gu.h"
 
-namespace BR2 {
+namespace VG {
 
 }//ns Game

@@ -2,7 +2,7 @@
 #include "../base/Hash.h"
 #include "../math/Algorithm.h"
 
-namespace BR2 {
+namespace VG {
 //Prime Numbers
 //Gneeratoer: https://asecuritysite.com/encryption/random3
 const uint32_t Hash::Fnv_Basis_32[FNV_MAX_ALGORITHMS_32] = {

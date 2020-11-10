@@ -8,11 +8,9 @@
 #define __SDL_15655475192235209788_H__
 
 #include "../base/BaseHeader.h"
-#include "../gfx/GfxHeader.h"
+#include "../core/SDLIncludes.h"
 
-#include "../base/SDLIncludes.h"
-
-namespace BR2 {
+namespace VG {
 /**
 *  @class SDLUtils
 *  @brief Static SDLUtils interface functions.

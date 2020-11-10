@@ -1,7 +1,7 @@
 #include "../base/TextParser.h"
 #include "../base/Exception.h"
 
-namespace BR2 {
+namespace VG {
 
 TextParser::TextParser(char* data) {
   _ptr = data;
@@ -214,4 +214,4 @@ void TextParser::eatLine(int32_t& lineCountToAddTo) {
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -8,7 +8,7 @@
 #include "../gfx/OpenGLApi.h"
 #include "../gfx/RenderUtils.h"
 
-namespace BR2 {
+namespace VG {
 OpenGLApi::OpenGLApi() {
 }
 OpenGLApi::~OpenGLApi() {
@@ -30,7 +30,7 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
   minGLVersion = c_iCurrentOpenGLVersion;
   minGLSubversion = c_iCurrentOpenGLSubVersion;
 
-  OpenGLProfile eConfigProfile = Gu::getEngineConfig()->openGLProfile();
+  OpenGLProfile eConfigProfile = Core::config()->openGLProfile();
 
   iProfile = SDL_GL_CONTEXT_PROFILE_CORE;
   if (eConfigProfile == OpenGLProfile::Compatibility) {
@@ -48,11 +48,11 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
 
   int msaa_buf = 0;
   int msaa_samples = 0;
-  if (Gu::getEngineConfig()->getEnableMSAA()) {
+  if (Core::config()->getEnableMSAA()) {
     msaa_buf = 1;
-    msaa_samples = Gu::getEngineConfig()->getMsaaSamples();
+    msaa_samples = Core::config()->getMsaaSamples();
   }
-  bVsync = Gu::getEngineConfig()->getVsyncEnabled();
+  bVsync = Core::config()->getVsyncEnabled();
 
   //This is the 'optimal' context.
   if (iProfile == SDL_GL_CONTEXT_PROFILE_ES) {
@@ -185,4 +185,4 @@ void OpenGLApi::destroyWindow(std::shared_ptr<GraphicsWindow> win) {
   GraphicsApi::destroyWindow(win);
 }
 
-}  // namespace BR2
+}  // namespace VG

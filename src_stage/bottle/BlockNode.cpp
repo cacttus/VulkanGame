@@ -8,7 +8,7 @@
 #include "../bottle/WipGrid.h"
 #include "../bottle/W25MeshMaker.h"
 
-namespace BR2 {
+namespace VG {
 BlockNode::BlockNode(std::shared_ptr<WorldGrid> pg) {
   _pGrid = pg;
   static int nNodes = 0;
@@ -149,7 +149,7 @@ void BlockNode::createCells(WorldCellFile* pFile, int32_t& iCell, World25GridGen
           //            //Make sure no dupes
           //            for(WorldCell* ccc : cells) {
           //                if(ccc->getLocalPos() == viPos) {
-          //                    Gu::debugBreak();
+          //                    Base::debugBreak();
           //                }
           //            }
           //#endif

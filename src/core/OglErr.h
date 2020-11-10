@@ -8,7 +8,7 @@
 #define __OGLERR_1479868789525442042_H__
 
 #include "../base/BaseHeader.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class oglErr
 *  @brief Handles OpenGL Errors.
@@ -26,6 +26,6 @@ private:
   std::unique_ptr<OglErr_Internal> _pint;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

@@ -11,7 +11,7 @@
 #include "../model/SceneNode.h"
 
 #include <vector>
-namespace BR2 {
+namespace VG {
 /**
 *  @class Path
 *  @brief The node-based implementation of motion along a fixed geometric path, supporting speed, accelleration and easing.

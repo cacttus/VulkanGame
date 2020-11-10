@@ -13,7 +13,7 @@
 #include "../math/Mat3x.h"
 #include "../base/TypeConv.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @stuct Mat4x
 *  @brief Row major 4x4 matrix. (64 bytes)
@@ -1045,6 +1045,6 @@ FORCE_INLINE bool Mat4x<Tx>::parse(std::string tok, Mat4x<Tx>& mOut) {
   return true;
 }
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

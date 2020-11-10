@@ -6,7 +6,7 @@
 #include "../gfx/RenderTarget.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 class RenderViewport_Internal {
 public:
   std::unique_ptr<RenderViewport_Internal> _pint = nullptr;
@@ -43,7 +43,7 @@ void RenderViewport::bind() {
 }
 void RenderViewport::updateBox(double sx, double sy, double sw, double sh) {
   if (_pint->_constraint == ViewportConstraint::Adjust) {
-    double ar = Gu::getEngineConfig()->windowedAspectRatio();
+    double ar = Core::config()->windowedAspectRatio();
     double vh = 1;
     double vw = 1;
 

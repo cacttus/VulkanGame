@@ -10,7 +10,7 @@
 //#include "../gfx/FrustumBase.h"
 //#include "../gfx/RenderParams.h"
 //#include "../model/VertexFormat.h"
-namespace BR2 {
+namespace VG {
 /////////////////////////////////////////////////////////////////////
 ParticleMaker::ParticleMaker(std::shared_ptr<GLContext> ct) :GLFramework(ct) {
 }

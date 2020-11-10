@@ -25,7 +25,7 @@
 #include "../model/TextBufferMesh.h"
 
 
-namespace BR2 {
+namespace VG {
 #pragma region UiSkinElement
 bool UiSkinElement::setAndValid(std::shared_ptr<UiSkinElement> ele) {
   bool b = (ele != nullptr && ele->validate());

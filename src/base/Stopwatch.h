@@ -9,7 +9,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Stopwatch
 *  @brief Records milliseconds between instances of code.  Similar to .NET Stopwatch class.

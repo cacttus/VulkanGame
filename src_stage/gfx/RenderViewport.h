@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /*
 Technically there are 3 modes. "Full" wouldn't even be a mode if we wanted to correctly scale the aspect ratio.  But FULL is needed to render shadows, and other 
 rendering.

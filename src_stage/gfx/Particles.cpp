@@ -1,7 +1,7 @@
 #include "Particles.h"
 
 
-namespace BR2 {
+namespace VG {
 Particles::Particles() {
 
 }

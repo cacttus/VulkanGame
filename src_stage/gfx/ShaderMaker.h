@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShaderMaker
 *  @brief Compiles GLSL shaders.
@@ -108,6 +108,6 @@ protected:
   std::shared_ptr<ShaderBase> getValidShaderForVertexType(ShaderMap& shaders, std::shared_ptr<VertexFormat> fmt);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

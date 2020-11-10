@@ -30,7 +30,7 @@
 #include "../world/RenderBucket.h"
 #include "../world/Scene.h"
 
-namespace BR2 {
+namespace VG {
 PhysicsWorld::PhysicsWorld(std::shared_ptr<Scene> pscene) {
   _pScene = pscene;
 }
@@ -160,7 +160,7 @@ void PhysicsWorld::reparentObjectByCustomBox(std::shared_ptr<PhysicsNode> ob, Bo
 
   if (!pBox->validateBoundBox()) {
     BRLogErrorCycle("Bound box was invalid for " + ob->name() + ": " + pBox->toString());
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
   //clear
@@ -219,7 +219,7 @@ void PhysicsWorld::reparentObjectByCustomBox(std::shared_ptr<PhysicsNode> ob, Bo
           //            bSet = true;
           //        }
           //        //AssertOrThrow2(pCell != nullptr);
-          //        // Gu::debugBreak();
+          //        // Base::debugBreak();
           //    }
 
           //}
@@ -231,7 +231,7 @@ void PhysicsWorld::reparentObjectByCustomBox(std::shared_ptr<PhysicsNode> ob, Bo
           //    BroLogWarn("OBject outside grid!");
           //}
           //**Object is approaching outside grid bounds.
-          //Gu::debugBreak();
+          //Base::debugBreak();
         }
       }
     }
@@ -295,7 +295,7 @@ bool PhysicsWorld::tryRemoveObj(std::shared_ptr<PhysicsNode> ob) {
 void PhysicsWorld::addObj(std::shared_ptr<PhysicsNode> ob, bool bActivate, bool bRefreshCache) {
   if (ob->detachFromParent() == true) {
     BRLogWarn(ob->getSpecName() + "Added a parented OBJ - you may get invaid results.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   calc_obj_manifold(ob);
 
@@ -308,7 +308,7 @@ void PhysicsWorld::addObj(std::shared_ptr<PhysicsNode> ob, bool bActivate, bool 
   ObjMap::iterator it = _mapObjects.find(ob->getId());
   if (it != _mapObjects.end()) {
     BRLogError("ERROR - Found duplicate grid object in world.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else {
     _mapObjects.insert(std::make_pair(ob->getId(), ob));
@@ -1139,7 +1139,7 @@ void PhysicsWorld::sweepGridBox(std::function<void(ivec3&)> func, ivec3& viMin, 
     BRLogWarnCycle("sweepGridBox, too many grids, looping over: " + dbg_nGrids);
     static int n = 0;
     if (n == 0) {
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
   for (int32_t k = viMin.z; k <= viMax.z; ++k) {

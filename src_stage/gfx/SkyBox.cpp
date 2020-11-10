@@ -12,7 +12,7 @@
 #include "../gfx/ShaderBase.h"
 #include "../gfx/RenderParams.h"
 
-namespace BR2 {
+namespace VG {
 SkyBox::SkyBox(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
 
 }

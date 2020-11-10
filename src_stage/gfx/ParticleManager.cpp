@@ -11,7 +11,7 @@
 #include "../gfx/RenderParams.h"
 #include "../model/VertexFormat.h"
 
-namespace BR2 {
+namespace VG {
 ParticleManager::ParticleManager(std::shared_ptr<GLContext> pContext) : GLFramework(pContext) {
 }
 ParticleManager::~ParticleManager() {

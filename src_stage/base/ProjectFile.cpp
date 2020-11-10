@@ -2,7 +2,7 @@
 //#include "ProjectFile.h"
 //
 //
-//namespace BR2 {
+//namespace VG {
 //ProjectFile::ProjectFile() {
 //
 //}

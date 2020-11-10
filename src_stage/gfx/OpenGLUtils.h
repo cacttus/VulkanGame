@@ -9,7 +9,7 @@
 // 
 // #include "../gfx/GfxHeader.h"
 // 
-// namespace BR2 {
+// namespace VG {
 // /**
 // *  @class OpenGLUtils
 // *  @brief Utilities for OpenGL.
@@ -84,6 +84,6 @@
 //   static void debugPrintBoundTextureAttribs(string_t& strState, const string_t& texName, GLenum tex_target);
 // };
 // 
-// }  // namespace BR2
+// }  // namespace VG
 // 
 // #endif

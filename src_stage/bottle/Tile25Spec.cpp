@@ -2,7 +2,7 @@
 #include "../bottle/Tile25Spec.h"
 #include "../bottle/SpriteBucket.h"
 
-namespace BR2 {
+namespace VG {
 Tile25Spec::Tile25Spec(string_t name, uint8_t iIndex, GridMeshLayer::e em, std::shared_ptr<SpriteSpec> top, std::shared_ptr<SpriteSpec> side,
   std::shared_ptr<SpriteSpec> bot, ClimateSpec& cp, float fRarity) {
 

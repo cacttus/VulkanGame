@@ -7,7 +7,7 @@
 #ifndef __TYPECAST_14601720251282440992_H__
 #define __TYPECAST_14601720251282440992_H__
 
-namespace BR2 {
+namespace VG {
 
 
 

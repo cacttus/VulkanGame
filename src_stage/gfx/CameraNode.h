@@ -12,7 +12,7 @@
 #include "../math/MathAll.h"
 #include "../world/PhysicsNode.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class CameraNode
 *  @brief Base class for cameras in the GL. Superclass of @cBaseCamera2D, @cBaseCamera3D

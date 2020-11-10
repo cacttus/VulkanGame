@@ -10,7 +10,7 @@
 #include "../model/ModelHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 enum class VertexUserType { v2_01,
                             v3_01,
                             v4_01,
@@ -209,6 +209,6 @@ public:
   static std::shared_ptr<VertexFormat> getVertexFormat() { return _pVertexFormat; }
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

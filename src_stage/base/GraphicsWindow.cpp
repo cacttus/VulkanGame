@@ -20,7 +20,7 @@
 #include "../world/Scene.h"
 #include "../world/PhysicsWorld.h"
 
-namespace BR2 {
+namespace VG {
 #pragma region GraphicsWindow_Internal
 class GraphicsWindow_Internal {
 public:
@@ -58,8 +58,8 @@ public:
 void GraphicsWindow_Internal::toggleFullscreen() {
   if (_bFullscreen == false) {
     //get the fullscreen resolution
-    int32_t iFsW = Gu::getEngineConfig()->getFullscreenWidth();
-    int32_t iFsH = Gu::getEngineConfig()->getFullscreenHeight();
+    int32_t iFsW = Core::config()->getFullscreenWidth();
+    int32_t iFsH = Core::config()->getFullscreenHeight();
     if (iFsW <= 0 || iFsH <= 0) {
       SDL_DisplayMode DM;
       SDL_GetCurrentDisplayMode(0, &DM);
@@ -372,4 +372,4 @@ bool GraphicsWindow::containsPoint_Global2D(const vec2& mp) {
 }
 
 #pragma endregion
-}  // namespace BR2
+}  // namespace VG

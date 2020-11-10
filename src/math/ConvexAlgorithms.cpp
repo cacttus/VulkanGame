@@ -2,7 +2,7 @@
 //#include "../math/Algorithm.h"
 
 #include "../math/MathAll.h"
-namespace BR2 {
+namespace VG {
 
 /**
 *    @fn convex_axis_t

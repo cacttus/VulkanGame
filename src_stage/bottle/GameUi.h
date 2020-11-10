@@ -15,7 +15,7 @@
 #include "../gfx/UiControls.h"
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 
 //TEMP for testing and debug fo the skin load
 class SKIN_TEMP {

@@ -1,7 +1,7 @@
 #include "Animation.h"
 
 
-namespace BR2 {
+namespace VG {
 
 bool RotateTo::update(float delta) {
   bool bDone = false;

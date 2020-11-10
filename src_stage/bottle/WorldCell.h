@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class World2dCell
 *  @brief

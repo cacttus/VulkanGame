@@ -5,7 +5,7 @@
 #include "../gfx/ShaderSubProgram.h"
 
 
-namespace BR2 {
+namespace VG {
 ShaderSubProgram::ShaderSubProgram() {
 }
 ShaderSubProgram::~ShaderSubProgram() {

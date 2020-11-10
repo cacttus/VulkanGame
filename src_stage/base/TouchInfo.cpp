@@ -1,7 +1,7 @@
 #include "../base/TouchInfo.h"
 #include "../base/Gu.h"
 
-namespace BR2 {
+namespace VG {
 void TouchInfo::copyFrom(TouchInfo* rhs) {
   this->_eState = rhs->_eState;
   this->_vMousePosPress = rhs->_vMousePosPress;

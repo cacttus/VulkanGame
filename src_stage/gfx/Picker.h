@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Picker
 *  @brief Manages pixel-perfect picking.

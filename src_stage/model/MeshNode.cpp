@@ -34,7 +34,7 @@
 #include "../world/NodeUtils.h"
 #include <iostream>
 
-namespace BR2 {
+namespace VG {
 MeshNode::MeshNode(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> ms) : MeshNode(name, pickable, ms, nullptr) {
 }
 MeshNode::MeshNode(const string_t& name, bool pickable, std::shared_ptr<MeshSpec> ps, std::shared_ptr<ModelNode> mn) : SceneNode(name, ps) {
@@ -158,7 +158,7 @@ void MeshNode::orderBoneNodesForGpu() {
       }
       else {
         BRLogError("'" + getMeshSpec()->getName() + "' : Node, Bone Cache is not ordered properly.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
   }
@@ -412,4 +412,4 @@ void MeshNode::showNoMaterialError() {
   //}
 }
 
-}  // namespace BR2
+}  // namespace VG

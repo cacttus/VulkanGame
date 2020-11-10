@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 enum class AttachState { NotAttached, Attached, Detached };
 /**
 *  @class Component

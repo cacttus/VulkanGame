@@ -11,7 +11,7 @@
 #include "../base/Allocator.h"
 #include "../base/DynamicBuffer.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class GrowBuffer
 *  @brief AUtomatically grows when items are added.

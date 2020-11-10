@@ -21,7 +21,7 @@
 #include <unistd.h>
 #endif
 
-namespace BR2 {
+namespace VG {
 string_t FileSystem::_strExePath = "";
 FileSystem::FileSystem() {}
 FileSystem::~FileSystem() {}
@@ -749,4 +749,4 @@ bool FileSystem::pathIsAbsolute(const string_t& path) {
 #endif
 }
 
-}  // namespace BR2
+}  // namespace VG

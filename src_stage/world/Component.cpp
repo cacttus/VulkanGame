@@ -2,7 +2,7 @@
 #include "./Component.h"
 
 
-namespace BR2 {
+namespace VG {
 Component::Component() {
 }
 Component::~Component() {

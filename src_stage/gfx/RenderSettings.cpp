@@ -1,7 +1,7 @@
 #include "../gfx/RenderSettings.h"
 
 
-namespace BR2 {
+namespace VG {
 void RenderSettings::init() {
   _pRenderDebug = std::make_shared<RenderDebug>();
 }

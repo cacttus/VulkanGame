@@ -36,7 +36,7 @@ extern int stb_vorbis_decode_filename(const char* filename, int* channels, int* 
 #endif
 #endif
 
-namespace BR2 {
+namespace VG {
 
 std::shared_ptr<Logger> Base::_logger = nullptr;
 std::shared_ptr<ApplicationPackage> Base::_package = nullptr;
@@ -164,7 +164,7 @@ void Base::print(const char* msg) {
   //if (_pEngineConfig == nullptr) {
   ColoredConsole::print(std::string(msg), ColoredConsole::Color::FG_WHITE);
   //}
-  //else if (Base::getEngineConfig()->getShowConsole()) {
+  //else if (Core::config()->getShowConsole()) {
   ColoredConsole::print(std::string(msg), ColoredConsole::Color::FG_WHITE);
   //}
 }
@@ -360,4 +360,4 @@ bool Base::isBigEndian() {
 }
 
 
-}  // namespace BR2
+}  // namespace VG

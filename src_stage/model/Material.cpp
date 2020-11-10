@@ -9,7 +9,7 @@
 #include "../gfx/TexCache.h"
 #include "../gfx/RenderSettings.h"
 
-namespace BR2 {
+namespace VG {
 Material::Material(const string_t& name) {
   _strName = name;
   _v4Spec.construct(1, 1, 1, 1);
@@ -184,7 +184,7 @@ void Material::deserialize(std::shared_ptr<BinaryFile> fb) {
     ts->deserialize(fb);
     if (_mapTextureBindings.find(ts->_eChannel) != _mapTextureBindings.end()) {
       BRLogWarn("Duplicate Texture binding for material." + (int)ts->_eChannel);
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     _mapTextureBindings.insert(std::make_pair(ts->_eChannel, ts));
   }
@@ -239,4 +239,4 @@ void TextureSlot::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeInt32(std::move((int32_t)_eChannel));
 }
 
-}  // namespace BR2
+}  // namespace VG

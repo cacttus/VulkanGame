@@ -31,7 +31,7 @@
 #include "../world/Scene.h"
 #include "../world/RenderBucket.h"
 
-namespace BR2 {
+namespace VG {
 RenderPipe::RenderPipe(std::shared_ptr<GLContext> ct, std::shared_ptr<GraphicsWindow> w) : GLFramework(ct) {
   _vClear = vec4(0, 0, 0, 1);
   _pWindow = w;
@@ -58,8 +58,8 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
   releaseFbosAndMesh();
 
   // - Setup Framebuffers.
-  _bMsaaEnabled = Gu::getEngineConfig()->getEnableMSAA();
-  _nMsaaSamples = Gu::getEngineConfig()->getMsaaSamples();
+  _bMsaaEnabled = Core::config()->getEnableMSAA();
+  _nMsaaSamples = Core::config()->getMsaaSamples();
   _iLastWidth = iWidth;
   _iLastHeight = iHeight;
 
@@ -142,7 +142,7 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
 
   //These are here SOLELY for shadow map blending.
   //If we don't do any shadow blending then these are useless.
-  int32_t iShadowMapRes = Gu::getEngineConfig()->getShadowMapResolution();
+  int32_t iShadowMapRes = Core::config()->getShadowMapResolution();
   _pShadowBoxFboMaster = std::make_shared<ShadowBox>(nullptr, iShadowMapRes, iShadowMapRes);
   _pShadowBoxFboMaster->init();
   _pShadowFrustumMaster = std::make_shared<ShadowFrustum>(nullptr, iShadowMapRes, iShadowMapRes);
@@ -589,8 +589,8 @@ void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet)
   //We loop this way because we MUST fill all texture units used by the GPU.
   std::vector<GLint> boxSamples;
   std::vector<GLint> frustSamples;
-  int iNumGpuShadowBoxes = Gu::getEngineConfig()->getMaxCubeShadowSamples();
-  int iNumGpuShadowFrustums = Gu::getEngineConfig()->getMaxFrustShadowSamples();
+  int iNumGpuShadowBoxes = Core::config()->getMaxCubeShadowSamples();
+  int iNumGpuShadowFrustums = Core::config()->getMaxFrustShadowSamples();
 
   if (lightman->getGpuShadowBoxes().size() > iNumGpuShadowBoxes) {
     BRLogWarnCycle("More than " + iNumGpuShadowBoxes + " boxes - some shadows will not show.");
@@ -690,7 +690,7 @@ void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet)
   }
   else {
     BRLogWarn("You didn't set the enviro texture.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   Gu::checkErrorsDbg();
 }
@@ -887,12 +887,12 @@ void RenderPipe::checkMultisampleParams() {
       BRLogWarn(Stz "[RenderPipe] MSAA sample count of '" + _nMsaaSamples +
                 "' was larger than the card's maximum: '" + iMaxSamples + "'. Truncating.");
       _nMsaaSamples = iMaxSamples;
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     if (BitHacks::bitcount(_nMsaaSamples) != 1) {
       BRLogWarn(Stz "[RenderPipe] Error, multisampling: The number of samples must be 2, 4, or 8.  Setting to 2.");
       _nMsaaSamples = iMaxSamples > 2 ? 2 : iMaxSamples;
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 }
@@ -932,4 +932,4 @@ std::shared_ptr<Img32> RenderPipe::getResultAsImage() {
 
   return bi;
 }
-}  // namespace BR2
+}  // namespace VG

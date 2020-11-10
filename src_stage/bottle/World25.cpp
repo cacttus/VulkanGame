@@ -52,7 +52,7 @@
 
 #define FST_PT(xx) _pContext->getCamera()->getFrustum()->PointAt(xx)
 
-namespace BR2 {
+namespace VG {
 World25::World25(std::shared_ptr<Scene> pscene, std::shared_ptr<BottleScript> pCallingScript) {
   AssertOrThrow2(pscene);
   _pScene = pscene;
@@ -909,7 +909,7 @@ void World25::createObjFromFile(World25ObjectData* obData)// WorldCell* pDestCel
 
   if (obData->_iType == PIX_OBJ_TYPE_INVALID) {
     //Technically this should never happen because we don't save invalid objects
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 }
@@ -1080,7 +1080,7 @@ GridShow::e World25::toggleShowGrid() {
     _eShowGrid = GridShow::e::NoShow;
   }
   else {
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   return _eShowGrid;
 }

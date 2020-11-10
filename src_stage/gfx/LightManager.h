@@ -11,7 +11,7 @@
 #include "../model/ModelHeader.h"
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class LightManager
 *  @brief Manages both lights, and shadow maps, for all objects which emit.

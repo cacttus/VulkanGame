@@ -10,7 +10,7 @@
 #include "../world/Script.h"
 #include "../base/LuaIncludes.h"
 
-namespace BR2 {
+namespace VG {
 class LuaScript : public Script {
 public:
   LuaScript();
@@ -29,6 +29,6 @@ private:
   //std::shared_ptr<LuaFunction> getGlobalFunction(const string_t& name);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

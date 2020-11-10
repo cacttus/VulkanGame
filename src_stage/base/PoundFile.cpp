@@ -3,7 +3,7 @@
 #include "../base/Logger.h"
 #include "../base/TextParser.h"
 
-namespace BR2 {
+namespace VG {
 PoundFile::PoundFile() {
 }
 PoundFile::PoundFile(string_t& loc) :

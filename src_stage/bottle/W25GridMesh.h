@@ -11,7 +11,7 @@
 
 #include <mutex>
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class W25GridMesh
 *  @brief Topology mesh for the glob nodes.

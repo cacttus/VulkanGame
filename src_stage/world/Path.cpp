@@ -10,7 +10,7 @@
 
 #include <algorithm>
 
-namespace BR2 {
+namespace VG {
 Path::Path(const string_t& name, std::shared_ptr<Spline> spline, float speed, float accel, PathEasing pe) : SceneNode(name, nullptr) {
   init();
 
@@ -145,4 +145,4 @@ void Path::drawForwardDebug(RenderParams& rp) {
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

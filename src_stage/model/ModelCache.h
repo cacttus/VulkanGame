@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ModelCache
 *  @brief simple mod cahce

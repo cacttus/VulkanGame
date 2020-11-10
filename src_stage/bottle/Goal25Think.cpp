@@ -2,7 +2,7 @@
 #include "../bottle/Brain25.h"
 #include "../bottle/SpriteBucket.h"
 
-namespace BR2 {
+namespace VG {
 Goal25Think::Goal25Think(Brain25* pBrain) : Goal25(pBrain) {
 }
 Goal25Think::~Goal25Think() {

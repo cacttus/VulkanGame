@@ -5,7 +5,7 @@
 #include "../bottle/WorldObj.h"
 #include "../base/Logger.h"
 
-namespace BR2 {
+namespace VG {
 WorldEditState::WorldEditState() {
 }
 WorldEditState::~WorldEditState() {

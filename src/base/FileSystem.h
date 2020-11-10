@@ -9,7 +9,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class FileInfo
 *  @brief Boiled down unix stat() structure.
@@ -88,6 +88,6 @@ private:
   static bool getAllFilesOrDirs(const string_t& dir, std::vector<string_t>& __out_ dirs, bool bFiles);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

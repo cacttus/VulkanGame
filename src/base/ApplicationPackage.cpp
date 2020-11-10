@@ -10,7 +10,7 @@
 #include "../base/PackageConfiguration.h"
 #include <fstream>
 
-namespace BR2 {
+namespace VG {
 
 #pragma region ApplicationPackage_Internal
 
@@ -330,4 +330,4 @@ string_t ApplicationPackage::getEngineConfigFilePath() {
 
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG

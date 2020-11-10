@@ -9,7 +9,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class TextParser
 *  @brief Parse Text.  Takes a pointer to the text data to parse and increments its own internal copy of the pointer.

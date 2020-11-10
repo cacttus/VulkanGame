@@ -9,7 +9,7 @@
 
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 //GridManifold
 //Simply a set of grids that an PhysicsNode intersects
 //Used by physics to make collision checking faster

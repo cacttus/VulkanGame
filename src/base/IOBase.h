@@ -12,7 +12,7 @@
 #include "../base/RetCode.h"
 #include "../math/Vec3x.h"
 #include "../math/Mat4x.h"
-namespace BR2 {
+namespace VG {
 /**
 *   @class IOBase
 *   @brief Abstract class to derive file classes from, this class supports basic static file operations.
@@ -144,6 +144,6 @@ public:
   virtual ~IOFileBuffer() override {}
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

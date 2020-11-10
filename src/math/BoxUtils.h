@@ -9,7 +9,7 @@
 
 #include "../math/MathHeader.h"
 
-namespace BR2 {
+namespace VG {
 //moved defs to mathheader
 class BoxUtils : public VirtualMemory {
 public:

@@ -25,7 +25,7 @@
 #include <cxxabi.h>
 #endif
 
-namespace BR2 {
+namespace VG {
 
 #if defined(BR2_OS_WINDOWS)
 HANDLE hCrtLog;
@@ -356,4 +356,4 @@ string_t DebugHelper::getCallingMethod() {
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

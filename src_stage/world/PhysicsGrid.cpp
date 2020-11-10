@@ -7,7 +7,7 @@
 #include "../gfx/ShaderMaker.h"
 
 
-namespace BR2 {
+namespace VG {
 PhysicsGrid::PhysicsGrid(std::shared_ptr<PhysicsWorld> pw, const ivec3& viPos, float fNodeWidth, float fNodeHeight, bool bEmpty) : _bEmpty(bEmpty),
 _pPhysicsWorld(pw), _viPos(viPos) {
   _fNodeHeight = fNodeHeight;

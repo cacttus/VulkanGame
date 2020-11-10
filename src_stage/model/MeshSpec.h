@@ -12,7 +12,7 @@
 #include "../model/SceneNode.h"
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class MeshSpec
 *  @brief Describes a geometry mesh.

@@ -31,7 +31,7 @@
 #include "../world/Scene.h"
 #include <future>
 
-namespace BR2 {
+namespace VG {
 std::shared_ptr<UiEventFunc> UiEventFunc::create(std::function<void(UiEventId::e eventId, void*)> f) {
   std::shared_ptr<UiEventFunc> ef = std::make_shared<UiEventFunc>();
   ef->_func = f;
@@ -1323,7 +1323,7 @@ void UiImage::getQuadVerts(std::vector<v_GuiVert>& verts, std::vector<v_index32>
     else {
       _q2Tex._p1.x = _pTexture->tex()->uv1().x;
       static int x = 0;
-      if (x == 0) { Gu::debugBreak(); }
+      if (x == 0) { Base::debugBreak(); }
     }
   }
   else if (_eSizeModeX == UiImageSizeMode::e::Computed) {
@@ -1347,7 +1347,7 @@ void UiImage::getQuadVerts(std::vector<v_GuiVert>& verts, std::vector<v_index32>
     else {
       _q2Tex._p1.y = _pTexture->tex()->uv0().y;
       static int x = 0;
-      if (x == 0) { Gu::debugBreak(); }//Texture height was zero
+      if (x == 0) { Base::debugBreak(); }//Texture height was zero
     }
   }
   else if (_eSizeModeY == UiImageSizeMode::e::Computed) {
@@ -2020,7 +2020,7 @@ void Ui9Grid::set9GridImages(std::shared_ptr<Ui9Tex> texs, uint32_t iLayer) {
           //**If this hits, likely you created a UiTex AFTER you called the MegaTex::loadImages()..
           // we need image sizes when craeating the gui, after the skin.
           //The order 100% NEEEDED - but it's more sane to do it this way to vet out visual bugs down the road
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
 
@@ -3312,7 +3312,7 @@ void UiScreen::performForcedLayout() {
 }
 void UiScreen::error(std::string errMsg) {
   BRLogError(errMsg);
-  Gu::debugBreak();
+  Base::debugBreak();
 }
 float UiScreen::getDesignMultiplierW() {
   //float dw = getScreen()->getDesignSize().getWidth();

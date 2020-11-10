@@ -12,7 +12,7 @@
 #include "../math/Vec4x.h"
 #include "../math/Mat4x.h"
 
-namespace BR2 {
+namespace VG {
 // - Channel 1 is depth texture, 0 is base textures
 #define GFX_TEXTURE_CHANNEL_BASE TEXTURE_CHANNEL_0
 #define GFX_TEXTURE_CHANNEL_NORMAL TEXTURE_CHANNEL_1
@@ -546,7 +546,7 @@ public:
   }
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #include "../gfx/RenderParams.h"
 

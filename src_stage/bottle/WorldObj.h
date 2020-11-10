@@ -12,7 +12,7 @@
 
 #include <array>
 
-namespace BR2 {
+namespace VG {
 //s0-3, e0-3, v0-3, c
 //s0,s1,s2,s3 e0,e1,e2,e3, v0,v1,v2,v3, c
 //proxy class to modify modelNodes loaded.

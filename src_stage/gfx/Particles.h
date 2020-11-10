@@ -11,7 +11,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *    @class Particles
 *    @brief

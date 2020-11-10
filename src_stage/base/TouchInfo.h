@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class TouchInfo
 *  @brief Extend this class to hold player touch info for the world.

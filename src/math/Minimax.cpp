@@ -1,7 +1,7 @@
 #include "../math/Minimax.h"
 #include "../math/Math.h"
 #include "../math/Random.h"
-namespace BR2 {
+namespace VG {
 
 float MpFloat::next() {
   checkWasSet();

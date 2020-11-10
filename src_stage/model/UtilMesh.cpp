@@ -10,7 +10,7 @@
 #include "../gfx/RenderUtils.h"
 #include "../gfx/ShaderMaker.h"
 
-namespace BR2 {
+namespace VG {
 UtilMesh::UtilMesh(std::shared_ptr<GLContext> ctx, std::shared_ptr<VertexFormat> fmt, std::shared_ptr<ShaderBase> ps, GLenum drawMode) : GLFramework(ctx) {
   _pShader = ps;
   _pVertexFormat = fmt;

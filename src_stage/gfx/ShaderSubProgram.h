@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShaderSubProgram
 *  @brief
@@ -54,6 +54,6 @@ private:
   GLenum getGLShaderEnum(ShaderType::e type);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

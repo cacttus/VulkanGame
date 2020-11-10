@@ -8,7 +8,7 @@
 #include "../bottle/Tile25Spec.h"
 #include "../bottle/BlockNode.h"
 
-namespace BR2 {
+namespace VG {
 //static int v8side6[6][4];
 //static int v8side6opp[6][4];
 int WorldCell::getV8IndexForV4Side(PhysicsGridSide::e eSide, int i) {

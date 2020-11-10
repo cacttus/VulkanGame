@@ -11,7 +11,7 @@
 #include "../model/ModelCache.h"
 #include "../model/ModelThumb.h"
 
-namespace BR2 {
+namespace VG {
 MobFile::MobFile() {
 }
 MobFile::~MobFile() {
@@ -30,7 +30,7 @@ void MobFile::pkp(std::vector<string_t>& tokens) {
       _pCurModDataLoad->_fVersion = TypeConv::strToFloat(getCleanToken(tokens, iind));
       if (_fVersion != _pCurModDataLoad->_fVersion) {
         BRLogError("Mob file verion mismatch got " + _pCurModDataLoad->_fVersion + ", but wanted " + _fVersion + ".");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
     else {
@@ -100,7 +100,7 @@ void MobFile::cacheObjectsAndComputeBoxes() {
 
     BRLogInfo("  Making Thumb ..");
     //Gen THumb
-    std::shared_ptr<Img32> thumb = ModelThumb::genThumb(ms, Gu::getEngineConfig()->getModelThumbSize());
+    std::shared_ptr<Img32> thumb = ModelThumb::genThumb(ms, Core::config()->getModelThumbSize());
     ms->setThumb(thumb);
   }
 }
@@ -188,12 +188,12 @@ bool ModDataLoad::tkAction(MobFile* mb, std::vector<string_t>& tokens) {
         }
         else {
           mb->parseErr("Failed to parse keyframe PRS");
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
       else {
         mb->parseErr(Stz"Invalid keyframe type '" + strType + "'");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
   }
@@ -772,7 +772,7 @@ void MeshSpecData::makeMaterialForSpec(MobFile* mb, std::shared_ptr<MeshSpec> pS
       }
       else {
         BRLogError("Texture image file " + _pMatData->_strDiffuseTex + " not found!");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
     if (StringUtil::isNotEmpty(_pMatData->_strNormalTex)) {
@@ -783,7 +783,7 @@ void MeshSpecData::makeMaterialForSpec(MobFile* mb, std::shared_ptr<MeshSpec> pS
       }
       else {
         BRLogError("Texture image file " + _pMatData->_strNormalTex + " not found!");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
     // mat->setAmbient(std::move(_pMatData->_v4AmbientColor));

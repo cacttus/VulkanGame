@@ -8,7 +8,7 @@
 #define __NODEDATAMANAGER_15821500662524728098_H__
 
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class NodeDataManager
 *  @brief

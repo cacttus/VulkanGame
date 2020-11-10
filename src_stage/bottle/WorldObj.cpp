@@ -8,7 +8,7 @@
 #include "../bottle/World25.h"
 #include "../bottle/BottleUtils.h"
 
-namespace BR2 {
+namespace VG {
 std::shared_ptr<WorldObj> WorldObj::create(std::string mobFolder, uint32_t typeID, std::string friendlyName, std::string strBox, std::string strPlace) {
   std::shared_ptr<WorldObj> ob = std::make_shared<WorldObj>();
   ob->_iTypeId = typeID;
@@ -31,7 +31,7 @@ std::shared_ptr<ModelNode> WorldObj::createInstance(std::shared_ptr<World25> pWo
   }
   else {
     BRLogError("Failed to load model.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   return nullptr;
@@ -68,7 +68,7 @@ void WorldObj::place(const vec3& r3, vec3& outPos, vec4& outRot) {
   //    outPos.construct(0, 0, 0);
   //    outRot.construct(0, 1, 0, 0);
   //    //failure
-  //    Gu::debugBreak();
+  //    Base::debugBreak();
   //}
 }
 
@@ -139,7 +139,7 @@ vec3 WorldObj::parseBoxFit(std::string strBox) {
 
   if (err) {
     BRLogError("Failed to parse boxfit" + strBox);
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   return vBoxFit;
 }
@@ -262,7 +262,7 @@ std::array<std::vector<PlaceMode::e>, W25SidePlace::e::Count> WorldObj::parsePla
     }
     if (bValid == false) {
       BRLogError("Invalid placement position '" + s + "'");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 

@@ -10,7 +10,7 @@
 //#include "../physics/SphericalVolume.h"
 //#include "../physics/TriangleMeshVolume.h"
 
-namespace BR2 {
+namespace VG {
 
 CollisionResult CollisionEquations::sat_axis_box_t_fast(
   const float& v0, const float& c0, const float& r0,
@@ -366,7 +366,7 @@ void CollisionEquations::sat_hull_proj_ext(
 
 //    if(v0 - v1 == 0){
 //        //Fix this.
-//       Gu::debugBreak();
+//       Base::debugBreak();
 //    }
 //    else {
 //        return (p1 - p0) / (v0 - v1);

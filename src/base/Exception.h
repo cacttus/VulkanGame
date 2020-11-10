@@ -9,7 +9,7 @@
 
 #include "../base/MachineTypes.h"
 
-namespace BR2 {
+namespace VG {
 //TODO: override std::exception
 class Exception {
 public:
@@ -22,6 +22,6 @@ private:
   const char* _file;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

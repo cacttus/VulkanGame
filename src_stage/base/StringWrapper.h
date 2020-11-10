@@ -11,7 +11,7 @@
 //#include <string>
 //#include "../base/BaseDefines.h"
 //
-//namespace BR2 {
+//namespace VG {
 //
 //#ifdef USE_BRO_STL_ALLOCATOR_WRAPPER
 //#define BroVectorTpl std::vector< Tx, AllocatorWrapper<Tx> >

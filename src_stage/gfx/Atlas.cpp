@@ -7,7 +7,7 @@
 #include "../gfx/Atlas.h"
 #include "../gfx/TexCache.h"
 
-namespace BR2 {
+namespace VG {
 Atlas::Atlas(std::shared_ptr<GLContext> ct, const string_t& na, ivec2& ivGridSize) : Texture2DSpec(na, TextureFormat::Image4ub, ct) {
   _vGridSize = ivGridSize; //_pSpriteMap->getGridDimensions();
 }
@@ -75,7 +75,7 @@ time_t Atlas::cacheGetGreatestModifyTimeForAllDependencies() {
       //  spriteFileLoc = getAtlasSpriteFullpath(ite->second);
       if (FileSystem::fileExists(strPath) == false) {
         BRLogError(getName() + " atlas file '" + strPath + "' does not exist.");
-        Gu::debugBreak();
+        Base::debugBreak();
         return 0;
       }
       currentModifyTime = FileSystem::getLastModifyTime(strPath);
@@ -179,7 +179,7 @@ void Atlas::addImage(Hash32 en, const string_t& loc, std::shared_ptr<Img32> imgD
 void Atlas::removeImage(std::shared_ptr<AtlasSprite> ps) {
   ImgMap::iterator ite = _mapImages.find(ps->_hash);
   if (ite == _mapImages.end()) {
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
   _mapImages.erase(ite);

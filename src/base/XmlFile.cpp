@@ -7,7 +7,7 @@
 
 #include "../ext/pugixml/pugixml.hpp"
 
-namespace BR2 {
+namespace VG {
 XmlFile::XmlFile() {
 }
 XmlFile::XmlFile(const string_t& loc) : TextConfigFile(loc) {

@@ -23,7 +23,7 @@
 #include "../model/FragmentBufferData.h"
 #include "../model/OBB.h"
 
-namespace BR2 {
+namespace VG {
 KeyFrame::KeyFrame(mat4& mat, int32_t iSeq) : KeyFrame(iSeq) {
   //We're removing matrices because it's damn impossible to use them.
   vec4 pos, rot, scl;
@@ -159,7 +159,7 @@ std::shared_ptr<KeyFrame> ActionKeys::getBFrame(std::shared_ptr<Animator> tl) {
 void ActionKeys::scaleKeys(int32_t iBasFps, float& fMaxEndTime) {
   if (_vecKeys.size() == 0) {
     BRLogError("ActionKeys is invalid, no keys present");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   for (std::shared_ptr<KeyFrame> kf : _vecKeys) {
     kf->scaleKey(iBasFps, fMaxEndTime);
@@ -205,7 +205,7 @@ void ActionGroup::addActionKeys(std::shared_ptr<ActionKeys> a) {
   Hash32 ah = a->getObjectNameHash();
   if (_mapActions.find(ah) != _mapActions.end()) {
     BRLogWarn("Tried to add action keys for '" + a->getObjectName() + "' multiple times to action group '" + getName() + "'");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else {
     _mapActions.insert(std::make_pair(ah, a));
@@ -222,7 +222,7 @@ void ActionGroup::scaleKeys() {
   _fEndTime = -FLT_MAX;
   if (_mapActions.size() == 0) {
     BRLogError("Action group is invalid, no actions present");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   for (std::pair<Hash32, std::shared_ptr<ActionKeys>> p : _mapActions) {
     p.second->scaleKeys(_iBaseFps, _fEndTime);
@@ -424,7 +424,7 @@ bool Armature::tkArmFile(MobFile* pMobFile, std::vector<string_t>& tokens) {
     else {
       if (_mapBoneCacheOrdered.find(_pCurBone->getBoneId()) != _mapBoneCacheOrdered.end()) {
         BRLogError("Bone '" + _pCurBone->getName() + "' ID:" + _pCurBone->getBoneId() + " already found in bone cache.  Animation will look weird.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       else {
         _mapBoneCacheOrdered.insert(std::make_pair(_pCurBone->getBoneId(), _pCurBone));
@@ -873,7 +873,7 @@ void ModelNode::buildNodeParents() {
           if (StringUtil::equals(strParent, bn->getSpecName())) {
             if (pNode->getParent() != nullptr) {
               BRLogError("Bone parent node already set for node " + pNode->getSpecName());
-              Gu::debugBreak();
+              Base::debugBreak();
             }
             else {
               //attach to armature, and alsoa dd the bone to the parenture
@@ -886,7 +886,7 @@ void ModelNode::buildNodeParents() {
       }
       if (bFound == false) {
         BRLogError("Bone parent node not found for node " + pNode->getSpecName());
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
     else if (StringUtil::isEmpty(strParent)) {
@@ -898,19 +898,19 @@ void ModelNode::buildNodeParents() {
         std::shared_ptr<SceneNode> pParentAttached = std::dynamic_pointer_cast<SceneNode>(pNode->getParent());
         if (pParentAttached == nullptr) {
           BRLogError("Parent already attached, but Tried to cast a base node - failed.");
-          Gu::debugBreak();
+          Base::debugBreak();
         }
         else {
           BRLogError("Parent '" + pParentAttached->getSpec()->getName() +
             "' already set for node '" + strChild + "' who wants to be parented by '" + strParent + "' ");
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
       else {
         std::shared_ptr<SceneNode> pParentNode = getNodeByName(strParent);
         if (pParentNode == nullptr) {
           BRLogError("Could not find parent '" + strParent + "' for node '" + strChild + "'");
-          Gu::debugBreak();
+          Base::debugBreak();
         }
         else {
           //if(pNode->isMeshNode() && pParentNode->isArmatureNode()){
@@ -1046,7 +1046,7 @@ void ModelNode::playAction(const string_t& actName) {
     std::shared_ptr<ActionGroup> ag = getModelSpec()->getAction(anh);
     if (ag == nullptr) {
       BRLogError("Model '" + getSpec()->getName() + "', could not find action '" + actName + "'");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     else if (ag->isValid()) {
       std::shared_ptr<Animator> pa = std::make_shared<Animator>();
@@ -1058,7 +1058,7 @@ void ModelNode::playAction(const string_t& actName) {
     }
     else {
       BRLogError("Action wasn't valid for playing.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 }
@@ -1149,7 +1149,7 @@ void ModelSpec::cacheMeshBones() {
               }
               else {
                 nNotFound++;
-                Gu::debugBreak();
+                Base::debugBreak();
               }
             }
           }

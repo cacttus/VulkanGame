@@ -23,7 +23,7 @@
 #include "../world/RenderBucket.h"
 #include "../world/Path.h"
 
-namespace BR2 {
+namespace VG {
 BaseSpec::BaseSpec(string_t strName) {
   _strName = strName;
   _iNameHashed = STRHASH(_strName);
@@ -140,7 +140,7 @@ string_t SceneNode::getSpecName() {
   }
   else {
     BRLogError("Treid to return a name of a model without a spec");
-    Gu::debugBreak();
+    Base::debugBreak();
     return std::string("no spec");
   }
 }
@@ -150,7 +150,7 @@ Hash32 SceneNode::getSpecNameHashed() {
   }
   else {
     BRLogError("Treid to return a hash of a model without a spec");
-    Gu::debugBreak();
+    Base::debugBreak();
     return 0;
   }
 }
@@ -190,7 +190,7 @@ void SceneNode::init() {
 void SceneNode::update(float delta, std::map<Hash32, std::shared_ptr<Animator>>& mapAnimators) {
   if (_bInitialized == false) {
     BRLogWarnCycle("Node was not initialized (init())");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 
@@ -648,4 +648,4 @@ std::shared_ptr<InputManager> SceneNode::getInput() {
   return nullptr;
 }
 
-}  // namespace BR2
+}  // namespace VG

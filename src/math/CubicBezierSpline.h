@@ -9,7 +9,7 @@
 
 #include "../math/Spline.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class CubicBezierSpline
 *  @brief Cubic Bezier spline.  For the scenegraph implementaion see @cPath.

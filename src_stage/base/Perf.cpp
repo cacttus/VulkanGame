@@ -5,7 +5,7 @@
 #include "../base/DebugHelper.h"
 
 
-namespace BR2 {
+namespace VG {
 static int g_bPerfFrame = false;
 
 std::stack<Stopwatch> Perf::_stopw;

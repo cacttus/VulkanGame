@@ -9,7 +9,7 @@
 #include "../base/BaseHeader.h"
 #include "../math/MathAll.h"
 #include "../base/RetCode.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class BaseImage
 *  @brief The base class for images.  The BaseImage class also includes functions for convolution filtering.
@@ -109,5 +109,5 @@ FORCE_INLINE float Img32::contrast(float pix, float C) {
   return powf(pix, C);
 }
 
-}  // namespace BR2
+}  // namespace VG
 #endif

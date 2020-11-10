@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 class TexFile {
 public:
   string_t _name;

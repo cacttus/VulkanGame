@@ -11,7 +11,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class FrustumProjectionParameters
 *  @brief Fill this class out for the frustum to create its volume

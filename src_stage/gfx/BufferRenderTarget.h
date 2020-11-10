@@ -9,7 +9,7 @@
 
 #include "../gfx/RenderTarget.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *    @class RenderTarget
 *    @brief The output of a rendering operation.

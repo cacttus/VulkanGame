@@ -8,7 +8,7 @@
 
 #include "../base/GlobalIncludes.h"
 
-namespace BR2 {
+namespace VG {
 
 typedef std::string string_t;
 typedef wint_t br_char;

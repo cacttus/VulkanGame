@@ -12,7 +12,7 @@
 #include "../model/MbiFile.h"
 #include "../model/Material.h"
 
-namespace BR2 {
+namespace VG {
 ModelCache::ModelCache(std::shared_ptr<GLContext> pc) : GLFramework(pc) {
   _pDefaultMaterial = std::make_shared<Material>("Model_Default_Material");
   //default material is the initial blender params.

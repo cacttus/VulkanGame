@@ -12,7 +12,7 @@
 #include "../math/MathAll.h"
 
 
-namespace BR2 {
+namespace VG {
 //GPU Types
 typedef int32_t GpuInt;
 typedef float GpuFloat;

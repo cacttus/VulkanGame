@@ -11,7 +11,7 @@
 #include "../model/IndexBufferData.h"
 #include "../model/MeshNode.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @fn parseGenParams
 *  @brief Parse a string defining generation params for a mesh into a class structure.
@@ -949,4 +949,4 @@ vec3* MeshUtils::getVertexElementOffset(vec3* verts, size_t iElementIndex, size_
   return ret;
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -7,7 +7,7 @@
 #include "../gfx/ShaderMaker.h"
 #include "../model/GpuBufferData.h"
 
-namespace BR2 {
+namespace VG {
 GpuBufferData::GpuBufferData(const string_t& mesh_name, std::shared_ptr<GLContext> ct, GLenum bufferType, size_t iElementSize) :
   _glBufferType(bufferType)
   , _iElementSize(iElementSize)
@@ -49,7 +49,7 @@ void GpuBufferData::copyDataServerClient(std::shared_ptr<ByteBuffer> gb) {
 void GpuBufferData::readbytes(size_t num_elements, void* __out_ buf, int32_t elementSize) {
   if (buf == nullptr) {
     BRLogError("Tried to read to NULL Buffer reading Gpu contents.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   if (_bIsAllocated == false) {
     BRThrowException(" [VBO] was not allocated");
@@ -92,12 +92,12 @@ void GpuBufferData::copyDataClientServer(size_t num_elements, const void* frags,
   }
   if (frags == nullptr) {
     BRLogError(" [VBO] Fragments to copy were null. ");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
   if (_bIsAllocated == false) {
     BRLogError(" [VBO] was not allocated");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 
@@ -115,7 +115,7 @@ void GpuBufferData::copyDataClientServer(size_t num_elements, const void* frags,
       BRLogError("Copy size " + copySizeBytes + " (" + num_elements + " elements) was larger than the buffer size " + byteSize + ". Make sure the input size is not -1 or less than 0.");
       unbindBuffer();
       return;
-      Gu::debugBreak();
+      Base::debugBreak();
     }
 
     //**NOTE: we would HAVE to use glMapBuffer because when we initially create this buffer
@@ -164,7 +164,7 @@ void GpuBufferData::mapBuffer(GLenum access, void*& pData) {
       sbLogged = true;
       _pContext->chkErrDbg();
       BRLogError("Error - glMapBuffer returned nullptr.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 
@@ -212,13 +212,13 @@ void GpuBufferData::unbindBuffer() {
 }
 void GpuBufferData::verifyValidBuffer() {
   //GDebugger doesn't like this for some reason.
-  if (Gu::getEngineConfig()->getEnableRuntimeErrorChecking()) {
+  if (Core::config()->getEnableRuntimeErrorChecking()) {
     if (!_pContext->glIsBuffer(_glId)) {
       //Buffer object doesn't exist in the context.
       //Error somewhere..
       _pContext->glBindBuffer(_glBufferType, _glId);
       if (!_pContext->glIsBuffer(_glId)) {
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
   }

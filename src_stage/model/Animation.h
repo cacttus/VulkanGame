@@ -9,7 +9,7 @@
 
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 
 //PRS animation
 class PRSAnimation : public VirtualMemory {

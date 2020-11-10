@@ -12,7 +12,7 @@
 #include "../bottle/ObFile.h"
 #include "../bottle/Tile25Spec.h"
 
-namespace BR2 {
+namespace VG {
 
 SpriteBucket::SpriteBucket() {}
 SpriteBucket::~SpriteBucket() {
@@ -89,7 +89,7 @@ void SpriteBucket::loadMotions(std::shared_ptr<ObFile> obFile) {
     TileMap::iterator it = _mapTiles.find(ps->getTileIndex());
     if (it != _mapTiles.end()) {
       BRLogError("Duplicate tile Index" + ps->getTileIndex() + " tried to be added to motion bucket.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     else {
       _mapTiles.insert(std::make_pair(ps->getTileIndex(), ps));
@@ -107,7 +107,7 @@ void SpriteBucket::loadMotions(std::shared_ptr<ObFile> obFile) {
     if (StringUtil::equalsi(sp->getName(), "tx-blank")) {
       if (_pBlank != nullptr) {
         BRLogWarn("Multiple blank tile IDs specified.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       _pBlank = sp;
     }
@@ -120,7 +120,7 @@ void SpriteBucket::loadMotions(std::shared_ptr<ObFile> obFile) {
     //                    sp2->getMaskIndex() == sp->getMaskIndex()) {
     //                    if(sp->getMaskSpec() != nullptr){
     //                        BRLogWarn("Multiple Masks specified for tile.");
-    //                        Gu::debugBreak();
+    //                        Base::debugBreak();
     //                    }
     //                    sp->setMask(sp2);
     //                }
@@ -345,7 +345,7 @@ void Sprite::update(float delta) {
       if (secondsPerFrame == 0.0f) {
         secondsPerFrame = 1;
         //error
-        Gu::debugBreak();
+        Base::debugBreak();
 
       }
       _iCurrentFrameIndex = (int)(_fCurTime / secondsPerFrame);
@@ -364,7 +364,7 @@ Hash32 Sprite::getFrameAtlasIndex() {
   }
   else {
     //Error
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   return 0;

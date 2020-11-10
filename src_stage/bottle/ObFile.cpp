@@ -20,7 +20,7 @@
 #include "../bottle/WalkerSpec.h"
 #include "../bottle/WorldObj.h"
 
-namespace BR2 {
+namespace VG {
 ObFile::ObFile() {
   _pBucket = std::make_shared<SpriteBucket>();
 }
@@ -73,7 +73,7 @@ void ObFile::parseConfig(std::vector<string_t>& tokens) {
     _pW25Config->_eDebugGridMode = (DebugGridMode::e)TypeConv::strToInt(getCleanToken(tokens, iind));
     if ((int)_pW25Config->_eDebugGridMode >= (int)DebugGridMode::e::MaxDebugGridModes) {
       BRLogError("Grid mode " + _pW25Config->_eDebugGridMode + " is invalid. Max modes = " + ((int)DebugGridMode::e::MaxDebugGridModes - 1));
-      Gu::debugBreak();
+      Base::debugBreak();
       _pW25Config->_eDebugGridMode = (DebugGridMode::e)0;
     }
   }
@@ -180,7 +180,7 @@ void ObFile::parseSprites(std::vector<string_t>& tokens) {
         else {
           files.push_back(Gu::getPackage()->makeAssetPath("sprites", "default.png"));
           BRLogError(name + ": Failed to find Sprite path: '" + path + "'. A default sprite will show.");
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
 
@@ -192,13 +192,13 @@ void ObFile::parseSprites(std::vector<string_t>& tokens) {
         if (StringUtil::equalsi(ps->getName(), name)) {
           BRLogWarn(name + ", " + ps->getName() + ": Duplicate sprite names found. Ignoring duplicate sprite.");
           bVerified = false;
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
 
       if (files.size() > 1 && fDuration == 0) {
         BRLogWarn(name + ", Animation had frames but didn't have a duration set. The animation will not play.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
 
       //Add sprite
@@ -208,7 +208,7 @@ void ObFile::parseSprites(std::vector<string_t>& tokens) {
     }
     else {
       BRLogWarn("Invalid SPR - incorrect number of arguments.  Wanted " + iMinArgCount + " got " + tokens.size());
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 }
@@ -256,7 +256,7 @@ void ObFile::parseTiles(std::vector<string_t>& tokens) {
       if (eMatterMode == GridMeshLayer::e::Invalid) {
         BRLogWarn(name + ",  Invalid TileMatter specification '" + matter + "'");
         bVerified = false;
-        Gu::debugBreak();
+        Base::debugBreak();
       }
 
       for (size_t iTile = 0; iTile < _vecTileSpecs.size(); ++iTile) {
@@ -264,12 +264,12 @@ void ObFile::parseTiles(std::vector<string_t>& tokens) {
         if (StringUtil::equalsi(ps->getName(), name)) {
           BRLogWarn(name + ", " + ps->getName() + ": Duplicate tile names found. Ignoring duplicate tile.");
           bVerified = false;
-          Gu::debugBreak();
+          Base::debugBreak();
         }
         if (ps->getTileIndex() == index) {
           BRLogWarn(name + ", " + ps->getName() + ": Duplicate tile indexes '" + index + "' were found in the sprite file. These must be unique. Ignoring duplicate.");
           bVerified = false;
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
 
@@ -281,23 +281,23 @@ void ObFile::parseTiles(std::vector<string_t>& tokens) {
       if (pTop == nullptr) {
         BRLogWarn(name + ": Top sprite '" + strTop + "'not found.  (Check the if sprite name is misspelled).");
         bVerified = false;
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       if (pSide == nullptr) {
         BRLogWarn(name + ": Side sprite '" + strSide + "'not found.  (Check the if sprite name is misspelled).");
         bVerified = false;
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       if (pBot == nullptr) {
         BRLogWarn(name + ": Bot sprite '" + strBot + "'not found.  (Check the if sprite name is misspelled).");
         bVerified = false;
-        Gu::debugBreak();
+        Base::debugBreak();
       }
 
       if (index < 0 || index > 255) {
         BRLogWarn(name + ": Index cannot be larger than 255!");
         bVerified = false;
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       if (bVerified == true && _bCurSpecValid == true) {
         processTile(name, index, eMatterMode, pTop, pSide, pBot, cp, rarity);
@@ -305,7 +305,7 @@ void ObFile::parseTiles(std::vector<string_t>& tokens) {
     }
     else {
       BRLogWarn("Invalid Tile - incorrect number of arguments, wanted " + iMinArgCount + " got " + tokens.size());
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 }
@@ -779,11 +779,11 @@ void ObFile::processShiftMotionImage(std::shared_ptr<SpriteSpec> ps, bool shiftH
   }
   else if (ps->getFrames().size() > 1) {
     BRLogWarn(ps->getName() + ": Motion to shift had more than 1 frame.  We can only process if they are 1 frame.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else if (ps->getFrames().size() == 0) {
     BRLogWarn(ps->getName() + ": Motion to shift had no frames!");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else {
     SpriteFrame* pFrame = ps->getFrames()[0];
@@ -1037,4 +1037,4 @@ WalkerSpec* ObFile::getWalkerSpecByName(const string_t& n) {
   return nullptr;
 }
 
-}  // namespace BR2
+}  // namespace VG

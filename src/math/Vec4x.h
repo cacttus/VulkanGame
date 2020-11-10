@@ -10,7 +10,7 @@
 #include "../math/Math.h"
 
 
-namespace BR2 {
+namespace VG {
 /** 
  * @class Vec4x
  * @brief Generic 4-vector class.
@@ -606,6 +606,6 @@ Vec4x<Tx>& Vec4x<Tx>::saturate() {
 //////////////////////////////////////////////////////////////////////////
 // - Vector shorthands
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

@@ -10,7 +10,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 
 // - This enum tells the window what to do with the rendering viewport
 //    when the size changes.

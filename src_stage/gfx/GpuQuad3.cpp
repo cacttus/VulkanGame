@@ -2,7 +2,7 @@
 #include "../math/MathAll.h"
 
 #include "../model/VertexFormat.h"
-namespace BR2 {
+namespace VG {
 GpuQuad3::GpuQuad3() {
   for (int i = 0; i < 4; ++i) {
     _vertex[i] = NULL;

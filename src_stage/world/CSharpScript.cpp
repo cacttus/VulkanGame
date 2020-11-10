@@ -4,7 +4,7 @@
 #include "../base/HashMap.h"
 #include <unordered_map>
 #include <algorithm>
-namespace BR2 {
+namespace VG {
 #ifndef FORCE_INLINE
 #ifdef BR2_OS_WINDOWS
 #define FORCE_INLINE __forceinline
@@ -237,7 +237,7 @@ private:
     //  });
 
     //TODO: check sort is descending
-    //Gu::debugBreak();
+    //Base::debugBreak();
 
     //validate table
     int c = (int)CSTokenType::TokensEnd - (int)CSTokenType::TokensStart;
@@ -256,7 +256,7 @@ private:
     }
     if (missing.length() != 0) {
       BRLogError("Missing Tokens from Lex table: " + missing);
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
   void matchToken(int next) {
@@ -1034,7 +1034,7 @@ string_t cstoken_to_string(CSTokenType tt) {
   if (it != cs_token_type_to_string_tab->end()) {
     return it->second;
   }
-  Gu::debugBreak();
+  Base::debugBreak();
   return "<not_found>";
 }
 

@@ -17,7 +17,7 @@
 
 #include <algorithm>
 
-namespace BR2 {
+namespace VG {
 #pragma region MtTex
 void MtTex::setImg(std::shared_ptr<Img32> img) {
   _pImg = img;
@@ -53,7 +53,7 @@ void MtTexPatch::loadData() {
       //If image isn't null, then it was already provided and should be loaded.
       if (!FileSystem::fileExists(getName())) {
         BRLogError("Failed to load, image file '" + getName() + "' didn't exist");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       else {
         std::shared_ptr<Img32> img = Gu::loadImage(getName());
@@ -65,7 +65,7 @@ void MtTexPatch::loadData() {
     std::vector<std::shared_ptr<Img32>> imgs = parseImagePatch(getName());
     if (imgs.size() != _vecTexs.size()) {
       BRLogError("Tex Count Mismatch, or texture not found for '" + getName() + "'.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     else {
       for (size_t i = 0; i < imgs.size(); ++i) {
@@ -129,7 +129,7 @@ void MtFont::createFont() {
   _pFontBuffer = std::make_shared<BinaryFile>("<none>");
   if (Gu::getPackage()->getFile(getName(), _pFontBuffer) == false) {
     BRLogError("Failed to get font file '" + getName() + "'");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 
@@ -147,7 +147,7 @@ void MtFont::createFont() {
     //Test "huan"
     //_firstChar = 0x6B61;// 喜..喜欢 0x559C, 0x6B61.. correct.. seems to work..Note: 欢 prints, 歡.. the traditioanl character
     //_charCount = 1;
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   //Get soem font metrics
@@ -178,14 +178,14 @@ void MtFont::createFont() {
   stbtt_pack_context context;
   if (!stbtt_PackBegin(&context, atlasData.get(), _atlasWidth, _atlasHeight, 0, 1, nullptr)) {
     BRLogError("Failed to initialize font");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 
   stbtt_PackSetOversampling(&context, _oversampleX, _oversampleY);
   if (!stbtt_PackFontRange(&context, (unsigned char*)_pFontBuffer->getData().ptr(), 0, (float)_iBakedCharSizePixels, _firstChar, _charCount, _charInfo.get())) {
     BRLogError("Failed to pack font");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 
@@ -208,7 +208,7 @@ std::shared_ptr<Img32> MtFont::createFontImage(std::unique_ptr<uint8_t[]>& pData
   //Copied from fontspec
   auto imgData = std::make_unique<uint8_t[]>(_atlasWidth * _atlasHeight * 4);
   if (_charInfo == nullptr) {
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   for (int32_t iPix = 0; iPix < _atlasWidth * _atlasHeight * 4; iPix += 4) {
@@ -235,7 +235,7 @@ void MtFont::getCharQuad(int32_t cCode, int32_t cCodePrev, FontSize fontSize, fl
   Box2f worldQuad;
   if (_bInitialized == false) {
     BRLogError("Font was not initialized.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
   if (_charInfo == nullptr) {
@@ -252,7 +252,7 @@ void MtFont::getCharQuad(int32_t cCode, int32_t cCodePrev, FontSize fontSize, fl
   if (getTexs().size() == 0) {
     //You didn't save the image
     BRLogError("Failure to save font image somewhere.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 
@@ -365,7 +365,7 @@ std::shared_ptr<MtTexPatch> MegaTex::getTex(std::shared_ptr<Img32> tx) {
   }
   else {
     BRLogError("Failed to add texture 23458242");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   return p;
@@ -413,11 +413,11 @@ std::shared_ptr<MtTexPatch> MegaTex::getTex(std::string img, int32_t nPatches, b
   //**MUST return nPatches number of textures, never return a different number
   if (ret == nullptr) {
     BRLogError("Could not find MegaTex Texture " + imgNameLow);
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else if (ret->getTexs().size() != (size_t)nPatches) {
     BRLogError("Failed to return an appropriate number of texture patches.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   return ret;
 }
@@ -492,7 +492,7 @@ std::shared_ptr<Img32> MegaTex::compile() {
       else {
         //Error
         //loadImages() wasn't called
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
 
@@ -637,4 +637,4 @@ bool MegaTex::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShad
 }
 
 #pragma endregion
-}  // namespace BR2
+}  // namespace VG

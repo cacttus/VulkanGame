@@ -3,7 +3,7 @@
 #include "../base/InputManager.h"
 
 
-namespace BR2 {
+namespace VG {
 
 
 GamePad::GamePad(std::shared_ptr<InputManager> man) {

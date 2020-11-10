@@ -13,7 +13,7 @@
 #include "../math/Mat4x.h"
 #include "../math/Vec4x.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShaderBase
 *  @brief Base class for handling OpenGL haders.

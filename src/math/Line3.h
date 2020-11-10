@@ -9,7 +9,7 @@
 
 #include "../math/Vec3x.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Line3f
 *  @breif Line class.  This is going to be used for SAT

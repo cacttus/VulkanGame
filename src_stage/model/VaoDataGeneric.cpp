@@ -16,7 +16,7 @@
 #include "../model/VertexFormat.h"
 #include "../gfx/OpenGLUtils.h"
 
-namespace BR2 {
+namespace VG {
 //static int g_debugNumconst = 0;
 //static int g_debugNumcr    = 0;
 //static int g_debugNumde    = 0;
@@ -132,7 +132,7 @@ void VaoShader::enableAttributesForShader(std::shared_ptr<ShaderBase> pShader, s
     errStr = Stz errStr + "\r\n===========================================================\r\n";
 
     BRLogError(errStr);
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   _pContext->debugGetRenderState(false, true);
@@ -208,4 +208,4 @@ std::shared_ptr<VaoShader> VaoDataGeneric::getOrCreateVaoForShader(std::shared_p
   return vao;
 }
 
-}  // namespace BR2
+}  // namespace VG

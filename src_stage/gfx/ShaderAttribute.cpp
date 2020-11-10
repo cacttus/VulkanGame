@@ -7,7 +7,7 @@
 #include "../gfx/ShaderAttribute.h"
 #include "../gfx/ShaderBase.h"
 
-namespace BR2 {
+namespace VG {
 ShaderAttribute::ShaderAttribute(std::shared_ptr<ShaderBase> pShaderBase, int32_t attribIndex) : _iGLLocation(NoAttribLocationFound), _strName("") {
   parseAttribute(pShaderBase, attribIndex);
 }
@@ -49,7 +49,7 @@ void ShaderAttribute::parseAttribute(std::shared_ptr<ShaderBase> pShaderBase, in
                    OperatingSystem::newline() + "";
 
       BRLogWarn(err);
-      Gu::debugBreak();
+      Base::debugBreak();
       // Don't throw but just exit gracefully so we can accumulate errors.
     }
   }
@@ -134,7 +134,7 @@ VertexUserType ShaderAttribute::parseUserType(string_t& name) {
 
   if (StringUtil::isNotEmpty(err)) {
     BRLogError("Attribute '" + _strName + "'parse error: " + OperatingSystem::newline() + err);
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else {
     //**In the old system we had a more generic approach to this, but here we just hard code it.
@@ -174,11 +174,11 @@ VertexUserType ShaderAttribute::parseUserType(string_t& name) {
     else {
       //Wer're going to hit this in the beginning because we can have a lot of different attrib types.
       BRLogInfo("  Unrecognized vertex attribute '" + name + "'.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 
   return ret;
 }
 
-}  // namespace BR2
+}  // namespace VG

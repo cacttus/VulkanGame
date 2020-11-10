@@ -8,7 +8,7 @@
 #include "../world/Scene.h"
 #include "../model/SceneNode.h" 
 
-namespace BR2 {
+namespace VG {
 BaseCollider::BaseCollider() {
   _pSpeedbox = new Box3f();
   _pBoundBox = new Box3f();
@@ -41,7 +41,7 @@ void BaseCollider::setNodePosition(const vec3& nodePos) { BRThrowNotImplementedE
 //    //This is not an error - like ArmatureNode will come here it's not a BaseCollider.
 //    //THis is just an extra safe check I guess
 //    //cast fail
-////    Gu::debugBreak();
+////    Base::debugBreak();
 //  }
 //  return TreeNode::attachChild(pChild);
 //}
@@ -58,15 +58,15 @@ void BaseCollider::validateSanePhysics() {
     //if (_vTempAcc.squaredLength() > PHY_MAX_VELOCITY_LENGTH_SQR) {
     //    //You're going too fast, stap.//Stop moving.
     //    _vTempAcc = 0;
-    //    Gu::debugBreak();
+    //    Base::debugBreak();
     //}
   if (getNode()->getVelocity().squaredLength() > PHY_MAX_VELOCITY_LENGTH_SQR) {
     //You're going too fast, stap.//Stop moving.
-//    Gu::debugBreak();
+//    Base::debugBreak();
     setNodeVelocity(vec3(0, 0, 0));
   }
   if (!pos.isNormalFloat()) {
-    //    Gu::debugBreak();
+    //    Base::debugBreak();
     pos = 0;
   }
 

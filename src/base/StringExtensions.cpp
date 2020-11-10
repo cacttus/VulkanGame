@@ -2,7 +2,7 @@
 #include "../math/MathAll.h"
 
 #include <iostream>
-namespace BR2 {
+namespace VG {
 
 
 std::string operator+(const std::string& str, const char& rhs) {

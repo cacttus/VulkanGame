@@ -12,7 +12,7 @@
 #include "../base/Logger.h"
 #include "../base/DebugHelper.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class HashMapItem
 *  @brief Container, storing a reference to a hashmap item, or nullptr.

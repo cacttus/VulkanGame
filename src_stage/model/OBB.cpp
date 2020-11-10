@@ -1,7 +1,7 @@
 #include "../model/OBB.h"
 #include "../model/UtilMeshInline.h"
 
-namespace BR2 {
+namespace VG {
 OBB::OBB() {
 
 }

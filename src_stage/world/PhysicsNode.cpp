@@ -7,7 +7,7 @@
 #include "../world/PhysicsWorld.h"
 #include "../world/NodeUtils.h"
 
-namespace BR2 {
+namespace VG {
 PhysicsNode::PhysicsNode(const string_t& name, std::shared_ptr<PhysicsSpec> ps) : SceneNode(name,ps) {
   _fMass = ps->getMass();
   _bHollow = ps->getHollow();
@@ -50,7 +50,7 @@ void PhysicsNode::afterAddedToScene(std::shared_ptr<Scene> scene) {
 //    //This is not an error - like ArmatureNode will come here it's not a physicsnode.
 //    //THis is just an extra safe check I guess
 //    //cast fail
-////    Gu::debugBreak();
+////    Base::debugBreak();
 //  }
 }
 void PhysicsNode::afterRemovedFromScene(std::shared_ptr<Scene> scene) {
@@ -88,15 +88,15 @@ void PhysicsNode::validateSanePhysics() {
     //if (_vTempAcc.squaredLength() > PHY_MAX_VELOCITY_LENGTH_SQR) {
     //    //You're going too fast, stap.//Stop moving.
     //    _vTempAcc = 0;
-    //    Gu::debugBreak();
+    //    Base::debugBreak();
     //}
   if (_vVelocity.squaredLength() > PHY_MAX_VELOCITY_LENGTH_SQR) {
     //You're going too fast, stap.//Stop moving.
-//    Gu::debugBreak();
+//    Base::debugBreak();
     _vVelocity = 0;
   }
   if (!pos.isNormalFloat()) {
-    //    Gu::debugBreak();
+    //    Base::debugBreak();
     pos = 0;
   }
 

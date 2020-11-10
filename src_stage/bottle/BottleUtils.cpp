@@ -15,7 +15,7 @@
 #include "../bottle/SpriteBucket.h"
 #include "../bottle/BottleUtils.h"
 
-namespace BR2 {
+namespace VG {
 void BottleUtils::addTileQuad2(World25Plane* pPlane, std::shared_ptr<Atlas> pAtlas,
   TileMesh25* qbm, Sprite* pMot,
   vec2& min, vec2& max, float midz, vec3& color0, vec3& color1, vec3& color2, vec3& color3) {

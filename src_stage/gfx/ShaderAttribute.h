@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShaderAttribute
 *  @brief An attribute in a GLSL shader.

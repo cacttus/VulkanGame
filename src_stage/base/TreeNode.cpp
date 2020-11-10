@@ -3,7 +3,7 @@
 #include "../base/Exception.h"
 #include "../base/Gu.h"
 
-namespace BR2 {
+namespace VG {
 TreeNode::TreeNode(string_t name) {
   _name = name;
   _mapChildren = std::make_unique<std::vector<std::shared_ptr<TreeNode>>>();
@@ -85,7 +85,7 @@ void TreeNode::internalRemoveChildNode(std::shared_ptr<TreeNode> pTreeNode) {
     }
   }
   //Failure
-  Gu::debugBreak();
+  Base::debugBreak();
 }
 //void TreeNode::unlinkAllChildren(bool bRecursive)
 //{

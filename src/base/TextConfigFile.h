@@ -9,7 +9,7 @@
 
 #include "../base/TextDataFile.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class TextConfigFile
 *  @brief Any file that can be processed as a list of string name-value tokens.

@@ -5,7 +5,7 @@
 #include "../bottle/World25.h"
 #include "../bottle/Lair.h"
 
-namespace BR2 {
+namespace VG {
 GameFile::GameFile() {
 }
 GameFile::~GameFile() {

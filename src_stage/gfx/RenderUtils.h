@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class RenderUtils
 *  @brief Provides utility functions for creating basic shapes, and rendering to the screen.
@@ -39,6 +39,6 @@ private:
 
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

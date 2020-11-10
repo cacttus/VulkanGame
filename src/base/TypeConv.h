@@ -11,7 +11,7 @@
 #include "../base/MachineTypes.h"
 #include "../base/Exception.h"
 
-namespace BR2 {
+namespace VG {
 #define frameStampToStr(x) uint64ToStr(x)
 
 #ifndef FORCE_INLINE
@@ -56,6 +56,6 @@ public:
   static string_t intToStr(const int_fast64_t i, const char* const fmt);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

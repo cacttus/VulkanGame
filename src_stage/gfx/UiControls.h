@@ -9,7 +9,7 @@
 
 #include "../gfx/UiSkin.h"
 
-namespace BR2 {
+namespace VG {
 class UiEventFunc : public VirtualMemoryShared<UiEventFunc> {
   std::function<void(UiEventId::e eventId, void*)> _func;
 public:

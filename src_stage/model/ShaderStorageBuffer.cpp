@@ -2,7 +2,7 @@
 #include "../math/MathAll.h"
 #include "../base/GLContext.h"
 
-namespace BR2 {
+namespace VG {
 
 ShaderStorageBuffer::ShaderStorageBuffer(const string_t& name, std::shared_ptr<GLContext> gc, size_t eleSize) :
   GpuBufferData(name + "-ssbo", gc, GL_SHADER_STORAGE_BUFFER, eleSize) {

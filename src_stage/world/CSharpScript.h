@@ -9,7 +9,7 @@
 
 #include "../world/Script.h"
 
-namespace BR2 {
+namespace VG {
 class CSToken;
 
 class CSharpFile : public VirtualMemory {

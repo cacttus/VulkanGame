@@ -13,7 +13,7 @@
 #include "../model/ModelHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 class VaoDataGeneric;
 class TextBufferMesh : public VirtualMemory {
 public:

@@ -7,7 +7,7 @@
 #ifndef __SYSTEMERRORDEFS_27745226362187691023999_H__
 #define __SYSTEMERRORDEFS_27745226362187691023999_H__
 
-namespace BR2 {
+namespace VG {
 /**
 *  @typedef RetCode
 *  @brief Generalized error codes (across entire application)

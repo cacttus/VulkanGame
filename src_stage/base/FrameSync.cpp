@@ -5,7 +5,7 @@
 #include "../base/FpsMeter.h"
 #include "../gfx/GraphicsContext.h"
 
-namespace BR2 {
+namespace VG {
 
 FrameSync::FrameSync(std::shared_ptr<GraphicsWindow> win) {
   _bVsyncDisabled = false;

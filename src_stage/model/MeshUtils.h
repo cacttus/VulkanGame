@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 namespace MeshGenType {
 typedef enum { MGA_CONE,
                MGA_SPHERE,
@@ -70,6 +70,6 @@ private:
   static void finalizeSpec(std::shared_ptr<MeshSpec> ms, vec3* minV = NULL, vec3* maxV = NULL);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

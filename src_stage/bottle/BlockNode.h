@@ -8,7 +8,7 @@
 #define __BLOCKNODE_14937714702398736072_H__
 
 #include "../bottle/BottleHeader.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class BlockNode
 *  @brief Global Node structure for grids.

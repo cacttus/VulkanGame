@@ -12,7 +12,7 @@
 #include "../bottle/SpriteBucket.h"
 #include "../bottle/Tile25Spec.h"
 
-namespace BR2 {
+namespace VG {
 WorldMaker::WorldMaker(std::shared_ptr<World25> pw, std::shared_ptr<SpriteBucket> pb, std::vector<LairSpec*>& mapLairs, std::vector<WalkerSpec*>& mapWalkers) : _pMotionBucket(pb), _pWorld25(pw) {
   if (mapLairs.size() == 0) {
     BRThrowException("There were no lairs.");
@@ -201,7 +201,7 @@ void WorldMaker::makeNewWorld() {
   Tile25Spec* tileGrass = _pWorld25->getSpriteBucket()->getTileByName("t-grass");
   if (tileGrass == nullptr) {
     //not found
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   for (ivec3 v : vv) {
     WipGrid* wg = new WipGrid(v, this->_pCurrentLair, 0);

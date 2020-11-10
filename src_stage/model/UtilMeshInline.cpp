@@ -3,7 +3,7 @@
 #include "../model/IndexBufferData.h"
 #include "../model/FragmentBufferData.h"
 
-namespace BR2 {
+namespace VG {
 UtilMeshInline::UtilMeshInline(std::shared_ptr<GLContext> ctx) : UtilMesh(ctx, v_v3c4::getVertexFormat(), nullptr, GL_NONE)  //The prim type will begin as invalid.
 {
   _vDefaultColor.construct(1, 0, 0, 1);
@@ -133,4 +133,4 @@ void UtilMeshInline2d::end(std::shared_ptr<CameraNode> cam) {
   draw(cam);
 }
 
-}  // namespace BR2
+}  // namespace VG

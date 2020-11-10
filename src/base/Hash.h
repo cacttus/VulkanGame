@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Hash
 *  @brief Uses the FNV algorithm to compute string hashes.

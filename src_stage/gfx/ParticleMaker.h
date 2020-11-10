@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../math/MathAll.h"
 
-namespace BR2 {
+namespace VG {
 //class Particle : public VirtualMemory {
 //public:
 //  vec3 _v; //velocty

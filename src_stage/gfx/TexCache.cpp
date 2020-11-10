@@ -8,7 +8,7 @@
 #include "../base/GLContext.h"
 #include "../gfx/OpenGLUtils.h"
 #include <iostream>
-namespace BR2 {
+namespace VG {
 
 const std::string TexCache::WorldGrass = "./data/tx32-grass.png";
 const std::string TexCache::WorldDirt = "./data/tx64_dirt.png";
@@ -97,7 +97,7 @@ bool TexCache::add(string_t name, std::shared_ptr<Texture2DSpec> ss, bool bError
   if (it != _cache.end()) {
     if (bErrorIfFound) {
       BRLogError("Texture cache had duplicate texure: " + name);
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     return false;
   }
@@ -143,4 +143,4 @@ std::shared_ptr<Texture2DSpec> TexCache::addGeneratedImage(string_t name, const 
 //}
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG

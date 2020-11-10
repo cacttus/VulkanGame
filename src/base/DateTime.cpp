@@ -14,7 +14,7 @@
 #endif
 #include <chrono>
 
-namespace BR2 {
+namespace VG {
 DateTime::DateTime(tm *t, int ms) {
   this->_seconds = t->tm_sec;
   this->_minutes = t->tm_min;
@@ -155,4 +155,4 @@ int DateTime::second() {
 #endif
 }
 
-}  // namespace BR2
+}  // namespace VG

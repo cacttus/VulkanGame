@@ -29,7 +29,7 @@
 //For std::setprecision
 #include <iomanip>
 
-namespace BR2 {
+namespace VG {
 
 template <class Tx>
 Vec3x<Tx> Vec3x<Tx>::operator*(const Mat3x<Tx>& m) {
@@ -329,6 +329,6 @@ inline bool fuzzyEquals(float a, float b, float e) {
 
 typedef Vec4ub Pixel4ub;
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

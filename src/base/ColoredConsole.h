@@ -3,7 +3,7 @@
 #define __COLORED_CONSOLE_0234205894098560235483_H__
 
 #include <string>
-namespace BR2 { 
+namespace VG { 
 
 //Linux/Windows support.
 class ColoredConsole {

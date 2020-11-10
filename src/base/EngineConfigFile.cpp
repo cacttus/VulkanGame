@@ -6,7 +6,7 @@
 //#include "../base/EngineConfigFile.h"
 //#include "../base/EngineConfig.h"
 //
-//namespace BR2 {
+//namespace VG {
 //EngineConfigFile::EngineConfigFile() {
 //}
 //EngineConfigFile::~EngineConfigFile() {

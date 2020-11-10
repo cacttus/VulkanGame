@@ -2,7 +2,7 @@
 #include "../base/Gu.h"
 
 
-namespace BR2 {
+namespace VG {
 W25Config::W25Config() {
 
 }

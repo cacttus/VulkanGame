@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../gfx/Texture2DSpec.h"
 #include "../math/MathAll.h"
-namespace BR2 {
+namespace VG {
 
 namespace SpriteFlags {
 typedef enum {

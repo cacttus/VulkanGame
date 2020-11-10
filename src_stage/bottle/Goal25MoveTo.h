@@ -10,7 +10,7 @@
 #include "../bottle/BottleHeader.h"
 #include "../bottle/Goal25.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Goal25MoveTo
 *  @brief

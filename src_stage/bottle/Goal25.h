@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Goal25
 *  @brief

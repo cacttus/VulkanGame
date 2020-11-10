@@ -40,7 +40,7 @@
 #include "../bottle/BottleUtils.h"
 #include "../bottle/World25.h"
 
-namespace BR2 {
+namespace VG {
 std::shared_ptr<Scene> Scene::create() {
   std::shared_ptr<Scene> s = std::make_shared<Scene>();
   s->init();
@@ -252,7 +252,7 @@ std::shared_ptr<GLContext> Scene::tryGetContext() {
   }
   else {
     BRLogErrorOnce("Window was null when getting graphics context. Context not found");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   return nullptr;
 }
@@ -541,4 +541,4 @@ void Scene::makeParticles() {
   _pParticleManager->init(_pParticlesAtlas, BottleUtils::c_iMaxParticles);
   Gu::checkErrorsDbg();
 }
-}  // namespace BR2
+}  // namespace VG

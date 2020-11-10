@@ -10,7 +10,7 @@
 
 #include "../model/GpuBufferData.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShaderStorageBuffer  SSBO
 *  @brief TODO: change the name to GpuShaderStorageBuffer

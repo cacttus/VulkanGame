@@ -2,7 +2,7 @@
 #include "../base/GLContext.h"
 #include "../gfx/BufferRenderTarget.h"
 
-namespace BR2 {
+namespace VG {
 BufferRenderTarget::BufferRenderTarget(const string_t& name, std::shared_ptr<GLContext> ctx, bool bShared) : RenderTarget(ctx) {
   _bShared = bShared;
   _strName = name;
@@ -50,4 +50,4 @@ void BufferRenderTarget::bind(GLenum eAttachment) {
   getContext()->chkErrDbg();
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -11,7 +11,7 @@
 #include "../gfx/GfxHeader.h"
 #include "../model/ModelHeader.h"
 #include "../math/MathAll.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class QuadBufferMesh
 *  @brief Manages an array of quads for modification and reflection back to the GPU.

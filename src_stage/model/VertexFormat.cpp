@@ -4,7 +4,7 @@
 #include "../model/VertexFormat.h"
 #include "../model/VboData.h"
 
-namespace BR2 {
+namespace VG {
 GLenum VertexComponent::getAttributeType() {
   return VertexFormat::computeAttributeType(_eDataType, _iComponentCount);
 }
@@ -290,4 +290,4 @@ int VertexFormat::matchTypeForShaderType(std::shared_ptr<VertexFormat> shaderTyp
   return n;
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -10,7 +10,7 @@
 #include "../world/RenderBucket.h"
 #include "../world/Scene.h"
 
-namespace BR2 {
+namespace VG {
 LightManager::LightManager(std::shared_ptr<Scene> pScene) {
   _pScene = pScene;
   _pGpuDeferredParams = std::make_shared<GpuDeferredParams>();

@@ -2,7 +2,7 @@
 #include "../world/Manifold.h"
 
 
-namespace BR2 {
+namespace VG {
 void NodeManifold::remove(std::shared_ptr<PhysicsNode> ob) {
   std::set<std::shared_ptr<PhysicsNode>>::iterator obit;
   obit = getAll()->find(ob);
@@ -10,7 +10,7 @@ void NodeManifold::remove(std::shared_ptr<PhysicsNode> ob) {
     getAll()->erase(obit);
   }
   else {
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   //This is a possible optimization for later.
@@ -20,7 +20,7 @@ void NodeManifold::remove(std::shared_ptr<PhysicsNode> ob) {
 //          getResting()->erase(obit);
 //      }
 //      else {
-//          Gu::debugBreak();
+//          Base::debugBreak();
 //      }
 //  }
 //  else {
@@ -29,7 +29,7 @@ void NodeManifold::remove(std::shared_ptr<PhysicsNode> ob) {
 //          getActive()->erase(obit);
 //      }
 //      else {
-//          Gu::debugBreak();
+//          Base::debugBreak();
 //      }
 //  }
 
@@ -44,7 +44,7 @@ void NodeManifold::add(std::shared_ptr<PhysicsNode> ob) {
     //#ifdef _DEBUG
   }
   else {
-    Gu::debugBreak();
+    Base::debugBreak();
     //Error
   }
   //#endif
@@ -56,7 +56,7 @@ void NodeManifold::add(std::shared_ptr<PhysicsNode> ob) {
     //          getResting()->insert(ob);
     //      }
     //      else {
-    //          Gu::debugBreak();
+    //          Base::debugBreak();
     //      }
     //  }
     //  else {
@@ -65,7 +65,7 @@ void NodeManifold::add(std::shared_ptr<PhysicsNode> ob) {
     //          getActive()->insert(ob);
     //      }
     //      else {
-    //          Gu::debugBreak();
+    //          Base::debugBreak();
     //      }
     //  }
 
@@ -83,7 +83,7 @@ void NodeManifold::add(std::shared_ptr<PhysicsNode> ob) {
 //    }
 //
 //    if (bFound == true) {
-//        Gu::debugBreak();
+//        Base::debugBreak();
 //    }
 //    else {
 //        //#endif
@@ -116,7 +116,7 @@ void NodeManifold::add(std::shared_ptr<PhysicsNode> ob) {
 //        getCells()->insert(pc);
 //    }
 //    else {
-//        Gu::debugBreak();
+//        Base::debugBreak();
 //    }
 //}
 void GridManifold::addGrid(std::shared_ptr<PhysicsGrid> pc) {
@@ -125,7 +125,7 @@ void GridManifold::addGrid(std::shared_ptr<PhysicsGrid> pc) {
     getGrids()->insert(pc);
   }
   else {
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 }
 void GridManifold::clear() {

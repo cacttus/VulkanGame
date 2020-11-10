@@ -9,7 +9,7 @@
 
 #include "../model/UtilMesh.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class UtilMeshGrid
 *  @brief draws a grid.

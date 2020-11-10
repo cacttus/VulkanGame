@@ -13,6 +13,6 @@
 // #include "../gfx/ShaderUniform.h"
 // #include <iostream>
 // 
-// namespace BR2 {
+// namespace VG {
 // 
-// }  // namespace BR2
+// }  // namespace VG

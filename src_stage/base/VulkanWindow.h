@@ -9,7 +9,7 @@
 //
 //#include "../base/GraphicsWindow.h"
 //
-//namespace BR2 {
+//namespace VG {
 ///**
 //*  @class VulkanWindow
 //*  @brief

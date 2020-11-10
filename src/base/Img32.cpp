@@ -3,7 +3,7 @@
 #include "../base/Logger.h"
 #include "../base/BinaryFile.h"
 
-namespace BR2 {
+namespace VG {
 Img32::Img32(const string_t& path, bool bLoad) {
   _strNameOrFilePath = path;
   if (bLoad) {
@@ -358,9 +358,9 @@ Pixel4ub Img32::normalizePixel(int32_t x, int32_t y, float depth) {
   Fv /= len;
   depth /= len;
 
-  pix.r() = (t_byte)(BR2::Math::round(Fh * 255.0f));
-  pix.g() = (t_byte)(BR2::Math::round(Fv * 255.0f));
-  pix.b() = (t_byte)(BR2::Math::round(depth * 255.0f));
+  pix.r() = (t_byte)(VG::Math::round(Fh * 255.0f));
+  pix.g() = (t_byte)(VG::Math::round(Fv * 255.0f));
+  pix.b() = (t_byte)(VG::Math::round(depth * 255.0f));
   pix.a() = 255;
 
   return pix;
@@ -890,4 +890,4 @@ void Img32::deserialize(std::shared_ptr<BinaryFile> bf) {
   }
 }
 
-}  // namespace BR2
+}  // namespace VG

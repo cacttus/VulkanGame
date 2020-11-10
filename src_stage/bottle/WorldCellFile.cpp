@@ -3,7 +3,7 @@
 #include "../base/FileSystem.h"
 #include "../bottle/WorldCellFile.h"
 
-namespace BR2 {
+namespace VG {
 ///////////////////////////////////////////////////////////////////
 W25CompressedCellGroup::W25CompressedCellGroup() {
 }
@@ -130,7 +130,7 @@ void WorldCellFile::parseFile(std::vector<char>& buf, uint32_t iDataSizeBytes) {
     BRLogError("Warning: Conga file version mismatch.");
     BRLogError("  Got: " + getFriendlyVersion(_iVersion));
     BRLogError("  Expected: " + getFriendlyVersion(CONGA_GRID_FILE_VERSION));
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
   //GLOB DATA

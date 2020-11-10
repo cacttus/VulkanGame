@@ -16,7 +16,7 @@
 #include "../math/Mat4x.h"
 #include "../base/TreeNode.h"
 
-namespace BR2 {
+namespace VG {
 class UtilMeshInline;
 class BaseSpec : public VirtualMemoryShared<BaseSpec> {
 public:

@@ -11,7 +11,7 @@
 #include "../math/Vec3x.h"
 #include "../math/Vec4x.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Quaternion
 *  not that quaternions only support rotations and matrix translations would be lost in the conversion.
@@ -143,6 +143,6 @@ FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::slerpTo(Quaternion<Tx>& rhs, Tx t) c
   return ret;
 }
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

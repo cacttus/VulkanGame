@@ -8,7 +8,7 @@
 #include "../model/UtilMeshInline.h"
 #include "../model/MeshSpec.h"
 
-namespace BR2 {
+namespace VG {
 CameraNode::CameraNode(const string_t& name, std::shared_ptr<RenderViewport> ppViewport) : PhysicsNode(name, nullptr) {
   _pViewport = ppViewport;
   _vWorldUp.construct(0, 1, 0);
@@ -194,4 +194,4 @@ void CameraNode::zoom(float amt) {
   setPos(std::move(newP));
 }
 
-}  // namespace BR2
+}  // namespace VG

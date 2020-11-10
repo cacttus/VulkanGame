@@ -1,7 +1,7 @@
 #include "./Singleton.h"
 
 
-namespace BR2 {
+namespace VG {
 
 
 }//ns Game

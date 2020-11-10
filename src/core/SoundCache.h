@@ -9,7 +9,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 class SoundSpec : public VirtualMemory {
 public:
   SoundSpec(const string_t& sFile);

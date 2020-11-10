@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class WorldSelect
 *  @brief Essentially, this is just a UIScreen.  TODO: turn this into a UiScript.

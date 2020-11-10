@@ -9,7 +9,7 @@
 
 #include "../gfx/GraphicsContext.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class VulkanContext
 *  @brief
@@ -32,6 +32,6 @@ public:
   virtual void popDepthTest() override {}
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

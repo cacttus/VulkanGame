@@ -9,7 +9,7 @@
 
 #include "../math/MathHeader.h"
 #include "../math/Vec3x.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class Spline
 *  @brief Base class for splines.  Currently we support Cubic Bezier and Linear.

@@ -9,7 +9,7 @@
 
 #include "../world/WorldHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class PhysicsShapes
 *  @brief

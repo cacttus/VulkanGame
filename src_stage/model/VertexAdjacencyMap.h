@@ -9,7 +9,7 @@
 
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class VertexAdjacencyMap
 *  @brief Mapping of vertexes to adjacent faces.  Adjacent faces are offsets into the index buffer.

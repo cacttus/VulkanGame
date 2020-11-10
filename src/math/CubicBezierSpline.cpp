@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-namespace BR2 {
+namespace VG {
 size_t seg_id(size_t pt_idx) {
   size_t seg = pt_idx / 3;
   return seg;

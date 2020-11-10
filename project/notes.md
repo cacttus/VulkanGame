@@ -1,5 +1,7 @@
 # Tasks
-Math & Base - shared libraries
+Math & Base - shared library =>  vg_bm.so
+VG => vg.so
+
 Add /vulkan, /opengl
 Move Gu from Math & Base 
 Move Gu to the lowest level (world)
@@ -21,6 +23,15 @@ SDL : App
 
 Top Layer
 Meshes, Scene, World, etc..
+
+Base
+Math
+System
+  SDL
+  OpenGLClasses
+  VulkanClasses
+  AppRunner
+
 
 
 

@@ -10,7 +10,7 @@
 #include "../bottle/BottleHeader.h"
 #include "../world/Script.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class BottleScript
 *  @brief This is the main Scene script that runs the bottle voxel engine.

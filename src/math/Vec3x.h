@@ -9,7 +9,7 @@
 
 #include "../math/Math.h"
 
-namespace BR2 {
+namespace VG {
 /** 
  * @class Vec3x
  * @brief Generic 3-vector class.
@@ -802,6 +802,6 @@ public:
     vec3 _x, _y, _z;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

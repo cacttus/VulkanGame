@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 class RenderDebug : public VirtualMemoryShared<RenderDebug> {
 public:
   bool& getShadowHelpVisible() { return _bShadowHelpVisible; }

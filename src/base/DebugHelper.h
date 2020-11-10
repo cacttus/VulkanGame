@@ -8,7 +8,7 @@
 #define __DEBUGHELPER_280862031362642290319991_H__
 
 #include "../base/BaseHeader.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class DebugHelper
 *  @brief  
@@ -40,6 +40,6 @@ private:
   static string_t modList();
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

@@ -10,7 +10,7 @@
 #include "../base/Hash.h"
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 class GData {
 public:
   W25Geom _geom[GridMeshLayer::e::MaxMatters];

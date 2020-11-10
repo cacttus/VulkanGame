@@ -8,7 +8,7 @@
 #define __FRAMEBUFFERBASE_14942908062084042827_H__
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class FramebufferBase
 *  @brief Base for all framebuffers
@@ -58,6 +58,6 @@ protected:
                                 GLenum eDataType, int32_t iWidth, int32_t iHeight, GLenum* eOutTarget, bool bMultisample, int32_t nSamples);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

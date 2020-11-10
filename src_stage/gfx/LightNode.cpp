@@ -16,7 +16,7 @@
 #include "../model/OBB.h"
 #include "../world/Scene.h"
 
-namespace BR2 {
+namespace VG {
 #pragma region LightNodeBase
 LightNodeBase::LightNodeBase(const string_t& name, bool bShadow) : PhysicsNode(name, nullptr) {
   _bEnableShadows = bShadow;
@@ -38,8 +38,8 @@ vec3* LightNodeBase::getFinalPosPtr() {
   return &_vGpuBufferedPosition;
 }
 bool LightNodeBase::getIsShadowsEnabled() {
-  return _bEnableShadows && (Gu::getEngineConfig()->getEnableObjectShadows() ||
-    Gu::getEngineConfig()->getEnableTerrainShadows());
+  return _bEnableShadows && (Core::config()->getEnableObjectShadows() ||
+    Core::config()->getEnableTerrainShadows());
 }
 #pragma endregion
 
@@ -70,7 +70,7 @@ void LightNodeDir::init() {
   _vUp = vec3(0, 1, 0);
   _vRight = vec3(1, 0, 0);
 
-  int32_t iShadowMapRes = Gu::getEngineConfig()->getShadowMapResolution();
+  int32_t iShadowMapRes = Core::config()->getShadowMapResolution();
   _pShadowFrustum = std::make_shared<ShadowFrustum>(std::dynamic_pointer_cast<LightNodeDir>(shared_from_this()),
     iShadowMapRes, iShadowMapRes);    //TEST
   _pShadowFrustum->init();
@@ -159,7 +159,7 @@ void LightNodePoint::init() {
   LightNodeBase::init();
   _pGpuLight = std::make_shared<GpuPointLight>();
 
-  int32_t iShadowMapRes = Gu::getEngineConfig()->getShadowMapResolution();
+  int32_t iShadowMapRes = Core::config()->getShadowMapResolution();
   _pShadowBox = std::make_shared<ShadowBox>(std::dynamic_pointer_cast<LightNodePoint>(shared_from_this()), iShadowMapRes, iShadowMapRes);    //TEST
   _pShadowBox->init();
 

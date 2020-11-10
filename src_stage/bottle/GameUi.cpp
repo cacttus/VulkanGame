@@ -27,7 +27,7 @@
 #include "../bottle/BottleScript.h"
 
 
-namespace BR2 {
+namespace VG {
 //"Acme-Regular.ttf
 #define HEAD_FONT "FreckleFace-Regular.ttf"
 #define SUB_FONT "FreckleFace-Regular.ttf"
@@ -404,7 +404,7 @@ void GameUi::createToolbar() {
           img->setTexture(sk->pTbGrid2);
         }
         else {
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
     }
@@ -522,7 +522,7 @@ std::shared_ptr<UiWindow> GameUi::createAssetWindow() {
     }
     else {
       BRLogError("Failed to find asset '" + ws->getMobName() + "'");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
   _pScript->getScene()->getUiScreen()->addChild(winObjects);

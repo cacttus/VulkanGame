@@ -9,7 +9,7 @@
 //
 ////#include "../base/PoundFile.h"
 //
-//namespace BR2 {
+//namespace VG {
 //
 //class EngineConfigFile : public XmlFile {
 //public:

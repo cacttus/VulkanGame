@@ -9,7 +9,7 @@
 
 #include "../model/UtilMesh.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class UtilMeshBox
 *  @brief
@@ -32,6 +32,6 @@ private:
   Box3f _pCube;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

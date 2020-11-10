@@ -1,7 +1,7 @@
 #include "../base/Crc32.h"
 
 
-namespace BR2 {
+namespace VG {
 Crc32::Crc32(uint32_t polynomial, uint32_t seed) :
   _uiPolynomial(polynomial)
   , _uiSeed(seed) {

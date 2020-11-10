@@ -503,7 +503,7 @@ std::string getHeader(std::string fileName, std::string strAddExt) {
           "_H__\n";
   head += "\n";
   head += "\n";
-  head += "namespace BR2 {\n";
+  head += "namespace VG {\n";
   head += "/**\n";
   head += "*  @class ";
   head += strFilePart;
@@ -576,7 +576,7 @@ std::string getSource(std::string fileName, std::string strAddExt) {
   head += "#include \"./" + getFilePart(fileName) + ".h\"\n";
   head += "\n";
   head += "\n";
-  head += "namespace BR2 {\n";
+  head += "namespace VG {\n";
   head += getFilePart(fileName);
   head += "::";
   head += getFilePart(fileName);

@@ -11,7 +11,7 @@
 #include "../bottle/W25GridMesh.h"
 #include "../gfx/Atlas.h"
 
-namespace BR2 {
+namespace VG {
 W25MeshMaker::W25MeshMaker(std::shared_ptr<Atlas> pAtlas) :
   _pWorldAtlas(pAtlas) {
 }
@@ -390,7 +390,7 @@ bool W25MeshMaker::checkHiddenSide(WorldCell* gc, int iSide, int iTri, GridMeshL
     //**Unless we implement consolidation.  Then fix this
     //int nnn = 0;
     //nnn++;
-    //Gu::debugBreak();
+    //Base::debugBreak();
 
     //*This is a consolidated node, ignore.
     return false;
@@ -873,7 +873,7 @@ void W25MeshConf::doSideTris(int t00, int t01, bool(&vt)[4], bool(&vb)[4], int(&
   else if (si[0] == 0 && si[1] == 5) { ePlane = W25Plane::e::CrossC; }
   else if (si[0] == 5 && si[1] == 0) { ePlane = W25Plane::e::CrossB; }
   else {
-    Gu::debugBreak(); //impossible
+    Base::debugBreak(); //impossible
   }
 
   //We should be able to handle just the triangle cases, then the "no edge" cases.
@@ -988,7 +988,7 @@ void W25MeshMaker::redoMeshForCellNoGpuCopy(
       for (size_t iInd = iOldOff; iInd < pMesh->getIndexes().size(); ++iInd) {
         pMesh->getIndexes()[iInd] -= iOldCount;
         if (pMesh->getIndexes()[iInd] < 0) {
-          Gu::debugBreak();//Bad boy
+          Base::debugBreak();//Bad boy
           pMesh->getIndexes()[iInd] = 0;
         }
       }

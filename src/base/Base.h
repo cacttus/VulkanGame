@@ -9,7 +9,7 @@
 
 #include "../base/StringUtil.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Utility file for /base
 *  @brief
@@ -77,6 +77,6 @@ private:
   static std::shared_ptr<App> _app;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

@@ -1,7 +1,7 @@
 #include "../math/Spline.h"
 #include "../base/Logger.h"
 
-namespace BR2 {
+namespace VG {
 
 Spline::Spline() {
 }

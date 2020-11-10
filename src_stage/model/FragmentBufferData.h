@@ -10,7 +10,7 @@
 #include "../model/ModelHeader.h"
 #include "../base/Allocator.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class FragmentBufferData
 *  @brief Fragment Buffer Data. Stores CPU-side fragments in a flexible interleaved buffer allowing multiple vertex formats.

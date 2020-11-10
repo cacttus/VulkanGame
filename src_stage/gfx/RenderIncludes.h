@@ -28,7 +28,7 @@
 #include <vulkan/vulkan.h>
 
 
-namespace BR2 {
+namespace VG {
 
 
 }//ns Game

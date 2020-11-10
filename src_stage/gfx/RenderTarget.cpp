@@ -2,7 +2,7 @@
 #include "./RenderTarget.h"
 
 
-namespace BR2 {
+namespace VG {
 RenderTarget::RenderTarget(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
 }
 RenderTarget::~RenderTarget() {

@@ -9,7 +9,7 @@
 
 #include "../base/HashMap.h"
 
-namespace BR2 {
+namespace VG {
 class XmlConfigAttribute : public VirtualMemory {
 public:
   string_t _attrib_name;

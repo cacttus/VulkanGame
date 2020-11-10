@@ -3,7 +3,7 @@
 #include "../math/BitHacks.h"
 #include <iostream>
 
-namespace BR2 {
+namespace VG {
 //
 //    FUNCTIONS
 //

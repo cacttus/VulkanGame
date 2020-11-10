@@ -13,7 +13,7 @@
 #include "../math/Minimax.h"
 #include "../math/Algorithm.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Random.h
 *  @brief Random numbers and noise.
@@ -181,6 +181,6 @@ FORCE_INLINE vec3 Random::rv311() {
 }
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

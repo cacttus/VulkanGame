@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../base/Logger.h"
 
-namespace BR2 {
+namespace VG {
 
 
 

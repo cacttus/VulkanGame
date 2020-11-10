@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class RenderTarget
 *  @brief Interface for rendering targets: GL buffer, or window surface.

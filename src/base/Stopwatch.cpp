@@ -3,7 +3,7 @@
 #include "../base/DateTime.h"
 #include "../base/Base.h"
 
-namespace BR2 {
+namespace VG {
 Stopwatch::Stopwatch(const string_t& strName, bool bStart) : _tA(0), _tB(0) {
   _strName = strName;
   if (bStart) {
@@ -66,4 +66,4 @@ bool Stopwatch::pulse(t_timeval isGreaterThanMs) {
   return bRet;
 }
 
-}  // namespace BR2
+}  // namespace VG

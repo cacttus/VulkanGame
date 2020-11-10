@@ -10,7 +10,7 @@
 #include "../gfx/GfxHeader.h"
 
 #include <future>
-namespace BR2 {
+namespace VG {
 /**
 *  @class PointLightShadowBox
 *  @brief Shadow map box for a point light.  A collection of 6 @cShadowFrustum.

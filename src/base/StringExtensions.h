@@ -9,7 +9,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *   @class StringExtensions
 *   @brief This file extends std::string allowing for implicit casts to integral types (doing away with TStr).

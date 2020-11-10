@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 /** Holds configs for making meshes */
 class W25MeshMaker : public VirtualMemoryShared<W25MeshMaker> {
   friend class W25MeshConf;

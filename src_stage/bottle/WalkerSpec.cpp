@@ -3,7 +3,7 @@
 #include "../bottle/Lair.h"
 
 
-namespace BR2 {
+namespace VG {
 WalkerSpec::WalkerSpec(string_t strName) : _strName(strName) {
   _iNameHashed = STRHASH(strName);
   _mxHopCount.setMin(0);

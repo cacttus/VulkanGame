@@ -10,7 +10,7 @@
 #include "../base/BaseHeader.h"
 #include "../base/Stopwatch.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Perf
 *  @brief Monitors performance.

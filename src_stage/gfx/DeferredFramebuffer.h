@@ -11,7 +11,7 @@
 #include "../gfx/FramebufferBase.h"
 #include "../model/ModelHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class DeferredFramebuffer
 *  @brief Deferred render target. This can be either a direct framebuffer & textures OR a multisample framebuffer
@@ -41,6 +41,6 @@ private:
   bool getIsBloomEnabled();
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

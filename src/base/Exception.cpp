@@ -1,7 +1,7 @@
 #include "../base/Exception.h"
 #include "../base/Logger.h"
 
-namespace BR2 {
+namespace VG {
 Exception::Exception(const string_t& c, int line, const char* file, bool bLogError) {
   _line = line;
   _msg = c;
@@ -17,4 +17,4 @@ string_t Exception::what() const {
   return _msg + " file:" + _file + " line:" + _line;
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -13,7 +13,7 @@
 #include "../world/Path.h"
 #include "../bottle/World25.h"
 
-namespace BR2 {
+namespace VG {
 RTSCamScript::RTSCamScript(std::shared_ptr<World25> pw) {
   _pWorld25 = pw;
   _fZoomHMax = BottleUtils::getNodeHeight() * 2;
@@ -25,7 +25,7 @@ void RTSCamScript::onStart() {
   std::shared_ptr<CameraNode> cam = getNode<CameraNode>();
   if (cam == nullptr) {
     BRLogError("Script could not start, object node was not set.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
   cam->getFrustum()->setZFar(1000.0f); //We need a SUPER long zFar in order to zoom up to the tiles.

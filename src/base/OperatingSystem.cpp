@@ -23,7 +23,7 @@
 #include <stdio.h>
 #endif
 
-namespace BR2 {
+namespace VG {
 
 string_t OperatingSystem::getOperatingSystemName() {
   string_t res;
@@ -429,4 +429,4 @@ string_t OperatingSystem::executeReadOutput(const string_t& cmd) {
   return data;
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -9,7 +9,7 @@
 #include "../gfx/ShaderSubProgram.h"
 #include "../gfx/GraphicsContext.h"
 
-namespace BR2 {
+namespace VG {
 ShaderCompiler::ShaderCompiler(std::shared_ptr<GLContext> ct, string_t fileDir) : _fileDir(fileDir), _pContext(ct) {
 }
 /**
@@ -56,7 +56,7 @@ void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg, co
 
   if (!Gu::getPackage()->fileExists((string_t)location)) {
     pSubProg->setStatus(ShaderStatus::e::CompileError);
-    Gu::debugBreak();
+    Base::debugBreak();
     BRThrowException("Could not find shader file or #include file, " + location);
   }
 
@@ -303,7 +303,7 @@ void ShaderCompiler::compile(std::shared_ptr<ShaderSubProgram> pSubProg) {
       if (StringUtil::lowercase(str).find("error") != string_t::npos) {
         pSubProg->debugPrintShaderSource();
         BRLogErrorNoStack(str);
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       else {
         BRLogWarn(str);
@@ -347,4 +347,4 @@ std::vector<string_t> ShaderCompiler::getErrorList(const std::shared_ptr<ShaderS
   return ret;
 }
 
-}  // namespace BR2
+}  // namespace VG

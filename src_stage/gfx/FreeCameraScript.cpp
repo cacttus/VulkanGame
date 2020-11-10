@@ -11,7 +11,7 @@
 #include "../model/SceneNode.h"
 #include "../world/Scene.h"
 
-namespace BR2 {
+namespace VG {
 FreeCameraScript::FreeCameraScript() {
 }
 FreeCameraScript::~FreeCameraScript() {
@@ -20,7 +20,7 @@ void FreeCameraScript::onStart() {
   std::shared_ptr<CameraNode> cam = getNode<CameraNode>();
   if (cam == nullptr) {
     BRLogError("Script could not start, object node was not set.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 

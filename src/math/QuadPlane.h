@@ -10,7 +10,7 @@
 #include "../math/TriPlane.h"
 #include "../math/PlaneEx3.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class QuadPlane
 *  @brief Derived plane for extra info and stuff.  DO NOT ADD VIRTUAL METHODS

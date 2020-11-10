@@ -3,11 +3,11 @@
 #include "../base/EngineConfig.h"
 #include "../base/GamePad.h"
 
-namespace BR2 {
+namespace VG {
 InputManager::InputManager() {
   //Keyboard keys init
   for (int i = 0; i < SDL_NUM_SCANCODES; ++i) {
-    _kbKeys[i] = BR2::ButtonState::Up;
+    _kbKeys[i] = VG::ButtonState::Up;
   }
 }
 InputManager::~InputManager() {
@@ -20,7 +20,7 @@ void InputManager::init() {
 
   _eRmb = _eLmb = _eMmb = ButtonState::e::Up;
 
-  if (Gu::getEngineConfig()->gamePadType() == GamePadType::KeyboardAndMouse) {
+  if (Core::config()->gamePadType() == GamePadType::KeyboardAndMouse) {
     _pGamePad = std::make_shared<KeyboardGamePad>(getThis<InputManager>());
   }
   else {
@@ -57,7 +57,7 @@ void InputManager::setKeyDown(SDL_Scancode keyCode) {
     BRLogError("scancode outside range:" + keyCode);
   }
   else {
-    _kbKeys[keyCode] = BR2::ButtonState::e::Press;
+    _kbKeys[keyCode] = VG::ButtonState::e::Press;
   }
 }
 void InputManager::setKeyUp(SDL_Scancode keyCode) {
@@ -66,7 +66,7 @@ void InputManager::setKeyUp(SDL_Scancode keyCode) {
     BRLogError("scancode outside range: " + keyCode);
   }
   else {
-    _kbKeys[keyCode] = BR2::ButtonState::Release;
+    _kbKeys[keyCode] = VG::ButtonState::Release;
   }
 }
 void InputManager::setLmbState(ButtonState::e bs) {
@@ -99,12 +99,12 @@ void InputManager::postUpdate() {
   _vLastMousePos_relative = _vMousePos_relative;
   _vLastMousePos_global = _vMousePos_global;
 }
-void InputManager::updateButtState(BR2::ButtonState::e& eState) {
-  if (eState == BR2::ButtonState::e::Press) {
-    eState = BR2::ButtonState::e::Down;
+void InputManager::updateButtState(VG::ButtonState::e& eState) {
+  if (eState == VG::ButtonState::e::Press) {
+    eState = VG::ButtonState::e::Down;
   }
-  else if (eState == BR2::ButtonState::Release) {
-    eState = BR2::ButtonState::e::Up;
+  else if (eState == VG::ButtonState::Release) {
+    eState = VG::ButtonState::e::Up;
   }
 }
 bool InputManager::keyState(SDL_Scancode key, ButtonState::e bs) {
@@ -146,4 +146,4 @@ void InputManager::warpMouse(int x, int y) {
   //  _bMouseWarped = true;
 }
 
-}  // namespace BR2
+}  // namespace VG

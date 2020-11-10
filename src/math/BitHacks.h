@@ -8,7 +8,7 @@
 #define __BITHACKS_90737118105551832723055_H__
 
 #include "../base/MachineTypes.h"
-namespace BR2 {
+namespace VG {
 
 //low level bit stuff
 class BitHacks {

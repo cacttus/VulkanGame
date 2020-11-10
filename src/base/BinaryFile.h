@@ -12,7 +12,7 @@
 #include "../math/Vec3x.h"
 #include "../math/Mat4x.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class BinaryFile
 *  @brief Binary parsed file which is loaded into a static buffer in memory via the memory manager.

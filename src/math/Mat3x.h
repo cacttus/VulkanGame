@@ -11,7 +11,7 @@
 #include "../math/Vec3x.h"
 #include "../math/Quaternion.h"
 #include "../base/TypeConv.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class Mat3x
 *  @brief A 3x3 Matrix. Column major.
@@ -256,6 +256,6 @@ FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator=(const Mat3x<Tx>& rhs) {
 }
 
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

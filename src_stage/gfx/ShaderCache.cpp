@@ -10,7 +10,7 @@
 
 #include <algorithm>
 
-namespace BR2 {
+namespace VG {
 #pragma region GLProgramBinary
 GLProgramBinary::GLProgramBinary(ShaderCache* cc, size_t binLength) : _pShaderCache(cc),
                                                                       _binaryLength(binLength),
@@ -196,7 +196,7 @@ std::shared_ptr<ShaderBase> ShaderCache::tryLoadCachedBinary(std::string program
       FileInfo inf = FileSystem::getFileInfo(file);
       if (!inf._exists) {
         BRLogError("Shader source file '" + file + "' does not exist.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
       else {
         maxTime = Math::brMax(inf._modified, maxTime);
@@ -297,4 +297,4 @@ std::shared_ptr<ShaderBase> ShaderCache::loadBinaryToGpu(std::string programName
 }
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG

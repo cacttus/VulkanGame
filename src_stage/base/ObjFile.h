@@ -11,7 +11,7 @@
 #include "../base/BinaryFile.h"
 #include "../model/ModelHeader.h"
 #include "../math/MathAll.h"
-namespace BR2 {
+namespace VG {
 /**
 *    @class ObjectFile
 *    @brief Imports OBJ files STRICTLY FOR BRO.

@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-namespace BR2 {
+namespace VG {
 void UnitTests::run(bool waitforkey) {
   UnitTests::mathTest();
 
@@ -94,4 +94,4 @@ void UnitTests::mathTest() {
   PRINT(Mat4x<double>::rotation(M_PI / 2 * 3, Vec3x<double>(0, 1, 0)) * v3);
 }
 
-}  // namespace BR2
+}  // namespace VG

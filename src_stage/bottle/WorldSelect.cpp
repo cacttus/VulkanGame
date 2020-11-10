@@ -18,7 +18,7 @@
 #include "../model/MeshUtils.h"
 #include "../world/Scene.h"
 
-namespace BR2 {
+namespace VG {
 WorldSelect::WorldSelect(std::shared_ptr<BottleScript> cr) {
   _pCongaRoom = cr;
 }

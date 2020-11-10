@@ -9,7 +9,7 @@
 
 #include "../gfx/GraphicsApi.h"
 
-namespace BR2 {
+namespace VG {
 #define VkExtFn(_vkFn) PFN_##_vkFn _vkFn = nullptr;
 /**
 *  @class VulkanApi
@@ -33,6 +33,6 @@ private:
   std::unique_ptr<VulkanApi_Internal> _pint;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

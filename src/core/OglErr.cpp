@@ -10,7 +10,7 @@
 #include "../gfx/OpenGLUtils.h"
 #include <atomic>
 
-namespace BR2 {
+namespace VG {
 class OglErr_Internal {
 public:
   enum class GpuLogLevel { Err_,
@@ -62,9 +62,9 @@ public:
         BRLogError(errmsg);
       }
 
-      if (Gu::getEngineConfig()->getBreakOnGraphicsError() == true) {
+      if (Core::config()->getBreakOnGraphicsError() == true) {
         if (bDoNotBreak == false) {
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
       bError = true;
@@ -111,10 +111,10 @@ public:
       return;
     }
 
-    bool graphicsLogHigh = Gu::getEngineConfig()->getGraphicsErrorLogging_High();
-    bool graphicsLogMed = Gu::getEngineConfig()->getGraphicsErrorLogging_Medium();
-    bool graphicsLogLow = Gu::getEngineConfig()->getGraphicsErrorLogging_Low();
-    bool graphicsLogInfo = Gu::getEngineConfig()->getGraphicsErrorLogging_Info();
+    bool graphicsLogHigh = Core::config()->getGraphicsErrorLogging_High();
+    bool graphicsLogMed = Core::config()->getGraphicsErrorLogging_Medium();
+    bool graphicsLogLow = Core::config()->getGraphicsErrorLogging_Low();
+    bool graphicsLogInfo = Core::config()->getGraphicsErrorLogging_Info();
 
     do {
       std::vector<GLchar> msgData(numMsgs * _maxMsgLen);
@@ -330,13 +330,13 @@ void OglErr::clearGPULog(std::shared_ptr<GLContext> ctx){
   _pint->clearGPULog(ctx);
 }
 bool OglErr::chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
-  if (Gu::getEngineConfig()->getEnableRuntimeErrorChecking() == true) {
+  if (Core::config()->getEnableRuntimeErrorChecking() == true) {
     return _pint->handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;
 }
 bool OglErr::chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
-  if (Gu::getEngineConfig()->getEnableDebugErrorChecking() == true) {
+  if (Core::config()->getEnableDebugErrorChecking() == true) {
     return _pint->handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;
@@ -348,4 +348,4 @@ OglErr::~OglErr() {
   _pint = nullptr;
 }
 
-}  // namespace BR2
+}  // namespace VG

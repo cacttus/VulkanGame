@@ -9,7 +9,7 @@
 
 #include "../base/TextConfigFile.h"
 
-namespace BR2 {
+namespace VG {
 class PackageConfiguration;
 /**
 *  @class XmlFile

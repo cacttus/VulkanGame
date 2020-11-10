@@ -9,7 +9,7 @@
 
 #include "./MathHeader.h"
 
-namespace BR2 {
+namespace VG {
 
 class Math : public VirtualMemory {
 public:
@@ -140,6 +140,6 @@ private:
   static std::shared_ptr<Random> _random;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

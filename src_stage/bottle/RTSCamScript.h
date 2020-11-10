@@ -11,7 +11,7 @@
 #include "../base/TouchInfo.h"
 #include "../world/Script.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class RTSCamScript
 *  @brief An script to control a 2d-ish rotatable camera for viewing the world as an RTS.

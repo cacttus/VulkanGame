@@ -16,7 +16,7 @@
 #include "../model/MbiFile.h"
 #include "../world/PhysicsWorld.h"
 
-namespace BR2 {
+namespace VG {
 MbiFile::MbiFile(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
   _pFile = std::make_shared<BinaryFile>(c_strMbiVersion);
 }
@@ -34,7 +34,7 @@ void MbiFile::parseErr(string_t str, bool bDebugBreak, bool bFatal) {
   else {
     BRLogError(str);
     if (bDebugBreak) {
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 }
@@ -66,7 +66,7 @@ bool MbiFile::loadAndParse(string_t file) {
 
   if (h0 != 'M' || h1 != 'B' || h2 != 'I' || h3 != 'H') {
     BRLogError("Invalid file header for MBI1 file.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return false;
   }
 

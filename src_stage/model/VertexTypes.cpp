@@ -1,7 +1,7 @@
 #include "../model/VertexTypes.h"
 
 
-namespace BR2 {
+namespace VG {
 
 //TODO: unique_ptr these.
 std::shared_ptr<VertexFormat> v_v2c4x2::_pVertexFormat = nullptr;

@@ -1,14 +1,16 @@
-#include "../base/SoundCache.h"
 #include "../base/Hash.h"
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
+#include "../base/ApplicationPackage.h"
+#include "../core/SoundCache.h"
+#include "../core/SDLIncludes.h"
 //#include "../base/ApplicationPackage.h"
 //#include "../base/Gu.h"
 
 //#include "../base/SDLIncludes.h"
 #include <mutex>
 
-namespace BR2 {
+namespace VG {
 #pragma region SoundSpec
 SoundSpec::SoundSpec(const string_t& fname) {
   _sFilePath = fname;
@@ -19,7 +21,7 @@ SoundSpec::~SoundSpec() {
 }
 void SoundSpec::load(const string_t& file) {
   if (_eLoadState == LoadState::e::NotLoaded) {
-    string_t location = FileSystem::combinePath(Base::getPackage()->getSoundsFolder(), file);
+    string_t location = FileSystem::combinePath(Base::package()->getSoundsFolder(), file);
 
     if (!FileSystem::fileExists(location)) {
       _eLoadState = LoadState::e::LoadFailed;
@@ -275,4 +277,4 @@ std::shared_ptr<SoundInst> SoundCache::tryPlay(const std::string& file, const So
 }
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG

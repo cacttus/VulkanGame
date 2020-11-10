@@ -17,7 +17,7 @@ gen all base land (no caves)
 
 */
 
-namespace BR2 {
+namespace VG {
 WipGrid::WipGrid(ivec3& viPos, LairSpec* pLair, int iSeed) :
   EasyNoise(iSeed), _pLair(pLair), _viPos(viPos) {
   // _iNoiseArrSize = CongaUtils::getNumValsPerNode();

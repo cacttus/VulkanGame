@@ -2,7 +2,7 @@
 #include "../base/Allocator.h"
 
 
-namespace BR2 {
+namespace VG {
 IndexBufferData::IndexBufferData() {
 }
 IndexBufferData::~IndexBufferData() {

@@ -56,7 +56,7 @@
 #include "../bottle/GameUi.h"
 #include "../bottle/WorldSelect.h"
 
-namespace BR2 {
+namespace VG {
 BottleScript::BottleScript() {
 }
 BottleScript::~BottleScript() {
@@ -197,7 +197,7 @@ bool BottleScript::loadOrCreateGame(string_t gameName) {
       gf.loadAndParse(gameFileDir);
       if (StringUtil::isEmpty(gf.getWorldName())) {
         BRLogError("World name was empty.");
-        Gu::debugBreak();
+        Base::debugBreak();
         return false;
       }
       else {
@@ -206,7 +206,7 @@ bool BottleScript::loadOrCreateGame(string_t gameName) {
     }
     else {
       BRLogError("Game file '" + gameFileDir + "' not found.");
-      Gu::debugBreak();
+      Base::debugBreak();
       return false;
     }
   }
@@ -332,7 +332,7 @@ void BottleScript::toggleDebug(std::shared_ptr<InputManager> pFingers) {
   if (pFingers->modsHeld(KeyMod::Ctrl | KeyMod::AltDontCare | KeyMod::ShiftDontCare)) {
     //CTRL + x
     //This is not recommended for the future.
-    TOGGLECD(SDL_SCANCODE_KP_0, Gu::getEngineConfig()->getEnableDebugErrorChecking());
+    TOGGLECD(SDL_SCANCODE_KP_0, Core::config()->getEnableDebugErrorChecking());
     if (pFingers->keyPress(SDL_SCANCODE_F1)) {
       //Force layout update
       getScene()->getUiScreen()->debugForceLayoutChanged();

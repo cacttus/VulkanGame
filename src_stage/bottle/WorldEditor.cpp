@@ -25,7 +25,7 @@
 #include "../bottle/WorldObj.h"
 #include "../bottle/W25Config.h"
 
-namespace BR2 {
+namespace VG {
 WorldEditor::WorldEditor(std::shared_ptr<World25> pWorld) {
   _pWorld25 = pWorld;
   //Must come after camera created AND world25 is created
@@ -224,7 +224,7 @@ void WorldEditor::makeAllEditedMeshes() {
         }
       }
       else {
-        Gu::debugBreak(); // Error
+        Base::debugBreak(); // Error
       }
     }
   }
@@ -243,7 +243,7 @@ void WorldEditor::makeAllEditedMeshes() {
       }
     }
     else {
-      Gu::debugBreak(); // Error
+      Base::debugBreak(); // Error
     }
   }
   _mapDirtyCells.clear();
@@ -270,7 +270,7 @@ void WorldEditor::addDrityCell(std::shared_ptr<WorldGrid> pg, WorldCell* pc) {
     }
   }
   else {
-    Gu::debugBreak(); // Error
+    Base::debugBreak(); // Error
   }
 }
 
@@ -673,7 +673,7 @@ void WorldEditor::addHistory(WorldCell* pc, int iPreviousGeom, int iPreviousTile
     _pCurrentClickHistory->_vecHistories.push_back(pg);
   }
   else {
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 }
 void WorldEditor::performUndo() {

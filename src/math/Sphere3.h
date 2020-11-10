@@ -9,7 +9,7 @@
 
 #include "../math/Vec3x.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Sphere3f
 *  @brief

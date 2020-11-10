@@ -2,7 +2,7 @@
 
 #include "../base/SDLIncludes.h"
 
-namespace BR2 {
+namespace VG {
 Delta::Delta() {
 }
 Delta::~Delta() {

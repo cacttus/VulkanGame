@@ -9,7 +9,7 @@
 // 
 // #include "../base/BaseHeader.h"
 // 
-// namespace BR2 {
+// namespace VG {
 // /**
 // *  @class App
 // *  @brief Interface for the app in a subsequent layer. You must implement the functions here in the SDL Layer

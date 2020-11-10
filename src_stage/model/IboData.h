@@ -10,7 +10,7 @@
 #include "../model/ModelHeader.h"
 #include "../model/GpuBufferData.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class IboData
 *  @brief Represents a vertex buffer object in Opengl.

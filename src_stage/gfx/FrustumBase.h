@@ -20,7 +20,7 @@
 #include "../math/MathAll.h"
 #include "../gfx/GfxHeader.h"
 #include "../model/SceneNode.h"
-namespace BR2 {
+namespace VG {
 /**
 *  @class Frustum
 *  @details Frustum class.
@@ -85,6 +85,6 @@ protected:
 
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

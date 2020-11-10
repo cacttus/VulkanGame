@@ -9,7 +9,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
  *  @class Crc32
  *  @brief Simplified version of
@@ -34,6 +34,6 @@ class Crc32 : public VirtualMemory {
                          int start, int size);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

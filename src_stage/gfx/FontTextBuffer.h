@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 #include "../math/MathAll.h"
-namespace BR2 {
+namespace VG {
 /**
 *   @class FontTextBuffer
 *   @brief

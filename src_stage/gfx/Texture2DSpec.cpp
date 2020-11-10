@@ -11,7 +11,7 @@
 #include "../gfx/RenderUtils.h"
 #include "../gfx/OpenGLUtils.h"
 
-namespace BR2 {
+namespace VG {
 Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : GLFramework(ct) {
   _strName = name;
   _eFormat = fmt;
@@ -72,14 +72,14 @@ void Texture2DSpec::calculateGLTextureFormat(TextureFormat fmt) {
   }
   else {
     BRLogError("Invalid engine texture format " + (int)fmt);
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 }
 bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound) {
   if (getGlId() == 0) {
     //https://stackoverflow.com/questions/1108589/is-0-a-valid-opengl-texture-id
     BRLogErrorCycle("Texture was not created on the GPU.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return false;
   }
   else {
@@ -311,4 +311,4 @@ void Texture2DSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
 
   create(format, data, iWidth, iHeight, bHasMipmaps, bRepeatU, bRepeatV);
 }
-}  // namespace BR2
+}  // namespace VG

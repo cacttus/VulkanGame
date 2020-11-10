@@ -7,7 +7,7 @@
 #include "../model/VertexFormat.h"
 #include "../model/MeshSpec.h"
 
-namespace BR2 {
+namespace VG {
 ObjFile::ObjFile(std::shared_ptr<GLContext> c) : _pContext(c), _bDebugDisableVertexCompression(false)  //**Set this to false to disable compressed vertexes (optimized meshes)
 {
   _iCurrentLine = 0;
@@ -270,4 +270,4 @@ mat4 ObjFile::parseMat4(BinaryFile& bf) {
   return mOut;
 }
 
-}  // namespace BR2
+}  // namespace VG

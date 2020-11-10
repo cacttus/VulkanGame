@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 
 /**
 *  @class GraphicsApi
@@ -43,6 +43,6 @@ private:
   void setWindowProps(SDL_Window* win, const GraphicsWindowCreateParameters& params);
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

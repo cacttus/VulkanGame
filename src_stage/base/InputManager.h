@@ -11,7 +11,7 @@
 #include "../math/MathAll.h"
 #include "../base/SDLIncludes.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Fingers
 *  @brief  Manages user input.
@@ -60,13 +60,13 @@ public:
 
   void preUpdate(); //before frame
   void postUpdate(); //after frame
-  void updateButtState(BR2::ButtonState::e& eState);
+  void updateButtState(VG::ButtonState::e& eState);
 
 
 private:
-  ButtonState::e _eRmb = BR2::ButtonState::Up;
-  ButtonState::e _eLmb = BR2::ButtonState::Up;
-  ButtonState::e _eMmb = BR2::ButtonState::Up;
+  ButtonState::e _eRmb = VG::ButtonState::Up;
+  ButtonState::e _eLmb = VG::ButtonState::Up;
+  ButtonState::e _eMmb = VG::ButtonState::Up;
   ButtonState::e _kbKeys[SDL_NUM_SCANCODES];
   vec2 _vLastMousePos_relative;
   vec2 _vMousePos_relative;

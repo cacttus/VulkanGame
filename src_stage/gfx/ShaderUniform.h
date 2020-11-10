@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class ShaderUniform
 *  @brief GLSL shader uniform variable (not a block).
@@ -121,6 +121,6 @@ private:
   void* _pValue = nullptr;
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

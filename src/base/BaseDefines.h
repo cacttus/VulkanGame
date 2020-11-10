@@ -9,7 +9,7 @@
 
 #include "../base/MachineTypes.h"
 
-namespace BR2 {
+namespace VG {
 //Operating System global defines
 //We can use either SDL's defines, or use the defines in the expected OS headers
 // BR2_OS_WINDOWS, BR2_OS_ANDROID, BR2_OS_LINUX, BR2_OS_IOS, BR2_OS_OSX
@@ -31,7 +31,7 @@ constexpr const char* BR_GET_FILENAME(const char* path) {
 //#define BR_SRC_FNAME __FILE__
 //#define BR_SRC_FLINE __LINE__
 //#elif defined(BR2_OS_LINUX)
-#define BR_SRC_FNAME (BR2::BR_GET_FILENAME(__FILE__))
+#define BR_SRC_FNAME (VG::BR_GET_FILENAME(__FILE__))
 #define BR_SRC_FLINE (__LINE__)
 //#else
 //  OS_METHOD_NOT_IMPLEMENTED;
@@ -315,6 +315,6 @@ public:
   }
 };
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

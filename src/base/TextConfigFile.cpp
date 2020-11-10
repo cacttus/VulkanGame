@@ -4,7 +4,7 @@
 #include "../base/OperatingSystem.h"
 #include "../base/StringUtil.h"
 
-namespace BR2 {
+namespace VG {
 TextConfigFile::TextConfigFile(const string_t& loc) : TextDataFile(loc) {
 }
 TextConfigFile::~TextConfigFile() {
@@ -81,4 +81,4 @@ bool TextConfigFile::cmp(const string_t& tok0, const char* ch, int32_t validateA
   return ret;
 }
 
-}  // namespace BR2
+}  // namespace VG

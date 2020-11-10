@@ -11,7 +11,7 @@
 #include "../gfx/ShaderBase.h"
 
 
-namespace BR2 {
+namespace VG {
 DeferredFramebuffer::DeferredFramebuffer(std::shared_ptr<GLContext> pc, uint32_t iWidth, uint32_t iHeight, bool bMultisample,
   uint32_t nSamples, vec4& vClear) :
   FramebufferBase("Deferred_FBO",pc, bMultisample, nSamples, vClear) {

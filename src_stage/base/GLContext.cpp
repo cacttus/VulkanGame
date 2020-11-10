@@ -39,7 +39,7 @@
 #include "../model/ModelCache.h"
 #include "../world/Scene.h"
 #include <iostream>
-namespace BR2 {
+namespace VG {
 GLContext::GLContext(std::shared_ptr<GraphicsApi> api, std::shared_ptr<GLProfile> profile) : GraphicsContext(api) {
   _profile = profile;
 }
@@ -80,7 +80,7 @@ bool GLContext::init(SDL_Window* sdlw) {
       printHelpfulDebug();
 
       if (_profile->_iMSAABuffers == 0) {
-        Gu::getEngineConfig()->setEnableMSAA(false);
+        Core::config()->setEnableMSAA(false);
         BRLogWarn("This configuration did not support MSAA.");
       }
 
@@ -147,7 +147,7 @@ bool GLContext::loadOpenGLFunctions() {
     if (!(y = (x)SDL_GL_GetProcAddress(#y))) {                                                              \
       BRLogError("GL Method " + #y + " not supported by your GPU, or there was another error somewhere.."); \
       bValid = false;                                                                                       \
-      Gu::debugBreak();                                                                                     \
+      Base::debugBreak();                                                                                     \
     }                                                                                                       \
   } while (0)
   //Quick
@@ -614,7 +614,7 @@ void GLContext::setObjectLabel(GLenum type, GLuint objectId, const string_t& lab
   if (StringUtil::isEmpty(label)) {
     //Label was empty.
     BRLogDebug("Warning label was empty.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   if (objectId > 0) {
     static int _maxlenLabel = -1;
@@ -623,7 +623,7 @@ void GLContext::setObjectLabel(GLenum type, GLuint objectId, const string_t& lab
     }
     if (label.length() >= _maxlenLabel) {
       //This shouldn't happen.
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     else {
       chkErrDbg();
@@ -915,7 +915,7 @@ bool GLContext::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLuin
     else {
       BRLogError("Invalid or Unsupported texture internal format when reading from GPU" +
                  (int)internalFormat);
-      Gu::debugBreak();
+      Base::debugBreak();
     }
 
     if (false) {
@@ -1762,4 +1762,4 @@ void GLContext::debugGetVertexArrayState(string_t& strState) {
 }
 #pragma endregion
 
-}  // namespace BR2
+}  // namespace VG

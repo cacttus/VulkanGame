@@ -9,7 +9,7 @@
 
 #include "../world/Component.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class Script
 *  @brief Base script component. This class by itself is the interface for compiled (c++) scripts.

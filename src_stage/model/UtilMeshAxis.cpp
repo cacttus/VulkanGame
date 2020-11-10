@@ -3,7 +3,7 @@
 #include "../model/VertexFormat.h"
 #include "../model/FragmentBufferData.h"
 #include "../model/IndexBufferData.h"
-namespace BR2 {
+namespace VG {
 UtilMeshAxis::UtilMeshAxis(std::shared_ptr<GLContext> ctx, float scale, float lineWidth, const mat4& xform) :
   UtilMesh(ctx, v_v3c4x2::getVertexFormat(), nullptr),
   _scale(scale),

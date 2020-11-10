@@ -4,7 +4,7 @@
 
 #include "../base/BaseHeader.h"
 
-namespace BR2 {
+namespace VG {
 class AppRunner_Internal;
 /**
 *   @class AppRunner
@@ -20,5 +20,5 @@ private:
   std::unique_ptr<AppRunner_Internal> _pint;
 };
 
-}  // namespace BR2
+}  // namespace VG
 #endif

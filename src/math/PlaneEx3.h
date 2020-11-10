@@ -10,7 +10,7 @@
 #include "../math/Plane3.h"
 #include "../math/Mat3x.h"
 
-namespace BR2 {
+namespace VG {
 /**
 *  @class PlaneEx3
 *  @brief Extension of the plane class to include tangent and binormal space.  DO NOT ADD VIRTUAL METHODS
@@ -64,6 +64,6 @@ FORCE_INLINE PlaneEx3::PlaneEx3() {
 FORCE_INLINE PlaneEx3::~PlaneEx3() {
 }
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

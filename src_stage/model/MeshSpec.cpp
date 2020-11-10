@@ -23,7 +23,7 @@
 #include "../world/PhysicsShapes.h"
 #include <iostream>
 
-namespace BR2 {
+namespace VG {
 MeshSpec::MeshSpec(const string_t& strName, std::shared_ptr<VertexFormat> vf, std::shared_ptr<ObjFile> objFile, std::shared_ptr<PhysicsShape> ps) : BaseSpec(strName) {
   _pVertexFormat = vf;
   _pObjectFile = objFile;
@@ -444,14 +444,14 @@ bool MeshSpec::hasFrags() {
 std::shared_ptr<FragmentBufferData> MeshSpec::getFrags() {
   if (_pFrags == nullptr) {
     BRLogError("Verts: Tried to end a mesh edit when no edit in progress.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   return _pFrags;
 }
 std::shared_ptr<IndexBufferData> MeshSpec::getIndexes() {
   if (_pIndexes == nullptr) {
     BRLogError("Indexes: Tried to end a mesh edit when no edit in progress.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   return _pIndexes;
 }
@@ -747,7 +747,7 @@ void MeshSpec::testAccess(std::shared_ptr<ModelSpec> ms, GpuAnimatedMeshWeightDa
       if (ms->getArmatureById(parms.first) == nullptr) {
         BRLogError("Skin test failed.  Armature does not exist for one or more weights.");
         _eSkinStatus = MeshSkinStatus::e::Error;
-        Gu::debugBreak();
+        Base::debugBreak();
         //break;
       }
     }
@@ -759,7 +759,7 @@ void MeshSpec::testAccess(std::shared_ptr<ModelSpec> ms, GpuAnimatedMeshWeightDa
     if (off + count > (int32_t)weightsGpuSize) {
       BRLogError("Skin test failed.  Weight offset " + (off + count) + " was outside bounds of " + weightsGpuSize);
       _eSkinStatus = MeshSkinStatus::e::Error;
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     else {
       for (int iWeight = 0; iWeight < count; ++iWeight) {
@@ -767,12 +767,12 @@ void MeshSpec::testAccess(std::shared_ptr<ModelSpec> ms, GpuAnimatedMeshWeightDa
         if (gpuWeight._iArmJointOffset < 0 || gpuWeight._iArmJointOffset > 10000) {
           BRLogError("Skin test failed.  Joint " + gpuWeight._iArmJointOffset + " invalid (or greater than 1000) ");
           _eSkinStatus = MeshSkinStatus::e::Error;
-          Gu::debugBreak();
+          Base::debugBreak();
         }
         if (gpuWeight._weight < 0.0f) {
           BRLogError("Skin test failed.  Weight was invalid: " + gpuWeight._weight);
           _eSkinStatus = MeshSkinStatus::e::Error;
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
 
@@ -851,7 +851,7 @@ void MeshSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
     }
     else if ((nWeights > 0 && nWeightOffsets == 0) || (nWeights == 0 && nWeightOffsets > 0)) {
       BRLogError(" Weights were invalid for mesh.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 

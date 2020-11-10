@@ -3,7 +3,7 @@
 #include "../bottle/Goal25Think.h"
 #include "../bottle/WorldObj.h"
 
-namespace BR2 {
+namespace VG {
 Brain25::Brain25(std::shared_ptr<ModelNode> pObj, std::shared_ptr<World25> pGrid) {
   _pWorld25 = pGrid;
   _pPixObj = pObj;
@@ -58,7 +58,7 @@ void Brain25::findStuff(std::vector<Goal25*>& outGoals) {
   //gq = _pWorld25->getObjQuad(_pPixObj);
   //if (gq == nullptr) {
   //    int n = 0;
-  //    Gu::debugBreak();//this happens sometiems IDK why
+  //    Base::debugBreak();//this happens sometiems IDK why
   //    return;
   //}
 

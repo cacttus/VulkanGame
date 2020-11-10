@@ -16,7 +16,7 @@
 #include "../model/VboData.h"
 #include "../model/VaoDataGeneric.h"
 
-namespace BR2 {
+namespace VG {
 FramebufferBase::FramebufferBase(const string_t& label, std::shared_ptr<GLContext> pc, bool bMsaa, int nMsaa, vec4& vClear) : GLFramework(pc) {
   _vClear = vClear;
   _bMsaaEnabled = bMsaa;
@@ -219,4 +219,4 @@ void FramebufferBase::makeRenderTexture(std::shared_ptr<GLContext> ctx, GLuint* 
   ctx->chkErrRt();
 }
 
-}  // namespace BR2
+}  // namespace VG

@@ -66,7 +66,7 @@ extern int stb_vorbis_decode_filename(const char* filename, int* channels, int* 
 #endif
 #endif
 
-namespace BR2 {
+namespace VG {
 std::shared_ptr<TexCache> Gu::_pTexCache = nullptr;
 std::shared_ptr<Sequencer> Gu::_pSequencer = nullptr;
 std::shared_ptr<SoundCache> Gu::_pSoundCache = nullptr;
@@ -101,7 +101,7 @@ std::shared_ptr<Sequencer> Gu::getSequencer() { return GetExistingManager(_pSequ
 std::shared_ptr<SoundCache> Gu::getSound() { return GetExistingManager(_pSoundCache); }
 std::shared_ptr<TexCache> Gu::getTexCache() { return GetExistingManager(_pTexCache); }
 std::shared_ptr<ShaderMaker> Gu::getShaderMaker() { return GetExistingManager(_pShaderMaker); }
-std::shared_ptr<EngineConfig> Gu::getEngineConfig() { return GetExistingManager(_pEngineConfig); }
+std::shared_ptr<EngineConfig> Core::config() { return GetExistingManager(_pEngineConfig); }
 std::shared_ptr<Logger> Gu::getLogger() { return GetExistingManager(_pLogger); }
 std::shared_ptr<GraphicsApi> Gu::getGraphicsApi() { return GetExistingManager(_pGraphicsApi); }
 std::shared_ptr<EngineConfig> Gu::getConfig() { return GetExistingManager(_pEngineConfig); }
@@ -139,11 +139,11 @@ bool Gu::is64Bit() {
 }
 void parsearg(std::string key, std::string value) {
   if (key == "--show-console") {
-    Gu::getEngineConfig()->setShowConsole(BR2::TypeConv::strToBool(value));
+    Core::config()->setShowConsole(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding show console window: " + value);
   }
   else if (key == "--game-host") {
-    Gu::getEngineConfig()->setGameHostAttached(BR2::TypeConv::strToBool(value));
+    Core::config()->setGameHostAttached(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding game host: " + value);
   }
   else {
@@ -210,11 +210,11 @@ void Gu::createLogger(const string_t& logfile_dir, const std::vector<string_t>& 
 }
 void processArg(std::string key, std::string value) {
   if (key == "--show-console") {
-    Gu::getEngineConfig()->setShowConsole(BR2::TypeConv::strToBool(value));
+    Core::config()->setShowConsole(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding show console window: " + value);
   }
   else if (key == "--game-host") {
-    Gu::getEngineConfig()->setGameHostAttached(BR2::TypeConv::strToBool(value));
+    Core::config()->setGameHostAttached(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding game host: " + value);
   }
   else {
@@ -233,14 +233,14 @@ void Gu::initGlobals(const std::vector<std::string>& args) {
   }
 
   //Setup Global Configuration
-  getLogger()->enableLogToFile(Gu::getEngineConfig()->getEnableLogToFile());
-  getLogger()->enableLogToConsole(Gu::getEngineConfig()->getEnableLogToConsole());
+  getLogger()->enableLogToFile(Core::config()->getEnableLogToFile());
+  getLogger()->enableLogToConsole(Core::config()->getEnableLogToConsole());
 
   //Print some environment Diagnostics
   BRLogInfo(Stz "Operating System: " + Gu::getOperatingSystemName());
   BRLogInfo(Stz "C++ Version: " + Gu::getCPPVersion());
 
-  if (Gu::getEngineConfig()->getShowConsole() == false) {
+  if (Core::config()->getShowConsole() == false) {
     OperatingSystem::hideConsole();
   }
   else {
@@ -439,4 +439,4 @@ void Gu::updateManagers() {
 }
 
 
-}  // namespace BR2
+}  // namespace VG

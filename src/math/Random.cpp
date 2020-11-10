@@ -3,7 +3,7 @@
 
 #include <time.h>
 
-namespace BR2 {
+namespace VG {
 Random::Random() {
   setSeed((int32_t)time(NULL));
 }

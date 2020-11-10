@@ -10,7 +10,7 @@
 #include "../math/Math.h"
 
 
-namespace BR2 {
+namespace VG {
 /** 
  * @class Vec2x
  * @note This class must not have any virtual functions (vtable).
@@ -439,6 +439,6 @@ bool Vec2x<Tx>::compareTo(const Vec2x<Tx>* rhs) const {
 STATIC FORCE_INLINE vec2& normalize(vec2& v1) { return v1.normalize(); }
 STATIC FORCE_INLINE float dot(vec2& v1, vec2& v2) { return v1.dot(v2); }
 
-}  // namespace BR2
+}  // namespace VG
 
 #endif

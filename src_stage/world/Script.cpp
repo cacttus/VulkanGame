@@ -1,7 +1,7 @@
 #include "../base/BaseHeader.h"
 #include "./Script.h"
 
-namespace BR2 {
+namespace VG {
 Script::Script() {
 }
 Script::~Script() {

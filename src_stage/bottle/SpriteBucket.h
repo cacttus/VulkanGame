@@ -9,7 +9,7 @@
 
 #include "../bottle/BottleHeader.h"
 
-namespace BR2 {
+namespace VG {
 #define MOTION25_INVALID_FRAME 0
 #define TILE_MASK_BLANK (-1)
 #define TILE_MASK_NONE (0)

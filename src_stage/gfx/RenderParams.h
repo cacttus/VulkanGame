@@ -12,7 +12,7 @@
 #include "../base/SDLGLIncludes.h"
 
 
-namespace BR2 {
+namespace VG {
 
 class RenderParams_Internal;
 /**
