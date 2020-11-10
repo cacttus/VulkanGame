@@ -147,7 +147,7 @@ FORCE_INLINE Quaternion<Tx> Mat3x<Tx>::getQuaternion() {
     s2 = 1.0f;
   }
   Tx t = s0 * _m11 + s1 * _m22 + s2 * _m33 + 1.0f;
-  Tx s = MathUtils::brRsqrt(t) * 0.5f;  //reciprocalSqrt(t)*0.5f;
+  Tx s = Math::brRsqrt(t) * 0.5f;  //reciprocalSqrt(t)*0.5f;
 
   q[k0] = s * t;
   q[k1] = (_m12 - s2 * _m21) * s;

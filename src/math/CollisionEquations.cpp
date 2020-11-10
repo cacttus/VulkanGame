@@ -1,5 +1,5 @@
 
-#include "../base/Gu.h"
+//#include "../base/Gu.h"
 #include "../base/Logger.h"
 #include "../math/MathAll.h"
 #include "../math/CollisionEquations.h"
@@ -471,7 +471,7 @@ CollisionResult CollisionEquations::sphere_collide_sphere(
     }
   }
 
-  float sqrtD = MathUtils::brSqrt(d);
+  float sqrtD = Math::brSqrt(d);
 
   root_1 = (-b + sqrtD) / (2 * a);
   root_2 = (-b - sqrtD) / (2 * a);
@@ -503,14 +503,14 @@ bool Ceq::triangleAabbTest(const vec3* vertices, const vec3& aabbMin, const vec3
   const vec3& p2 = vertices[1];
   const vec3& p3 = vertices[2];
 
-  if (MathUtils::brMin(MathUtils::brMin(p1.x, p2.x), p3.x) > aabbMax.x) return false;
-  if (MathUtils::brMax(MathUtils::brMax(p1.x, p2.x), p3.x) < aabbMin.x) return false;
+  if (Math::brMin(Math::brMin(p1.x, p2.x), p3.x) > aabbMax.x) return false;
+  if (Math::brMax(Math::brMax(p1.x, p2.x), p3.x) < aabbMin.x) return false;
 
-  if (MathUtils::brMin(MathUtils::brMin(p1.z, p2.z), p3.z) > aabbMax.z) return false;
-  if (MathUtils::brMax(MathUtils::brMax(p1.z, p2.z), p3.z) < aabbMin.z) return false;
+  if (Math::brMin(Math::brMin(p1.z, p2.z), p3.z) > aabbMax.z) return false;
+  if (Math::brMax(Math::brMax(p1.z, p2.z), p3.z) < aabbMin.z) return false;
 
-  if (MathUtils::brMin(MathUtils::brMin(p1.y, p2.y), p3.y) > aabbMax.y) return false;
-  if (MathUtils::brMax(MathUtils::brMax(p1.y, p2.y), p3.y) < aabbMin.y) return false;
+  if (Math::brMin(Math::brMin(p1.y, p2.y), p3.y) > aabbMax.y) return false;
+  if (Math::brMax(Math::brMax(p1.y, p2.y), p3.y) < aabbMin.y) return false;
 
   return true;
 }

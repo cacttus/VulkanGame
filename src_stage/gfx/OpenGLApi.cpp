@@ -111,7 +111,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const GraphicsWindowCrea
   if (getCoreContext()) {
     getCoreContext()->chkErrRt();
   }
-  SDLUtils::checkSDLErr();
+  SDLUtils::Base::checkErrors()();
 
   return pRet;
 }
@@ -124,7 +124,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
   try {
     //This must be called before creating the window because this sets SDL's PixelFormatDescriptor.
     GLContext::setWindowAndOpenGLFlags(prof);
-    SDLUtils::checkSDLErr();
+    SDLUtils::Base::checkErrors()();
 
     SDL_Window* win = makeSDLWindow(params, SDL_WINDOW_OPENGL, false);//initially don't show window, we show it later.
     if (win != nullptr) {

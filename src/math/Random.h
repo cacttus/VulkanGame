@@ -18,7 +18,7 @@ namespace BR2 {
 *  @class Random.h
 *  @brief Random numbers and noise.
 */
-class Random : public VirtualMemory {
+class Random : public VirtualMemoryShared<Random> {
 public:
   Random();
   Random(int32_t seed);

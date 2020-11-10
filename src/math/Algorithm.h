@@ -278,7 +278,7 @@ static FORCE_INLINE double sdevf(std::vector<double>& vin)
         sum2 += sub*sub; // (a-b)^2
     }
     mean = sum2 / (double)vin.size();
-    return (double)MathUtils::brSqrt((float)mean);
+    return (double)Math::brSqrt((float)mean);
 }
 // - Sampled standard deviation
 static FORCE_INLINE double ssdevf(std::vector<double>& vin)
@@ -292,7 +292,7 @@ static FORCE_INLINE double ssdevf(std::vector<double>& vin)
         sum2 += sub*sub; // (a-b)^2
     }
     mean = sum2 / ((double)vin.size()-1);
-    return (double)MathUtils::brSqrt((float)mean);
+    return (double)Math::brSqrt((float)mean);
 }
 
 /**
@@ -569,7 +569,7 @@ static FORCE_INLINE void getSolidVolumeProjectionBounds(
 FORCE_INLINE STATIC float calcCubeDiagonal(float cubeSide)
 {
     //  sqrt( 3(x^2) )
-    return MathUtils::brSqrt( (cubeSide*cubeSide)*3 );
+    return Math::brSqrt( (cubeSide*cubeSide)*3 );
 }
 
 };

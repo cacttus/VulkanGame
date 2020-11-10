@@ -246,22 +246,22 @@ FORCE_INLINE bool Box3x<Tx>::sphereIntersect(Vec3x<Tx>* center, float r) {
   float dist_squared = r * r;
 
   if (center->x < _min.x) {
-    dist_squared -= MathUtils::sqrf(center->x - _min.x);
+    dist_squared -= Math::sqrf(center->x - _min.x);
   }
   else if (center->x > _max.x) {
-    dist_squared -= MathUtils::sqrf(center->x - _max.x);
+    dist_squared -= Math::sqrf(center->x - _max.x);
   }
   if (center->y < _min.y) {
-    dist_squared -= MathUtils::sqrf(center->y - _min.y);
+    dist_squared -= Math::sqrf(center->y - _min.y);
   }
   else if (center->y > _max.y) {
-    dist_squared -= MathUtils::sqrf(center->y - _max.y);
+    dist_squared -= Math::sqrf(center->y - _max.y);
   }
   if (center->z < _min.z) {
-    dist_squared -= MathUtils::sqrf(center->z - _min.z);
+    dist_squared -= Math::sqrf(center->z - _min.z);
   }
   else if (center->z > _max.z) {
-    dist_squared -= MathUtils::sqrf(center->z - _max.z);
+    dist_squared -= Math::sqrf(center->z - _max.z);
   }
 
   return dist_squared > 0;
@@ -749,7 +749,7 @@ FORCE_INLINE float Box3x<Tx>::outerRadius() {
   Vec3x<Tx> dMin = _min - c;
   Vec3x<Tx> dMax = _max - c;
   Vec3x<Tx> vMax = Vec3x<Tx>::maxv(dMin.abs(), dMax.abs());
-  Tx fMax = MathUtils::brMax(vMax.x, MathUtils::brMax(vMax.y, vMax.z));
+  Tx fMax = Math::brMax(vMax.x, Math::brMax(vMax.y, vMax.z));
   return fMax;
 }
 template < class Tx >
@@ -758,7 +758,7 @@ FORCE_INLINE float Box3x<Tx>::innerRadius() {
   Vec3x<Tx> dMin = _min - c;
   Vec3x<Tx> dMax = _max - c;
   Vec3x<Tx> vMin = Vec3x<Tx>::minv(dMin.abs(), dMax.abs());
-  Tx fMin = MathUtils::brMin(vMin.x, MathUtils::brMin(vMin.y, vMin.z));
+  Tx fMin = Math::brMin(vMin.x, Math::brMin(vMin.y, vMin.z));
   return fMin;
 }
 template < class Tx >

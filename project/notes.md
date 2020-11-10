@@ -1,8 +1,34 @@
 # Tasks
+Math & Base - shared libraries
+Add /vulkan, /opengl
+Move Gu from Math & Base 
+Move Gu to the lowest level (world)
+Change all Gu singletons to their own classes to decouple math & base
+No more global singleton.
+* Replacing Gu with Utils for /base static globals.
+
+Instead of a single Gu class, each system layer will have the following
+  * A static utility class named by the layer **.cpp & **.h
+  * A header named by the layer **Header where enums, class definitions, typedefs and small classes
+
+Base Layer (no dependencies)
+  Math, Base, App::checkErrors
+
+SDL will go in the API layer
+SDl, Window, Vulkan, OpenGL
+SDL : App
+  SDL::checkErrors
+
+Top Layer
+Meshes, Scene, World, etc..
+
+
+
 
 # GWindow integration
   1. Move src to src_stage and move files over 1-by-1
   1. System decoupling.
+    * Gu is a problem. It makes it difficult to modularize the engine.
     * base, math will be independent .so now and have no external dependencies besides /ext
     * graphics, model, world depend on base & math
       * this will help us write the utility applications without duplicating code

@@ -2,6 +2,9 @@
 
 #include "../base/StringUtil.h"
 #include "../base/Logger.h"
+#include "../base/Base.h"
+#include "../base/TypeConv.h"
+#include "../base/Base.h"
 
 #ifdef BR2_OS_LINUX
 #include <iostream>
@@ -27,7 +30,7 @@ string_t DateTime::getAsString() {
 }
 DateTime DateTime::fromMilliseconds(uint_fast64_t in_ms) {
   //Test
-  Gu::debugBreak();
+  Base::debugBreak();
 
   uint_fast32_t hh = in_ms % (60 * 60 * 60 * 1000) / (60 * 60 * 1000);
   uint_fast32_t mm = in_ms % (60 * 60 * 1000) / (60 * 1000);

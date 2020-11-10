@@ -57,7 +57,7 @@ void UiDragInfo::update(std::shared_ptr<InputManager> pFingers) {
     else {
       //Check for mouse delta to prevent unnecessary updates.
       vec2 dp = pFingers->getMousePos_Relative() - _vDragStart;
-      if (MathUtils::fuzzyEquals(dp.x, 0.0f) == false || MathUtils::fuzzyEquals(dp.y, 0.0f) == false) {
+      if (Math::fuzzyEquals(dp.x, 0.0f) == false || Math::fuzzyEquals(dp.y, 0.0f) == false) {
         _bDrag = true;
       }
       else {

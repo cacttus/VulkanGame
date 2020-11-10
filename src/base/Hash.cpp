@@ -1,5 +1,5 @@
+#include "../base/Base.h"
 #include "../base/Hash.h"
-#include "../base/Gu.h"
 #include "../math/Algorithm.h"
 
 namespace BR2 {
@@ -73,9 +73,9 @@ float EasyNoise::perlin(float x, float y, float z) {
   float xf = x - (int)x;
   float yf = y - (int)y;
   float zf = z - (int)z;
-  float u = Gu::fade(fabsf(xf));
-  float v = Gu::fade(fabsf(yf));
-  float w = Gu::fade(fabsf(zf));
+  float u = Base::fade(fabsf(xf));
+  float v = Base::fade(fabsf(yf));
+  float w = Base::fade(fabsf(zf));
 
 #define inc(x) ((x)+1)
 

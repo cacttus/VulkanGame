@@ -205,12 +205,12 @@ void AppRunner_Internal::printVideoDiagnostics() {
     if (should_be_zero != 0) {
       // In case of error...
       BRLogInfo("  Could not get display mode for video display #%d: %s" + idisplay);
-      SDLUtils::checkSDLErr();
+      SDLUtils::Base::checkErrors()();
     }
     else {
       // On success, print the current display mode.
       BRLogInfo("  Display " + idisplay + ": " + current.w + "x" + current.h + ", " + current.refresh_rate + "hz");
-      SDLUtils::checkSDLErr();
+      SDLUtils::Base::checkErrors()();
     }
   }
 }
@@ -231,7 +231,7 @@ void AppRunner_Internal::initAudio() {
   if (SDL_AudioInit(NULL) < 0) {
     exitApp(Stz "SDL Couldn't initialize audio driver: " + SDL_GetError(), -1);
   }
-  SDLUtils::checkSDLErr();
+  SDLUtils::Base::checkErrors()();
 }
 void AppRunner_Internal::initNet() {
   BRLogInfo("Initializing SDL Net");
@@ -244,7 +244,7 @@ void AppRunner_Internal::initNet() {
     attachToGameHost();
   }
 
-  SDLUtils::checkSDLErr();
+  SDLUtils::Base::checkErrors()();
 }
 void AppRunner_Internal::runGameLoopTryCatch() {
   typedef void (*SignalHandlerPointer)(int);
@@ -258,7 +258,7 @@ void AppRunner_Internal::runGameLoopTryCatch() {
   Gu::updateManagers();
 
   //Print the setup time.
-  BRLogInfo(Stz "**Total initialization time: " + MathUtils::round((float)((Gu::getMicroSeconds() - _tvInitStartTime) / 1000) / 1000.0f, 2) + " seconds" + OperatingSystem::newline());
+  BRLogInfo(Stz "**Total initialization time: " + Math::round((float)((Gu::getMicroSeconds() - _tvInitStartTime) / 1000) / 1000.0f, 2) + " seconds" + OperatingSystem::newline());
 
   BRLogInfo("Entering Game Loop");
   try {
@@ -315,7 +315,7 @@ void AppRunner_Internal::loadDebugPackage() {
   BRLogInfo("Building Debug ApplicationPackage");
   std::shared_ptr<ApplicationPackage> def = std::make_shared<ApplicationPackage>();
   def->build(FileSystem::getExecutableFullPath());
-  SDLUtils::checkSDLErr();
+  SDLUtils::Base::checkErrors()();
 
   Gu::setPackage(def);
 }

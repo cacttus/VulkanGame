@@ -199,7 +199,7 @@ std::shared_ptr<ShaderBase> ShaderCache::tryLoadCachedBinary(std::string program
         Gu::debugBreak();
       }
       else {
-        maxTime = MathUtils::brMax(inf._modified, maxTime);
+        maxTime = Math::brMax(inf._modified, maxTime);
       }
     }
 

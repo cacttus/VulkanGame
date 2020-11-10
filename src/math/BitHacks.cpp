@@ -1,6 +1,6 @@
-//#ifdef _DEBUG
+#include "../base/ColoredConsole.h"
+#include "../base/Base.h"
 #include "../math/BitHacks.h"
-#include "../base/Gu.h"
 #include <iostream>
 
 namespace BR2 {
@@ -11,11 +11,11 @@ namespace BR2 {
 void BitHacks::pbin(uint8_t b) {
   for (int i = 7; i >= 0; --i) {
     if (b & (1 << i)) {
-      Gu::print("1");
+      ColoredConsole::print("1");
     }
 
-    else {
-      Gu::print("0");
+    else {\
+      Base::print("0");
     }
   }
   std::cout << std::endl;
@@ -23,10 +23,10 @@ void BitHacks::pbin(uint8_t b) {
 void BitHacks::pbin(uint16_t b) {
   for (int i = 15; i >= 0; --i) {
     if (b & (1 << i)) {
-      Gu::print("1");
+      Base::print("1");
     }
     else {
-      Gu::print("0");
+      Base::print("0");
     }
   }
   std::cout << std::endl;
@@ -34,10 +34,10 @@ void BitHacks::pbin(uint16_t b) {
 void BitHacks::pbin(uint8_t b, char c) {
   for (int i = 7; i >= 0; --i) {
     if (b & (1 << i)) {
-      Gu::print(c);
+      Base::print(c);
     }
     else {
-      Gu::print(" ");
+      Base::print(" ");
     }
   }
   std::cout << std::endl;
@@ -46,10 +46,10 @@ void BitHacks::pbin(uint8_t b, char c) {
 void BitHacks::pbinx(uint8_t b) {
   for (int i = 7; i >= 0; --i) {
     if (b & (1 << i)) {
-      Gu::print("1");
+      Base::print("1");
     }
     else {
-      Gu::print("0");
+      Base::print("0");
     }
   }
 }

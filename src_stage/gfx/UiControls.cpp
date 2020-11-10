@@ -357,15 +357,15 @@ void UiElement::positionChildren(bool bForce) {
   bool dbg_bEnableCache = false;
 
   if (dbg_bEnableCache &&
-    MathUtils::fuzzyEquals(wCur, _fLastWidth, eps) &&
-    MathUtils::fuzzyEquals(hCur, _fLastHeight, eps) &&
+    Math::fuzzyEquals(wCur, _fLastWidth, eps) &&
+    Math::fuzzyEquals(hCur, _fLastHeight, eps) &&
     _bLayoutChanged == false &&
     bForce == false &&
     dbg_bDisableCaching == false
     ) {
     //width/height hasn't changed, but statics need to be repositioned if position has changed.
     dbg_bEnteredCachedRoutine = true;
-    if (MathUtils::fuzzyEquals(lCur, _fLastLeft, eps) && MathUtils::fuzzyEquals(tCur, _fLastTop, eps)) {
+    if (Math::fuzzyEquals(lCur, _fLastLeft, eps) && Math::fuzzyEquals(tCur, _fLastTop, eps)) {
       //Left/Top has not changed
       //So this element genrally has not changed so don't change children
       //note: if we support auto-resizing parents in the future, all this logic is useless
@@ -470,8 +470,8 @@ void UiElement::computeContentQuad() {
       effR -= 1;
       effT -= 1;
 
-      fright = MathUtils::brMax(fright, left().px() + effR);
-      fbottom = MathUtils::brMax(fbottom, top().px() + effT);
+      fright = Math::brMax(fright, left().px() + effR);
+      fbottom = Math::brMax(fbottom, top().px() + effT);
 
       //expand contenet quad
       _b2ContentQuad.genExpandByPoint(vec2(fright, fbottom));
@@ -553,14 +553,14 @@ void UiElement::layoutLayer(std::vector<std::shared_ptr<UiElement>> stats) {
     float auto_height = 0;
     if (nAutoWsLine > 0) {
       float myWidth = right().px() - left().px();//Container width
-      auto_width = MathUtils::brMax(myWidth - line._width, 0.0f) / (float)nAutoWsLine;
+      auto_width = Math::brMax(myWidth - line._width, 0.0f) / (float)nAutoWsLine;
       //So we're going to "sprinkle the width" across other autos
       // for each element whose min width > the computed auto
       //subtract from the computed_auto the remaining width minus the auto  (min_width - computed_auto) / remaining_autos4
     }
     if (nAutoHLines > 0) {
       float myHeight = bottom().px() - top().px();//Container height
-      auto_height = MathUtils::brMax(myHeight - fTotalHeight, 0.0f) / (float)nAutoHLines;
+      auto_height = Math::brMax(myHeight - fTotalHeight, 0.0f) / (float)nAutoHLines;
     }
 
     //run calculation again, this time with autos
@@ -647,7 +647,7 @@ void UiElement::calcStaticElement(std::shared_ptr<UiElement> ele, std::vector<Ui
   ele->validateQuad();
 
   //Increse line height WITH PAD
-  line->_height = MathUtils::brMax(line->_height, hpx_pad);
+  line->_height = Math::brMax(line->_height, hpx_pad);
 
   line->_eles.push_back(ele);
 }
@@ -1249,7 +1249,7 @@ void UiElement::bringToFront(std::shared_ptr<UiElement> child, bool bCreateNewLa
   removeChild(child);
   if (bCreateNewLayer == true) {
     for (auto p : getChildren()) {
-      iMaxLayer = MathUtils::brMax(iMaxLayer, p.first);
+      iMaxLayer = Math::brMax(iMaxLayer, p.first);
     }
     iMaxLayer++;
   }
@@ -1670,7 +1670,7 @@ void UiLabel::createGlyphs() {
       //I think the only method to make this work is to encapsulate Words within UiElements (simply)
       g->display() = UiDisplayMode::e::InlineNoWrap;
       if (bNextWrap) {
-        labelWidth = MathUtils::brMax(labelWidth, labelWidthCur);
+        labelWidth = Math::brMax(labelWidth, labelWidthCur);
         labelWidthCur = 0;
         g->display() = (UiDisplayMode::e::Block);
         bNextWrap = false;
@@ -2300,7 +2300,7 @@ void UiScrubGenThumb::update(std::shared_ptr<InputManager> pFingers) {
 }
 void UiScrubGenThumb::setBarSizePct(float pos01) {
   if (pos01 < 0.0f || pos01 > 1.0f) {
-    pos01 = MathUtils::brClamp(pos01, 0.0f, 1.0f);
+    pos01 = Math::brClamp(pos01, 0.0f, 1.0f);
     UiScreen::error("invalid scroll position sent to scrollbar, clamping");
   }
   _fBarSizePct = pos01;
@@ -2826,7 +2826,7 @@ void UiContainer::enableScrollbar(std::shared_ptr<UiScrollbarSkin> pSkin) {
   uDim d1;
   std::shared_ptr<UiElement> pCell = nullptr;
   if (pSkin->_eOrientation == Orientation::e::Vertical) {
-    //float borderRem = MathUtils::broMax(_pBorder->get(GridBorder::e::Right).px() - pSkin->_uWidthOrHeightPx.px(), 0.0f);
+    //float borderRem = Math::broMax(_pBorder->get(GridBorder::e::Right).px() - pSkin->_uWidthOrHeightPx.px(), 0.0f);
 
     d0w = _fBorderWidthPx;//uDim(borderRem, UiDimUnit::e::Pixel);//Left pad %
     d0h = "100%";
@@ -2836,7 +2836,7 @@ void UiContainer::enableScrollbar(std::shared_ptr<UiScrollbarSkin> pSkin) {
     pCell = getCell(0, 1);
   }
   else if (pSkin->_eOrientation == Orientation::e::Horizontal) {
-    //float borderRem = MathUtils::broMax(_pBorder->get(GridBorder::e::Bot).px() - pSkin->_uWidthOrHeightPx.px(), 0.0f);
+    //float borderRem = Math::broMax(_pBorder->get(GridBorder::e::Bot).px() - pSkin->_uWidthOrHeightPx.px(), 0.0f);
 
     d0w = "100%";
     d0h = _fBorderWidthPx; //uDim(borderRem, UiDimUnit::e::Pixel);//Left pad %
@@ -2873,7 +2873,7 @@ void UiContainer::enableScrollbar(std::shared_ptr<UiScrollbarSkin> pSkin) {
       //Calculate the width/hight of the thumb bar relative to the scroll percentage. (Zero for trackbar)
       if (b2wh > 0) {
         fBarSize = b1wh / (b2wh);
-        fBarSize = MathUtils::brClamp(fBarSize, 0.0f, 1.0f);
+        fBarSize = Math::brClamp(fBarSize, 0.0f, 1.0f);
       }
     }
     return fBarSize;

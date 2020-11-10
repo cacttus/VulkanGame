@@ -103,7 +103,7 @@ void Texture2DSpec::unbind(TextureChannel::e eChannel) {
 int32_t Texture2DSpec::generateMipmapLevels(uint32_t width, uint32_t height) {
   // - Create log2 mipmaps
   int numMipMaps = 0;
-  int x = MathUtils::brMax(width, height);
+  int x = Math::brMax(width, height);
   for (; x; x = x >> 1) {
     numMipMaps++;
   }

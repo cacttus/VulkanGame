@@ -187,7 +187,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeArcSegment(float radius, float radius2,
     bool cw_winding = false;
 
     float res = (aRadius) * (aRadius) - (pRadius) * (pRadius);
-    float sqrtres = MathUtils::brSqrt(res);
+    float sqrtres = Math::brSqrt(res);
     float PlaneSize = 2.0f * sqrtres;
 
     float PlaneDelta = PlaneSize / (float)slices;
@@ -878,7 +878,7 @@ std::shared_ptr<MeshSpec> MeshUtils::makeCrossboardXY(float xscale, float yscale
   std::shared_ptr<MeshSpec> a = makeBillboardXY(xscale, yscale, translateYToBottomOfBillboard);
   std::shared_ptr<MeshSpec> b = makeBillboardXY(xscale, yscale, translateYToBottomOfBillboard);
 
-  mat4 m = mat4::rotation(MathUtils::radians(90), 0, 1, 0);
+  mat4 m = mat4::rotation(Math::radians(90), 0, 1, 0);
 
   b->beginEdit();
   {

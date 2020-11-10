@@ -7,7 +7,8 @@
 #ifndef __VEC2X_2283131541297662696812355_H__
 #define __VEC2X_2283131541297662696812355_H__
 
-#include "../math/MathHeader.h"
+#include "../math/Math.h"
+
 
 namespace BR2 {
 /** 
@@ -147,7 +148,7 @@ Vec2x<Tx> Vec2x<Tx>::Vec2x_MAX() {
 }
 template <class Tx>
 Tx Vec2x<Tx>::length() const {
-  return MathUtils::brSqrt(x * x + y * y);
+  return Math::brSqrt(x * x + y * y);
 }
 template <class Tx>
 Tx Vec2x<Tx>::length2() const {

@@ -40,7 +40,7 @@ public:
   GLint _maxMsgLen = -1;
 
   bool handleErrors(std::shared_ptr<GLContext> ctx, bool bShowNote, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
-    SDLUtils::checkSDLErr(doNotLog || !clearOnly, clearOnly);
+    SDLUtils::Base::checkErrors()(doNotLog || !clearOnly, clearOnly);
 
     printAndFlushGpuLog(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
 

@@ -1,7 +1,7 @@
 #include "../base/Stopwatch.h"
 #include "../base/Logger.h"
 #include "../base/DateTime.h"
-#include "../base/Gu.h"
+#include "../base/Base.h"
 
 namespace BR2 {
 Stopwatch::Stopwatch(const string_t& strName, bool bStart) : _tA(0), _tB(0) {
@@ -14,10 +14,10 @@ Stopwatch::~Stopwatch() {
 }
 void Stopwatch::start(const string_t& strName) {
   _strName = strName;
-  _tA = Gu::getMicroSeconds();
+  _tA = Base::getMicroSeconds();
 }
 string_t Stopwatch::stop(bool bLog, bool bFancy) {
-  _tB = Gu::getMicroSeconds();
+  _tB = Base::getMicroSeconds();
 
   if (bLog == true) {
     BRLogDebug(toString(bFancy));
@@ -42,7 +42,7 @@ string_t Stopwatch::toString(bool bFancy) {
 }
 void Stopwatch::print(string_t& st) {
   string_t str = st + toString() + "ms";
-  Gu::print(str);
+  Base::print(str);
 }
 string_t Stopwatch::pulse(bool bLog, bool bFancy) {
   string_t ret = stop(bLog, bFancy);

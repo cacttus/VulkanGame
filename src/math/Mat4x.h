@@ -1016,7 +1016,7 @@ FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>
 
   q.getAxisAngle(rot);
   if (bDegreeRotation) {
-    rot.w = MathUtils::degrees(rot.w);
+    rot.w = Math::degrees(rot.w);
   }
 }
 template <typename Tx>

@@ -107,7 +107,7 @@ public:
     }
 
     if (!SDL_Vulkan_CreateSurface(win, instance, &surface)) {
-      SDLUtils::checkSDLErr();
+      SDLUtils::Base::checkErrors()();
       BRThrowException("SDL failed to create vulkan window.");
     }
     //You can log every vulkan call to stdout.

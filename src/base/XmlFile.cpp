@@ -1,4 +1,5 @@
 #include "../base/XmlFile.h"
+#include "../base/Base.h"
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
 #include "../base/HashMap.h"
@@ -40,7 +41,7 @@ std::shared_ptr<PackageConfiguration> XmlFile::getXMLConfiguration(const string_
     });
   if (root.empty()) {
     BRLogWarn("Could not find <ApplicationPackage> root node.  The node should be at the document root.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else {
     pugi::xml_attribute att = root.find_attribute([](pugi::xml_attribute attr) {
@@ -51,7 +52,7 @@ std::shared_ptr<PackageConfiguration> XmlFile::getXMLConfiguration(const string_
       });
     if (att.empty()) {
       BRLogWarn("<ApplicationPackage> did not contain a 'name' attribute.");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
     else {
       ret->_appName = string_t(att.value());

@@ -62,7 +62,7 @@ void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg, co
 
   // Store the greater modify time for shader cache.
   modTime = Gu::getPackage()->getLastModifyTime((string_t)location);
-  greatestModifyTime = MathUtils::brMax(modTime, greatestModifyTime);
+  greatestModifyTime = Math::brMax(modTime, greatestModifyTime);
 
   // Load all source bytes
   std::shared_ptr<BinaryFile> bf = std::make_shared<BinaryFile>(c_strShaderFileVersion);

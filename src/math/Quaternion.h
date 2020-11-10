@@ -125,7 +125,7 @@ FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::slerpTo(Quaternion<Tx>& rhs, Tx t) c
 
   if ((1 - absAng) > 1e-6f) {
     sinSqr = 1.0 - absAng * absAng;
-    sinAng = MathUtils::brRsqrt(sinSqr);
+    sinAng = Math::brRsqrt(sinSqr);
     ang = atan2f(sinSqr * sinAng, absAng);
     s0 = sinf((1.0f - t) * ang) * sinAng;
     s1 = sinf(t * ang) * sinAng;

@@ -1,8 +1,6 @@
+#include "../base/Base.h"
 #include "../base/Logger.h"
 #include "../base/EngineConfig.h"
-
-#include "../base/GLContext.h"
-#include "../base/Gu.h"
 #include "../base/Logger.h"
 #include "../base/Exception.h"
 #include "../base/HashMap.h"
@@ -47,7 +45,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
 
     if (lcmp(tokens[0], EngineConfig::c_EnableRuntimeErrorChecking, 2)) {
       _pConfig->_bEnableRuntimeErrorChecking = TypeConv::strToBool(getCleanToken(tokens, iind));
-      if (Gu::isDebug()) {
+      if (Base::isDebug()) {
         msg("Runtime error checking is turned on by default in debug build.");
         _pConfig->_bEnableRuntimeErrorChecking = true;
       }
@@ -200,7 +198,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
       }
       else {
         msg(Stz "Failed to read '" + tokens[0] + "', must be in the form uint/uint, and width/height, ex: 1920/1080.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
     else if (lcmp(tokens[0], EngineConfig::c_GamePad, 2)) {
@@ -210,7 +208,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
       }
       else {
         msg(Stz "Invalid token for: '" + tokens[0] + "' got: '" + tok + "'.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
     else if (lcmp(tokens[0], EngineConfig::c_OpenGLProfile, 2)) {
@@ -227,7 +225,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
       }
       else {
         msg(Stz "Invalid token for: '" + tokens[0] + "' got: '" + tok + "'.");
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
 
@@ -259,7 +257,7 @@ void EngineConfig::pkp(std::vector<string_t>& tokens) {
 
     else {
       msg(Stz " Unrecognized engine config token '" + tokens[0] + "'");
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
   catch (const Exception& ex) {

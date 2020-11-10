@@ -1,5 +1,5 @@
 #include "../base/DebugHelper.h"
-#include "../base/Gu.h"
+#include "../base/Base.h"
 #include "../base/Logger.h"
 #include "../base/StringUtil.h"
 #include "../base/WindowsIncludes.h"
@@ -7,6 +7,7 @@
 #include "../base/OperatingSystem.h"
 #include "../base/EngineConfig.h"
 #include "../base/ColoredConsole.h"
+#include "../base/Exception.h"
 
 #include <iostream>
 #include <mutex>
@@ -34,7 +35,7 @@ bool _bDoDebug = false;
 
 void staticDebugBreak(const string_t& str) {
   BRLogError(str);
-  Gu::debugBreak();
+  Base::debugBreak();
 }
 void runtimeAssertion(const string_t& str) {
   BRThrowException(str);
@@ -44,7 +45,7 @@ DebugHelper::DebugHelper() {
 DebugHelper::~DebugHelper() {
 }
 void DebugHelper::breakPoint() {
-  Gu::debugBreak();
+  Base::debugBreak();
 }
 
 void DebugHelper::debugBreak() {

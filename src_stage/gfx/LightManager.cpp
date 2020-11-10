@@ -90,10 +90,10 @@ void LightManager::updateRenderData() {
   if (inp->keyPressOrDown(SDL_SCANCODE_Y)) {
     _pGpuDeferredParams->_fHdrSampleExp += 0.01f;
   }
-  _pGpuDeferredParams->_fFogDamp = MathUtils::brClamp(_pGpuDeferredParams->_fFogDamp, 0.0f, 1.0f);
-  _pGpuDeferredParams->_fFogBlend = MathUtils::brClamp(_pGpuDeferredParams->_fFogBlend, 0.0f, 1.0f);
-  _pGpuDeferredParams->_fFogDivisor = MathUtils::brClamp(_pGpuDeferredParams->_fFogDivisor, 0.0f, FLT_MAX);
-  _pGpuDeferredParams->_fAmbientIntensity = MathUtils::brClamp(_pGpuDeferredParams->_fAmbientIntensity, 0.0f, 1.0f);
+  _pGpuDeferredParams->_fFogDamp = Math::brClamp(_pGpuDeferredParams->_fFogDamp, 0.0f, 1.0f);
+  _pGpuDeferredParams->_fFogBlend = Math::brClamp(_pGpuDeferredParams->_fFogBlend, 0.0f, 1.0f);
+  _pGpuDeferredParams->_fFogDivisor = Math::brClamp(_pGpuDeferredParams->_fFogDivisor, 0.0f, FLT_MAX);
+  _pGpuDeferredParams->_fAmbientIntensity = Math::brClamp(_pGpuDeferredParams->_fAmbientIntensity, 0.0f, 1.0f);
 
   //    _pGpuDeferredParams->_iPointLightCount
   std::shared_ptr<CameraNode> pCam = this->_pScene->getActiveCamera();

@@ -153,7 +153,7 @@ void CameraNode::zoom(float amt) {
   vec3 newP;
 
   _fCurZoomDist += -amt;
-  _fCurZoomDist = MathUtils::brClamp(_fCurZoomDist, _fMinZoomDist, _fMaxZoomDist);
+  _fCurZoomDist = Math::brClamp(_fCurZoomDist, _fMinZoomDist, _fMaxZoomDist);
 
   float f1 = _fCurZoomDist;
   float f2 = _fMinZoomDist;

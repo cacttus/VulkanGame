@@ -157,7 +157,7 @@ string_t BottleScript::getNewWorldName(string_t gameName) {
     if (dir.length() > 1) {
       dir = dir.substr(1);
       if (TypeConv::strToInt(dir, i)) {
-        iHigh = MathUtils::brMax(i, iHigh);
+        iHigh = Math::brMax(i, iHigh);
       }
       else {
         BRLogWarn("Dir '" + dir + "' is not a valid world name");

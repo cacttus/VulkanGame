@@ -7,7 +7,7 @@
 #ifndef __ivec3_1793212932844915478412_H__
 #define __ivec3_1793212932844915478412_H__
 
-#include "../math/MathHeader.h"
+#include "../math/Math.h"
 
 namespace BR2 {
 /** 
@@ -247,9 +247,9 @@ template <class Tx>
 Vec3x<Tx> Vec3x<Tx>::minv(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b) {
   Vec3x<Tx> out;
 
-  out.x = MathUtils::brMin(v_a.x, v_b.x);
-  out.y = MathUtils::brMin(v_a.y, v_b.y);
-  out.z = MathUtils::brMin(v_a.z, v_b.z);
+  out.x = Math::brMin(v_a.x, v_b.x);
+  out.y = Math::brMin(v_a.y, v_b.y);
+  out.z = Math::brMin(v_a.z, v_b.z);
 
   return out;
 }
@@ -257,9 +257,9 @@ template <class Tx>
 Vec3x<Tx> Vec3x<Tx>::maxv(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b) {
   Vec3x<Tx> out;
 
-  out.x = MathUtils::brMax(v_a.x, v_b.x);
-  out.y = MathUtils::brMax(v_a.y, v_b.y);
-  out.z = MathUtils::brMax(v_a.z, v_b.z);
+  out.x = Math::brMax(v_a.x, v_b.x);
+  out.y = Math::brMax(v_a.y, v_b.y);
+  out.z = Math::brMax(v_a.z, v_b.z);
 
   return out;
 }
@@ -300,7 +300,7 @@ Vec3x<Tx> Vec3x<Tx>::VEC3X_MAX() {
 
 template <class Tx>
 Tx Vec3x<Tx>::length() const {
-  return MathUtils::brSqrt(x * x + y * y + z * z);
+  return Math::brSqrt(x * x + y * y + z * z);
 }
 template <class Tx>
 double Vec3x<Tx>::lengthd() const {
@@ -308,7 +308,7 @@ double Vec3x<Tx>::lengthd() const {
   double dy = (double)y;
   double dz = (double)z;
 
-  return MathUtils::brSqrt(dx * dx + dy * dy + dz * dz);
+  return Math::brSqrt(dx * dx + dy * dy + dz * dz);
 }
 template <class Tx>
 Tx Vec3x<Tx>::length2() const {
@@ -792,7 +792,7 @@ void Vec3x<Tx>::checkNormalOrZeroAndLimitVector(float fMaxLength, bool bShowWarn
   // Make sure the vector length isn't too big.
   if (squaredLength() >= (fMaxLength * fMaxLength)) {
     if (bShowWarningMessage == true)
-      BRLogWarn("Object has launched into orbit: v=(", x, " ", y, " ", z, ")");
+      BRLogWarn("Object has launched into orbit: v=("+ x+ " "+ y+ " "+ z+ ")");
     *this = normalized() * fMaxLength;
   }
 }

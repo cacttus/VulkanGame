@@ -741,9 +741,9 @@ void PhysicsWorld::unstick_ob_v2(vec3& ob_in_p, const vec3& ob_in_v, Box3f* boxA
   vec3 cv_lat_n = cv_lat.normalized();
 
   float friction = plane_n.dot(cv_n); // "slide factor."
-  friction = MathUtils::brMax(-friction, 0.0f);
+  friction = Math::brMax(-friction, 0.0f);
   friction -= ob_friction;
-  friction = MathUtils::brClamp(friction, 0.0f, 1.0f);
+  friction = Math::brClamp(friction, 0.0f, 1.0f);
 
   if (friction > 0) {
     //lateral velocity old velocity length times friction amount.
@@ -1040,10 +1040,10 @@ void PhysicsWorld::bb_move_and_slide(const vec3& ob_last_p, const vec3& ob_last_
 
   float friction = 1;
   friction = plane_n.dot(cv_n); // "slide factor."
-  friction = 1.0f + (MathUtils::brMin(friction * 0.8f, 0.0f));// we remove some friction to make the char slide more.
-  friction = MathUtils::brClamp(friction, 0.0f, 1.0f);
+  friction = 1.0f + (Math::brMin(friction * 0.8f, 0.0f));// we remove some friction to make the char slide more.
+  friction = Math::brClamp(friction, 0.0f, 1.0f);
   friction *= ob_friction;
-  friction = MathUtils::brClamp(friction, 0.0f, 1.0f);
+  friction = Math::brClamp(friction, 0.0f, 1.0f);
 
   if (friction > 0) {
     //lateral velocity old velocity length times friction amount.

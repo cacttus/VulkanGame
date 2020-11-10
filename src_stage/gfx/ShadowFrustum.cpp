@@ -84,7 +84,7 @@ void ShadowFrustum_Internal::updateView() {
   vec3 up = _pLightSource->getUp();
 
   //Calculate geometrric frustum
-  //const float tanfov90_2 = tanf(MathUtils::degToRad(90 / 2));//90 degree field of view for a box
+  //const float tanfov90_2 = tanf(Math::degToRad(90 / 2));//90 degree field of view for a box
   _pFrustum->update(
       dir, pos, up, ProjectionMode::e::Perspective);
 
@@ -150,7 +150,7 @@ void ShadowFrustum_Internal::cullObjectsAsync(CullParams& cp) {
 
   std::shared_ptr<PhysicsWorld> physics = NodeUtils::getPhysicsWorld(_pLightSource);
 
-  _pVisibleSet->start(MathUtils::brMin(
+  _pVisibleSet->start(Math::brMin(
                           cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
                           Gu::getEngineConfig()->getMaxPointLightShadowDistance() * Gu::getEngineConfig()->getMaxPointLightShadowDistance()),
                       cp.getCamera());

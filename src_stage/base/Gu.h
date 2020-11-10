@@ -129,7 +129,7 @@ private:
   static std::shared_ptr<Random> _pRandom;
 };
 
-#define Config Gu::getEngineConfig()
+#define Config Base::getEngineConfig()
 
 }  // namespace BR2
 

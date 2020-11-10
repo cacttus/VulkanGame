@@ -2,6 +2,7 @@
 #include "../base/Logger.h"
 #include "../base/Exception.h"
 #include "../base/OperatingSystem.h"
+#include "../base/StringUtil.h"
 
 namespace BR2 {
 TextConfigFile::TextConfigFile(const string_t& loc) : TextDataFile(loc) {
@@ -35,7 +36,7 @@ void TextConfigFile::parseErr(const string_t& str, bool bDebugBreak, bool bFatal
   else {
     BRLogError(str2);
     if (bDebugBreak) {
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 }

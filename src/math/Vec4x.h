@@ -7,7 +7,8 @@
 #ifndef __VEC4X_282629732193852125132500_H__
 #define __VEC4X_282629732193852125132500_H__
 
-#include "../math/MathHeader.h"
+#include "../math/Math.h"
+
 
 namespace BR2 {
 /** 
@@ -294,7 +295,7 @@ Vec4x<Tx> Vec4x<Tx>::Vec4x_MAX() {
 }
 template <class Tx>
 Tx Vec4x<Tx>::length() const {
-  return MathUtils::brSqrt(x * x + y * y + z * z + w * w);
+  return Math::brSqrt(x * x + y * y + z * z + w * w);
 }
 template <class Tx>
 Tx Vec4x<Tx>::length2() const {
@@ -570,10 +571,10 @@ Vec4x<Tx> Vec4x<Tx>::zero() {
 }
 template <class Tx>
 Vec4x<Tx>& Vec4x<Tx>::clampValues(const Tx& minVal, const Tx& maxVal) {
-  r() = MathUtils::brClamp(r(), minVal, maxVal);
-  g() = MathUtils::brClamp(g(), minVal, maxVal);
-  b() = MathUtils::brClamp(b(), minVal, maxVal);
-  a() = MathUtils::brClamp(a(), minVal, maxVal);
+  r() = Math::brClamp(r(), minVal, maxVal);
+  g() = Math::brClamp(g(), minVal, maxVal);
+  b() = Math::brClamp(b(), minVal, maxVal);
+  a() = Math::brClamp(a(), minVal, maxVal);
 
   return *this;
 }
@@ -595,9 +596,9 @@ Vec4x<Tx>& Vec4x<Tx>::saturate() {
     ff = &cb;
 
   float diff = 1.0f - (*ff);
-  r() = MathUtils::brMin(1.0f, cr + diff);
-  g() = MathUtils::brMin(1.0f, cg + diff);
-  b() = MathUtils::brMin(1.0f, cb + diff);
+  r() = Math::brMin(1.0f, cr + diff);
+  g() = Math::brMin(1.0f, cg + diff);
+  b() = Math::brMin(1.0f, cb + diff);
 
   return *this;
 }

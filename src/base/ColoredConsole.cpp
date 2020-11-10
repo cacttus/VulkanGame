@@ -2,7 +2,7 @@
 #include "../base/BuildConfig.h"
 #include "../base/ColoredConsole.h"
 #include "../base/OperatingSystem.h"
-#include "../base/Gu.h"
+#include "../base/Base.h"
 #include <iostream>
 
 #if defined(BR2_OS_LINUX)
@@ -32,7 +32,7 @@ void ColoredConsole::print(const std::string& str, ColoredConsole::Color cc) {
     catch (...) {
       //Error. We are in the logger so we can't really log.
       std::cout << "Error with terminfo." << std::endl;
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 #elif defined(BR2_OS_WINDOWS)

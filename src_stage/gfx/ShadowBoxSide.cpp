@@ -116,7 +116,7 @@ void ShadowBoxSide::cullObjectsAsync(CullParams& cp) {
 
   updateView();
 
-  _pVisibleSet->start(MathUtils::brMin(
+  _pVisibleSet->start(Math::brMin(
     cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
     Gu::getEngineConfig()->getMaxPointLightShadowDistance() * Gu::getEngineConfig()->getMaxPointLightShadowDistance()),
     cp.getCamera());

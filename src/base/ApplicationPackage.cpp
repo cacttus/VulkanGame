@@ -141,7 +141,7 @@ void ApplicationPackage_Internal::setSz(const string_t& name, string_t& value, s
   }
   if (set == false) {
     BRLogError("Failed to find required Package attribute <" + name + " />");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 }
 void ApplicationPackage_Internal::load(const string_t& file_path) {
@@ -265,7 +265,7 @@ string_t ApplicationPackage::getFileAsString(const string_t& fileLoc) {
 bool ApplicationPackage::getFile(const string_t& fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull) {
   if (fb == nullptr) {
     BRLogError("Buffered file was nullptr, no file was read. Initialize binaryfile.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return false;
   }
   if (isPackage() == false) {

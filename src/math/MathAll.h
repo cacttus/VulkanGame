@@ -7,6 +7,7 @@
 #define __MATH_ALL_567230957209347_H__
 
 #include "../math/MathHeader.h"
+#include "../math/Math.h"
 #include "../math/Vec2x.h"
 #include "../math/Vec3x.h"
 #include "../math/Vec4x.h"
@@ -224,8 +225,8 @@ template <class Tx>
 Vec2x<Tx> Vec2x<Tx>::minv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b) {
   Vec2x<Tx> out;
 
-  out.x = MathUtils::brMin(v_a.x, v_b.x);
-  out.y = MathUtils::brMin(v_a.y, v_b.y);
+  out.x = Math::brMin(v_a.x, v_b.x);
+  out.y = Math::brMin(v_a.y, v_b.y);
 
   return out;
 }
@@ -233,8 +234,8 @@ template <class Tx>
 Vec2x<Tx> Vec2x<Tx>::maxv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b) {
   Vec2x<Tx> out;
 
-  out.x = MathUtils::brMax(v_a.x, v_b.x);
-  out.y = MathUtils::brMax(v_a.y, v_b.y);
+  out.x = Math::brMax(v_a.x, v_b.x);
+  out.y = Math::brMax(v_a.y, v_b.y);
 
   return out;
 }

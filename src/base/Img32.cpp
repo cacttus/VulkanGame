@@ -1,7 +1,5 @@
 #include "../base/Img32.h"
 #include "../base/Allocator.h"
-#include "../base/Gu.h"
-
 #include "../base/Logger.h"
 #include "../base/BinaryFile.h"
 
@@ -360,9 +358,9 @@ Pixel4ub Img32::normalizePixel(int32_t x, int32_t y, float depth) {
   Fv /= len;
   depth /= len;
 
-  pix.r() = (t_byte)(BR2::MathUtils::round(Fh * 255.0f));
-  pix.g() = (t_byte)(BR2::MathUtils::round(Fv * 255.0f));
-  pix.b() = (t_byte)(BR2::MathUtils::round(depth * 255.0f));
+  pix.r() = (t_byte)(BR2::Math::round(Fh * 255.0f));
+  pix.g() = (t_byte)(BR2::Math::round(Fv * 255.0f));
+  pix.b() = (t_byte)(BR2::Math::round(depth * 255.0f));
   pix.a() = 255;
 
   return pix;
@@ -522,7 +520,7 @@ void Img32::shiftV(int numPixels, Img32& __out_ bi) {
   ptA = _pData->ptr() + begA;
   ptB = bi.getData()->ptr() + begB;
   memcpy(ptB, ptA, begSiz);
-  Gu::checkMemory();
+  Base::checkMemory();
 }
 
 void Img32::shiftH(int numPixels, Img32& __out_ bi) {
@@ -739,7 +737,7 @@ int32_t Img32::getPitch() const {
   return pitch;
 }
 int32_t Img32::getRMask() const {
-  if (Gu::isBigEndian()) {
+  if (Base::isBigEndian()) {
     return 0xff000000;
   }
   else {
@@ -747,7 +745,7 @@ int32_t Img32::getRMask() const {
   }
 }
 int32_t Img32::getGMask() const {
-  if (Gu::isBigEndian()) {
+  if (Base::isBigEndian()) {
     return 0x00ff0000;
   }
   else {
@@ -755,7 +753,7 @@ int32_t Img32::getGMask() const {
   }
 }
 int32_t Img32::getBMask() const {
-  if (Gu::isBigEndian()) {
+  if (Base::isBigEndian()) {
     return 0x0000ff00;
   }
   else {
@@ -763,7 +761,7 @@ int32_t Img32::getBMask() const {
   }
 }
 int32_t Img32::getAMask() const {
-  if (Gu::isBigEndian()) {
+  if (Base::isBigEndian()) {
     return 0x000000ff;
   }
   else {
@@ -852,11 +850,11 @@ bool Img32::parseImagePatch(std::shared_ptr<Img32> master, std::vector<std::shar
         voff.construct(x0, y0);
         vsiz.construct(x1 - x0, y1 - y0);
         img = master->copySubImageTo(voff, vsiz);
-        ret.push_back(img);  //std::make_shared<Texture2DSpec>(img, Gu::getGraphicsContext(), eFilter));
+        ret.push_back(img);  //std::make_shared<Texture2DSpec>(img, Base::getGraphicsContext(), eFilter));
       }
       else {
         //Invalid Patch segment
-        Gu::debugBreak();
+        Base::debugBreak();
       }
     }
   }

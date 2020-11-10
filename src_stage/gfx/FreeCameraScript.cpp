@@ -99,7 +99,7 @@ void FreeCameraScript::update(std::shared_ptr<InputManager> pInput, float dt) {
   float v_len;
   cam->getVelocity().len_and_norm(v_n, v_len);
   float v_new_len = v_len - v_len * _fMoveDamp * dt;
-  v_new_len = MathUtils::brClamp(v_new_len, 0.0f, _fMaxMoveVel);
+  v_new_len = Math::brClamp(v_new_len, 0.0f, _fMaxMoveVel);
   cam->setVelocity(std::move(v_n * v_new_len));
 
   RenderParams rp;

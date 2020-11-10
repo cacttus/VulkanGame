@@ -1,5 +1,6 @@
 #include "../base/Logger.h"
 #include "../math/CubicBezierSpline.h"
+#include "../base/Base.h"
 
 #include <algorithm>
 
@@ -72,7 +73,7 @@ void CubicBezierSpline::eval(double len, vec3& __out_ out_pt) {
     if (_points.size()) {
       out_pt = _points[0];
     }
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 
@@ -86,7 +87,7 @@ void CubicBezierSpline::eval(double t, size_t segment, vec3& __out_ pt) {
   if (t < 0.0 || t>1.0) {
     static bool bvbb = true;
     if (bvbb) {
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
   if (segment * 3 + 3 < _points.size()) {
@@ -98,7 +99,7 @@ void CubicBezierSpline::eval(double t, size_t segment, vec3& __out_ pt) {
   }
   else {
     BRLogError("Spline segment out of range.");
-    Gu::debugBreak();
+    Base::debugBreak();
   }
 
 
@@ -180,17 +181,17 @@ void CubicBezierSpline::iterate(size_t pointA, size_t pointB, std::function<void
   //Iterates over the spline integral, giving the lambda the cur, and last points.
   if (pointA >= _points.size()) {
     BRLogError("Point '" + pointA + "' outside range '" + (_points.size() == 0 ? 0 : (_points.size() - 1)) + "'");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
   if (pointB >= _points.size()) {
     BRLogError("Point '" + pointB + "' outside range '" + (_points.size() == 0 ? 0 : (_points.size() - 1)) + "'");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
   if (integral_t < 0.000001) {
     BRLogError("Spline integral step was too small.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return;
   }
 

@@ -11,7 +11,7 @@ Exception::Exception(const string_t& c, int line, const char* file, bool bLogErr
     BRLogError(err);
   }
 
-  Gu::debugBreak();
+  Base::debugBreak();
 }
 string_t Exception::what() const {
   return _msg + " file:" + _file + " line:" + _line;

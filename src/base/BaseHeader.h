@@ -77,13 +77,13 @@ void runtimeAssertion(const string_t& str);
   do {                                \
     if (!(expr)) BRThrowException(x); \
   } while (0)
-#define CheckGpuErrorsDbg() BR2::Gu::checkErrors()
+#define CheckGpuErrorsDbg() BR2::Base::checkErrors()
 #define ShowMessageBoxOnce(msg)           \
   {                                       \
     static bool __show = false;           \
     if (__show == false) {                \
       do {                                \
-        Gu::showMessageBox(msg, "Error"); \
+        Base::showMessageBox(msg, "Error"); \
       } while (0);                        \
     };                                    \
     __show = true;                        \
@@ -93,7 +93,7 @@ void runtimeAssertion(const string_t& str);
   do {                                                           \
     if (!(x)) {                                                  \
       BRLogError("Log assertion failed '" + string_t(#x) + "'"); \
-      Gu::debugBreak();                                          \
+      Base::debugBreak();                                          \
     }                                                            \
   } while (0)
 
@@ -125,20 +125,20 @@ inline Tx brSafeCast(Ty pb) {
 *  @class GLFramework
 *  @brief Inherit to be part of the OpenGL rendering system.
 */
-class GLFramework : public VirtualMemoryShared<GLFramework> {
-public:
-  GLFramework(std::shared_ptr<GLContext> ct) {
-    _pContext = ct;
-  }
-  virtual ~GLFramework() override { _pContext = nullptr; }
-  std::shared_ptr<GLContext> getContext() { return _pContext; }
-
-protected:
-  void setContext(std::shared_ptr<GLContext> ct) { _pContext = ct; }
-
-private:
-  std::shared_ptr<GLContext> _pContext = nullptr;
-};
+// class GLFramework : public VirtualMemoryShared<GLFramework> {
+// public:
+//   GLFramework(std::shared_ptr<GLContext> ct) {
+//     _pContext = ct;
+//   }
+//   virtual ~GLFramework() override { _pContext = nullptr; }
+//   std::shared_ptr<GLContext> getContext() { return _pContext; }
+// 
+// protected:
+//   void setContext(std::shared_ptr<GLContext> ct) { _pContext = ct; }
+// 
+// private:
+//   std::shared_ptr<GLContext> _pContext = nullptr;
+// };
 
 template <class Tx>
 class ISerializable : public VirtualMemoryShared<Tx> {
@@ -162,28 +162,20 @@ public:
   }
   virtual ~SoundPlayInfo() override {}
 };
-
-template <typename Tx>
-class Singleton : public VirtualMemoryShared {
+class App : public VirtualMemoryShared<App> {
 public:
-  std::shared_ptr<Tx> instance() {
-    if (_instance == nullptr) {
-      _instance = std::make_shared<Tx>();
-    }
-    return _instance;
-  }
-
-private:
-  static std::shared_ptr<Tx> _instance ;
+    App();
+    virtual ~App() override;
+    virtual void checkErrors(bool, bool) = 0;
 };
-template<typename Tx> Tx Singleton<Tx>::_instance = nullptr;
+
 
 }  // namespace BR2
 
 /************************************************************************/
 /* SDL Defines                                                          */
 /************************************************************************/
-struct SDL_Window;
-union SDL_Event;
+// struct SDL_Window;
+// union SDL_Event;
 
 #endif

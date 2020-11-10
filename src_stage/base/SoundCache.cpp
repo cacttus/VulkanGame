@@ -2,10 +2,10 @@
 #include "../base/Hash.h"
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
-#include "../base/ApplicationPackage.h"
-#include "../base/Gu.h"
+//#include "../base/ApplicationPackage.h"
+//#include "../base/Gu.h"
 
-#include "../base/SDLIncludes.h"
+//#include "../base/SDLIncludes.h"
 #include <mutex>
 
 namespace BR2 {
@@ -19,13 +19,13 @@ SoundSpec::~SoundSpec() {
 }
 void SoundSpec::load(const string_t& file) {
   if (_eLoadState == LoadState::e::NotLoaded) {
-    string_t location = FileSystem::combinePath(Gu::getPackage()->getSoundsFolder(), file);
+    string_t location = FileSystem::combinePath(Base::getPackage()->getSoundsFolder(), file);
 
     if (!FileSystem::fileExists(location)) {
       _eLoadState = LoadState::e::LoadFailed;
     }
     else {
-      int ret = Gu::loadSound(location, _iChannels, _iSampleRate, _pSoundData, _nSamples, _iSoundDataLenBytes);
+      int ret = Base::loadSound(location, _iChannels, _iSampleRate, _pSoundData, _nSamples, _iSoundDataLenBytes);
       if (ret == 1) {
         _eLoadState = LoadState::e::Loaded;
       }
@@ -109,13 +109,13 @@ void SoundInst::checkPlayback() {
       if (_playInfo._fLoopPos < 0.0f) {
         _playInfo._fLoopPos = 0.0f;
         if (xx == 0) {
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
       if (_playInfo._fLoopPos > 1.0f) {
         _playInfo._fLoopPos = 1.0f;
         if (xx == 0) {
-          Gu::debugBreak();
+          Base::debugBreak();
         }
       }
 

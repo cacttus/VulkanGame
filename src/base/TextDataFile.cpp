@@ -1,7 +1,7 @@
 #include "../base/Exception.h"
 #include "../base/TextDataFile.h"
 #include "../base/StringUtil.h"
-#include "../base/Gu.h"
+//#include "../base/Gu.h"
 #include "../base/FileSystem.h"
 #include "../base/Logger.h"
 
@@ -28,7 +28,7 @@ void TextDataFile::loadAndParse(const string_t& loc) {
     string_t st = FileSystem::getCurrentDirectory();
 
     //File not found.
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   else {
     parse(_fileData, _fileSize);

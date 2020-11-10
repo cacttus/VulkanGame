@@ -20,7 +20,7 @@ public:
     // create a listening TCP socket on port 44178 (server)
     IPaddress ip;
     int ret = SDLNet_ResolveHost(&ip, NULL, 44178);
-    SDLUtils::checkSDLErr(true, false);
+    SDLUtils::Base::checkErrors()(true, false);
     if (ret == -1) {
       BRLogInfo("SDLNet_ResolveHost:" + SDLNet_GetError());
       _bError = true;
@@ -28,7 +28,7 @@ public:
     }
 
     _server_control = SDLNet_TCP_Open(&ip);
-    SDLUtils::checkSDLErr(true, false);
+    SDLUtils::Base::checkErrors()(true, false);
     if (!_server_control) {
       BRLogInfo("SDLNet_TCP_Open:" + SDLNet_GetError());
       _bError = true;
@@ -51,7 +51,7 @@ void Net::update() {
       // https://gist.github.com/psqq/b92243f2149fcf4dd46370d4c0b5fef9
 
       //Check any dangling SDL errors before clearing them.
-      SDLUtils::checkSDLErr();
+      SDLUtils::Base::checkErrors()();
 
       //Accept control clients
       TCPsocket new_control_client = SDLNet_TCP_Accept(_pint->_server_control);

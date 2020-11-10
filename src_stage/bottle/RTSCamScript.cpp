@@ -128,13 +128,13 @@ void RTSCamScript::userRotateAndZoom(std::shared_ptr<CameraNode> cam, vec2& v, v
   //Rotate (X)
   if (_bUnsnapX) {
     _fRotationVel += perUnitRotationRads * v.x;
-    _fRotationVel = MathUtils::brClamp(_fRotationVel, _fRotationVelMin, _fRotationVelMax);
+    _fRotationVel = Math::brClamp(_fRotationVel, _fRotationVelMin, _fRotationVelMax);
   }
 
   //Zoom (Y)
   if (_bUnsnapY) {
     _fZoomVel += perUnitZoom * v.y;
-    _fZoomVel = MathUtils::brClamp(_fZoomVel, _fZoomVelMin, _fZoomVelMax);
+    _fZoomVel = Math::brClamp(_fZoomVel, _fZoomVelMin, _fZoomVelMax);
   }
 }
 void RTSCamScript::updateRotateAndZoom(std::shared_ptr<CameraNode> cam, float delta) {
@@ -143,7 +143,7 @@ void RTSCamScript::updateRotateAndZoom(std::shared_ptr<CameraNode> cam, float de
   if (_fRotationVel * _fRotationVel > 0.0f) {
     doRotate(cam, _fRotationVel);
     _fRotationVel = _fRotationVel - (_fRotationVel * _fRotationEase * delta);
-    _fRotationVel = MathUtils::brClamp(_fRotationVel, _fRotationVelMin, _fRotationVelMax);
+    _fRotationVel = Math::brClamp(_fRotationVel, _fRotationVelMin, _fRotationVelMax);
 
     if (_fRotationVel * _fRotationVel < stop_e) {
       _fRotationVel = 0.0f;
@@ -154,7 +154,7 @@ void RTSCamScript::updateRotateAndZoom(std::shared_ptr<CameraNode> cam, float de
     //doZoom(_fZoomVel);
     doRotateZ(cam, _fZoomVel);
     _fZoomVel = _fZoomVel - (_fZoomVel * _fZoomEase * delta);
-    _fZoomVel = MathUtils::brClamp(_fZoomVel, _fZoomVelMin, _fZoomVelMax);
+    _fZoomVel = Math::brClamp(_fZoomVel, _fZoomVelMin, _fZoomVelMax);
     if (_fZoomVel * _fZoomVel < stop_e) {
       _fZoomVel = 0.0f;
     }

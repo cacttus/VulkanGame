@@ -1,13 +1,13 @@
+#include "../base/Base.h"
 #include "../base/BinaryFile.h"
 #include "../base/BaseHeader.h"
-
 #include "../base/StringUtil.h"
 #include "../base/Logger.h"
-#include "../base/Gu.h"
 #include "../base/FileSystem.h"
 #include "../base/DiskFile.h"
-#include "../base/SDLUtils.h"
 #include "../base/OperatingSystem.h"
+#include "../math/MathAll.h"
+#include "../math/Vec2x.h"
 
 namespace BR2 {
 
@@ -162,9 +162,9 @@ bool BinaryFile::loadFromDisk(const string_t& fileLoc, size_t offset, int64_t le
       inf += OperatingSystem::newline() + " - File Does not exist.";
     }
     BRLogError(inf);
-    SDLUtils::checkSDLErr(true, false);
+    Base::checkErrors(true, false);
     //Failure
-    Gu::debugBreak();
+    Base::debugBreak();
     return false;
     // BroThrowException("Failure, could not read file", fileLoc, " returned ", ret);
   }
@@ -324,7 +324,7 @@ bool BinaryFile::readVersion() {
 
   if (!StringUtil::equals(_strFileVersion, version)) {
     BRLogError("Binary file version '" + version + "' did not match expected version '" + _strFileVersion + "'.");
-    Gu::debugBreak();
+    Base::debugBreak();
     return false;
   }
   return true;

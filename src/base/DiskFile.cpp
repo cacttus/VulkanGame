@@ -4,6 +4,7 @@
 
 #include "../base/Logger.h"
 #include "../base/Exception.h"
+#include "../base/Base.h"
 
 #include <fstream>
 

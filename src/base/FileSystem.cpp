@@ -1,10 +1,8 @@
+#include "../base/Base.h"
 #include "../base/FileSystem.h"
-#include "../base/ApplicationPackage.h"
 #include "../base/Exception.h"
-#include "../base/GLContext.h"
 #include "../base/Logger.h"
 #include "../base/StringUtil.h"
-
 #include "../base/DateTime.h"
 #include <fstream>
 
@@ -104,7 +102,7 @@ bool FileSystem::createFile(const string_t& filename, bool trunc, bool bLog) {
       BRLogError(err);
     }
     else {
-      Gu::print(err);
+      Base::print(err);
     }
   }
 
@@ -498,9 +496,10 @@ string_t FileSystem::formatPath(const string_t& p) {
 }
 string_t FileSystem::getScreenshotFilename() {
   string_t fname = DateTime::getAsString() + "_" + FileSystem::getExecutableName() + "_frame.png";
-  fname = FileSystem::replaceInvalidCharsFromFilename(fname);
-  fname = StringUtil::replaceAll(fname, " ", "_");
-  fname = FileSystem::combinePath(Gu::getPackage()->getCacheFolder(), fname);
+  BRThrowNotImplementedException();
+  // fname = FileSystem::replaceInvalidCharsFromFilename(fname);
+  // fname = StringUtil::replaceAll(fname, " ", "_");
+  // fname = FileSystem::combinePath(Base::getPackage()->getCacheFolder(), fname);
 
   return fname;
 }
@@ -531,52 +530,52 @@ int FileSystem::SDLFileRead(const string_t& fname, char*& pOutData,
                             int64_t& _iOutSizeBytes, bool addNull) {
   //Return 1 = failure
   //Return 0 = success
-  //Use SDLUtils::checkSDLError() to check the error.
+  //Use SDLUtils::Base::checkErrors()or() to check the error.
   string_t full_path = getFilePath(fname);
-
-  SDL_RWops* rw = SDL_RWFromFile(full_path.c_str(), "rb");
-  if (rw == NULL) {
-    return 1;
-  }
-
-  _iOutSizeBytes = SDL_RWsize(rw);
-  if (addNull) {
-    pOutData = new char[_iOutSizeBytes + 1];
-  }
-  else {
-    pOutData = new char[_iOutSizeBytes];
-  }
-
-  Sint64 nb_read_total = 0, nb_read = 1;
-  char* buf = pOutData;
-  while (nb_read_total < _iOutSizeBytes && nb_read != 0) {
-    nb_read = SDL_RWread(rw, buf, 1, _iOutSizeBytes - nb_read_total);
-    nb_read_total += nb_read;
-    buf += nb_read;
-  }
-  SDL_RWclose(rw);
-  if (nb_read_total != _iOutSizeBytes) {
-    delete[] pOutData;
-    return 1;
-  }
-
-  // So yeah sometimes you just gotta..
-  if (addNull) {
-    pOutData[nb_read_total] = '\0';
-  }
-  return 0;
-}
-int FileSystem::SDLFileWrite(const string_t& fname, char* pData,
-                             size_t _iDataSizeBytes) {
-  string_t full_path = getFilePath(fname);
-
-  SDL_RWops* rw = SDL_RWFromFile(full_path.c_str(), "wb");
-  if (rw == NULL){
-    return 1;
-  }
-
-  SDL_RWwrite(rw, pData, 1, _iDataSizeBytes);
-  SDL_RWclose(rw);
+// 
+//   SDL_RWops* rw = SDL_RWFromFile(full_path.c_str(), "rb");
+//   if (rw == NULL) {
+//     return 1;
+//   }
+// 
+//   _iOutSizeBytes = SDL_RWsize(rw);
+//   if (addNull) {
+//     pOutData = new char[_iOutSizeBytes + 1];
+//   }
+//   else {
+//     pOutData = new char[_iOutSizeBytes];
+//   }
+// 
+//   Sint64 nb_read_total = 0, nb_read = 1;
+//   char* buf = pOutData;
+//   while (nb_read_total < _iOutSizeBytes && nb_read != 0) {
+//     nb_read = SDL_RWread(rw, buf, 1, _iOutSizeBytes - nb_read_total);
+//     nb_read_total += nb_read;
+//     buf += nb_read;
+//   }
+//   SDL_RWclose(rw);
+//   if (nb_read_total != _iOutSizeBytes) {
+//     delete[] pOutData;
+//     return 1;
+//   }
+// 
+//   // So yeah sometimes you just gotta..
+//   if (addNull) {
+//     pOutData[nb_read_total] = '\0';
+//   }
+   return 0;
+ }
+ int FileSystem::SDLFileWrite(const string_t& fname, char* pData,
+                              size_t _iDataSizeBytes) {
+//   string_t full_path = getFilePath(fname);
+// 
+//   SDL_RWops* rw = SDL_RWFromFile(full_path.c_str(), "wb");
+//   if (rw == NULL){
+//     return 1;
+//   }
+// 
+//   SDL_RWwrite(rw, pData, 1, _iDataSizeBytes);
+//   SDL_RWclose(rw);
 
   return 0;
 }
@@ -614,7 +613,7 @@ string_t FileSystem::getFilePath(const string_t& name) {
   std::string fdir = name.substr(0, pos3 + 1);
 
   CFBundleRef mainBundle = CFBundleGetMainBundle();
-  CFStringRef rName = Gu::stdStrToCFStr(fname);
+  CFStringRef rName = Base::stdStrToCFStr(fname);
   CFStringRef rDir =
       CFSTR("");  // stdStrToCFStr(fdir);//CFSTR("");
                   // It appears that the bundle doesn't use directories we supply
@@ -728,7 +727,7 @@ bool FileSystem::pathIsAbsolute(const string_t& path) {
 #elif defined(BR2_OS_WINDOWS)
   // C++14 has std::filesystem::path path(loc);
   // This wasn't supported (last windows build) so this legacy may be removed.
-  Gu::debugBreak();  //TEST THIS
+  Base::debugBreak();  //TEST THIS
   if (isUNC(path)) {
     return true;
   }

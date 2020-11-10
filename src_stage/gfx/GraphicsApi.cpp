@@ -173,7 +173,7 @@ bool GraphicsApi::handleEvents(SDL_Event* event) {
       break;
     case SDL_MOUSEWHEEL:
       if (event->wheel.y != 0) {
-        int n = MathUtils::brMin(10, MathUtils::brMax(-10, event->wheel.y));
+        int n = Math::brMin(10, Math::brMax(-10, event->wheel.y));
         pInput->setMouseWheel(n);
         Gu::getGlobalInput()->setMouseWheel(n);
       }
@@ -229,21 +229,21 @@ SDL_Window* GraphicsApi::makeSDLWindow(const GraphicsWindowCreateParameters& par
   if (ret != nullptr) {
     //On Linux SDL will set an error if unable to represent a GL/Vulkan profile, as we try different ones. Ignore them for now.
     //Windows SDL sets an error when the context is created.
-    SDLUtils::checkSDLErr();
+    SDLUtils::Base::checkErrors()();
 
     //Fullscreen nonsense
     if (bFullscreen) {
       SDL_SetWindowFullscreen(ret, SDL_WINDOW_FULLSCREEN);
     }
-    SDLUtils::checkSDLErr();
+    SDLUtils::Base::checkErrors()();
     if (show) {
       SDL_ShowWindow(ret);
     }
-    SDLUtils::checkSDLErr();
+    SDLUtils::Base::checkErrors()();
   }
   else {
     //Linux: Couldn't find matching GLX visual.
-    SDLUtils::checkSDLErr(true, false);
+    SDLUtils::Base::checkErrors()(true, false);
   }
 
   //Customize window (per display system)

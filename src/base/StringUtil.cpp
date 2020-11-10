@@ -1,10 +1,11 @@
 
+#include "../base/Base.h"
 #include "../base/StringUtil.h"
 #include "../base/TypeConv.h"
-
 #include "../base/Logger.h"
-#include "../base/Gu.h"
+#include "../base/Base.h"
 #include "../base/OperatingSystem.h"
+#include "../math/Math.h"
 
 //For wstring conversion
 #include <locale>
@@ -13,6 +14,7 @@
 #include <algorithm>
 //For va_list
 #include <stdarg.h>
+#include <sstream>
 
 namespace BR2 {
 
@@ -184,7 +186,7 @@ string_t StringUtil::getPaddedNumber(int32_t number, int32_t maxNumberOfChars, c
   char* cbuf;
   int32_t nDigits;
 
-  nDigits = MathUtils::getNumberOfDigits(number);
+  nDigits = Math::getNumberOfDigits(number);
 
   if (nDigits > maxNumberOfChars) {
     if (expand) {
@@ -470,7 +472,7 @@ string_t StringUtil::appendLine(string_t& str, const string_t& toAppend) {
 }
 string_t StringUtil::generate() {
   //The string is unique based on std::chrono microseconds.
-  t_timeval tv = Gu::getMicroSeconds();
+  t_timeval tv = Base::getMicroSeconds();
   string_t ret;
   size_t size = sizeof(t_timeval);
   char* c = (char*)&tv;

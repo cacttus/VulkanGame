@@ -158,7 +158,7 @@
 //      //I think the only method to make this work is to encapsulate Words within UiElements (simply)
 //      g->display() = UiDisplayMode::e::InlineNoWrap;
 //      if (bNextWrap) {
-//        labelWidth = MathUtils::broMax(labelWidth, labelWidthCur);
+//        labelWidth = Math::broMax(labelWidth, labelWidthCur);
 //        labelWidthCur = 0;
 //        g->display() = (UiDisplayMode::e::Block);
 //        bNextWrap = false;

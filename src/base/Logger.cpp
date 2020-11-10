@@ -1,15 +1,13 @@
+#include "../base/Base.h"
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
-#include "../base/ApplicationPackage.h"
 #include "../base/DateTime.h"
-#include "../base/Gu.h"
 #include "../base/DebugHelper.h"
 #include "../base/StringUtil.h"
-#include "../base/GraphicsWindow.h"
-#include "../base/GLContext.h"
 #include "../base/Stopwatch.h"
 #include "../base/ColoredConsole.h"
 #include "../base/OperatingSystem.h"
+#include "../base/TypeConv.h"
 #include <mutex>
 #include <atomic>
 #include <fstream>
@@ -111,7 +109,7 @@ string_t Logger_Internal::createMessageHead(LogLevel level, const char* file, in
   }
   else {
     logtype = "?";
-    Gu::debugBreak();
+    Base::debugBreak();
   }
   string_t file_line = "";
   if (_bSuppressLineFileDisplay == false && level != LogLevel::Script) {
@@ -217,7 +215,7 @@ void Logger_Internal::processLogs_Async() {
       //Debug only . This is not necessarily an error.
       //We could wait for the file to become available by write-checking
       //it a couple of times
-      Gu::debugBreak();
+      Base::debugBreak();
     }
   }
 

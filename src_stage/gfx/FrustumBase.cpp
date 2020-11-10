@@ -503,7 +503,7 @@ void FrustumBase::setFov(float fov) {
     BRLogWarn("Frustum FOV " + fov + " was invalid, setting to valid number");
     fov = 45;
   }
-  tan_fov_2 = tanf(MathUtils::radians(fov / 2.0f));
+  tan_fov_2 = tanf(Math::radians(fov / 2.0f));
 }
 //void FrustumBase::updateBoundBox()
 //{

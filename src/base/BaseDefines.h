@@ -248,6 +248,8 @@ class GamePad;
 class GamePadButton;
 class KeyboardGamePad;
 
+class App;
+
 template <class Tx>
 class DynamicBuffer;
 template <class Tx>

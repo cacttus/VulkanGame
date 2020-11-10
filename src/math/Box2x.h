@@ -166,11 +166,11 @@ template < class Tx >
 FORCE_INLINE void Box2x<Tx>::validate() {
 
   if (p0().x > p1().x)
-    throw 0;// Gu::debugBreak();//removed due to c++ compiler changes, change this in the future
+    throw 0;// Base::debugBreak();//removed due to c++ compiler changes, change this in the future
   if (p0().y > p1().y)
-    throw 0; // Gu::debugBreak();//removed due to c++ compiler changes, change this in the future
+    throw 0; // Base::debugBreak();//removed due to c++ compiler changes, change this in the future
   if ((p0().x > p1().x) || (p0().y > p1().y)) {
-    // if(!Gu::getIsDevMode())
+    // if(!Base::getIsDevMode())
     //     BroLogError("Quad2 bound box is out of range ", toString());
   }
 }

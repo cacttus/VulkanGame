@@ -127,7 +127,7 @@ void GraphicsWindow_Internal::printHelpfulDebug() {
   SDL_GL_GetDrawableSize(win, &dw, &dh);
   BRLogInfo("Draw Size     : " + dw + "x" + dh);
 
-  SDLUtils::checkSDLErr();
+  SDLUtils::Base::checkErrors()();
 }
 void GraphicsWindow_Internal::beginRender(std::shared_ptr<GraphicsWindow> cont) {
   cont->getContext()->chkErrDbg();
@@ -186,7 +186,7 @@ void GraphicsWindow::init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, con
   }
 
   SDLUtils::trySetWindowIcon(_pint->_pSDLWindow, Gu::getPackage()->getIconPath());
-  SDLUtils::checkSDLErr();
+  SDLUtils::Base::checkErrors()();
   getContext()->chkErrRt();
 
   //Set W/H to match Desktop aspect ratio (e.g. 1920/1080)
@@ -224,7 +224,7 @@ void GraphicsWindow::init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, con
     _pint->_pRenderPipe = std::make_shared<RenderPipe>(getContext(), getThis<GraphicsWindow>());
     _pint->_pRenderPipe->init(getViewport()->getWidth(), getViewport()->getHeight(), Gu::getPackage()->makeAssetPath(Gu::getPackage()->getEnvTextureFolder()));
     _pint->printHelpfulDebug();
-    SDLUtils::checkSDLErr();
+    SDLUtils::Base::checkErrors()();
     getContext()->chkErrRt();
   }
 }

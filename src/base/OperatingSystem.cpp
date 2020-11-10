@@ -1,6 +1,5 @@
-
-
 #include "../base/Logger.h"
+#include "../base/Exception.h"
 #include "../base/FileSystem.h"
 #include "../base/OperatingSystem.h"
 #include "../base/WindowsIncludes.h"
@@ -293,7 +292,7 @@ string_t OperatingSystem::showOpenFolderDialog(const string_t& saved_path) {
   }
 #elif defined(BR2_OS_LINUX)
   //Must test this.
-  Gu::debugBreak();
+  Base::debugBreak();
 
   try {
     FILE* f = popen("zenity --file-selection --directory", "r");

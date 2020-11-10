@@ -79,7 +79,7 @@ time_t Atlas::cacheGetGreatestModifyTimeForAllDependencies() {
         return 0;
       }
       currentModifyTime = FileSystem::getLastModifyTime(strPath);
-      greatestModifyTime = MathUtils::brMax(greatestModifyTime, currentModifyTime);
+      greatestModifyTime = Math::brMax(greatestModifyTime, currentModifyTime);
     }
   }
 

@@ -8,7 +8,7 @@
 #define __ENGINECONFIG_14942867052644616215_H__
 
 #include "../base/BaseHeader.h"
-#include "../gfx/GfxHeader.h"
+//#include "../gfx/GfxHeader.h"
 #include "../base/XmlFile.h"
 
 namespace BR2 {
