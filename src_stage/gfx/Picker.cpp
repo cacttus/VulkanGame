@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/InputManager.h"
 #include "../base/Logger.h"
 #include "../base/Gu.h"
@@ -10,7 +10,7 @@
 #include "../gfx/RenderPipe.h"
 #include "../gfx/RenderViewport.h"
 #include "../gfx/CameraNode.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 
 namespace VG {
 Picker::Picker(std::shared_ptr<GLContext> pc, std::shared_ptr<RenderPipe> rp) : GLFramework(pc) {

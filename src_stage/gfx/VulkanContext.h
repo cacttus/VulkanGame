@@ -7,7 +7,7 @@
 #ifndef __VULKANCONTEXT_15654533273371902995_H__
 #define __VULKANCONTEXT_15654533273371902995_H__
 
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 
 namespace VG {
 /**

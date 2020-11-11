@@ -5,8 +5,8 @@
 #include "../gfx/TexCache.h"
 #include "../gfx/Texture2DSpec.h"
 #include "../gfx/RenderUtils.h"
-#include "../base/GLContext.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/GLContext.h"
+#include "../core/opengl/OpenGLUtils.h"
 #include <iostream>
 namespace VG {
 

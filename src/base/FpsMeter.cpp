@@ -1,11 +1,11 @@
+#include "../base/Base.h"
 #include "../base/FpsMeter.h"
-#include "../base/Gu.h"
 
 
 namespace VG {
 
 bool FpsMeter::deltaMs(t_timeval& __inout_ last, t_timeval ms) {
-  t_timeval cur = Gu::getMicroSeconds();
+  t_timeval cur = Base::getMicroSeconds();
   if (cur - last >= ms) {
     last = cur;
     return true;
@@ -14,7 +14,7 @@ bool FpsMeter::deltaMs(t_timeval& __inout_ last, t_timeval ms) {
 }
 void FpsMeter::update() {
   //Only call this once per frame.
-  t_timeval cur = Gu::getMicroSeconds();
+  t_timeval cur = Base::getMicroSeconds();
   if (cur - _tmr > 500000) {//Update every seec
     t_timeval delta = cur - _last;
     double divisor = 1000000;

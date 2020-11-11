@@ -19,9 +19,9 @@ std::shared_ptr<PackageConfiguration> XmlFile::getXMLConfiguration(const string_
 
   char* fdata;
   int64_t fsize;
-  FileSystem::SDLFileRead(filepath, fdata, fsize, true);
+  Base::app()->readFile(filepath, fdata, fsize, true);
   pugi::xml_parse_result parseResult = doc.load_buffer_inplace((void*)fdata, fsize);
-  FileSystem::SDLFileFree(fdata);
+  Base::app()->freeFile(fdata);
 
   //HashMap<XmlConfigEntry> items;
   std::shared_ptr<PackageConfiguration> ret;

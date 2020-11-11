@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/GpuComputeSync.h"
 
 namespace VG {

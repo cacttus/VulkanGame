@@ -3,7 +3,7 @@
 #include "../base/Img32.h"
 #include "../base/Hash.h"
 #include "../base/Perf.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/ApplicationPackage.h"
 #include "../math/Algorithm.h"
 #include "../gfx/Texture2DSpec.h"

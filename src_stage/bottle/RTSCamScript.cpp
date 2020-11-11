@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/Logger.h"
 #include "../base/InputManager.h"
 #include "../base/GraphicsWindow.h"

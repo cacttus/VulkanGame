@@ -1,11 +1,11 @@
 #include "../base/DebugHelper.h"
-#include "../base/AppRunner.h"
-#include "../base/Gu.h"
 #include "../base/Logger.h"
 #include "../base/UnitTests.h"
+#include "../base/Base.h"
+#include "../core/SDLApp.h"
 
 //unit test includes
-#include "../world/CSharpScript.h"
+//#include "../world/CSharpScript.h"
 #include <iostream>
 
 //This is needed, since SDL defines main.
@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
   DebugHelper::debugHeapBegin(false);
   {
     //VG::DebugHelper::setBreakAlloc(221975);
-    std::shared_ptr<AppRunner> ar = std::make_shared<AppRunner>();
-    ar->runApp(Gu::argsToVectorOfString(argc, argv),
+    auto ar = std::make_shared<SDLApp>();
+    ar->runApp(Base::argsToVectorOfString(argc, argv),
                std::vector<std::function<bool()>>({[]() {
                  //const string_t strtest = "using System; namespace MyNS { class MyCL{int[] x = new int[]; int b(float a ){ return b + a*(2*(3+.0006d); }} }";
 

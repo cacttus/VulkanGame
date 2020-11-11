@@ -1,6 +1,6 @@
 #include "../model/ShaderStorageBuffer.h"
 #include "../math/MathAll.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 
 namespace VG {
 

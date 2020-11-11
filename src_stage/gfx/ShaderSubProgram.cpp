@@ -1,7 +1,7 @@
 #include "../base/Logger.h"
 #include "../base/FileSystem.h"
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/ShaderSubProgram.h"
 
 

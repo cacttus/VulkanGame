@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/CameraNode.h"
 #include "../gfx/FrustumBase.h"
 #include "../gfx/RenderViewport.h"

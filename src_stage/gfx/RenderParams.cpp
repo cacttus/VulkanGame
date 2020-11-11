@@ -7,7 +7,7 @@
 #include "../gfx/RenderParams.h"
 #include "../gfx/ShaderUniform.h"
 
-#include "../base/SDLGLIncludes.h"
+#include "../core/opengl/SDLGLIncludes.h"
 
 namespace VG {
 class RenderParams_Internal {

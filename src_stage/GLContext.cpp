@@ -3,8 +3,8 @@
 #include "../base/TypeConv.h"
 #include "../base/StringUtil.h"
 #include "../base/Logger.h"
-#include "../base/GLContext.h"
-#include "../base/Gu.h"
+#include "../core/opengl/GLContext.h"
+//#include "../base/Gu.h"
 #include "../base/InputManager.h"
 #include "../base/Sequencer.h"
 #include "../base/GraphicsWindow.h"
@@ -12,8 +12,8 @@
 #include "../base/FrameSync.h"
 #include "../base/SoundCache.h"
 #include "../base/Logger.h"
-#include "../base/SDLUtils.h"
-#include "../base/OglErr.h"
+#include "../core/SDLUtils.h"
+#include "../core/opengl/OglErr.h"
 #include "../base/Allocator.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/OperatingSystem.h"
@@ -22,7 +22,7 @@
 #include "../base/Img32.h"
 #include "../math/MathAll.h"
 #include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 #include "../gfx/ShaderBase.h"
 #include "../gfx/ParticleManager.h"
 #include "../gfx/ShaderUniform.h"
@@ -34,7 +34,7 @@
 #include "../gfx/UiControls.h"
 #include "../gfx/CameraNode.h"
 #include "../gfx/RenderSettings.h"
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 #include "../model/VertexFormat.h"
 #include "../model/ModelCache.h"
 #include "../world/Scene.h"
@@ -80,7 +80,7 @@ bool GLContext::init(SDL_Window* sdlw) {
       printHelpfulDebug();
 
       if (_profile->_iMSAABuffers == 0) {
-        Core::config()->setEnableMSAA(false);
+        Base::config()->setEnableMSAA(false);
         BRLogWarn("This configuration did not support MSAA.");
       }
 
@@ -98,7 +98,7 @@ bool GLContext::init(SDL_Window* sdlw) {
 
         //Swap Interval.
         SDL_GL_SetSwapInterval(_profile->_bVsync ? 1 : 0);  //Vsync is automatic on IOS
-        SDLUtils::Base::checkErrors()();
+        Base::checkErrors();
 
         //Create opengl error handler
         _pOglErr = std::make_unique<OglErr>();
@@ -520,23 +520,23 @@ bool GLContext::isForwardCompatible() {
   return (_profile->_iProfile == SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 }
 void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   //Attribs
   SDL_GL_ResetAttributes();
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 
   //We want SRGB in the final render, so this should be requested.
   SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, prof->_bSRGB);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 
   //Context sharing will be necessary with multiple-window rendering (we are required to create 1 context per window)
   SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
   //Not sure, imagine we'd use our own buffer blending to create a VR scene.
@@ -544,14 +544,14 @@ void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
 
   if (prof->_iMinVersion > 0 && prof->_iMinSubVersion > 0) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, prof->_iMinVersion);
-    SDLUtils::Base::checkErrors()();
+    Base::checkErrors();
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, prof->_iMinSubVersion);
-    SDLUtils::Base::checkErrors()();
+    Base::checkErrors();
   }
 
   //Desktop Debug = Compatibility, Runtime = Core, Phone = ES
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, prof->_iProfile);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 
   int debug_flag = 0;
 #ifdef _DEBUG
@@ -563,29 +563,29 @@ void GLContext::setWindowAndOpenGLFlags(std::shared_ptr<GLProfile> prof) {
   //https://wiki.libsdl.org/SDL_GLcontextFlag#SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG
   int forward_compat = (prof->_iProfile == SDL_GL_CONTEXT_PROFILE_CORE) ? (0) : (SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, debug_flag | forward_compat);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 
   //Depth size is finicky. Sometimes it will only give us 16 bits. Trying to set stencil to zero MIGHT help
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, prof->_iDepthBits);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   //Attempt to zero out the stencil buffer to request a 32b depth.
 
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 
   //Multisampling
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, prof->_iMSAASamples);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, prof->_iMSAABuffers);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 }
 bool GLContext::isActive() {
   bool r = Gu::getActiveContext() == getThis<GLContext>();

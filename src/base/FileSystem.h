@@ -76,9 +76,7 @@ public:
   static string_t getScreenshotFilename();
   static string_t replaceInvalidCharsFromFilename(const string_t& __in_ fnIn, char replaceChar = '_', bool bIgnoreSlashes = false);
 
-  static void SDLFileFree(char*& pOutData);
-  static int SDLFileRead(const string_t& fname, char*& pOutData, int64_t& _iOutSizeBytes, bool addNull = false);
-  static int SDLFileWrite(const string_t& fname, char* pData, size_t _iDataSizeBytes);
+
   static string_t getFilePath(const string_t& name);
 
   static FileInfo getFileInfo(const string_t& loc);

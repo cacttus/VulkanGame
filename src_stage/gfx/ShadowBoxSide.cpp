@@ -118,7 +118,7 @@ void ShadowBoxSide::cullObjectsAsync(CullParams& cp) {
 
   _pVisibleSet->start(Math::brMin(
     cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
-    Core::config()->getMaxPointLightShadowDistance() * Core::config()->getMaxPointLightShadowDistance()),
+    Base::config()->getMaxPointLightShadowDistance() * Base::config()->getMaxPointLightShadowDistance()),
     cp.getCamera());
 
   if (std::shared_ptr<PhysicsWorld> physics = NodeUtils::getPhysicsWorld(_pLightSource)) {

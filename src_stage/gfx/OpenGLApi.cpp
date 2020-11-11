@@ -1,11 +1,11 @@
 #include "../base/Exception.h"
 #include "../base/Logger.h"
-#include "../base/OglErr.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/OglErr.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/EngineConfig.h"
-#include "../base/SDLUtils.h"
-#include "../gfx/OpenGLApi.h"
+#include "../core/SDLUtils.h"
+#include "../core/opengl/OpenGLApi.h"
 #include "../gfx/RenderUtils.h"
 
 namespace VG {
@@ -30,7 +30,7 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
   minGLVersion = c_iCurrentOpenGLVersion;
   minGLSubversion = c_iCurrentOpenGLSubVersion;
 
-  OpenGLProfile eConfigProfile = Core::config()->openGLProfile();
+  OpenGLProfile eConfigProfile = Base::config()->openGLProfile();
 
   iProfile = SDL_GL_CONTEXT_PROFILE_CORE;
   if (eConfigProfile == OpenGLProfile::Compatibility) {
@@ -48,11 +48,11 @@ std::vector<std::shared_ptr<GLProfile>> OpenGLApi::getProfiles() {
 
   int msaa_buf = 0;
   int msaa_samples = 0;
-  if (Core::config()->getEnableMSAA()) {
+  if (Base::config()->getEnableMSAA()) {
     msaa_buf = 1;
-    msaa_samples = Core::config()->getMsaaSamples();
+    msaa_samples = Base::config()->getMsaaSamples();
   }
-  bVsync = Core::config()->getVsyncEnabled();
+  bVsync = Base::config()->getVsyncEnabled();
 
   //This is the 'optimal' context.
   if (iProfile == SDL_GL_CONTEXT_PROFILE_ES) {
@@ -111,7 +111,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindow(const GraphicsWindowCrea
   if (getCoreContext()) {
     getCoreContext()->chkErrRt();
   }
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 
   return pRet;
 }
@@ -124,7 +124,7 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
   try {
     //This must be called before creating the window because this sets SDL's PixelFormatDescriptor.
     GLContext::setWindowAndOpenGLFlags(prof);
-    SDLUtils::Base::checkErrors()();
+    Base::checkErrors();
 
     SDL_Window* win = makeSDLWindow(params, SDL_WINDOW_OPENGL, false);//initially don't show window, we show it later.
     if (win != nullptr) {

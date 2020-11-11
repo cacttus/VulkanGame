@@ -3,11 +3,11 @@
 #include "../base/ApplicationPackage.h"
 #include "../base/DiskFile.h"
 #include "../base/BinaryFile.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/ShaderCompiler.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/ShaderSubProgram.h"
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 
 namespace VG {
 ShaderCompiler::ShaderCompiler(std::shared_ptr<GLContext> ct, string_t fileDir) : _fileDir(fileDir), _pContext(ct) {

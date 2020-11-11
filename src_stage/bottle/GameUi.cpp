@@ -1,5 +1,5 @@
 #include "../base/Logger.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/SoundCache.h"
 #include "../base/TouchInfo.h"
 #include "../base/FrameSync.h"

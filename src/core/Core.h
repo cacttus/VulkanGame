@@ -16,11 +16,12 @@ namespace VG {
 */
 class Core {
 public:
-  static std::shared_ptr<EngineConfig> config() { return _config; }
+  
+  static void initGlobals();
+  
 
 private:
-  static std::shared_ptr<EngineConfig> _config;
-  static void initGlobals();
+
 };
 
 }  // namespace VG

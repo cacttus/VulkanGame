@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/ApplicationPackage.h"
 #include "../base/Hash.h"
 #include "../base/FrameSync.h"

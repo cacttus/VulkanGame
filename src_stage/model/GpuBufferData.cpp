@@ -1,7 +1,7 @@
 #include "../base/Logger.h"
 #include "../base/Gu.h"
 #include "../base/BaseHeader.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/EngineConfig.h"
 #include "../math/MathAll.h"
 #include "../gfx/ShaderMaker.h"
@@ -212,7 +212,7 @@ void GpuBufferData::unbindBuffer() {
 }
 void GpuBufferData::verifyValidBuffer() {
   //GDebugger doesn't like this for some reason.
-  if (Core::config()->getEnableRuntimeErrorChecking()) {
+  if (Base::config()->getEnableRuntimeErrorChecking()) {
     if (!_pContext->glIsBuffer(_glId)) {
       //Buffer object doesn't exist in the context.
       //Error somewhere..

@@ -1,67 +1,55 @@
 //#include "../base/SoundCache.h"
-//#include "../base/GLContext.h"
+//#include "../core/opengl/GLContext.h"
 #include "../base/ApplicationPackage.h"
 //#include "../base/InputManager.h"
 #include "../base/Logger.h"
 //#include "../base/SDLIncludes.h"
 //#include "../base/GraphicsWindow.h"
-//#include "../base/SDLUtils.h"
+//#include "../core/SDLUtils.h"
 //#include "../base/Gu.h"
-//#include "../base/OglErr.h"
+//#include "../core/opengl/OglErr.h"
 #include "../base/OperatingSystem.h"
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
 #include "../math/MathAll.h"
 // #include "../gfx/GraphicsApi.h"
 // #include "../gfx/RenderUtils.h"
-// #include "../gfx/OpenGLApi.h"
+// #include "../core/opengl/OpenGLApi.h"
 // #include "../gfx/VulkanApi.h"
 // #include "../model/ModelCache.h"
 // #include "../world/Scene.h"
 // #include "../world/PhysicsWorld.h"
 // #include "../bottle/BottleScript.h"
-// #include "../base/LuaScript.h"
+#include "../core/LuaScript.h"
 #include "../core/CoreHeader.h"
 #include "../core/Core.h"
 #include "../core/SDLIncludes.h"
-#include "../core/AppRunner.h"
+#include "../core/SDLApp.h"
+#include "../core/SDLUtils.h"
+#include "../core/GraphicsDriver.h"
 
 #include <signal.h>
 #include <chrono>
 #include <thread>
 
 namespace VG {
-//////////////////////////////////////////////////////////////////////////
 void SignalHandler(int signal) {
   BRThrowException(Stz "VC Access Violation. signal=" + signal + "  This shouldn't work in release build.");
 }
-//////////////////////////////////////////////////////////////////////////
-class AppRunner_Internal {
-public:
-  SDL_AudioSpec _audioSpec;
-  uint64_t _tvInitStartTime = 0;
-  // accept a connection coming in on server_tcpsock
-  TCPsocket _gameHostSocket;  //Send and receive data
-  TCPsocket _server_tcpsock;  //Accept connections
-  std::shared_ptr<GraphicsApi> _pGraphicsApi = nullptr;
-
-  void initSDLAndCreateGraphicsApi();
-  void doShowError(const string_t& err, const Exception* const e) const;
-  void attachToGameHost();
-  void printVideoDiagnostics();
-  void updateWindowHandleForGamehost();
-  void initAudio();
-  void initNet();
-  void runGameLoopTryCatch();
-  void exitApp(const string_t& error, int rc);
-  bool argMatch(const std::vector<string_t>& args, const string_t& arg1, int32_t iCount);
-  bool runCommands(const std::vector<string_t>& args);
-  void loadAppPackage(const std::vector<string_t>& args);
-  void runUnitTests(std::vector<std::function<bool()>>);
-  void loadDebugPackage();
-};
-
-void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
+SDLApp::SDLApp() {
+}
+SDLApp::~SDLApp() {
+}
+void SDLApp::freeFile(char*& pOutData) {
+  SDLUtils::SDLFileFree(pOutData);
+}
+int SDLApp::readFile(const string_t& fname, char*& pOutData, int64_t& _iOutSizeBytes, bool addNull) {
+  return SDLUtils::SDLFileRead(fname, pOutData, _iOutSizeBytes, addNull);
+}
+int SDLApp::writeFile(const string_t& fname, char* pData, size_t _iDataSizeBytes) {
+  return SDLUtils::SDLFileWrite(fname, pData, _iDataSizeBytes);
+}
+void SDLApp::initSDLAndCreateGraphicsApi() {
   //Nix main()
   SDL_SetMainReady();
 
@@ -72,24 +60,27 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   printVideoDiagnostics();
 
   //Create graphics API
-  if (Core::config()->getRenderSystem() == RenderSystem::OpenGL) {
-    _pGraphicsApi = std::make_shared<OpenGLApi>();
+  if (Base::config()->getRenderSystem() == RenderSystem::OpenGL) {
+    BRThrowNotImplementedException();
+    //TODO:
+    //_pGraphicsApi = std::make_shared<OpenGLApi>();
   }
-  else if (Core::config()->getRenderSystem() == RenderSystem::Vulkan) {
-    _pGraphicsApi = std::make_shared<VulkanApi>();
+  else if (Base::config()->getRenderSystem() == RenderSystem::Vulkan) {
+    BRThrowNotImplementedException();
+    //_pGraphicsApi = std::make_shared<VulkanApi>();
   }
   else {
     BRThrowException("Invalid render engine.");
   }
-  Base::setGraphicsApi(_pGraphicsApi);
+  //Base::setGraphicsApi(_pGraphicsApi);
 
   // Run Tests
   std::shared_ptr<LuaScript> math_test = std::make_shared<LuaScript>();
-  math_test->compile(FileSystem::combinePath(Base::getPackage()->getScriptsFolder(), "/test_math.lua"));
+  math_test->compile(FileSystem::combinePath(package()->getScriptsFolder(), "/test_math.lua"));
   math_test = nullptr;
 
   std::shared_ptr<LuaScript> editor = std::make_shared<LuaScript>();
-  editor->compile(FileSystem::combinePath(Base::getPackage()->getAssetsFolder(), "/Editor.lua"));
+  editor->compile(FileSystem::combinePath(package()->getAssetsFolder(), "/Editor.lua"));
 
   //** Editor.lua
   //
@@ -120,7 +111,13 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
 
   BRLogInfo("Apprunner complete.");
 }
-void AppRunner_Internal::doShowError(const string_t& err, const Exception* const e) const {
+void SDLApp::checkErrors(bool bLog, bool bBreak) {
+  SDLUtils::checkSDLErr(bLog, bBreak);
+  if (_graphicsDriver != nullptr) {
+    _graphicsDriver->checkErrors();
+  }
+}
+void SDLApp::doShowError(const string_t& err, const Exception* const e) const {
   if (e != nullptr) {
     OperatingSystem::showErrorDialog(e->what() + err, Stz "Error");
   }
@@ -128,7 +125,7 @@ void AppRunner_Internal::doShowError(const string_t& err, const Exception* const
     OperatingSystem::showErrorDialog("No Error Message" + err, Stz "Error");
   }
 }
-void AppRunner_Internal::runUnitTests(std::vector<std::function<bool()>> unit_tests) {
+void SDLApp::runUnitTests(std::vector<std::function<bool()>> unit_tests) {
   int x = 1;
   for (auto test : unit_tests) {
     if (!test()) {
@@ -139,8 +136,8 @@ void AppRunner_Internal::runUnitTests(std::vector<std::function<bool()>> unit_te
   }
 }
 
-void AppRunner_Internal::attachToGameHost() {
-  int GameHostPort = Core::config()->getGameHostPort();
+void SDLApp::attachToGameHost() {
+  int GameHostPort = Base::config()->getGameHostPort();
 
   IPaddress ip;
   if (SDLNet_ResolveHost(&ip, NULL, GameHostPort) == -1) {
@@ -156,7 +153,7 @@ void AppRunner_Internal::attachToGameHost() {
   t_timeval t0 = Base::getMilliSeconds();
 
   while (true) {
-    int timeout = Core::config()->getGameHostTimeoutMs();
+    int timeout = Base::config()->getGameHostTimeoutMs();
 
     if (Base::getMilliSeconds() - t0 > timeout) {
       exitApp(Stz "Failed to connect to game host, timeout " + timeout + "ms exceeded.", -1);
@@ -182,7 +179,7 @@ void AppRunner_Internal::attachToGameHost() {
     }
   }
 }
-void AppRunner_Internal::printVideoDiagnostics() {
+void SDLApp::printVideoDiagnostics() {
   //Init Video
   //SDL_Init(SDL_INIT_VIDEO);
 
@@ -208,16 +205,16 @@ void AppRunner_Internal::printVideoDiagnostics() {
     if (should_be_zero != 0) {
       // In case of error...
       BRLogInfo("  Could not get display mode for video display #%d: %s" + idisplay);
-      SDLUtils::Base::checkErrors()();
+      Base::checkErrors();
     }
     else {
       // On success, print the current display mode.
       BRLogInfo("  Display " + idisplay + ": " + current.w + "x" + current.h + ", " + current.refresh_rate + "hz");
-      SDLUtils::Base::checkErrors()();
+      Base::checkErrors();
     }
   }
 }
-void AppRunner_Internal::updateWindowHandleForGamehost() {
+void SDLApp::updateWindowHandleForGamehost() {
 #if defined(BR2_OS_WINDOWS)
   //For the WPF app container we need to set the window handle to be the top window
   //https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.mainwindowhandle?view=netframework-4.8
@@ -229,27 +226,27 @@ void AppRunner_Internal::updateWindowHandleForGamehost() {
   //SetActiveWindow(hwnd);
 #endif
 }
-void AppRunner_Internal::initAudio() {
+void SDLApp::initAudio() {
   //AUDIO
   if (SDL_AudioInit(NULL) < 0) {
     exitApp(Stz "SDL Couldn't initialize audio driver: " + SDL_GetError(), -1);
   }
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 }
-void AppRunner_Internal::initNet() {
+void SDLApp::initNet() {
   BRLogInfo("Initializing SDL Net");
   if (SDLNet_Init() == -1) {
     exitApp(Stz "SDL Net could not be initialized: " + SDL_GetError(), -1);
   }
 
-  if (Core::config()->getGameHostAttached()) {
+  if (Base::config()->getGameHostAttached()) {
     updateWindowHandleForGamehost();
     attachToGameHost();
   }
 
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 }
-void AppRunner_Internal::runGameLoopTryCatch() {
+void SDLApp::runGameLoopTryCatch() {
   typedef void (*SignalHandlerPointer)(int);
 
   //Attempt to catch segfaults that doesn't really work.
@@ -258,14 +255,14 @@ void AppRunner_Internal::runGameLoopTryCatch() {
   previousHandler = signal(SIGSEGV, SignalHandler);
 
   //test the globals before starting the game loop
-  Base::updateManagers();
+  Base::updateGlobals();
 
   //Print the setup time.
   BRLogInfo(Stz "**Total initialization time: " + Math::round((float)((Base::getMicroSeconds() - _tvInitStartTime) / 1000) / 1000.0f, 2) + " seconds" + OperatingSystem::newline());
 
   BRLogInfo("Entering Game Loop");
   try {
-    _pGraphicsApi->updateLoop();
+    _graphicsDriver->updateLoop();
   }
   catch (const Exception& e) {
     doShowError("Runtime Error", &e);
@@ -275,19 +272,19 @@ void AppRunner_Internal::runGameLoopTryCatch() {
   }
 }
 
-void AppRunner_Internal::exitApp(const string_t& error, int rc) {
+void SDLApp::exitApp(const string_t& error, int rc) {
   OperatingSystem::showErrorDialog(error + SDLNet_GetError(), Stz "Error");
 
   Base::debugBreak();
 
-  Base::getGraphicsApi()->cleanup();
+  _graphicsDriver->cleanup();
 
   SDLNet_Quit();
   SDL_Quit();
 
   exit(rc);
 }
-bool AppRunner_Internal::argMatch(const std::vector<string_t>& args, const string_t& arg1, int32_t iCount) {
+bool SDLApp::argMatch(const std::vector<string_t>& args, const string_t& arg1, int32_t iCount) {
   if (args.size() <= 1) {
     return false;
   }
@@ -296,12 +293,13 @@ bool AppRunner_Internal::argMatch(const std::vector<string_t>& args, const strin
   }
   return false;
 }
-bool AppRunner_Internal::runCommands(const std::vector<string_t>& args) {
+bool SDLApp::runCommands(const std::vector<string_t>& args) {
   if (argMatch(args, "/c", 4)) {
     //Convert Mob
     string_t strMob = args[2];
     string_t strFriendlyName = args[3];
-    Base::getModelCache()->convertMobToBin(strMob, false, strFriendlyName);
+    BRThrowNotImplementedException();
+    // Base::getModelCache()->convertMobToBin(strMob, false, strFriendlyName);
     return true;
   }
   else if (argMatch(args, "/s", 3)) {
@@ -314,15 +312,15 @@ bool AppRunner_Internal::runCommands(const std::vector<string_t>& args) {
     return false;
   }
 }
-void AppRunner_Internal::loadDebugPackage() {
+void SDLApp::loadDebugPackage() {
   BRLogInfo("Building Debug ApplicationPackage");
-  std::shared_ptr<ApplicationPackage> def = std::make_shared<ApplicationPackage>();
-  def->build(FileSystem::getExecutableFullPath());
-  SDLUtils::Base::checkErrors()();
-
-  Base::setPackage(def);
+  _package = std::make_shared<ApplicationPackage>();
+  _package->build(FileSystem::getExecutableFullPath());
+  Base::checkErrors();
 }
-void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
+void SDLApp::loadAppPackage(const std::vector<string_t>& args) {
+  _package = nullptr;
+
   if (Base::checkArg(args, "package_loc", "_debug")) {
     BRLogInfo("Application package set to debug.");
     loadDebugPackage();
@@ -335,9 +333,8 @@ void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
 
     if (StringUtil::isNotEmpty(file)) {
       BRLogInfo("Building Package");
-      std::shared_ptr<ApplicationPackage> pack = std::make_shared<ApplicationPackage>();
-      pack->build(FileSystem::getExecutableFullPath());
-      Base::setPackage(pack);
+      _package = std::make_shared<ApplicationPackage>();
+      _package->build(FileSystem::getExecutableFullPath());
     }
     else {
       BRLogWarn("Package not selected. Loading debug package.");
@@ -345,83 +342,32 @@ void AppRunner_Internal::loadAppPackage(const std::vector<string_t>& args) {
     }
   }
 }
-//////////////////////////////////////////////////////////////////////////
-AppRunner::AppRunner() {
-  _pint = std::make_unique<AppRunner_Internal>();
-}
-AppRunner::~AppRunner() {
-  _pint = nullptr;
-}
-void AppRunner::runApp(const std::vector<string_t>& args, std::vector<std::function<bool()>> unit_tests) {
-  _pint->_tvInitStartTime = Base::getMicroSeconds();
+
+void SDLApp::runApp(const std::vector<string_t>& args, std::vector<std::function<bool()>> unit_tests) {
+  _tvInitStartTime = Base::getMicroSeconds();
 
   //Root the engine FIRST so we can find the EngineConfig.dat
   FileSystem::init(args[0]);
 
-  //Start logger
-  Base::createLogger("./logs", args);
+  _app = std::make_shared<SDLApp>();
 
-  _pint->loadAppPackage(args);
+  //Start logger
+  Base::initGlobals(std::dynamic_pointer_cast<App>(_app), "./logs", args);
+
+  loadAppPackage(args);
+  Core::initGlobals();
+  // static std::shared_ptr<ApplicationPackage> getPackage();
+  //static void setPackage(std::shared_ptr<ApplicationPackage> x) { _pPackage = x; }
 
   //Load Engine Config, and make globals
-  Base::initGlobals(args);
   {
-    _pint->initSDLAndCreateGraphicsApi();
+    initSDLAndCreateGraphicsApi();
 
-    if (_pint->runCommands(args) == false) {
-      _pint->runUnitTests(unit_tests);
-      _pint->runGameLoopTryCatch();
+    if (runCommands(args) == false) {
+      runUnitTests(unit_tests);
+      runGameLoopTryCatch();
     }
   }
-  Base::deleteManagers();
 }
-
-//        //Init SDL ?? DO we need?
-//        if (SDL_Init(0) != 0) {
-//            fprintf(stderr, "Couldn't initialize video driver: %s\n",
-//                    SDL_GetError());
-//            return SDL_FALSE;
-//        }
-//
-//
-//        if (SDL_VideoInit(_pGlState->videodriver) < 0) {
-//            fprintf(stderr, "Couldn't initialize video driver: %s\n",
-//                    SDL_GetError());
-//            return SDL_FALSE;
-//        }
-//Fullscreen
-//        SDL_zero(fullscreen_mode);
-//        switch (depthBits) {
-//            case 16:
-//                fullscreen_mode.format = SDL_PIXELFORMAT_RGB565;
-//                break;
-//            case 24:
-//                fullscreen_mode.format = SDL_PIXELFORMAT_RGB24;
-//                break;
-//        }
-//        fullscreen_mode.refresh_rate = _pGlState->refresh_rate;
-//
-//Create Window.
-// char  etitle[1024];
-// char* szTitle = NULL;
-
-//SDL_ShowWindow(_pWindow);
-
-//Not necessary - we need to make sure this it
-//Create Renderer
-// _pGlState->renderer = SDL_CreateRenderer(_pGlState->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-// if (!_pGlState->renderer) {
-//     fprintf(stderr, "Couldn't create renderer: %s\n",
-//         SDL_GetError());
-//     return SDL_FALSE;
-// }
-// if (_pGlState->logical_w && _pGlState->logical_h) {
-//     SDL_RenderSetLogicalSize(_pGlState->renderer, _pGlState->logical_w, _pGlState->logical_h);
-// }
-// else if (_pGlState->scale) {
-//     SDL_RenderSetScale(_pGlState->renderer, _pGlState->scale, _pGlState->scale);
-// }
-
-//}
 
 }  // namespace VG

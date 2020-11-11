@@ -1,10 +1,10 @@
 #include "../base/OperatingSystemHeader.h"
 #include "../base/Logger.h"
 #include "../base/EngineConfig.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/ApplicationPackage.h"
 #include "../base/Gu.h"
-#include "../base/SDLUtils.h"
+#include "../core/SDLUtils.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/Delta.h"
 #include "../base/FpsMeter.h"
@@ -58,8 +58,8 @@ public:
 void GraphicsWindow_Internal::toggleFullscreen() {
   if (_bFullscreen == false) {
     //get the fullscreen resolution
-    int32_t iFsW = Core::config()->getFullscreenWidth();
-    int32_t iFsH = Core::config()->getFullscreenHeight();
+    int32_t iFsW = Base::config()->getFullscreenWidth();
+    int32_t iFsH = Base::config()->getFullscreenHeight();
     if (iFsW <= 0 || iFsH <= 0) {
       SDL_DisplayMode DM;
       SDL_GetCurrentDisplayMode(0, &DM);
@@ -127,7 +127,7 @@ void GraphicsWindow_Internal::printHelpfulDebug() {
   SDL_GL_GetDrawableSize(win, &dw, &dh);
   BRLogInfo("Draw Size     : " + dw + "x" + dh);
 
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
 }
 void GraphicsWindow_Internal::beginRender(std::shared_ptr<GraphicsWindow> cont) {
   cont->getContext()->chkErrDbg();
@@ -186,7 +186,7 @@ void GraphicsWindow::init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, con
   }
 
   SDLUtils::trySetWindowIcon(_pint->_pSDLWindow, Gu::getPackage()->getIconPath());
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   getContext()->chkErrRt();
 
   //Set W/H to match Desktop aspect ratio (e.g. 1920/1080)
@@ -224,7 +224,7 @@ void GraphicsWindow::init(std::shared_ptr<GraphicsApi> api, SDL_Window* win, con
     _pint->_pRenderPipe = std::make_shared<RenderPipe>(getContext(), getThis<GraphicsWindow>());
     _pint->_pRenderPipe->init(getViewport()->getWidth(), getViewport()->getHeight(), Gu::getPackage()->makeAssetPath(Gu::getPackage()->getEnvTextureFolder()));
     _pint->printHelpfulDebug();
-    SDLUtils::Base::checkErrors()();
+    Base::checkErrors();
     getContext()->chkErrRt();
   }
 }

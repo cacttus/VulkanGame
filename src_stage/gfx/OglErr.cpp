@@ -1,13 +1,13 @@
 #include "../base/BaseHeader.h"
-#include "../base/OglErr.h"
+#include "../core/opengl/OglErr.h"
 #include "../base/Logger.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/DebugHelper.h"
 #include "../base/EngineConfig.h"
-#include "../base/SDLUtils.h"
+#include "../core/SDLUtils.h"
 #include "../base/OperatingSystem.h"
 #include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 #include <atomic>
 
 namespace VG {
@@ -62,7 +62,7 @@ public:
         BRLogError(errmsg);
       }
 
-      if (Core::config()->getBreakOnGraphicsError() == true) {
+      if (Base::config()->getBreakOnGraphicsError() == true) {
         if (bDoNotBreak == false) {
           Base::debugBreak();
         }
@@ -111,10 +111,10 @@ public:
       return;
     }
 
-    bool graphicsLogHigh = Core::config()->getGraphicsErrorLogging_High();
-    bool graphicsLogMed = Core::config()->getGraphicsErrorLogging_Medium();
-    bool graphicsLogLow = Core::config()->getGraphicsErrorLogging_Low();
-    bool graphicsLogInfo = Core::config()->getGraphicsErrorLogging_Info();
+    bool graphicsLogHigh = Base::config()->getGraphicsErrorLogging_High();
+    bool graphicsLogMed = Base::config()->getGraphicsErrorLogging_Medium();
+    bool graphicsLogLow = Base::config()->getGraphicsErrorLogging_Low();
+    bool graphicsLogInfo = Base::config()->getGraphicsErrorLogging_Info();
 
     do {
       std::vector<GLchar> msgData(numMsgs * _maxMsgLen);
@@ -330,13 +330,13 @@ void OglErr::clearGPULog(std::shared_ptr<GLContext> ctx){
   _pint->clearGPULog(ctx);
 }
 bool OglErr::chkErrRt(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
-  if (Core::config()->getEnableRuntimeErrorChecking() == true) {
+  if (Base::config()->getEnableRuntimeErrorChecking() == true) {
     return _pint->handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;
 }
 bool OglErr::chkErrDbg(std::shared_ptr<GLContext> ctx, bool bDoNotBreak, bool doNotLog, const string_t& shaderName, bool clearOnly) {
-  if (Core::config()->getEnableDebugErrorChecking() == true) {
+  if (Base::config()->getEnableDebugErrorChecking() == true) {
     return _pint->handleErrors(ctx, true, bDoNotBreak, doNotLog, shaderName, clearOnly);
   }
   return false;

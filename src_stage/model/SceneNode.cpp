@@ -2,7 +2,7 @@
 #include "../base/BinaryFile.h"
 #include "../base/Logger.h"
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/EngineConfig.h"
 #include "../base/GraphicsWindow.h"
 #include "../math/MathAll.h"

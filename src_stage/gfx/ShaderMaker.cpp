@@ -2,7 +2,7 @@
 #include "../base/ApplicationPackage.h"
 #include "../base/FileSystem.h"
 #include "../base/Hash.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/OperatingSystem.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/ShaderBase.h"

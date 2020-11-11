@@ -24,7 +24,7 @@ void TextDataFile::loadAndParse(const string_t& loc) {
 
   // - Load and parse
   bool success = false;
-  if (FileSystem::SDLFileRead(loc, _fileData, _fileSize, true) != 0) {
+  if (Base::app()->readFile(loc, _fileData, _fileSize, true) != 0) {
     string_t st = FileSystem::getCurrentDirectory();
 
     //File not found.
@@ -33,7 +33,7 @@ void TextDataFile::loadAndParse(const string_t& loc) {
   else {
     parse(_fileData, _fileSize);
 
-    FileSystem::SDLFileFree(_fileData);
+    Base::app()->freeFile(_fileData);
 
     // - Execute actions after load
     success = true;

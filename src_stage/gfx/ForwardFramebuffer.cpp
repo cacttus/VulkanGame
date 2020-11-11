@@ -1,6 +1,6 @@
 #include "../base/Logger.h"
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/RenderUtils.h"
 #include "../gfx/ForwardFramebuffer.h"

@@ -1,5 +1,5 @@
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/SkyBox.h"
 #include "../gfx/TexCache.h"
 #include "../gfx/Atlas.h"

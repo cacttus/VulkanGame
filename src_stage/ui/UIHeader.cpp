@@ -1,4 +1,4 @@
-//#include "../base/GLContext.h"
+//#include "../core/opengl/GLContext.h"
 //#include "../base/Fingers.h"
 //#include "../base/Gu.h"
 //

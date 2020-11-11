@@ -1,7 +1,7 @@
 #include "../base/Gu.h"
 #include "../base/Logger.h"
 #include "../gfx/CameraNode.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../world/PhysicsGridAwareness.h"
 #include "../world/NodeUtils.h"
 

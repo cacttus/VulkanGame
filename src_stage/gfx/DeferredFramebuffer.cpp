@@ -1,6 +1,6 @@
 #include "../base/Logger.h"
 #include "../base/Perf.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../math/BitHacks.h"
 #include "../gfx/DeferredFramebuffer.h"
 #include "../gfx/ShaderMaker.h"

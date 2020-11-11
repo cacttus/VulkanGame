@@ -1,6 +1,6 @@
 #include "../base/Logger.h"
 #include "../base/Exception.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/OperatingSystem.h"
 #include "../base/Gu.h"
 #include "../base/Hash.h"

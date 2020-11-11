@@ -1,5 +1,5 @@
 #include "../base/Logger.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/CameraNode.h"
 #include "../gfx/GpuQuad3.h"
 #include "../gfx/QuadBufferMesh.h"

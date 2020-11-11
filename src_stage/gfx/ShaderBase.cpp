@@ -1,7 +1,7 @@
 #include "../base/Logger.h"
 #include "../base/Perf.h"
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/Hash.h"
 #include "../base/EngineConfig.h"
 #include "../base/Allocator.h"
@@ -14,7 +14,7 @@
 #include "../gfx/ShaderAttribute.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 #include "../gfx/LightManager.h"
 #include "../gfx/LightNode.h"
 #include "../gfx/RenderViewport.h"
@@ -23,7 +23,7 @@
 #include "../gfx/GpuComputeSync.h"
 #include "../gfx/ShadowBoxSide.h"
 #include "../gfx/ShadowFrustum.h"
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 #include "../model/VaoDataGeneric.h"
 #include "../model/MeshNode.h"
 #include "../model/MeshSpec.h"
@@ -213,7 +213,7 @@ void ShaderBase::setUf(string_t name, void* value, GLint count, bool bIgnore) {
 void ShaderBase::verifyBound() {
   //This is a sanity system.
 
-  if (Core::config()->getEnableRuntimeErrorChecking()) {
+  if (Base::config()->getEnableRuntimeErrorChecking()) {
     //This should be debug only/
     GLint prog = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &prog);

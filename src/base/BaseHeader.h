@@ -148,7 +148,6 @@ public:
   virtual void deserialize(std::shared_ptr<BinaryFile> fb) = 0;
   virtual void serialize(std::shared_ptr<BinaryFile> fb) = 0;
 };
-
 class SoundPlayInfo : public VirtualMemory {
 public:
   bool _bLoop = false;
@@ -156,7 +155,7 @@ public:
   float _fVolume = 1.0f;   // [0,1]
   SoundPlayInfo() {}
   SoundPlayInfo(bool loop, float fLoopPos, float fVolume) {
-    _bLoop = loop;
+    _bLoop = loop;\
     _fLoopPos = fLoopPos;
     _fVolume = fVolume;
   }
@@ -164,9 +163,14 @@ public:
 };
 class App : public VirtualMemoryShared<App> {
 public:
-    App();
-    virtual ~App() override;
+    App(){}
+    virtual ~App() override {}
     virtual void checkErrors(bool, bool) = 0;
+    virtual std::shared_ptr<ApplicationPackage> package() = 0;
+    virtual void freeFile(char*& pOutData) = 0;
+    virtual int readFile(const string_t& fname, char*& pOutData, int64_t& _iOutSizeBytes, bool addNull = false) = 0;
+    virtual int writeFile(const string_t& fname, char* pData, size_t _iDataSizeBytes) = 0;
+
 };
 
 

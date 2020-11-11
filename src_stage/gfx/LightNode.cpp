@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/Logger.h"
 #include "../base/Exception.h"
 #include "../base/EngineConfig.h"
@@ -38,8 +38,8 @@ vec3* LightNodeBase::getFinalPosPtr() {
   return &_vGpuBufferedPosition;
 }
 bool LightNodeBase::getIsShadowsEnabled() {
-  return _bEnableShadows && (Core::config()->getEnableObjectShadows() ||
-    Core::config()->getEnableTerrainShadows());
+  return _bEnableShadows && (Base::config()->getEnableObjectShadows() ||
+    Base::config()->getEnableTerrainShadows());
 }
 #pragma endregion
 
@@ -70,7 +70,7 @@ void LightNodeDir::init() {
   _vUp = vec3(0, 1, 0);
   _vRight = vec3(1, 0, 0);
 
-  int32_t iShadowMapRes = Core::config()->getShadowMapResolution();
+  int32_t iShadowMapRes = Base::config()->getShadowMapResolution();
   _pShadowFrustum = std::make_shared<ShadowFrustum>(std::dynamic_pointer_cast<LightNodeDir>(shared_from_this()),
     iShadowMapRes, iShadowMapRes);    //TEST
   _pShadowFrustum->init();
@@ -159,7 +159,7 @@ void LightNodePoint::init() {
   LightNodeBase::init();
   _pGpuLight = std::make_shared<GpuPointLight>();
 
-  int32_t iShadowMapRes = Core::config()->getShadowMapResolution();
+  int32_t iShadowMapRes = Base::config()->getShadowMapResolution();
   _pShadowBox = std::make_shared<ShadowBox>(std::dynamic_pointer_cast<LightNodePoint>(shared_from_this()), iShadowMapRes, iShadowMapRes);    //TEST
   _pShadowBox->init();
 

@@ -1,5 +1,5 @@
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../world/PhysicsGrid.h"
 #include "../world/PhysicsWorld.h"
 #include "../world/Manifold.h"

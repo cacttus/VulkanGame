@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/InputManager.h"
 #include "../base/Gu.h"
 #include "../base/Img32.h"

@@ -13,16 +13,24 @@ Instead of a single Gu class, each system layer will have the following
   * A static utility class named by the layer **.cpp & **.h
   * A header named by the layer **Header where enums, class definitions, typedefs and small classes
 
-Base Layer (no dependencies)
+1. Base Layer (no dependencies)
   Math, Base, App::checkErrors
+2. Core Layer (Core)
+  SDL will go in the API layer
+  SDl, Windows, Vulkan, OpenGL
+  SDL : App
+    SDL::checkErrors
+3. Top Layer
+  Meshes, Scene, World, etc..
 
-SDL will go in the API layer
-SDl, Window, Vulkan, OpenGL
-SDL : App
-  SDL::checkErrors
+* Changes
+1. ApplicationPackage is part of App.
+  all files will be through SDLApp -> package()-> getFile. This is simpler.
+2. AppRunner -> SDLApp
 
-Top Layer
-Meshes, Scene, World, etc..
+
+In the future we can fork this repository creating the BaseMath repository and the other one.
+
 
 Base
 Math

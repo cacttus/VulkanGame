@@ -1,16 +1,17 @@
 #include "../base/BaseHeader.h"
-#include "../base/LuaScript.h"
 #include "../base/Logger.h"
-#include "../base/Gu.h"
+//#include "../base/Gu.h"
 #include "../base/ApplicationPackage.h"
 #include "../base/FileSystem.h"
+#include "../base/Exception.h"
 #include "../base/OperatingSystem.h"
 #include "../base/Stopwatch.h"
 #include "../math/Random.h"
-#include "../gfx/GraphicsApi.h"
-#include "../gfx/GfxHeader.h"
-#include "../base/GraphicsWindow.h"
-#include "../base/SoundCache.h"
+//#include "../gfx/GraphicsApi.h"
+//#include "../gfx/GfxHeader.h"
+//#include "../base/GraphicsWindow.h"
+#include "../core/SoundCache.h"
+#include "../core/LuaScript.h"
 #include <iostream>
 
 //https://github.com/SteveKChiu/lua-intf
@@ -85,22 +86,22 @@ LuaScript::LuaScript() {
       int x2 =GraphicsWindowCreateParameters:: Wintype_Utility;
       int x3 =GraphicsWindowCreateParameters:: Wintype_Noborder;
   // BR2 Bindings
-  _START_CLASS(Gu)
-      .addStaticFunction("getGraphicsApi", &Gu::getGraphicsApi)
-      .addStaticFunction("getEngineConfig", &Core::config)
-      .addStaticFunction("playSound", &Gu::playSound, LUA_ARGS(const string_t&, const SoundPlayInfo&))
-      .endClass();
+  // _START_CLASS(Gu)
+  //     .addStaticFunction("getGraphicsApi", &Gu::getGraphicsApi)
+  //     .addStaticFunction("getEngineConfig", &Core::config)
+  //     .addStaticFunction("playSound", &Gu::playSound, LUA_ARGS(const string_t&, const SoundPlayInfo&))
+  //     .endClass();
   _START_CLASS(SoundPlayInfo)
       //You can only have 1 constructor
       .addConstructor(LUA_ARGS(bool, float, float))
       .endClass();
   _START_CLASS(EngineConfig)
       .endClass();
-  _START_CLASS(GraphicsApi)
-      .addFunction("createWindow",
-                   static_cast<std::shared_ptr<GraphicsWindow> (GraphicsApi::*)(const GraphicsWindowCreateParameters&)>(&GraphicsApi::createWindow),
-                   LUA_ARGS(const GraphicsWindowCreateParameters&))
-      .endClass();
+  // _START_CLASS(GraphicsApi)
+  //     .addFunction("createWindow",
+  //                  static_cast<std::shared_ptr<GraphicsWindow> (GraphicsApi::*)(const GraphicsWindowCreateParameters&)>(&GraphicsApi::createWindow),
+  //                  LUA_ARGS(const GraphicsWindowCreateParameters&))
+  //     .endClass();
   _START_CLASS(GraphicsWindowCreateParameters)
       .addConstructor(LUA_ARGS(const string_t&,
                                int32_t, int32_t, int32_t, int32_t, int32_t,
@@ -197,7 +198,7 @@ void LuaScript::compile(const string_t& filename) {
   string_t file_str = "";
   //Read file lines.
   try {
-    file_str += Gu::getPackage()->getFileAsString(filename);
+    file_str += Base::app()->package()->getFileAsString(filename);
   }
   catch (const Exception& ex) {
     lua_close(_pState);

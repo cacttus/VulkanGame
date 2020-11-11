@@ -1,18 +1,19 @@
-#include "../base/OglErr.h"
 #include "../base/Logger.h"
 #include "../base/EngineConfig.h"
-#include "../base/Gu.h"
-#include "../base/SDLUtils.h"
-#include "../base/GLContext.h"
+//#include "../base/Gu.h"
+#include "../core/SDLUtils.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/GraphicsWindow.h"
 #include "../base/DebugHelper.h"
 #include "../base/Delta.h"
 #include "../base/Perf.h"
 #include "../base/InputManager.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/GraphicsApi.h"
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 #include "../gfx/RenderPipe.h"
+
+#include "../core/OglErr.h"
 
 #include <SDL_video.h>
 
@@ -229,17 +230,17 @@ SDL_Window* GraphicsApi::makeSDLWindow(const GraphicsWindowCreateParameters& par
   if (ret != nullptr) {
     //On Linux SDL will set an error if unable to represent a GL/Vulkan profile, as we try different ones. Ignore them for now.
     //Windows SDL sets an error when the context is created.
-    SDLUtils::Base::checkErrors()();
+    Base::checkErrors();
 
     //Fullscreen nonsense
     if (bFullscreen) {
       SDL_SetWindowFullscreen(ret, SDL_WINDOW_FULLSCREEN);
     }
-    SDLUtils::Base::checkErrors()();
+    Base::checkErrors();
     if (show) {
       SDL_ShowWindow(ret);
     }
-    SDLUtils::Base::checkErrors()();
+    Base::checkErrors();
   }
   else {
     //Linux: Couldn't find matching GLX visual.

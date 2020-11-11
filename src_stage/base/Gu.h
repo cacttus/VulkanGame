@@ -129,7 +129,7 @@ private:
   static std::shared_ptr<Random> _pRandom;
 };
 
-#define Config Core::config()
+#define Config Base::config()
 
 }  // namespace VG
 

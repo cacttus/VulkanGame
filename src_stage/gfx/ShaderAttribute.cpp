@@ -2,7 +2,7 @@
 #include "../base/Gu.h"
 #include "../gfx/ShaderMaker.h"
 #include "../base/Hash.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/OperatingSystem.h"
 #include "../gfx/ShaderAttribute.h"
 #include "../gfx/ShaderBase.h"

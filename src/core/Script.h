@@ -7,7 +7,7 @@
 #ifndef __SCRIPT_15833810871154937548_H__
 #define __SCRIPT_15833810871154937548_H__
 
-#include "../world/Component.h"
+#include "../core/Component.h"
 
 namespace VG {
 /**
@@ -19,7 +19,7 @@ public:
   Script();
   virtual ~Script() override;
 
-  virtual void onDrawUi(RenderParams& rp) {}
+  virtual void onDrawUi() {}
   virtual void onIdle(t_timeval ms) {}
   virtual void onScreenChanged(uint32_t uiWidth, uint32_t uiHeight, bool bFullscreen) {}
   virtual void onServerPacketReceived(std::shared_ptr<Packet> pack) {}

@@ -2,7 +2,7 @@
 #include "../base/EngineConfig.h"
 #include "../base/DateTime.h"
 #include "../base/Img32.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/InputManager.h"
 #include "../base/FileSystem.h"
 #include "../gfx/RenderViewport.h"
@@ -13,7 +13,7 @@
 #include "../gfx/ShaderBase.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 #include "../gfx/RenderTarget.h"
 #include "../gfx/BufferRenderTarget.h"
 #include "../gfx/LightManager.h"
@@ -58,8 +58,8 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
   releaseFbosAndMesh();
 
   // - Setup Framebuffers.
-  _bMsaaEnabled = Core::config()->getEnableMSAA();
-  _nMsaaSamples = Core::config()->getMsaaSamples();
+  _bMsaaEnabled = Base::config()->getEnableMSAA();
+  _nMsaaSamples = Base::config()->getMsaaSamples();
   _iLastWidth = iWidth;
   _iLastHeight = iHeight;
 
@@ -142,7 +142,7 @@ void RenderPipe::init(int32_t iWidth, int32_t iHeight, string_t strEnvTexturePat
 
   //These are here SOLELY for shadow map blending.
   //If we don't do any shadow blending then these are useless.
-  int32_t iShadowMapRes = Core::config()->getShadowMapResolution();
+  int32_t iShadowMapRes = Base::config()->getShadowMapResolution();
   _pShadowBoxFboMaster = std::make_shared<ShadowBox>(nullptr, iShadowMapRes, iShadowMapRes);
   _pShadowBoxFboMaster->init();
   _pShadowFrustumMaster = std::make_shared<ShadowFrustum>(nullptr, iShadowMapRes, iShadowMapRes);
@@ -589,8 +589,8 @@ void RenderPipe::setShadowEnv(std::shared_ptr<LightManager> lightman, bool bSet)
   //We loop this way because we MUST fill all texture units used by the GPU.
   std::vector<GLint> boxSamples;
   std::vector<GLint> frustSamples;
-  int iNumGpuShadowBoxes = Core::config()->getMaxCubeShadowSamples();
-  int iNumGpuShadowFrustums = Core::config()->getMaxFrustShadowSamples();
+  int iNumGpuShadowBoxes = Base::config()->getMaxCubeShadowSamples();
+  int iNumGpuShadowFrustums = Base::config()->getMaxFrustShadowSamples();
 
   if (lightman->getGpuShadowBoxes().size() > iNumGpuShadowBoxes) {
     BRLogWarnCycle("More than " + iNumGpuShadowBoxes + " boxes - some shadows will not show.");

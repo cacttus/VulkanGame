@@ -3,19 +3,19 @@
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../math/BoxUtils.h"
 #include "../gfx/ShadowFrustum.h"
 #include "../gfx/FrustumBase.h"
 #include "../gfx/RenderViewport.h"
 #include "../gfx/LightManager.h"
 #include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 #include "../gfx/ShadowBox.h"
 #include "../gfx/LightNode.h"
 #include "../gfx/ShaderBase.h"
 #include "../gfx/ShaderMaker.h"
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 #include "../model/MeshNode.h"
 #include "../world/RenderBucket.h"
 #include "../world/NodeUtils.h"
@@ -152,7 +152,7 @@ void ShadowFrustum_Internal::cullObjectsAsync(CullParams& cp) {
 
   _pVisibleSet->start(Math::brMin(
                           cp.getMaxObjectDistance() * cp.getMaxObjectDistance(),
-                          Core::config()->getMaxPointLightShadowDistance() * Core::config()->getMaxPointLightShadowDistance()),
+                          Base::config()->getMaxPointLightShadowDistance() * Base::config()->getMaxPointLightShadowDistance()),
                       cp.getCamera());
 
   physics->collectVisibleNodes(_pVisibleSet);

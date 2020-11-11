@@ -1,6 +1,6 @@
-#include "../base/Delta.h"
+#include "../core/Delta.h"
 
-#include "../base/SDLIncludes.h"
+#include "../core/SDLIncludes.h"
 
 namespace VG {
 Delta::Delta() {

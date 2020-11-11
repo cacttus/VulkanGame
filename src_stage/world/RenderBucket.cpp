@@ -2,7 +2,7 @@
 #include "../gfx/ShaderBase.h"
 #include "../gfx/CameraNode.h"
 #include "../gfx/ShaderMaker.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../model/MeshNode.h"
 #include "../model/MeshSpec.h"
 #include "../model/Material.h"

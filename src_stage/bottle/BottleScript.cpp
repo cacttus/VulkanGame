@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/SoundCache.h"
 #include "../base/Logger.h"
 #include "../base/TouchInfo.h"
@@ -332,7 +332,7 @@ void BottleScript::toggleDebug(std::shared_ptr<InputManager> pFingers) {
   if (pFingers->modsHeld(KeyMod::Ctrl | KeyMod::AltDontCare | KeyMod::ShiftDontCare)) {
     //CTRL + x
     //This is not recommended for the future.
-    TOGGLECD(SDL_SCANCODE_KP_0, Core::config()->getEnableDebugErrorChecking());
+    TOGGLECD(SDL_SCANCODE_KP_0, Base::config()->getEnableDebugErrorChecking());
     if (pFingers->keyPress(SDL_SCANCODE_F1)) {
       //Force layout update
       getScene()->getUiScreen()->debugForceLayoutChanged();

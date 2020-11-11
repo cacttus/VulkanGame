@@ -1,5 +1,5 @@
 #include "../base/Logger.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/BinaryFile.h"
 #include "../base/Hash.h"
 #include "../base/FileSystem.h"

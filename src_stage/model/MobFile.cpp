@@ -100,7 +100,7 @@ void MobFile::cacheObjectsAndComputeBoxes() {
 
     BRLogInfo("  Making Thumb ..");
     //Gen THumb
-    std::shared_ptr<Img32> thumb = ModelThumb::genThumb(ms, Core::config()->getModelThumbSize());
+    std::shared_ptr<Img32> thumb = ModelThumb::genThumb(ms, Base::config()->getModelThumbSize());
     ms->setThumb(thumb);
   }
 }

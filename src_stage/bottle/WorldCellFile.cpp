@@ -49,7 +49,7 @@ void WorldCellFile::clearCells() {
 int WorldCellFile::loadAndParse() {
   int64_t iReadSizeBytes;
   char* pOut;
-  if (FileSystem::SDLFileRead(_strLoc, pOut, iReadSizeBytes, true) != 0) {
+  if (Base::app()->readFile(_strLoc, pOut, iReadSizeBytes, true) != 0) {
     return 1;
   }
   if (iReadSizeBytes <= 0) {

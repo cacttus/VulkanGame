@@ -2,7 +2,7 @@
 #include "../base/FileSystem.h"
 #include "../base/InputManager.h"
 #include "../base/Img32.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/FpsMeter.h"
 #include "../math/Box2x.h"
 #include "../math/Vec4x.h"

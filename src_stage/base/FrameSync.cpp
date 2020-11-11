@@ -3,7 +3,7 @@
 #include "../base/GraphicsWindow.h"
 #include "../base/FileSystem.h"
 #include "../base/FpsMeter.h"
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 
 namespace VG {
 

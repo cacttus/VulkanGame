@@ -9,8 +9,11 @@
 #include "../base/BinaryFile.h"
 #include "../base/Logger.h"
 #include "../base/ColoredConsole.h"
-//#include "../base/Net.h"
 #include "../ext/lodepng.h"
+#include "../base/Sequencer.h"
+#include "../base/EngineConfig.h"
+#include "../base/OperatingSystem.h"
+#include "../base/FileSystem.h"
 
 #include <chrono>
 #include <thread>
@@ -39,11 +42,48 @@ extern int stb_vorbis_decode_filename(const char* filename, int* channels, int* 
 namespace VG {
 
 std::shared_ptr<Logger> Base::_logger = nullptr;
-std::shared_ptr<ApplicationPackage> Base::_package = nullptr;
 std::shared_ptr<App> Base::_app = nullptr;
+std::shared_ptr<Sequencer> Base::_sequencer = nullptr;
+std::shared_ptr<EngineConfig> Base::_config = nullptr;
 
-void Base::checkErrors(bool a, bool b){
-  Base::app()->checkErrors(a,b);
+void Base::initGlobals(std::shared_ptr<App> app, const string_t& logfile_dir, const std::vector<string_t>& args) {
+  Base::createLogger(logfile_dir, args);
+  Base::_app = app;
+
+  _sequencer = std::make_shared<Sequencer>();
+  Base::checkErrors();
+
+  loadConfig(args);
+
+  //Override EngineConfig
+  for (std::string arg : args) {
+    string_t key, value;
+    parsearg(arg, key, value);
+    processArg(key, value);
+  }
+
+  //Setup Global Configuration
+  Base::logger()->enableLogToFile(Base::config()->getEnableLogToFile());
+  Base::logger()->enableLogToConsole(Base::config()->getEnableLogToConsole());
+
+  //Print some environment Diagnostics
+  BRLogInfo(Stz "Operating System: " + Base::getOperatingSystemName());
+  BRLogInfo(Stz "C++ Version: " + Base::getCPPVersion());
+
+  if (Base::config()->getShowConsole() == false) {
+    OperatingSystem::hideConsole();
+  }
+  else {
+    OperatingSystem::showConsole();
+  }
+}
+void Base::updateGlobals() {
+  if (_sequencer) {
+    _sequencer->update();
+  }
+}
+void Base::checkErrors(bool a, bool b) {
+  Base::app()->checkErrors(a, b);
 }
 void Base::debugBreak() {
 #if defined(BR2_OS_WINDOWS)
@@ -164,7 +204,7 @@ void Base::print(const char* msg) {
   //if (_pEngineConfig == nullptr) {
   ColoredConsole::print(std::string(msg), ColoredConsole::Color::FG_WHITE);
   //}
-  //else if (Core::config()->getShowConsole()) {
+  //else if (Base::config()->getShowConsole()) {
   ColoredConsole::print(std::string(msg), ColoredConsole::Color::FG_WHITE);
   //}
 }
@@ -197,7 +237,7 @@ std::shared_ptr<Img32> Base::loadImage(std::string imgLoc) {
   std::shared_ptr<Img32> ret = nullptr;
 
   std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>("<none>");
-  if (Base::package()->getFile(imgLoc, fb)) {
+  if (Base::app()->package()->getFile(imgLoc, fb)) {
     //decode
     err = lodepng_decode32(&image, &width, &height, (unsigned char*)fb->getData().ptr(), fb->getData().count());
     if (err != 0) {
@@ -252,10 +292,6 @@ bool Base::saveImage(std::string path, std::shared_ptr<Img32> spec) {
 
   return bRet;
 }
-void Base::freeImage(std::shared_ptr<Img32> b) {
-  //b->dea
-  //delete b;
-}
 t_timeval Base::getMicroSeconds() {
   int64_t ret;
   std::chrono::nanoseconds ns = std::chrono::high_resolution_clock::now().time_since_epoch();
@@ -275,16 +311,7 @@ static CFStringRef stdStrToCFStr(std::string st) {
 }
 #endif
 #endif
-
-void Base::createManagers(const string_t& logfile_dir, const std::vector<string_t>& args) {
-  BRLogInfo("GLContext - Creating Sequencer");
-  Base::createLogger(logfile_dir, args);
-
-  //_pSequencer = std::make_shared<Sequencer>();
-  //SDLUtils::Base::checkErrors()();
-  //ct->chkErrRt();
-}
-void parsearg(const string_t& arg, string_t& __out_ out_key, string_t& __out_ out_value) {
+void Base::parsearg(const string_t& arg, string_t& __out_ out_key, string_t& __out_ out_value) {
   bool isvalue = false;
   std::string key = "";
   std::string value = "";
@@ -357,6 +384,35 @@ bool Base::isBigEndian() {
 #else
   return false;
 #endif
+}
+void Base::loadConfig(const std::vector<std::string>& args) {
+  string_t configPath = ApplicationPackage::getEngineConfigFilePath();
+  BRLogInfo("Loading config from '" + configPath + "'");
+  if (!FileSystem::fileExists(configPath)) {
+    BRThrowException("Engine configuration file '" + configPath + "' does not exist.");
+  }
+  else {
+    std::shared_ptr<EngineConfig> ef = std::make_shared<EngineConfig>();
+    ef->loadAndParse(configPath);
+    Base::_config = ef;
+  }
+
+  //Override the EngineConfig
+  for (std::string arg : args) {
+    string_t key, value;
+    parsearg(arg, key, value);
+    processArg(key, value);
+  }
+}
+void Base::processArg(std::string key, std::string value) {
+  if (key == "--show-console") {
+    Base::config()->setShowConsole(VG::TypeConv::strToBool(value));
+    BRLogInfo("Overriding show console window: " + value);
+  }
+  else if (key == "--game-host") {
+    Base::config()->setGameHostAttached(VG::TypeConv::strToBool(value));
+    BRLogInfo("Overriding game host: " + value);
+  }
 }
 
 

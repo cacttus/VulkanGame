@@ -18,14 +18,16 @@ namespace VG {
 class SDLUtils : public VirtualMemory {
 public:
   static void trySetWindowIcon(SDL_Window* w, string_t iconPath);
-  static void checkSDLErr(bool bLog = true, bool bBreak=true);
+  static void checkSDLErr(bool bLog = true, bool bBreak = true);
+  static void SDLFileFree(char*& pOutData);
+  static int SDLFileRead(const string_t& fname, char*& pOutData, int64_t& _iOutSizeBytes, bool addNull = false);
+  static int SDLFileWrite(const string_t& fname, char* pData, size_t _iDataSizeBytes);
+
 private:
   static void createSurfaceFromImage(const string_t& strImage, std::shared_ptr<Img32>& __out_ pImage, SDL_Surface*& __out_ pSurface);
   static SDL_Surface* createSurfaceFromImage(const std::shared_ptr<Img32> bi);
 };
 
-}//ns Game
-
-
+}  // namespace VG
 
 #endif

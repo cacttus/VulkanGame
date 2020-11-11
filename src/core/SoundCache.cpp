@@ -21,7 +21,7 @@ SoundSpec::~SoundSpec() {
 }
 void SoundSpec::load(const string_t& file) {
   if (_eLoadState == LoadState::e::NotLoaded) {
-    string_t location = FileSystem::combinePath(Base::package()->getSoundsFolder(), file);
+    string_t location = FileSystem::combinePath(Base::app()->package()->getSoundsFolder(), file);
 
     if (!FileSystem::fileExists(location)) {
       _eLoadState = LoadState::e::LoadFailed;

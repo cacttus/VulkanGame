@@ -522,64 +522,6 @@ string_t FileSystem::replaceInvalidCharsFromFilename(const string_t& __in_ fnIn,
 
   return fname;
 }
-void FileSystem::SDLFileFree(char*& pOutData) {
-  delete[] pOutData;
-  pOutData = nullptr;
-}
-int FileSystem::SDLFileRead(const string_t& fname, char*& pOutData,
-                            int64_t& _iOutSizeBytes, bool addNull) {
-  //Return 1 = failure
-  //Return 0 = success
-  //Use SDLUtils::Base::checkErrors()or() to check the error.
-  string_t full_path = getFilePath(fname);
-// 
-//   SDL_RWops* rw = SDL_RWFromFile(full_path.c_str(), "rb");
-//   if (rw == NULL) {
-//     return 1;
-//   }
-// 
-//   _iOutSizeBytes = SDL_RWsize(rw);
-//   if (addNull) {
-//     pOutData = new char[_iOutSizeBytes + 1];
-//   }
-//   else {
-//     pOutData = new char[_iOutSizeBytes];
-//   }
-// 
-//   Sint64 nb_read_total = 0, nb_read = 1;
-//   char* buf = pOutData;
-//   while (nb_read_total < _iOutSizeBytes && nb_read != 0) {
-//     nb_read = SDL_RWread(rw, buf, 1, _iOutSizeBytes - nb_read_total);
-//     nb_read_total += nb_read;
-//     buf += nb_read;
-//   }
-//   SDL_RWclose(rw);
-//   if (nb_read_total != _iOutSizeBytes) {
-//     delete[] pOutData;
-//     return 1;
-//   }
-// 
-//   // So yeah sometimes you just gotta..
-//   if (addNull) {
-//     pOutData[nb_read_total] = '\0';
-//   }
-   return 0;
- }
- int FileSystem::SDLFileWrite(const string_t& fname, char* pData,
-                              size_t _iDataSizeBytes) {
-//   string_t full_path = getFilePath(fname);
-// 
-//   SDL_RWops* rw = SDL_RWFromFile(full_path.c_str(), "wb");
-//   if (rw == NULL){
-//     return 1;
-//   }
-// 
-//   SDL_RWwrite(rw, pData, 1, _iDataSizeBytes);
-//   SDL_RWclose(rw);
-
-  return 0;
-}
-
 string_t FileSystem::getFilePath(const string_t& name) {
   std::string str;
 #ifdef __APPLE__

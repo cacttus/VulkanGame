@@ -1,5 +1,5 @@
-#include "../base/GLContext.h"
-#include "../base/OglErr.h"
+#include "../core/opengl/GLContext.h"
+#include "../core/opengl/OglErr.h"
 #include "../base/Logger.h"
 
 #include "../gfx/GpuQuad3.h"
@@ -14,7 +14,7 @@
 
 #include "../model/VaoDataGeneric.h"
 #include "../model/VertexFormat.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 
 namespace VG {
 //static int g_debugNumconst = 0;

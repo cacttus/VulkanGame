@@ -1,5 +1,5 @@
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/Logger.h"
 #include "../base/Exception.h"
 #include "../world/BaseCollider.h"

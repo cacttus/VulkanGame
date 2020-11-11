@@ -1,9 +1,9 @@
 #include "../gfx/VulkanApi.h"
 #include "../base/Logger.h"
 #include "../base/Exception.h"
-#include "../base/OglErr.h"
+#include "../core/opengl/OglErr.h"
 #include "../base/GraphicsWindow.h"
-#include "../base/SDLUtils.h"
+#include "../core/SDLUtils.h"
 
 #include <SDL_vulkan.h>
 #include <vulkan/vulkan.h>
@@ -107,7 +107,7 @@ public:
     }
 
     if (!SDL_Vulkan_CreateSurface(win, instance, &surface)) {
-      SDLUtils::Base::checkErrors()();
+      Base::checkErrors();
       BRThrowException("SDL failed to create vulkan window.");
     }
     //You can log every vulkan call to stdout.

@@ -6,7 +6,7 @@
 #include "../base/Allocator.h"
 #include "../base/ApplicationPackage.h"
 #include "../base/BinaryFile.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../gfx/UiControls.h"
 #include "../gfx/RenderUtils.h"
 #include "../gfx/MegaTex.h"

@@ -7,8 +7,7 @@
 #ifndef __COMPONENT_15816346511616768678_H__
 #define __COMPONENT_15816346511616768678_H__
 
-#include "../base/BaseHeader.h"
-#include "../world/WorldHeader.h"
+#include "../core/CoreHeader.h"
 
 namespace VG {
 enum class AttachState { NotAttached, Attached, Detached };
@@ -29,20 +28,20 @@ public:
   //Called after removed from node, just before node is destroyed
   virtual void onExit() = 0;
 
-  virtual void onDrawForward(RenderParams& rp) {}
-  virtual void onDrawDeferred(RenderParams& rp) {}
-  virtual void onDrawShadow(RenderParams& rp) {}
-  virtual void onDrawTransparent(RenderParams& rp) {}
-  virtual void onDrawDebug(RenderParams& rp) {}
-  virtual void onDrawNonDepth(RenderParams& rp) {}
+  virtual void onDrawForward() {}
+  virtual void onDrawDeferred() {}
+  virtual void onDrawShadow() {}
+  virtual void onDrawTransparent() {}
+  virtual void onDrawDebug() {}
+  virtual void onDrawNonDepth() {}
 
-  template < class Tx = SceneNode >
-  std::shared_ptr<Tx> getNode() { return std::dynamic_pointer_cast<Tx>(_pWorldObject); }
-  std::shared_ptr<Scene> getScene() { return _pScene; }
+  //template < class Tx = SceneNode >
+  //std::shared_ptr<Tx> getNode() { return std::dynamic_pointer_cast<Tx>(_pWorldObject); }
+  //std::shared_ptr<Scene> getScene() { return _pScene; }
 
 private:
-  std::shared_ptr<SceneNode> _pWorldObject = nullptr;
-  std::shared_ptr<Scene> _pScene = nullptr; //This is a shortcut for the scene node which we will access a lot.
+  //std::shared_ptr<SceneNode> _pWorldObject = nullptr;
+  //std::shared_ptr<Scene> _pScene = nullptr; //This is a shortcut for the scene node which we will access a lot.
   AttachState _eAttachState = AttachState::NotAttached;
 };
 

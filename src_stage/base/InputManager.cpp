@@ -20,7 +20,7 @@ void InputManager::init() {
 
   _eRmb = _eLmb = _eMmb = ButtonState::e::Up;
 
-  if (Core::config()->gamePadType() == GamePadType::KeyboardAndMouse) {
+  if (Base::config()->gamePadType() == GamePadType::KeyboardAndMouse) {
     _pGamePad = std::make_shared<KeyboardGamePad>(getThis<InputManager>());
   }
   else {

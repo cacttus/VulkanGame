@@ -1,5 +1,4 @@
 #include "../base/UnitTests.h"
-#include "../base/Gu.h"
 
 // #define GLM_CONFIG_XYZW_ONLY
 #include <glm/vec3.hpp>    // glm::vec3

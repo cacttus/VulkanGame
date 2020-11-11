@@ -1,13 +1,13 @@
 #include "../base/Logger.h"
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/FileSystem.h"
 #include "../base/Allocator.h"
 #include "../base/Hash.h"
 #include "../gfx/ShaderUniform.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 
 namespace VG {
 ShaderUniform::ShaderUniform(std::shared_ptr<GLContext> ct, GLenum eType, GLint location, const string_t& name, size_t iArraySize) : GLFramework(ct) {

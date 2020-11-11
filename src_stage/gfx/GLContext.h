@@ -7,7 +7,7 @@
 #ifndef __GLCONTEXT_14795781163972161943_H__
 #define __GLCONTEXT_14795781163972161943_H__
 
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 #include "../base/SDLIncludes.h"
 
 namespace VG {

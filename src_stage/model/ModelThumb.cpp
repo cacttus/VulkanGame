@@ -1,5 +1,5 @@
 #include "../base/Gu.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/BinaryFile.h"
 #include "../base/Img32.h"
 #include "../gfx/CameraNode.h"

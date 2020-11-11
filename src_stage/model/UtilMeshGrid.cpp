@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../model/UtilMeshGrid.h"
 //#include "../base/GlobalUtils.h"
 //#include "../gfx/UtilMeshGrid.h"

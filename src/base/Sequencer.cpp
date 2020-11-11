@@ -1,5 +1,5 @@
 #include "../base/Sequencer.h"
-#include "../base/Gu.h"
+#include "../base/Base.h"
 
 namespace VG {
 Sequence* Sequencer::exec(
@@ -13,7 +13,7 @@ void Sequencer::update() {
   std::vector<int> toRemove;
   std::vector<Sequence*> toAdd;
 
-  t_timeval ct = Gu::getMicroSeconds();
+  t_timeval ct = Base::getMicroSeconds();
 
   for (size_t ia = 0; ia < _vecSequences.size(); ++ia) {
     Sequence* ss = _vecSequences[ia];

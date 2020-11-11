@@ -1,6 +1,6 @@
 #include "../base/GlobalIncludes.h"
 #include "../base/Logger.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/Img32.h"
 #include "../base/Gu.h"
 #include "../base/Allocator.h"
@@ -9,7 +9,7 @@
 #include "../gfx/ShaderBase.h"
 #include "../gfx/Texture2DSpec.h"
 #include "../gfx/RenderUtils.h"
-#include "../gfx/OpenGLUtils.h"
+#include "../core/opengl/OpenGLUtils.h"
 
 namespace VG {
 Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : GLFramework(ct) {

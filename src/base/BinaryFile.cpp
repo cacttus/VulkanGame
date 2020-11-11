@@ -151,7 +151,7 @@ bool BinaryFile::loadFromDisk(const string_t& fileLoc, size_t offset, int64_t le
   char* bufRet;
   int64_t size;
   int ret;
-  ret = FileSystem::SDLFileRead(fileLoc, bufRet, size, bAddNull);
+  ret = Base::app()->readFile(fileLoc, bufRet, size, bAddNull);
   if (ret != 0) {
     string_t inf = "Failure, could not read file" + fileLoc + " returned " + ret;
     //Dump an SDL error if present.
@@ -178,7 +178,7 @@ bool BinaryFile::loadFromDisk(const string_t& fileLoc, size_t offset, int64_t le
 
   _data._alloca((size_t)(size_len + 1));
   memcpy(_data.ptr(), bufRet, size_len);
-  FileSystem::SDLFileFree(bufRet);
+  Base::app()->freeFile(bufRet);
 
   *(getData().ptr() + size_len) = 0;
 
@@ -197,7 +197,7 @@ std::string BinaryFile::toString() {
   return ret;
 }
 bool BinaryFile::writeToDisk(const string_t& fileLoc) {
-  if (FileSystem::SDLFileWrite(fileLoc, _data.ptr(), _data.count()) == 0) {
+  if (Base::app()->writeFile(fileLoc, _data.ptr(), _data.count()) == 0) {
     return true;
   }
   return false;

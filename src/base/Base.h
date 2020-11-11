@@ -16,11 +16,15 @@ namespace VG {
 */
 class Base {
 public:
-  static void createManagers(const string_t& logfile_dir, const std::vector<string_t>& args);
+  static void initGlobals(std::shared_ptr<App> app, const string_t& logfile_dir, const std::vector<string_t>& args);
+  static void updateGlobals();
 
-  static std::shared_ptr<Logger> logger(){return _logger;}
-  static std::shared_ptr<ApplicationPackage> package(){return _package;}
-  static std::shared_ptr<App> app(){return _app;}
+  static std::shared_ptr<EngineConfig> config() { return _config; }
+
+  static std::shared_ptr<Logger> logger() { return _logger; }
+
+  static std::shared_ptr<App> app() { return _app; }
+  static std::shared_ptr<Sequencer> sequencer() { return _sequencer; }
 
   static void checkErrorsDbg(bool ignore = false);
   static void checkErrorsRt(bool ignore = false);
@@ -40,7 +44,6 @@ public:
 
   static std::shared_ptr<Img32> loadImage(std::string path);
   static bool saveImage(std::string path, std::shared_ptr<Img32> spec);
-  static void freeImage(std::shared_ptr<Img32> b);
   static int loadSound(std::string path, int& iChannels, int& iSampleRate, int16_t*& pData, int& nSamples, int& iDataLenBytes);
   static void print(char msg);
   static void print(const char* msg);
@@ -66,15 +69,19 @@ public:
   }
   static float fade(float t);
   static void checkErrors(bool log = true, bool bbreak = true);
-  
+
+  static bool checkArg(const std::vector<string_t>& args, const string_t& inkey, const string_t& invalue);
+  static void parsearg(const string_t& arg, string_t& __out_ out_key, string_t& __out_ out_value);
+
 private:
   static void createLogger(const string_t& logfile_dir, const std::vector<string_t>& args);
-  static bool checkArg(const std::vector<string_t>& args, const string_t& inkey, const string_t& invalue);
   static void loadConfig(const std::vector<std::string>& args);
+  static void processArg(std::string key, std::string value);
 
   static std::shared_ptr<Logger> _logger;
-  static std::shared_ptr<ApplicationPackage> _package;
   static std::shared_ptr<App> _app;
+  static std::shared_ptr<Sequencer> _sequencer;
+  static std::shared_ptr<EngineConfig> _config;
 };
 
 }  // namespace VG

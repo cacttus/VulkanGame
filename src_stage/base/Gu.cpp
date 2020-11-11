@@ -1,18 +1,18 @@
 #include "../base/Logger.h"
 #include "../base/SDLIncludes.h"
-#include "../base/SDLGLIncludes.h"
-#include "../base/SDLUtils.h"
+#include "../core/opengl/SDLGLIncludes.h"
+#include "../core/SDLUtils.h"
 #include "../base/Img32.h"
 #include "../base/Allocator.h"
 #include "../base/FileSystem.h"
-#include "../base/OglErr.h"
+#include "../core/opengl/OglErr.h"
 #include "../base/EngineConfig.h"
 #include "../base/DiskFile.h"
 #include "../base/OperatingSystem.h"
 #include "../base/DebugHelper.h"
 #include "../base/BinaryFile.h"
 #include "../base/GraphicsWindow.h"
-#include "../base/InputManager.h"
+#include "../base/InputManager.h"8
 #include "../base/FpsMeter.h"
 #include "../base/FrameSync.h"
 #include "../base/ApplicationPackage.h"
@@ -21,7 +21,7 @@
 #include "../base/SoundCache.h"
 #include "../base/FileSystem.h"
 #include "../base/EngineConfig.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../base/Net.h"
 #include "../base/ProjectFile.h"
 #include "../base/ColoredConsole.h"
@@ -29,14 +29,14 @@
 #include "../gfx/TexCache.h"
 #include "../gfx/RenderViewport.h"
 #include "../gfx/GraphicsApi.h"
-#include "../gfx/GraphicsContext.h"
+#include "../core/opengl/GraphicsContext.h"
 #include "../gfx/RenderSettings.h"
 #include "../gfx/ShaderMaker.h"
 #include "../gfx/UiControls.h"
 #include "../gfx/ParticleManager.h"
 #include "../gfx/ShaderMaker.h"
-#include "../gfx/OpenGLApi.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/OpenGLApi.h"
+#include "../core/opengl/GLContext.h"
 #include "../model/ModelCache.h"
 #include "../model/VertexTypes.h"
 #include "../model/VertexFormat.h"
@@ -101,7 +101,7 @@ std::shared_ptr<Sequencer> Gu::getSequencer() { return GetExistingManager(_pSequ
 std::shared_ptr<SoundCache> Gu::getSound() { return GetExistingManager(_pSoundCache); }
 std::shared_ptr<TexCache> Gu::getTexCache() { return GetExistingManager(_pTexCache); }
 std::shared_ptr<ShaderMaker> Gu::getShaderMaker() { return GetExistingManager(_pShaderMaker); }
-std::shared_ptr<EngineConfig> Core::config() { return GetExistingManager(_pEngineConfig); }
+std::shared_ptr<EngineConfig> Base::config() { return GetExistingManager(_pEngineConfig); }
 std::shared_ptr<Logger> Gu::getLogger() { return GetExistingManager(_pLogger); }
 std::shared_ptr<GraphicsApi> Gu::getGraphicsApi() { return GetExistingManager(_pGraphicsApi); }
 std::shared_ptr<EngineConfig> Gu::getConfig() { return GetExistingManager(_pEngineConfig); }
@@ -139,11 +139,11 @@ bool Gu::is64Bit() {
 }
 void parsearg(std::string key, std::string value) {
   if (key == "--show-console") {
-    Core::config()->setShowConsole(VG::TypeConv::strToBool(value));
+    Base::config()->setShowConsole(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding show console window: " + value);
   }
   else if (key == "--game-host") {
-    Core::config()->setGameHostAttached(VG::TypeConv::strToBool(value));
+    Base::config()->setGameHostAttached(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding game host: " + value);
   }
   else {
@@ -210,11 +210,11 @@ void Gu::createLogger(const string_t& logfile_dir, const std::vector<string_t>& 
 }
 void processArg(std::string key, std::string value) {
   if (key == "--show-console") {
-    Core::config()->setShowConsole(VG::TypeConv::strToBool(value));
+    Base::config()->setShowConsole(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding show console window: " + value);
   }
   else if (key == "--game-host") {
-    Core::config()->setGameHostAttached(VG::TypeConv::strToBool(value));
+    Base::config()->setGameHostAttached(VG::TypeConv::strToBool(value));
     BRLogInfo("Overriding game host: " + value);
   }
   else {
@@ -233,14 +233,14 @@ void Gu::initGlobals(const std::vector<std::string>& args) {
   }
 
   //Setup Global Configuration
-  getLogger()->enableLogToFile(Core::config()->getEnableLogToFile());
-  getLogger()->enableLogToConsole(Core::config()->getEnableLogToConsole());
+  getLogger()->enableLogToFile(Base::config()->getEnableLogToFile());
+  getLogger()->enableLogToConsole(Base::config()->getEnableLogToConsole());
 
   //Print some environment Diagnostics
   BRLogInfo(Stz "Operating System: " + Gu::getOperatingSystemName());
   BRLogInfo(Stz "C++ Version: " + Gu::getCPPVersion());
 
-  if (Core::config()->getShowConsole() == false) {
+  if (Base::config()->getShowConsole() == false) {
     OperatingSystem::hideConsole();
   }
   else {
@@ -389,38 +389,38 @@ void Gu::createManagers(std::shared_ptr<GLContext> ct) {
 
   BRLogInfo("GLContext - Creating TexCache");
   _pTexCache = std::make_shared<TexCache>(ct);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating Sequencer");
   _pSequencer = std::make_shared<Sequencer>();
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating Global Input");
   _pGlobalInput = std::make_shared<InputManager>();
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating SoundCache");
   _pSoundCache = std::make_shared<SoundCache>();
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   ct->chkErrRt();
 
   BRLogInfo("GLContext - Creating ShaderMaker & base shaders");
   _pShaderMaker = std::make_shared<ShaderMaker>(ct);
   _pShaderMaker->initialize();
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   ct->chkErrRt();
 
   BRLogInfo("GLContext - Model Cache");
   _pModelCache = std::make_shared<ModelCache>(ct);
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   ct->chkErrRt();
 
   BRLogInfo("GLContext - Network");
   _pNet = std::make_shared<Net>();
-  SDLUtils::Base::checkErrors()();
+  Base::checkErrors();
   ct->chkErrRt();
 
 }

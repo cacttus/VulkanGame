@@ -1,11 +1,10 @@
 #include "../base/BaseHeader.h"
-#include "./Core.h"
+#include "../core/Core.h"
 
 namespace VG {
-std::shared_ptr<EngineConfig> Core::_config = nullptr;
-void Core::initGlobals(){
 
-//TODO: load engine config
+void Core::initGlobals() {
+
 
 }
 

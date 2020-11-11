@@ -9,7 +9,7 @@
 
 #include "../gfx/GfxHeader.h"
 #include "../model/ModelHeader.h"
-#include "../base/SDLGLIncludes.h"
+#include "../core/opengl/SDLGLIncludes.h"
 
 
 namespace VG {

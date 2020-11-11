@@ -1,4 +1,4 @@
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../model/UtilMeshAxis.h"
 #include "../model/VertexFormat.h"
 #include "../model/FragmentBufferData.h"

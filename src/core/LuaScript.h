@@ -7,8 +7,8 @@
 #ifndef __LUASCRIPT_160116796115863083100017670618_H__
 #define __LUASCRIPT_160116796115863083100017670618_H__
 
-#include "../world/Script.h"
-#include "../base/LuaIncludes.h"
+#include "../core/Script.h"
+#include "../core/LuaIncludes.h"
 
 namespace VG {
 class LuaScript : public Script {

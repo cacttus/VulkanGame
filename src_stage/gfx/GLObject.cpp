@@ -1,5 +1,5 @@
 // #include "../gfx/GLObject.h"
-// #include "../base/GLContext.h"
+// #include "../core/opengl/GLContext.h"
 // #include "../base/Gu.h"
 // 
 // namespace VG {

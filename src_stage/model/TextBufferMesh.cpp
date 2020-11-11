@@ -3,7 +3,7 @@
 #include "../gfx/ShaderBase.h"
 #include "../model/VaoDataGeneric.h"
 #include "../model/MeshNode.h"
-#include "../base/GLContext.h"
+#include "../core/opengl/GLContext.h"
 #include "../model/VertexFormat.h"
 
 namespace VG {

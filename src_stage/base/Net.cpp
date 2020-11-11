@@ -1,8 +1,8 @@
 #include "../base/Net.h"
 #include "../base/Logger.h"
-#include "../base/OglErr.h"
+#include "../core/opengl/OglErr.h"
 #include "../base/SyncTimer.h"
-#include "../base/SDLUtils.h"
+#include "../core/SDLUtils.h"
 
 #include <SDL_net.h>
 
@@ -51,7 +51,7 @@ void Net::update() {
       // https://gist.github.com/psqq/b92243f2149fcf4dd46370d4c0b5fef9
 
       //Check any dangling SDL errors before clearing them.
-      SDLUtils::Base::checkErrors()();
+      Base::checkErrors();
 
       //Accept control clients
       TCPsocket new_control_client = SDLNet_TCP_Accept(_pint->_server_control);

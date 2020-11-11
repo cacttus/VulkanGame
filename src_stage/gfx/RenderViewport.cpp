@@ -43,7 +43,7 @@ void RenderViewport::bind() {
 }
 void RenderViewport::updateBox(double sx, double sy, double sw, double sh) {
   if (_pint->_constraint == ViewportConstraint::Adjust) {
-    double ar = Core::config()->windowedAspectRatio();
+    double ar = Base::config()->windowedAspectRatio();
     double vh = 1;
     double vw = 1;
 
