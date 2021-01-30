@@ -65,6 +65,7 @@ bool GLContext::init(SDL_Window* sdlw) {
     bRet = false;
   }
   else {
+    SDLUtils::checkSDLErr();
     int ver, subver, shad_ver, shad_subver;
     getOpenGLVersion(ver, subver, shad_ver, shad_subver);
 
@@ -98,8 +99,8 @@ bool GLContext::init(SDL_Window* sdlw) {
 
         //Swap Interval.
         SDL_GL_SetSwapInterval(_profile->_bVsync ? 1 : 0);  //Vsync is automatic on IOS
-        SDLUtils::checkSDLErr();
-
+        
+        
         //Create opengl error handler
         _pOglErr = std::make_unique<OglErr>();
         _pRenderUtils = std::make_unique<RenderUtils>(getThis<GLContext>());
@@ -481,14 +482,17 @@ void GLContext::loadCheckProc() {
 }
 void GLContext::printHelpfulDebug() {
   int tmp = 0;
+  SDLUtils::checkSDLErr();
   SDL_GL_GetAttribute(SDL_GL_DOUBLEBUFFER, &tmp);
   BRLogInfo("SDL_GL_DOUBLEBUFFER: " + tmp);
   SDL_GL_GetAttribute(SDL_GL_BUFFER_SIZE, &tmp);
   BRLogInfo("SDL_GL_BUFFER_SIZE: " + tmp);
   SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &tmp);
-
+  
   BRLogInfo("SDL_GL_DEPTH_SIZE: " + tmp);
-  SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE, &tmp);
+  BRLogInfo("Skipping stencil size, should be zero.");
+  //Stencil size check causes GL errors in some implementations when stencil is zero. Not sure why.
+  //SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE, &tmp);
   BRLogInfo("SDL_GL_STENCIL_SIZE: " + tmp);
   SDL_GL_GetAttribute(SDL_GL_ACCELERATED_VISUAL, &tmp);
   BRLogInfo("SDL_GL_ACCELERATED_VISUAL: " + tmp);
@@ -515,6 +519,7 @@ void GLContext::printHelpfulDebug() {
   BRLogInfo("SDL_GL_BLUE_SIZE: " + tmp);
   SDL_GL_GetAttribute(SDL_GL_ALPHA_SIZE, &tmp);
   BRLogInfo("SDL_GL_ALPHA_SIZE: " + tmp);
+  SDLUtils::checkSDLErr();
 }
 bool GLContext::isForwardCompatible() {
   return (_profile->_iProfile == SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);

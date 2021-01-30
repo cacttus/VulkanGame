@@ -9,6 +9,10 @@
 #include <filesystem>
 #include <sys/unistd.h>
 
+#ifndef PROJECT_VERSION
+#define PROJECT_VERSION "PROJECT_VERSION Undefined"
+#endif
+
 typedef unsigned int t_Date;
 
 typedef enum { ext_none, ext_h, ext_cc, ext_hpp, ext_cpp, ext_java } t_ext;

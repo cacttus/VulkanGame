@@ -1,27 +1,25 @@
 # VulkanGame
 A demo game engine which uses the SDL2 Vulkan API.
 
-# Building 
-### Visual Studio - Windows
+# Building and Running
+### CMake & Visual Studio - Windows
 * Open VulkanGame.sln with Visual Studio 2019.
-### CMake - Windows
 * Run ./cmake-windows-gcc.sh via Cygwin.
-### VSCode - Linux/Windows
-* Change configuration from Linux To Win32.
+### VSCode 
+* Change configuration from Linux / Win32 at the bottom.
 * Ctrl+Shift+P -> Cmake: Build -> Enter.
-### CMake - Linux
-* sudo apt-get update
-* sudo apt-get upgrade
-* sudo apt install
-  * build-essential
-  * libsdl2-dev
-  * libsdl2-net-dev
-  * libvulkan-dev
-  * libopengl-dev
-  * cmake
-  * liblua5.3-dev
-  * libluabind-dev
-* Build with Cmake / VSCode.
+### CMake - Debian Linux
+* Install the following libraries via apt.
+* Note the following dependencies can now be installed in Debian Linux by running __deps.sh__ as root.
+* build-essential
+* cmake
+* libsdl2-dev
+* libsdl2-net-dev
+* libvulkan-dev
+* libopengl-dev
+* liblua5.3-dev
+* libluabind-dev
+* libglm-dev
 
 # Design
 

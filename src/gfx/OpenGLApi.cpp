@@ -131,7 +131,9 @@ std::shared_ptr<GraphicsWindow> OpenGLApi::createWindowFromProfile(std::shared_p
       if (params._parent) {
         //Share a context, GBuffer
         std::shared_ptr<GLContext> context = getCoreContext()->getThis<GLContext>();
+        SDLUtils::checkSDLErr();
         pRet = context->createGraphicsWindow(win, params);
+        SDLUtils::checkSDLErr();
       }
       else {
         //Create a new context,and GBuffer.
