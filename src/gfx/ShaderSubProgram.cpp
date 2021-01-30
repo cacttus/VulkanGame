@@ -41,12 +41,8 @@ void ShaderSubProgram::init(std::shared_ptr<GLContext> ctx, string_t loc, Shader
   }
 }
 string_t ShaderSubProgram::getHumanReadableErrorString() const {
+  //Don't append anything to these errors as they're parsed up the chain.
   string_t str;
-
-  str += "Errors loading ";
-  str += _sourceLocation;
-  str += "\n";
-
   for (size_t i = 0; i < _compileErrors.size(); ++i) {
     str += "  ";
     str += _compileErrors[i];
@@ -57,7 +53,7 @@ string_t ShaderSubProgram::getHumanReadableErrorString() const {
 string_t ShaderSubProgram::debugGetFullShaderSource() const {
   string_t str = "";
   for (size_t iLine = 0; iLine < _sourceLines.size(); ++iLine) {
-    str += string_t(StringUtil::getZeroPaddedNumber((int32_t)iLine + 0, 4));
+    str += string_t(StringUtil::getZeroPaddedNumber((int32_t)iLine + 1, 4));
     str += " ";
     string_t nl = StringUtil::removeNewline(_sourceLines[iLine]);//.substr(0, _sourceLines[i].length() - 2);
     if (nl.length() != 0) {

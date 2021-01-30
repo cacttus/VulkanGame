@@ -1,5 +1,8 @@
-# Top level Cmake
-# Example command
+# VulkanGame (BR2) Top level Cmake 
+# Example commands
+#   cmake .
+#   cmake --build .  --config Debug --target all -- -j
+# In VSCode
 #   /usr/bin/cmake --build /home/mario/git/VulkanGame/build --config Debug --target all -- -j
 #
 cmake_minimum_required(VERSION 3.0.0)
