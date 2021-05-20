@@ -29,25 +29,19 @@
 2. _Double Scene_ Draw 2 scenes on 2 different windows.
   * https://community.khronos.org/t/sharing-contexts/73563/3
 2. View skelton + a UI menu in main window. With a UI Button in another window. Do with LUA.
-3. Our goal should probably be the Mario game and not the 3D world that we are thinkin bout.
-4. GENREN - generic renderer that works for everything
+3. GENREN - generic renderer that works for everything
   * Init configurable - specifies which capabilities it has.
   * This reduces buffer footprints
   * Render configurable - Specify which pipe bits to set.
-  3
 Multithreaded Design
   Async scene  - scnees (physics &c) update async.
   Window -> Updates async
   Render Thread - 1 per context
   Audio - async
   Input - Async.
-  5
  -- Good generic WPF reference
  -- https://www.wpf-tutorial.com/panels/dockpanel/
  
-# Q's
-How to specify camera?  
-  
 # Tasks
 1. Multiple Windows
   A. _Task: UiCentrism_

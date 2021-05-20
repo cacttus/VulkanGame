@@ -80,6 +80,7 @@ find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(Vulkan REQUIRED)  
 find_package(Threads REQUIRED) #This is better than -pthread
+
 #find_package(Lua REQUIRED)
 # if(${LUA_FOUND})
 #   message("Lua " ${LUA_VERSION_MAJOR} "." ${LUA_VERSION_MINOR} " found.")
