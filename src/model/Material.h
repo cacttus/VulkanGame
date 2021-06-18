@@ -17,7 +17,7 @@ public:
   string_t _strDebugTextureFileName;
   TextureChannel::e _eChannel = TextureChannel::e::Channel0;
   TextureType::e _eTextureType = TextureType::e::Undefined;
-  std::shared_ptr<Texture2DSpec> _pTex = nullptr;
+  std::shared_ptr<Texture2D> _pTex = nullptr;
   float _fInfluence = 1.0f;
   void deserialize(std::shared_ptr<BinaryFile> fb);
   void serialize(std::shared_ptr<BinaryFile> fb);
@@ -40,8 +40,8 @@ public:
   bool getIsTransparent() { return _nTransparentTextureCount > 0; }
 
   void bind(std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound = false, bool bBindParameters = true);
-  void addTextureBinding(std::shared_ptr<Texture2DSpec> ptm, TextureChannel::e eChannel, TextureType::e etype, float influence);
-  void removeTextureBinding(std::shared_ptr<Texture2DSpec> ptm);
+  void addTextureBinding(std::shared_ptr<Texture2D> ptm, TextureChannel::e eChannel, TextureType::e etype, float influence);
+  void removeTextureBinding(std::shared_ptr<Texture2D> ptm);
 
   void setSpec(const vec4&& v) { _v4Spec = v; }
   const vec4& getSpec() { return _v4Spec; }

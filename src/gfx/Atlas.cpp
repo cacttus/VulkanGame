@@ -8,10 +8,10 @@
 #include "../gfx/TexCache.h"
 
 namespace BR2 {
-Atlas::Atlas(std::shared_ptr<GLContext> ct, const string_t& na, ivec2& ivGridSize) : Texture2DSpec(na, TextureFormat::Image4ub, ct) {
+Atlas::Atlas(std::shared_ptr<GLContext> ct, const string_t& na, ivec2& ivGridSize) : Texture2D(na, TextureFormat::Image4ub, ct) {
   _vGridSize = ivGridSize; //_pSpriteMap->getGridDimensions();
 }
-Atlas::Atlas(std::shared_ptr<GLContext> ct, const string_t& na, ivec2& viSpriteSize, const string_t& strImageLoc) : Texture2DSpec(na,TextureFormat::Image4ub, ct) {
+Atlas::Atlas(std::shared_ptr<GLContext> ct, const string_t& na, ivec2& viSpriteSize, const string_t& strImageLoc) : Texture2D(na,TextureFormat::Image4ub, ct) {
   _strPrecompileFileLocation = strImageLoc;
   _vSpriteSize = viSpriteSize;
   //_vGridSize = ivGridSize; //_pSpriteMap->getGridDimensions();
@@ -156,7 +156,7 @@ void Atlas::finishCompile(std::shared_ptr<Img32> sp, bool bMipmaps) {
   //Create the texture
   create(TextureFormat::Image4ub, (unsigned char*)sp->getData()->ptr(), sp->getWidth(), sp->getHeight(), bMipmaps, false, false);
 
-  Gu::getTexCache()->add(getName(), getThis<Texture2DSpec>());
+  Gu::getTexCache()->add(getName(), getThis<Texture2D>());
   Gu::freeImage(sp);
 }
 void Atlas::addImage(Hash32 en, const string_t& loc) {

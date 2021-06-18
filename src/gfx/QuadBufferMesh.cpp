@@ -23,7 +23,7 @@ QuadBufferMesh::QuadBufferMesh(std::shared_ptr<GLContext> c, int32_t count) : _p
 QuadBufferMesh::~QuadBufferMesh() {
   freeData();
 }
-void QuadBufferMesh::setTexture(std::shared_ptr<Texture2DSpec> tex) {
+void QuadBufferMesh::setTexture(std::shared_ptr<Texture2D> tex) {
   _pTexture = tex;
   ///_pMesh->setTexture(tex);
 }

@@ -26,7 +26,7 @@ public:
     int32_t count
   );
   virtual ~QuadBufferMesh() override;
-  void setTexture(std::shared_ptr<Texture2DSpec> tex);
+  void setTexture(std::shared_ptr<Texture2D> tex);
   FORCE_INLINE int32_t getMaxQuads() { return _iMaxQuads; }
   FORCE_INLINE int32_t getQuadCount() { return _iCurrentQuadIndex; }
   FORCE_INLINE void resetCopy() { _iCurrentQuadIndex = 0; }
@@ -55,7 +55,7 @@ protected:
   std::shared_ptr<MeshNode> _pMesh = nullptr;
   std::shared_ptr<GLContext> _pContext = nullptr;
   int32_t _iMaxQuads = 0;
-  std::shared_ptr<Texture2DSpec> _pTexture = nullptr;
+  std::shared_ptr<Texture2D> _pTexture = nullptr;
   void assignIndexes();
   void freeData();
 };

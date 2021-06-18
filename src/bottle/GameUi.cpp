@@ -479,7 +479,7 @@ void GameUi::createToolbar() {
 std::shared_ptr<UiWindow> GameUi::createAssetWindow() {
   //////////////////////////////////////////////////////////////////////////
   //Window
-  std::vector<std::shared_ptr<Texture2DSpec>> texs;
+  std::vector<std::shared_ptr<Texture2D>> texs;
   std::shared_ptr<UiWindow> winObjects = UiWindow::create(_pGuiSkin->pAssetWindowSkin->_pWindowSkin);
   winObjects->position() = UiPositionMode::Relative;
   float dw = _pScript->getScene()->getUiScreen()->getDesignSize().getWidth();
@@ -532,7 +532,7 @@ std::shared_ptr<UiWindow> GameUi::createAssetWindow() {
 std::shared_ptr<UiWindow> GameUi::createConfigWindow() {
   //////////////////////////////////////////////////////////////////////////
   //Window
-  std::vector<std::shared_ptr<Texture2DSpec>> texs;
+  std::vector<std::shared_ptr<Texture2D>> texs;
   std::shared_ptr<UiWindow> winConfig = UiWindow::create(_pGuiSkin->pAssetWindowSkin->_pWindowSkin);
   winConfig->position() = UiPositionMode::Relative;
   float dw = _pScript->getScene()->getUiScreen()->getDesignSize().getWidth();
@@ -698,7 +698,7 @@ std::shared_ptr<UiWindow> GameUi::createConfigWindow() {
 std::shared_ptr<UiWindow> GameUi::createMenuWindow() {
   //////////////////////////////////////////////////////////////////////////
   //Window
-  std::vector<std::shared_ptr<Texture2DSpec>> texs;
+  std::vector<std::shared_ptr<Texture2D>> texs;
   std::shared_ptr<UiWindow> win = UiWindow::create(_pGuiSkin->pAssetWindowSkin->_pWindowSkin);
   win->position() = UiPositionMode::Relative;
   float dw = _pScript->getScene()->getUiScreen()->getDesignSize().getWidth();

@@ -91,7 +91,7 @@ TexCache::~TexCache() {
   //}
   _cache.clear();
 }
-bool TexCache::add(string_t name, std::shared_ptr<Texture2DSpec> ss, bool bErrorIfFound) {
+bool TexCache::add(string_t name, std::shared_ptr<Texture2D> ss, bool bErrorIfFound) {
   Hash32 ih = Hash::computeStringHash32bit(name, 0);
   TexMap::iterator it = _cache.find(ih);
   if (it != _cache.end()) {
@@ -105,8 +105,8 @@ bool TexCache::add(string_t name, std::shared_ptr<Texture2DSpec> ss, bool bError
   return true;
 }
 
-std::shared_ptr<Texture2DSpec> TexCache::getOrLoad(TexFile tc, bool bIsGenerated, bool bRepeatU, bool bRepeatV) {
-  std::shared_ptr<Texture2DSpec> ret = nullptr;
+std::shared_ptr<Texture2D> TexCache::getOrLoad(TexFile tc, bool bIsGenerated, bool bRepeatU, bool bRepeatV) {
+  std::shared_ptr<Texture2D> ret = nullptr;
 
   int32_t ih = Hash::computeStringHash32bit(tc._loc, 0);
   TexMap::iterator ite = _cache.find(ih);
@@ -115,14 +115,14 @@ std::shared_ptr<Texture2DSpec> TexCache::getOrLoad(TexFile tc, bool bIsGenerated
     ret = ite->second;
   }
   else if (bIsGenerated == false) {
-    ret = std::make_shared<Texture2DSpec>(tc._name, tc._loc, getContext(), bRepeatU, bRepeatV);
+    ret = std::make_shared<Texture2D>(tc._name, tc._loc, getContext(), bRepeatU, bRepeatV);
     _cache.insert(std::make_pair(ih, ret));
   }
 
   return ret;
 }
-std::shared_ptr<Texture2DSpec> TexCache::addGeneratedImage(string_t name, const std::shared_ptr<Img32> ss) {
-  std::shared_ptr<Texture2DSpec> pRet = std::make_shared<Texture2DSpec>(name, TextureFormat::Image4ub, ss, getContext());
+std::shared_ptr<Texture2D> TexCache::addGeneratedImage(string_t name, const std::shared_ptr<Img32> ss) {
+  std::shared_ptr<Texture2D> pRet = std::make_shared<Texture2D>(name, TextureFormat::Image4ub, ss, getContext());
   add(name, pRet);
 
   return pRet;

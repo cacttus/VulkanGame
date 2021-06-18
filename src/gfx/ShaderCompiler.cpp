@@ -311,6 +311,16 @@ void ShaderCompiler::compile(std::shared_ptr<ShaderSubProgram> pSubProg) {
     }
   }
 
+  //OOPS you didn't delete arg[]
+  //6/10/21 - This needs to be tested. This is a memory leak.
+ // Gu::debugBreak();
+  for (size_t i = 0; i < pSubProg->getSourceLines().size(); ++i) {
+    if (pSubProg->getSourceLines()[i].size()) {
+      delete [] arg[i];
+    }
+  }
+  delete [] arg;
+
   if (!b) {
     pSubProg->setStatus(ShaderStatus::CompileError);
   }

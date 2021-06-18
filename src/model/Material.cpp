@@ -116,7 +116,7 @@ void Material::bind(std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound,
     }
   }
 }
-void Material::addTextureBinding(std::shared_ptr<Texture2DSpec> ptm, TextureChannel::e channel, TextureType::e etype, float influence) {
+void Material::addTextureBinding(std::shared_ptr<Texture2D> ptm, TextureChannel::e channel, TextureType::e etype, float influence) {
   AssertOrThrow2(ptm != NULL);
 
   if (_mapTextureBindings.find(channel) != _mapTextureBindings.end()) {
@@ -134,7 +134,7 @@ void Material::addTextureBinding(std::shared_ptr<Texture2DSpec> ptm, TextureChan
 
   _mapTextureBindings.insert(std::make_pair(channel, ts));
 }
-void Material::removeTextureBinding(std::shared_ptr<Texture2DSpec> ptm) {
+void Material::removeTextureBinding(std::shared_ptr<Texture2D> ptm) {
   std::map<TextureChannel::e, std::shared_ptr<TextureSlot>>::iterator ite = _mapTextureBindings.begin();
 
   for (; ite != _mapTextureBindings.end(); ite++) {

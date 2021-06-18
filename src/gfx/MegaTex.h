@@ -123,7 +123,7 @@ private:
 *  @class MegaTex
 *  @brief Composes mega textures (non-uniform grid atlas)
 */
-class MegaTex : public Texture2DSpec {
+class MegaTex : public Texture2D {
   enum class MegaTexCompileState { NotCompiled,
                                    Dirty,
                                    Compiling,

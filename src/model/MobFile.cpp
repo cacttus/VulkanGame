@@ -756,8 +756,8 @@ std::shared_ptr<VertexFormat> MeshSpecData::getVertexFormatForSpec(MobFile* mb) 
 }
 void MeshSpecData::makeMaterialForSpec(MobFile* mb, std::shared_ptr<MeshSpec> pSpec) {
   if (_pMatData != nullptr) {
-    std::shared_ptr<Texture2DSpec> diffuse = nullptr;
-    std::shared_ptr<Texture2DSpec> normal = nullptr;
+    std::shared_ptr<Texture2D> diffuse = nullptr;
+    std::shared_ptr<Texture2D> normal = nullptr;
     //create material
 
     std::shared_ptr<Material> mat = std::make_shared<Material>(_pMatData->_strMatName);
@@ -767,7 +767,7 @@ void MeshSpecData::makeMaterialForSpec(MobFile* mb, std::shared_ptr<MeshSpec> pS
       //Texture should be placed in the same directory as the mob.
       path = FileSystem::combinePath(mb->getMobDir(), _pMatData->_strDiffuseTex);
       if (FileSystem::fileExists(path)) {
-        std::shared_ptr<Texture2DSpec> pTex = Gu::getTexCache()->getOrLoad(TexFile(path));
+        std::shared_ptr<Texture2D> pTex = Gu::getTexCache()->getOrLoad(TexFile(path));
         mat->addTextureBinding(pTex, TextureChannel::e::Channel0, TextureType::e::Color, _pMatData->_fDiffuseTexInfluence);
       }
       else {
@@ -778,7 +778,7 @@ void MeshSpecData::makeMaterialForSpec(MobFile* mb, std::shared_ptr<MeshSpec> pS
     if (StringUtil::isNotEmpty(_pMatData->_strNormalTex)) {
       path = FileSystem::combinePath(mb->getMobDir(), _pMatData->_strNormalTex);
       if (FileSystem::fileExists(path)) {
-        std::shared_ptr<Texture2DSpec> pTex = Gu::getTexCache()->getOrLoad(TexFile(path));
+        std::shared_ptr<Texture2D> pTex = Gu::getTexCache()->getOrLoad(TexFile(path));
         mat->addTextureBinding(pTex, TextureChannel::e::Channel1, TextureType::e::Normal, _pMatData->_fNormalTexInfluence);
       }
       else {

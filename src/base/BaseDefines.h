@@ -210,7 +210,7 @@ class Sequence;
 class Sequencer;
 class _NoInheritClassBase {};
 class Logger;
-class Texture2DSpec;
+class Texture2D;
 class GLContext;
 class TexCache;
 class Img32;

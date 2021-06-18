@@ -80,7 +80,7 @@ private:
 
   //Test data.
   std::shared_ptr<MeshNode> _pQuadMeshBackground = nullptr;
-  std::shared_ptr<Texture2DSpec> _pTex = nullptr;
+  std::shared_ptr<Texture2D> _pTex = nullptr;
   std::shared_ptr<Atlas> _pParticlesAtlas = nullptr;
 
   void init() override;

@@ -2412,7 +2412,7 @@ std::shared_ptr<UiScrollbar> UiScrollbar::create(std::shared_ptr<UiScrollbarSkin
   sb->setBarWidthFunc(barFunc);
   sb->setScrollFunc(scrollFunc);
 
-  std::shared_ptr<Texture2DSpec> img[3];
+  std::shared_ptr<Texture2D> img[3];
   if (pSkin->_eOrientation == Orientation::e::Vertical) {
     sb->width() = pSkin->_uWidthOrHeightPx;
     sb->height() = "auto";

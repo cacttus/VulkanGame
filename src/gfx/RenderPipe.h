@@ -67,7 +67,7 @@ protected:
   std::shared_ptr<ShadowFrustum> _pShadowFrustumMaster = nullptr;
 
   std::shared_ptr<DOFFbo> _pDOFFbo = nullptr;
-  std::shared_ptr<Texture2DSpec> _pEnvTex = nullptr;  //Enviro map - for mirrors (coins)
+  std::shared_ptr<Texture2D> _pEnvTex = nullptr;  //Enviro map - for mirrors (coins)
 
   vec4 _vClear;
 

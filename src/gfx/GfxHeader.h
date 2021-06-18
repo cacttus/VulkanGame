@@ -310,7 +310,7 @@ class SpriteAnimationInstance;
 class SpriteFile;
 class SpriteManager;
 class SpriteMap;
-class Texture2DSpec;
+class Texture2D;
 class TextureAtlas2d;
 class GLContext;
 class SkyBox;

@@ -17,11 +17,9 @@
 * Show window in center of screen (windowed mode)
 * Test this build on Windows to make sure it still works.
 * Fix the "unrecognized parameter" in the console.
-* Turn Random into an instance.
 
 ### Backlog
 * Change props from preprocessor to "debuggable" props.
-
 
 # Goals
 1. _Multirender Scene_ Draw the same scene on 2 windows.
@@ -305,7 +303,7 @@ Multithreaded Design
         * SMW package 
           local scene = Scene()
           local skeledug = Gu.getObject("Skeledug") --get node/model etc.
-          scene:add(Skeledug)
+          scene:add(Skeledug, vec3(0,1,0))
 
     * __Tests__
         1. Shared Contexts 

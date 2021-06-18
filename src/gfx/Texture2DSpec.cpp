@@ -12,28 +12,28 @@
 #include "../gfx/OpenGLUtils.h"
 
 namespace BR2 {
-Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : GLFramework(ct) {
+Texture2D::Texture2D(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ct) : GLFramework(ct) {
   _strName = name;
   _eFormat = fmt;
 }
-Texture2DSpec::Texture2DSpec(const string_t& name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV) : GLFramework(ctx) {
+Texture2D::Texture2D(const string_t& name, string_t loc, std::shared_ptr<GLContext> ctx, bool bRepeatU, bool bRepeatV) : GLFramework(ctx) {
   _strName = name;
   _eFormat = TextureFormat::Image4ub;
   loadPng(loc, bRepeatU, bRepeatV);
 }
-Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : GLFramework(ctx) {
+Texture2D::Texture2D(const string_t& name, TextureFormat fmt, const std::shared_ptr<Img32> sp, std::shared_ptr<GLContext> ctx, TexFilter::e eFilter) : GLFramework(ctx) {
   _strName = name;
   create(fmt, (unsigned char*)sp->getData()->ptr(), sp->getWidth(), sp->getHeight(), false, false, false);
   setFilter(eFilter);
 }
-Texture2DSpec::Texture2DSpec(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps) : GLFramework(ctx) {
+Texture2D::Texture2D(const string_t& name, TextureFormat fmt, std::shared_ptr<GLContext> ctx, unsigned char* texData, int iWidth, int iHeight, bool mipmaps) : GLFramework(ctx) {
   _strName = name;
   create(fmt, texData, iWidth, iHeight, mipmaps, false, false);
 }
-Texture2DSpec::~Texture2DSpec() {
+Texture2D::~Texture2D() {
   getContext()->glDeleteTextures(1, &_glId);
 }
-void Texture2DSpec::loadPng(const string_t& imgLoc, bool bRepeatU, bool bRepeatV) {
+void Texture2D::loadPng(const string_t& imgLoc, bool bRepeatU, bool bRepeatV) {
   _strLocation = imgLoc;
   std::shared_ptr<Img32> sp = Gu::loadImage(imgLoc);
   if (sp != nullptr) {
@@ -44,7 +44,7 @@ void Texture2DSpec::loadPng(const string_t& imgLoc, bool bRepeatU, bool bRepeatV
     _bLoadFailed = true;
   }
 }
-void Texture2DSpec::calculateGLTextureFormat(TextureFormat fmt) {
+void Texture2D::calculateGLTextureFormat(TextureFormat fmt) {
   //All textures are 32 bit
   //AssertOrThrow2(getBytesPerPixel() == 4);
   if (fmt == TextureFormat::Image4ub) {
@@ -75,7 +75,7 @@ void Texture2DSpec::calculateGLTextureFormat(TextureFormat fmt) {
     Gu::debugBreak();
   }
 }
-bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound) {
+bool Texture2D::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShader, bool bIgnoreIfNotFound) {
   if (getGlId() == 0) {
     //https://stackoverflow.com/questions/1108589/is-0-a-valid-opengl-texture-id
     BRLogErrorCycle("Texture was not created on the GPU.");
@@ -96,11 +96,11 @@ bool Texture2DSpec::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase>
   }
   return true;
 }
-void Texture2DSpec::unbind(TextureChannel::e eChannel) {
+void Texture2D::unbind(TextureChannel::e eChannel) {
   getContext()->glActiveTexture(GL_TEXTURE0 + eChannel);
   getContext()->glBindTexture(_eGLTextureBinding, 0);
 }
-int32_t Texture2DSpec::generateMipmapLevels(uint32_t width, uint32_t height) {
+int32_t Texture2D::generateMipmapLevels(uint32_t width, uint32_t height) {
   // - Create log2 mipmaps
   int numMipMaps = 0;
   int x = MathUtils::brMax(width, height);
@@ -110,7 +110,7 @@ int32_t Texture2DSpec::generateMipmapLevels(uint32_t width, uint32_t height) {
   return numMipMaps;
 }
 // - Make the texture known to OpenGL
-void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint32_t w, uint32_t h, bool genMipmaps, bool bRepeatU, bool bRepeatV) {
+void Texture2D::create(TextureFormat format, unsigned char* imageData, uint32_t w, uint32_t h, bool genMipmaps, bool bRepeatU, bool bRepeatV) {
   _iWidth = w;
   _iHeight = h;
   if (h != 0.0f) {
@@ -203,7 +203,7 @@ void Texture2DSpec::create(TextureFormat format, unsigned char* imageData, uint3
   //Unbind so we don't modify it
   getContext()->glBindTexture(_eGLTextureBinding, 0);
 }
-void Texture2DSpec::setWrapU(TexWrap::e wrap) {
+void Texture2D::setWrapU(TexWrap::e wrap) {
   bind(TextureChannel::e::Channel0, nullptr);
   if (wrap == TexWrap::e::Clamp) {
     glTexParameteri(_eGLTextureBinding, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -216,7 +216,7 @@ void Texture2DSpec::setWrapU(TexWrap::e wrap) {
   }
   unbind(TextureChannel::e::Channel0);
 }
-void Texture2DSpec::setWrapV(TexWrap::e wrap) {
+void Texture2D::setWrapV(TexWrap::e wrap) {
   bind(TextureChannel::e::Channel0, nullptr);
   if (wrap == TexWrap::e::Clamp) {
     glTexParameteri(_eGLTextureBinding, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -229,7 +229,7 @@ void Texture2DSpec::setWrapV(TexWrap::e wrap) {
   }
   unbind(TextureChannel::e::Channel0);
 }
-void Texture2DSpec::setFilter(TexFilter::e filter) {
+void Texture2D::setFilter(TexFilter::e filter) {
   _eFilter = filter;
   bind(TextureChannel::e::Channel0, nullptr);
   getContext()->chkErrDbg();
@@ -265,10 +265,10 @@ void Texture2DSpec::setFilter(TexFilter::e filter) {
 
   unbind(TextureChannel::e::Channel0);
 }
-bool Texture2DSpec::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image) {
+bool Texture2D::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image) {
   return getContext()->getTextureDataFromGpu(image, _glId, _eGLTextureBinding);
 }
-void Texture2DSpec::serialize(std::shared_ptr<BinaryFile> fb) {
+void Texture2D::serialize(std::shared_ptr<BinaryFile> fb) {
   std::shared_ptr<Img32> img = std::make_shared<Img32>();
   getTextureDataFromGpu(img);
 
@@ -285,7 +285,7 @@ void Texture2DSpec::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeUint32(std::move((uint32_t)img->getData()->byteSize()));
   fb->write((const char*)img->getData()->ptr(), img->getData()->byteSize());
 }
-void Texture2DSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
+void Texture2D::deserialize(std::shared_ptr<BinaryFile> fb) {
   fb->readVersion();
   fb->readString(_strName);
   fb->readString(_strLocation);

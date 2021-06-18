@@ -90,7 +90,7 @@ bool MbiFile::loadAndParse(string_t file) {
 
 
   //Read textures
-  std::map<Hash32, std::shared_ptr<Texture2DSpec>> texs;
+  std::map<Hash32, std::shared_ptr<Texture2D>> texs;
   int32_t nTexs;
   fb->readInt32(nTexs);
   BRLogInfo("  --> Loading " + nTexs +" texture(s).");
@@ -99,7 +99,7 @@ bool MbiFile::loadAndParse(string_t file) {
     Hash32 hTex;
     fb->readUint32(hTex);
 
-    std::shared_ptr<Texture2DSpec> pTex = std::make_shared<Texture2DSpec>("<unset>", TextureFormat::Image4ub, getContext());
+    std::shared_ptr<Texture2D> pTex = std::make_shared<Texture2D>("<unset>", TextureFormat::Image4ub, getContext());
     pTex->deserialize(fb);
     if (Gu::getTexCache()->add(pTex->getLocation(), pTex, false) == false) {
       string_t loc = pTex->getLocation();
@@ -117,7 +117,7 @@ bool MbiFile::loadAndParse(string_t file) {
     for (std::shared_ptr<MeshSpec> mesh : ms->getMeshes()) {
       if (mesh->getMaterial() != nullptr) {
         for (std::pair<TextureChannel::e, std::shared_ptr<TextureSlot>> p : mesh->getMaterial()->getTextureSlots()) {
-          std::map<Hash32, std::shared_ptr<Texture2DSpec>>::iterator it = texs.find(p.second->_iTexFileHashed);
+          std::map<Hash32, std::shared_ptr<Texture2D>>::iterator it = texs.find(p.second->_iTexFileHashed);
           if (it != texs.end()) {
             p.second->_pTex = it->second;
           }
@@ -185,7 +185,7 @@ void MbiFile::save(string_t file) {
   }
 
   //Collect textures
-  std::map<Hash32, std::shared_ptr<Texture2DSpec>> texs;
+  std::map<Hash32, std::shared_ptr<Texture2D>> texs;
   for (std::shared_ptr<ModelSpec> ms : _vecModels) {
     for (std::shared_ptr<MeshSpec> mesh : ms->getMeshes()) {
       if (mesh->getMaterial() != nullptr) {
@@ -201,7 +201,7 @@ void MbiFile::save(string_t file) {
   //Write textures
   fb->writeInt32(std::move((int32_t)texs.size()));
   Img32 img;
-  for (std::pair<Hash32, std::shared_ptr<Texture2DSpec>> p : texs) {
+  for (std::pair<Hash32, std::shared_ptr<Texture2D>> p : texs) {
     fb->writeUint32(std::move(p.first));
     p.second->serialize(fb);
   }

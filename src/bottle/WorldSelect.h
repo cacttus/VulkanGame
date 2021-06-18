@@ -32,7 +32,7 @@ private:
   std::shared_ptr<BottleScript> _pCongaRoom = nullptr;
   std::vector<string_t> _vecWorldFolders;
   WorldSelectState::e _eWorldSelectState = WorldSelectState::e::Select;
-  std::shared_ptr<Texture2DSpec> _pTex = nullptr;
+  std::shared_ptr<Texture2D> _pTex = nullptr;
   string_t _strSelectedWorld = "";
   bool _bLoadNextFrame = false;
   string_t genNewWorldName(const string_t& baseName);

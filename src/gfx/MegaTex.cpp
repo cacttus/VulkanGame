@@ -99,7 +99,7 @@ std::vector<std::shared_ptr<Img32>> MtTexPatch::parseImagePatch(std::string file
     //save images (and master
     Gu::saveImage("./data/cache/saved_9P_master.png", master);
     for (int n = 0; n < ret.size(); ++n) {
-      std::shared_ptr<Texture2DSpec> tex = std::make_shared<Texture2DSpec>(getName(), TextureFormat::Image4ub, ret[n], _pMegaTex->getContext(), TexFilter::e::Nearest);
+      std::shared_ptr<Texture2D> tex = std::make_shared<Texture2D>(getName(), TextureFormat::Image4ub, ret[n], _pMegaTex->getContext(), TexFilter::e::Nearest);
       _pMegaTex->getContext()->getRenderUtils()->saveTexture(std::move(Stz "./data/cache/saved_9P_" + n + ".png"), tex->getGlId(), GL_TEXTURE_2D);
     }
   }
@@ -334,7 +334,7 @@ float MtFont::fontSizeToFontScale(float fs) {
 //}
 #pragma endregion
 #pragma region MegaTex
-MegaTex::MegaTex(const string_t& name, std::shared_ptr<GLContext> ctx, bool bCache) : Texture2DSpec(name, TextureFormat::Image4ub, ctx) {
+MegaTex::MegaTex(const string_t& name, std::shared_ptr<GLContext> ctx, bool bCache) : Texture2D(name, TextureFormat::Image4ub, ctx) {
   _bCache = bCache;
 }
 MegaTex::~MegaTex() {
@@ -630,7 +630,7 @@ bool MegaTex::bind(TextureChannel::e eChannel, std::shared_ptr<ShaderBase> pShad
     if (_eState == MegaTexCompileState::Dirty) {
       BRLogWarnCycle("MegaTex was dirty before rendering.");
     }
-    return Texture2DSpec::bind(eChannel, pShader, bIgnoreIfNotFound);
+    return Texture2D::bind(eChannel, pShader, bIgnoreIfNotFound);
   }
 
   return false;

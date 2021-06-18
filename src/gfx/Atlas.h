@@ -40,7 +40,7 @@ private:
 *  @class Atlas
 *  @brief Stores an atlas of sprites.
 */
-class Atlas : public Texture2DSpec {
+class Atlas : public Texture2D {
 public:
   static string_t getGeneratedFileName();
 
