@@ -17,23 +17,23 @@ enum class CSharpAccessModifier {
   Public,
   Private,
   Protected,
-  None, //None is not applicable to variables within method scope.
+  None,  //None is not applicable to variables within method scope.
 };
 enum class CSharpStorageClass {
   Static,
-  Dynamic, //..not static
+  Dynamic,  //..not static
 };
 enum class CSharpOperator {
   Op_Add,
   Op_Sub,
   Op_Mul,
   Op_Div,
-  Op_Assign, // x =
-  Op_Call,  //x()
-  Op_PreInc, //++x
-  Op_PreDec, //--x
-  Op_PostInc, //x++ //This will be hard
-  Op_PostDec, //x--
+  Op_Assign,   // x =
+  Op_Call,     //x()
+  Op_PreInc,   //++x
+  Op_PreDec,   //--x
+  Op_PostInc,  //x++ //This will be hard
+  Op_PostDec,  //x--
   Op_None
 };
 enum class CSharpControlWord {
@@ -62,7 +62,7 @@ enum class CSharpDataType {
   Vec2,
   Vec3,
   Vec4,
-  Class, //Action<>, Function<>
+  Class,  //Action<>, Function<>
 };
 enum class CSharpCallingConvention {
   None,
@@ -75,44 +75,76 @@ enum class CSTokenType {
   //////////////////////////////////////////////////////////////////////////
   // Tokens
   TokensStart,
-  Class, Struct, Enum,
-  If, While, For, Do,
-  Public, Private, Protected,
-  Sealed, Final, Internal,
-  Throw, Catch, Finally,
-  Get, Set,
-  Namespace, Using,
-  Equals, Plus, Times, Divide, Minus, // = + * / -
-  PlusEquals, MinusEquals, TimesEquals, DivideEquals,// += -= *= /=
-  GreaterThan, LessThan,// > <
-  LogicalOr, LogicalAnd, LogicalNot, // || && !
-  BitwiseOr, BitwiseAnd, BitwiseNot, // | & ~
-  RShift, LShift,// >> <<
-  Dot, Colon,// . :
-  Inc, Dec, //++ --
-  New, //new 
-  Semicolon,//;
-  LBrace, RBrace, //{ }
-  LParen, RParen, //( )
-  LBracket, RBracket,//[ ]
-  VerbatimLiteral, //@
-  SQuote, DQuote,// ' "
+  Class,
+  Struct,
+  Enum,
+  If,
+  While,
+  For,
+  Do,
+  Public,
+  Private,
+  Protected,
+  Sealed,
+  Final,
+  Internal,
+  Throw,
+  Catch,
+  Finally,
+  Get,
+  Set,
+  Namespace,
+  Using,
+  Equals,
+  Plus,
+  Times,
+  Divide,
+  Minus,  // = + * / -
+  PlusEquals,
+  MinusEquals,
+  TimesEquals,
+  DivideEquals,  // += -= *= /=
+  GreaterThan,
+  LessThan,  // > <
+  LogicalOr,
+  LogicalAnd,
+  LogicalNot,  // || && !
+  BitwiseOr,
+  BitwiseAnd,
+  BitwiseNot,  // | & ~
+  RShift,
+  LShift,  // >> <<
+  Dot,
+  Colon,  // . :
+  Inc,
+  Dec,        //++ --
+  New,        //new
+  Semicolon,  //;
+  LBrace,
+  RBrace,  //{ }
+  LParen,
+  RParen,  //( )
+  LBracket,
+  RBracket,         //[ ]
+  VerbatimLiteral,  //@
+  SQuote,
+  DQuote,  // ' "
   TokensEnd,
 
   //Variables
-  Word, //Word is defined as a token, but it's also a grammatical construct.  It's a defualt item if not in token table.
+  Word,  //Word is defined as a token, but it's also a grammatical construct.  It's a defualt item if not in token table.
   Number,
 
   //////////////////////////////////////////////////////////////////////////
-  //Grammar 
+  //Grammar
   Whitespace,
-  DataType, //int, float, class..
-  String, //""
-  StringLiteral, //''
-  ZeroClosure,  //*
+  DataType,         //int, float, class..
+  String,           //""
+  StringLiteral,    //''
+  ZeroClosure,      //*
   PositiveClosure,  //+
-  Block, // {..} OR Inline block (single line) ** 
-  Expression, // any values id|(..)
+  Block,            // {..} OR Inline block (single line) **
+  Expression,       // any values id|(..)
 };
 typedef CSTokenType LT;
 
@@ -127,20 +159,27 @@ class CSharpStatement;
 class CSharpTerm;
 class CSRuntimeContext;
 
-
 class CSToken {
 public:
   CSToken() {}
-  CSToken(string_t tok, CSTokenType type) { _token = tok; _type = type; }
-  string_t token() { return _token; }
-  CSTokenType& type() { return _type; } //If CSTokenType is keyword, then use keyword() below.
+  CSToken(string_t tok, CSTokenType type) {
+    _token = tok;
+    _type = type;
+  }
+  const string_t& token() { return _token; }
+  CSTokenType& type() { return _type; }  //If CSTokenType is keyword, then use keyword() below.
 private:
   string_t _token = "";
   CSTokenType _type = CSTokenType::None;
 };
+
 class CSLexer : public VirtualMemory {
 public:
-  enum class Ele { Word, Number, Ws, Sym, Undefined };// Element Class
+  enum class Ele { Word,
+                   Number,
+                   Ws,
+                   Sym,
+                   Undefined };  // Element Class
   const string_t c_test = "using System; namespace MyNS { class MyCL{int[] x = new int[]; int b(float a ){ return b + a*(2*(3+.0006d); }} }";
   //We can use Dec or Int.Intf.. which since we need to parse 'f' out I think Int.Int is also relevant.
 private:
@@ -152,13 +191,14 @@ private:
     }
     const string_t str() const { return _str; }
     const CSTokenType tok() const { return _tok; }
+
   private:
     string_t _str;
     CSTokenType _tok;
   };
-public:
 
-  CSLexer(string_t filename, string_t code) {
+public:
+  CSLexer(string_t filename, const string_t& code) {
     _strFile = filename;
     _code = code;
     makeTable();
@@ -169,8 +209,21 @@ public:
     }
     _tokenHashTable.clear();
   }
-  std::vector<CSToken*> parsedTokens() { return _parsedTokens; }
-
+  std::vector<CSToken*> parsedTokens() {
+    return _parsedTokens;
+  }
+  void debugPrintErrorsAndTokens() {
+    string_t errors = "";
+    for (auto& e : _errors) {
+      errors += "  error: " + e + "\n";
+    }
+    BRLogInfo(errors);
+    string_t tokens = "";
+    for (auto& e : _parsedTokens) {
+      tokens += e->token() + ",";
+    }
+    BRLogInfo(tokens);
+  }
   void removeWsTokens() {
     std::vector<CSToken*> newtoks;
     for (auto tok : _parsedTokens) {
@@ -207,28 +260,65 @@ private:
     BRLogError("" + _strFile + " (" + _line + "," + _char + "): error: " + err);
   }
   void makeTable() {
-#define MPA(str,sym) do{ _tokenTable.push_back(new TokenTableEntry(str, CSTokenType::sym)); _tokenHashTable.insert(std::make_pair(str,CSTokenType::sym)); } while(0);
+#define MPA(str, sym)                                                  \
+  do {                                                                 \
+    _tokenTable.push_back(new TokenTableEntry(str, CSTokenType::sym)); \
+    _tokenHashTable.insert(std::make_pair(str, CSTokenType::sym));     \
+  } while (0);
     //  MPA("\t", Tab); MPA(" ", Space);
-    MPA("class", Class); MPA("struct", Struct); MPA("enum", Enum);
-    MPA("if", If); MPA("while", While); MPA("for", For); MPA("do", Do);
-    MPA("public", Public); MPA("private", Private); MPA("protected", Protected);
-    MPA("sealed", Sealed); MPA("final", Final); MPA("internal", Internal);
-    MPA("throw", Throw); MPA("catch", Catch); MPA("finally", Finally);
-    MPA("get", Get); MPA("set", Set);
-    MPA("namespace", Namespace); MPA("using", Using);
-    MPA("=", Equals); MPA("+", Plus); MPA("-", Minus); MPA("*", Times); MPA("/", Divide);
-    MPA("+=", PlusEquals); MPA("-=", MinusEquals); MPA("*=", TimesEquals); MPA("/=", DivideEquals);
-    MPA("||", LogicalOr); MPA("&&", LogicalAnd); MPA("!", LogicalNot);
-    MPA(">", GreaterThan); MPA("<", LessThan);
-    MPA("|", BitwiseOr); MPA("&", BitwiseAnd); MPA("~", BitwiseNot);
-    MPA(">>", RShift); MPA("<<", LShift);
-    MPA(".", Dot); MPA(":", Colon);  MPA(";", Semicolon);
-    MPA("++", Inc); MPA("--", Dec);
+    MPA("class", Class);
+    MPA("struct", Struct);
+    MPA("enum", Enum);
+    MPA("if", If);
+    MPA("while", While);
+    MPA("for", For);
+    MPA("do", Do);
+    MPA("public", Public);
+    MPA("private", Private);
+    MPA("protected", Protected);
+    MPA("sealed", Sealed);
+    MPA("final", Final);
+    MPA("internal", Internal);
+    MPA("throw", Throw);
+    MPA("catch", Catch);
+    MPA("finally", Finally);
+    MPA("get", Get);
+    MPA("set", Set);
+    MPA("namespace", Namespace);
+    MPA("using", Using);
+    MPA("=", Equals);
+    MPA("+", Plus);
+    MPA("-", Minus);
+    MPA("*", Times);
+    MPA("/", Divide);
+    MPA("+=", PlusEquals);
+    MPA("-=", MinusEquals);
+    MPA("*=", TimesEquals);
+    MPA("/=", DivideEquals);
+    MPA("||", LogicalOr);
+    MPA("&&", LogicalAnd);
+    MPA("!", LogicalNot);
+    MPA(">", GreaterThan);
+    MPA("<", LessThan);
+    MPA("|", BitwiseOr);
+    MPA("&", BitwiseAnd);
+    MPA("~", BitwiseNot);
+    MPA(">>", RShift);
+    MPA("<<", LShift);
+    MPA(".", Dot);
+    MPA(":", Colon);
+    MPA(";", Semicolon);
+    MPA("++", Inc);
+    MPA("--", Dec);
     MPA("new", New);
-    MPA("{", LBrace); MPA("}", RBrace);
-    MPA("(", LParen); MPA(")", RParen);
-    MPA("[", LBracket); MPA("]", RBracket);
-    MPA("'", SQuote); MPA("\"", DQuote);
+    MPA("{", LBrace);
+    MPA("}", RBrace);
+    MPA("(", LParen);
+    MPA(")", RParen);
+    MPA("[", LBracket);
+    MPA("]", RBracket);
+    MPA("'", SQuote);
+    MPA("\"", DQuote);
     MPA("@", VerbatimLiteral);
 
     //sort table by grammatical superset
@@ -298,7 +388,7 @@ private:
           }
         }
       }
-      else { //symbol, delimited by number, ws, and word
+      else {  //symbol, delimited by number, ws, and word
         CSTokenType type = findExact(_token);
         if (type != CSTokenType::None) {
           pushTok(type, next_ele);
@@ -324,11 +414,10 @@ private:
   }
   bool isSym(int c) {
     if ((c == '=') || (c == '+') || (c == '-') || (c == '*') || (c == '/') ||
-      (c == '\\') || (c == '~') || (c == '!') || (c == '&') || (c == '|') ||
-      (c == ';') || (c == ':') || (c == '.') ||
-      (c == '{') || (c == '}') || (c == '(') || (c == ')') || (c == '[') || (c == ']') ||
-      (c == '"') || (c == '\'') || (c == '@')
-      ) {
+        (c == '\\') || (c == '~') || (c == '!') || (c == '&') || (c == '|') ||
+        (c == ';') || (c == ':') || (c == '.') ||
+        (c == '{') || (c == '}') || (c == '(') || (c == ')') || (c == '[') || (c == ']') ||
+        (c == '"') || (c == '\'') || (c == '@')) {
       return true;
     }
     return false;
@@ -350,7 +439,7 @@ private:
       ele = Ele::Word;
     }
     else if (isInt(next)) {
-      ele = Ele::Number; // We start as Int, but promote to Dec if we find a '.'
+      ele = Ele::Number;  // We start as Int, but promote to Dec if we find a '.'
     }
     else if (isSym(next)) {
       ele = Ele::Sym;
@@ -431,8 +520,9 @@ public:
     }
     return ret;
   }
+
 private:
-  std::vector<std::shared_ptr<CSharpVariable>> _callstack; //Callstack.
+  std::vector<std::shared_ptr<CSharpVariable>> _callstack;  //Callstack.
   std::shared_ptr<CSRuntimeContext> _pContext = nullptr;
 };
 class CSRuntimeContext : public CSharpContext {
@@ -444,9 +534,10 @@ public:
     BRLogError("Runtime Error: " + err);
   }
   std::shared_ptr<CSCallstack> getCallstack() { return _callstack; }
+
 private:
-  std::shared_ptr<CSCallstack> _callstack = nullptr;//Call init()
-  int32_t _instructionPointer; // the current instruction point.er
+  std::shared_ptr<CSCallstack> _callstack = nullptr;  //Call init()
+  int32_t _instructionPointer;                        // the current instruction point.er
 };
 std::shared_ptr<CSharpVariable> CSCallstack::top() {
   if (_callstack.size() == 0) {
@@ -455,18 +546,16 @@ std::shared_ptr<CSharpVariable> CSCallstack::top() {
   return *(_callstack.end());
 }
 
-
 //Language definition classes, class, method, property, code block, variables, statements.
 class CSharpLanguage : public VirtualMemory {
 public:
   virtual void execute(std::shared_ptr<CSRuntimeContext> context) {
     BRThrowNotImplementedException();
-  } //Execute the code.
+  }  //Execute the code.
 protected:
   int32_t _iLine = -1;  //The line this element was found on.  If the expression spans multiple lines, this is the first line.
-  string_t _code; //The code that was parsed to create this language item.
+  string_t _code;       //The code that was parsed to create this language item.
 };
-
 
 //Namespace
 //Essentially this is also a CSharpScope.  however, that isn't necessary.
@@ -476,6 +565,7 @@ public:
   std::vector<CSharpStruct> getClasses() { return _classes; }
   std::shared_ptr<CSharpNamespace> parent() { return _parent; }
   std::vector<std::shared_ptr<CSharpNamespace>> children() { return _children; }
+
 private:
   string_t _identifier = "<invalid>";
   std::vector<CSharpStruct> _classes;
@@ -523,28 +613,41 @@ public:
   }
 
   virtual string_t toString() {
-    if (_eDataType == CSharpDataType::None) { return "None"; }
-    else if (_eDataType == CSharpDataType::Int16) { return "Int16"; }
-    else if (_eDataType == CSharpDataType::Int32) { return "Int32"; }
-    else if (_eDataType == CSharpDataType::Int64) { return "Int64"; }
-    else if (_eDataType == CSharpDataType::Float) { return "Float"; }
-    else if (_eDataType == CSharpDataType::Double) { return "Double"; }
+    if (_eDataType == CSharpDataType::None) {
+      return "None";
+    }
+    else if (_eDataType == CSharpDataType::Int16) {
+      return "Int16";
+    }
+    else if (_eDataType == CSharpDataType::Int32) {
+      return "Int32";
+    }
+    else if (_eDataType == CSharpDataType::Int64) {
+      return "Int64";
+    }
+    else if (_eDataType == CSharpDataType::Float) {
+      return "Float";
+    }
+    else if (_eDataType == CSharpDataType::Double) {
+      return "Double";
+    }
     else if (_eDataType == CSharpDataType::Class) {
       return "Class";
     }
     BRThrowNotImplementedException();
   }
+
 private:
-  std::map<CSharpOperator, std::map< CSharpTypeHash, std::shared_ptr<CSharpMethod> > > _operators;
+  std::map<CSharpOperator, std::map<CSharpTypeHash, std::shared_ptr<CSharpMethod>>> _operators;
   HashMap<string_t> _aliases;
 
   //[public|private|sealed|protected] class MyClass [: MySuperClass] {
-  CSharpTypeHash _iTypeHash = 0; /// This is how we're going to locate types.
+  CSharpTypeHash _iTypeHash = 0;  /// This is how we're going to locate types.
   string_t _identifier = "<invalid>";
   CSharpStorageClass _storageClass = CSharpStorageClass::Dynamic;
   CSharpAccessModifier _modifier = CSharpAccessModifier::None;
   CSharpDataType _eDataType = CSharpDataType::None;
-  std::shared_ptr<CSharpStruct> _pClass = nullptr;//Not set if we're not a class.
+  std::shared_ptr<CSharpStruct> _pClass = nullptr;  //Not set if we're not a class.
   HashMap<std::shared_ptr<CSharpVariable>> _members;
   HashMap<std::shared_ptr<CSharpMethod>> _methods;
   std::shared_ptr<CSharpNamespace> _namespace;
@@ -576,8 +679,6 @@ CSharpStruct::CSharpStruct(std::shared_ptr<CSharpNamespace> ns, string_t struct_
   _namespace = ns;
 }
 
-
-
 //Global Base class for all objects
 class CSharpClass : public CSharpStruct {
 public:
@@ -588,7 +689,7 @@ private:
 //class CSharpInt : public CSharpStruct {
 //public:
 //  CSharpInt() {
-//    //So we will add each operator method. - + - * () 
+//    //So we will add each operator method. - + - * ()
 //    addMethod(std::make_shared<CSharpMethod>(std::shared_ptr<CSharpInt>, std::shared_ptr<CSharpInt>)
 //
 //
@@ -670,7 +771,7 @@ public:
 //[Access_modifier] [static] [return_type] method(parms,..) {control block}
 // Arguments are passed onto the stack using the stdcall convention.
 // int MyMeth(float a, ref MyClass b)  < CSharpMethod { CSharpParameter, CSharpParameter }
-// {  < CSharpCodeBlock 
+// {  < CSharpCodeBlock
 //    int x = 0;      < variable declaration CSharpVariable
 //    int y = 5;      < CSharpVariableDeclaration
 //    int z = (b.Prop + x);     < CSharpVariableDeclaration
@@ -685,11 +786,12 @@ public:
   virtual void execute(std::shared_ptr<CSRuntimeContext> context) override {
     //execute() here is likely invalid, because we're using CSharpMethodInvocation below.
   }
+
 private:
   CSharpStorageClass _storageClass;
   CSharpAccessModifier _modifier;
   CSharpDataType _returnType;
-  CSharpCallingConvention _callingConvention = CSharpCallingConvention::StdCall; //StdCall - callee cleans the stack.
+  CSharpCallingConvention _callingConvention = CSharpCallingConvention::StdCall;  //StdCall - callee cleans the stack.
 
   //We should also provide the capability to call BR2 classes using the CSharpMethod syntax.
   std::vector<std::shared_ptr<CSharpParameter>> _params;
@@ -713,15 +815,14 @@ class CSharpVariable : public CSharpLanguage {
 public:
   string_t getIdentifier() { return _identifier; }
 
-  virtual int32_t toInt32(std::shared_ptr<CSRuntimeContext> context) = 0; //Converts to int32
-  virtual bool isInt32(std::shared_ptr<CSRuntimeContext> context) = 0; //Returns false if this doesn't CONVERT to an int32
+  virtual int32_t toInt32(std::shared_ptr<CSRuntimeContext> context) = 0;  //Converts to int32
+  virtual bool isInt32(std::shared_ptr<CSRuntimeContext> context) = 0;     //Returns false if this doesn't CONVERT to an int32
 
 private:
-  string_t _identifier = "<invalid>"; // The language identifier
+  string_t _identifier = "<invalid>";                // The language identifier
   std::shared_ptr<CSharpStruct> _myClass = nullptr;  //nullptr, if this is a local variable.
-  CSharpDataType _dataType = CSharpDataType::None; //This can basically be gotten from the subclass.
+  CSharpDataType _dataType = CSharpDataType::None;   //This can basically be gotten from the subclass.
 };
-
 
 //Scope -- Code block
 // { .. }
@@ -735,6 +836,7 @@ public:
     //  expr->execute(context);
     //}
   }
+
 private:
   std::vector<std::shared_ptr<CSharpStatement>> _expressions;
 };
@@ -748,10 +850,10 @@ private:
 //      + (1/5 * myclass.Method()) - subexpression
 //            1 - term
 //            /5 - term
-//            * myclass.Method() - term 
+//            * myclass.Method() - term
 //                myclass - term
 //                .Method() - term
-//            * -1 - term 
+//            * -1 - term
 //              -1 - term -  unary operator is its own term.
 // An expression, may also be a statement, Equals is allowed here.
 //  Note: Only assignment, call, increment, decrement, await, and new object expressions can be used as a statement
@@ -772,9 +874,10 @@ public:
   virtual void execute(std::shared_ptr<CSRuntimeContext> context) override {
     evaluate(context);
   }
+
 private:
   //Here a variable may also be declared.
-  std::vector<std::shared_ptr<CSharpTerm>> _terms; //These come In order
+  std::vector<std::shared_ptr<CSharpTerm>> _terms;  //These come In order
 };
 
 //Method Invocation
@@ -801,6 +904,7 @@ public:
 
     //_method->execute(context);
   }
+
 private:
   std::shared_ptr<CSharpMethod> _method = nullptr;
   std::vector<std::shared_ptr<CSharpStatement>> _params;
@@ -812,7 +916,6 @@ public:
   //TODO:
 private:
   int32_t _iVarId = -1;  //The index of the variable, in the method's compiled variable table.  This includes the method parameters.
-
 };
 
 //Expression Term
@@ -850,13 +953,13 @@ public:
     //    retur value;
     //  }
     //}
-
   }
+
 private:
-  CSharpOperator _operator = CSharpOperator::Op_None; // =, +, -, *, /, call, or None for first term (first term has no operator, and is the storage)
+  CSharpOperator _operator = CSharpOperator::Op_None;  // =, +, -, *, /, call, or None for first term (first term has no operator, and is the storage)
 
   //Only one of these will be set.
-  std::shared_ptr<CSharpVariableReference> _variable = nullptr; // this may be a constant.
+  std::shared_ptr<CSharpVariableReference> _variable = nullptr;  // this may be a constant.
   std::shared_ptr<CSharpStatement> _statement = nullptr;
   std::shared_ptr<CSharpMethodInvocation> _methodInvocation = nullptr;
 };
@@ -877,12 +980,12 @@ public:
       //}
     }
   }
-private:
-  CSharpControlWord _controlword = CSharpControlWord::None; //ifthen, while, for, do
-  std::shared_ptr<CSharpStatement> _condition = nullptr; // (var > 2)
-  std::shared_ptr<CSharpScope> _codeBlock = nullptr; // { do this .. }
-};
 
+private:
+  CSharpControlWord _controlword = CSharpControlWord::None;  //ifthen, while, for, do
+  std::shared_ptr<CSharpStatement> _condition = nullptr;     // (var > 2)
+  std::shared_ptr<CSharpScope> _codeBlock = nullptr;         // { do this .. }
+};
 
 #pragma region CSharpScript_Internal
 class CSharpScript_Internal {
@@ -894,8 +997,10 @@ public:
 //Script level language context
 enum class C_Script {
   None,
-  NamespaceDecl, NamespaceId,
-  UsingDecl, UsingId
+  NamespaceDecl,
+  NamespaceId,
+  UsingDecl,
+  UsingId
 };
 void CSharpScript_Internal::compile(std::shared_ptr<CSharpCompileContext> context) {
   //*Classes can exist without namespaces too.
@@ -953,7 +1058,6 @@ void CSharpScript_Internal::compile(std::shared_ptr<CSharpCompileContext> contex
   //  }
   //}
 
-
   //gather all using's
   // using->add(make_shared<CSharpUsing)
   //* A using clause must precede all other elements
@@ -961,9 +1065,6 @@ void CSharpScript_Internal::compile(std::shared_ptr<CSharpCompileContext> contex
   //  std::make_shared<CSharpNamespace>( string_t internal_code )
   // foreach namespace
   //   namespace->compile(context)
-
-
-
 }
 
 #pragma endregion
@@ -976,46 +1077,83 @@ CSharpScript::CSharpScript() {
 CSharpScript::~CSharpScript() {
   _pint = nullptr;
 }
-std::vector<CSToken*> CSharpScript::lexTest(string_t str) {
+std::vector<CSToken*> CSharpScript::lexTest(const string_t& str) {
   CSLexer* lex = new CSLexer("testFile.cs", str);
   lex->lex();
   lex->removeWsTokens();
 
+  lex->debugPrintErrorsAndTokens();
+
   return lex->parsedTokens();
 }
 string_t cstoken_to_string(CSTokenType tt) {
-  static std::unique_ptr<std::map < CSTokenType, std::string >> cs_token_type_to_string_tab = nullptr;
+  static std::unique_ptr<std::map<CSTokenType, std::string>> cs_token_type_to_string_tab = nullptr;
 
   if (cs_token_type_to_string_tab == nullptr) {
     cs_token_type_to_string_tab = std::make_unique<std::map<CSTokenType, std::string>>();
-#define TAB_INS(x) do { cs_token_type_to_string_tab->insert(std::make_pair(CSTokenType::x, Stz #x)); } while(0)
+#define TAB_INS(x)                                                               \
+  do {                                                                           \
+    cs_token_type_to_string_tab->insert(std::make_pair(CSTokenType::x, Stz #x)); \
+  } while (0)
     TAB_INS(None);
 
     TAB_INS(TokensStart);
 
     TAB_INS(Whitespace);
-    TAB_INS(Class); TAB_INS(Struct); TAB_INS(Enum);
-    TAB_INS(If); TAB_INS(While); TAB_INS(For); TAB_INS(Do);
-    TAB_INS(Public); TAB_INS(Private); TAB_INS(Protected);
-    TAB_INS(Sealed); TAB_INS(Final); TAB_INS(Internal);
-    TAB_INS(Throw); TAB_INS(Catch); TAB_INS(Finally);
-    TAB_INS(Get); TAB_INS(Set);
-    TAB_INS(Namespace); TAB_INS(Using);
-    TAB_INS(Equals); TAB_INS(Plus); TAB_INS(Times); TAB_INS(Divide); TAB_INS(Minus);
-    TAB_INS(PlusEquals); TAB_INS(MinusEquals); TAB_INS(TimesEquals); TAB_INS(DivideEquals);
-    TAB_INS(GreaterThan); TAB_INS(LessThan);
-    TAB_INS(LogicalOr); TAB_INS(LogicalAnd); TAB_INS(LogicalNot);
-    TAB_INS(BitwiseOr); TAB_INS(BitwiseAnd); TAB_INS(BitwiseNot);
-    TAB_INS(RShift); TAB_INS(LShift);
-    TAB_INS(Dot); TAB_INS(Colon);
-    TAB_INS(Inc); TAB_INS(Dec);
+    TAB_INS(Class);
+    TAB_INS(Struct);
+    TAB_INS(Enum);
+    TAB_INS(If);
+    TAB_INS(While);
+    TAB_INS(For);
+    TAB_INS(Do);
+    TAB_INS(Public);
+    TAB_INS(Private);
+    TAB_INS(Protected);
+    TAB_INS(Sealed);
+    TAB_INS(Final);
+    TAB_INS(Internal);
+    TAB_INS(Throw);
+    TAB_INS(Catch);
+    TAB_INS(Finally);
+    TAB_INS(Get);
+    TAB_INS(Set);
+    TAB_INS(Namespace);
+    TAB_INS(Using);
+    TAB_INS(Equals);
+    TAB_INS(Plus);
+    TAB_INS(Times);
+    TAB_INS(Divide);
+    TAB_INS(Minus);
+    TAB_INS(PlusEquals);
+    TAB_INS(MinusEquals);
+    TAB_INS(TimesEquals);
+    TAB_INS(DivideEquals);
+    TAB_INS(GreaterThan);
+    TAB_INS(LessThan);
+    TAB_INS(LogicalOr);
+    TAB_INS(LogicalAnd);
+    TAB_INS(LogicalNot);
+    TAB_INS(BitwiseOr);
+    TAB_INS(BitwiseAnd);
+    TAB_INS(BitwiseNot);
+    TAB_INS(RShift);
+    TAB_INS(LShift);
+    TAB_INS(Dot);
+    TAB_INS(Colon);
+    TAB_INS(Inc);
+    TAB_INS(Dec);
     TAB_INS(New);
     TAB_INS(Semicolon);
-    TAB_INS(LBrace); TAB_INS(RBrace);
-    TAB_INS(LParen); TAB_INS(RParen);
-    TAB_INS(LBracket); TAB_INS(RBracket);
+    TAB_INS(LBrace);
+    TAB_INS(RBrace);
+    TAB_INS(LParen);
+    TAB_INS(RParen);
+    TAB_INS(LBracket);
+    TAB_INS(RBracket);
     TAB_INS(VerbatimLiteral);
-    TAB_INS(SQuote); TAB_INS(DQuote);
+    TAB_INS(SQuote);
+    TAB_INS(DQuote);
     TAB_INS(TokensEnd);
 
     TAB_INS(Word);
@@ -1030,7 +1168,7 @@ string_t cstoken_to_string(CSTokenType tt) {
     TAB_INS(Expression);
   }
 
-  std::map < CSTokenType, std::string >::iterator it = cs_token_type_to_string_tab->find(tt);
+  std::map<CSTokenType, std::string>::iterator it = cs_token_type_to_string_tab->find(tt);
   if (it != cs_token_type_to_string_tab->end()) {
     return it->second;
   }
@@ -1044,9 +1182,7 @@ string_t CSharpScript::tokensToString(std::vector<CSToken*> toks) {
     str += cstoken_to_string(tok->type());
   }
   return str;
-
 }
-
 
 ////execute is only available for the root class.
 //virtual void execute(std::shared_ptr<CSharpContext> context) override {
@@ -1090,7 +1226,6 @@ void CSharpScript::initScriptSystem() {
   //  cs_Int32->operators().insert(std::make_pair(CSharpOperator::Op_Add, add_methods));
 }
 std::shared_ptr<CSharpScript> CSharpScript::compile(std::shared_ptr<CSharpCompileContext> ct) {
-
   //gather all class references first.
   if (!ct->_bGatheredClasses) {
     //gather
@@ -1098,8 +1233,7 @@ std::shared_ptr<CSharpScript> CSharpScript::compile(std::shared_ptr<CSharpCompil
   //  std::shared_ptr<CSharpScript> ret = std::make_shared<CSharpScript>();
   //  ret->_pint->compile(ct);
   //
-    //std::shared_ptr<CSharpContext> context = std::make_shared<CSharpContext>();
-
+  //std::shared_ptr<CSharpContext> context = std::make_shared<CSharpContext>();
 
   return nullptr;
 }
@@ -1134,7 +1268,10 @@ void CSharpScript::onExit() {
 #pragma endregion
 
 enum class CSIntegralType {
-  Int, Float, Double, Decimal,
+  Int,
+  Float,
+  Double,
+  Decimal,
 };
 /*
       using := "using"
@@ -1168,33 +1305,128 @@ enum class CSIntegralType {
 */
 //
 
-
-
 enum CSContext {
-  Global, Namespace,
-  ClassBody, MethodBody,
-  Inherited //Inherited from the enclosing context
+  Global,
+  Namespace,
+  ClassBody,
+  MethodBody,
+  Inherited  //Inherited from the enclosing context
 };
 class CSGrammarExp {
 public:
   CSGrammarExp() {}
-  CSGrammarExp(std::vector<CSTokenType> toks, CSContext ctx) { _grammar = toks; _context = ctx; }
+  CSGrammarExp(std::vector<CSTokenType> toks, CSContext ctx) {
+    _grammar = toks;
+    _context = ctx;
+  }
 
   std::vector<CSTokenType> grammar() { return _grammar; }
   std::vector<CSContext> contexts() { return _contexts; }
   CSContext context() { return _context; }
+
 private:
   std::vector<CSTokenType> _grammar;
-  std::vector<CSContext> _contexts;//Valid contexts
-  CSContext _context;//The context of this expression
+  std::vector<CSContext> _contexts;  //Valid contexts
+  CSContext _context;                //The context of this expression
 };
 string_t code = "using System;\nnamespace TestNS\n{\nclass TestClass\n{\nint x;\nint testMethod(int param)\n{\nthis.x+=param;//test comment\n}\n}\n}/*end namespace, also, test comment*/\n\n\n";
 string_t invalid_code = "using System;\nclass TestClass\n{\nint x;\nint testMethod(int param)\n{\nthis.x+=param;//test comment\n}\n}\nint invalid_field_outside_class;\n\n";
 
+// Recursive Descent (LL) parsers are easy to understand and write
+// LR requires grammar and is apparently faster.  It has a single lookahead terminal to determine grammatical structure.
+// We're not following a formal Backus Naur system.  Just make it work ok.
+// Dynamic programming is eliminating recursion by storing recursion results in variables and using a loop instead.
+// LR avoids recursion by dynamic programming, thus eliminates time complexity of an LL parser.
+// shift-reduce - an efficient table-driven method of creating a "parse tree"
+// parse-tree
+//  a = 3;
+//  term assign 4 delim
+//  reduce to
+//  variable_assignment
+// https://web.archive.org/web/20160305041504/http://dragonbook.stanford.edu/lecture-notes/Stanford-CS143/08-Bottom-Up-Parsing.pdf
+//        "Shift-reduce parsing is the most commonly used and the most powerful of the bottom-up techniques"
+//        Shift = (push next token from input on stack, advance input)
+//        Reduce = (pop right-hand side of production off stack, push left-hand side, no change in input)   `
+//        Each grammar is a replace/rewrite system of some kind.
+//        This is actualy really easy to create either way, the grammars are just going to be hard.
+//        You must validate a reduction, because you can reduce to a dead end.
+//        An LR parser uses two tables:
+//        1.The action table Action[s,a] tells the parser what to do when the state on top of the stack is s and terminal a is the next input token.
+//        The possible actions are to shift a state onto the stack, to reduce the handle on top of the stack, to accept the input, or to report an error.
+//        2.The goto table Goto[s,X] indicates the new state to place on top of the stack after a reduction of the nonterminal X while state s is on top of the stack.
+// 
+//        LL is recursive descent and less powerful than LALR.  LR will allow us to show multiple errors and such.
+// 
+//        if there is an error, clean the  stack, then you can process stuff after an error
+// The goal here is to create a syntax tree from the scanner or lexer
+// Stack + Parsing Table
+// The hard part is to find the correct valid reduction of a shift reduce parser.
+//Recognizing valid handles is the difficult part of shift-reduce parsing.
+//http://www.cs.ecu.edu/karl/5220/spr16/Notes/Bottom-up/shiftreduce.html
+//https://www.geeksforgeeks.org/chomsky-hierarchy-in-theory-of-computation/
+//Regular grammar vs context free grammar (chomsky)
+//Chomsky Hierarchy
+// type 0-3
+// unrestricted - turing machine
+// context sensitive
+// context free
+// regular
+
+//Terminal vs nonterminal
+// Terminal - Any symbol that cannot be changed via a grammar rule.
+//    + cannot be changed 2 + 5 can be changed into E
+// Nonterminal - CaN be changed.
+//   E -> 2 + 5, E is non terminal
+// Production Rule - Left -> Right
+
+// Rule of least power.
+// A sentential form is any string derivable from the start symbol. Note that this includes the forms with non-terminals at intermediate steps as well.
+// A right-sentential form is a sentential form that occurs in a step of rightmost derivation (RMD).
+
+//Production rule is a rewrite rule 
+// Terminal symbols = alphabet
+//Ambiguous grammar - a grammar that only has leftmost derivations
+// leftmost vs rightmost derivation - expanding the left or right sides of the parse tree / syntax tree one Nonterminal at a time.
+// Any sentence can be produced via left-most or right-most derivation. 
+
+//A terminal symbol is one of an alphabet a..b..c...
+//A nonterminal is usually upper case, and is a grammar rule like A = a + b,
+//So this is where it gets confusing. Nonterminals can include other nonterminals. This is usually what confuses people.
+//A = A + b, or A = A + A
+//Differences between DFA and NDFA is that an NDFA can transition to multipel states, where a DFA can only transition to one state.
+// Multiple arrows lead away from a node with the same input.
+
+// FORMAL GRAMMAR - Finite set of terminal, Nonterminal, and a start symbol and production rules G = (N,T,S,P)
+// CONTEXT FREE GRAMMAR (type 2)- Any Nonterminal N can produce 0 or more strings of T, N, or e (empty). Basically everything within S
+// CONTEXT SENSITIVE GRAMMAR (type 1)- The left hand side of a production can have more than one Nonterminal symbol and produce any terminal or nonterminal symbols as long as the production is not empty.
+//Type 0 = turing machine - there is no grammar.
+// SENTENCE - is a sentential form consisting only of terminals. Just terminals.
+//LEFTMOST OR RIGHTMOST DERIVATION is expanding parse tree IN ORDER OF LEFT TO RIGHT OR RIGHT TO LEFT, ONE nonterminal at a time.
+//     Given 
+//        A
+//      / | \
+//     A  |   A
+//     |  | / | \
+//     |  | A | A
+//     |  | | | |
+//     a  + b - c
+//    Leftmost derivation LMD = 
+//     A -> A + A 
+//     -> a + A
+//     -> a + A - A
+//     -> a + b - A
+//     -> a + b - c
+//    Rightmost derivation RMD = 
+//     A -> A + A
+//     -> A + A - A
+//     -> A + A - c
+//     -> A + b - c
+//     -> a + b - c
+
+
 class GrammarTest {
 public:
   void test() {
-
     //CSGrammarExp xp_namespace(std::vector<CSTokenType>({ LT::Namespace, LT::Identifier, LT::Block }), CSContext::Namespace);
     //xp_namespace.contexts().push_back(CSContext::Global);
     //xp_namespace.contexts().push_back(CSContext::Namespace);
@@ -1387,34 +1619,6 @@ public:
 
       std::map<string_t, G_G> grammars;
 
-      //Recursive Descent (LL) parsers are easy to understand and write
-      //LR requires grammar and is apparently faster.  It has a single lookahead terminal to determine grammatical structure.
-      //We're not following a formal Backus Naur system.  Just make it work ok.
-
-      //Dynamic programming is eliminating recursion by storing recursion results in variables and using a loop instead.
-      //LR avoids recursion by dynamic programming, thus eliminates time complexity of an LL parser.
-      //shift-reduce - an efficient table-driven method of creating a "parse tree"
-      //parse-tree
-      // a = 3;
-      // term assign 4 delim
-      // reduce to
-      // variable_assignment
-      //https://web.archive.org/web/20160305041504/http://dragonbook.stanford.edu/lecture-notes/Stanford-CS143/08-Bottom-Up-Parsing.pdf
-      "Shift-reduce parsing is the most commonly used and the most powerful of the bottom-up techniques"
-      Shift = (push next token from input on stack, advance input)
-      Reduce = (pop right-hand side of production off stack, push left-hand side, no change in input)   `
-      Each grammar is a replace/rewrite system of some kind.
-      This is actualy really easy to create either way, the grammars are just going to be hard.
-      You must validate a reduction, because you can reduce to a dead end.
-      An LR parser uses two tables:
-      1.The action table Action[s,a] tells the parser what to do when the state on top of the stack is s and terminal a is the next input token.
-      The possible actions are to shift a state onto the stack, to reduce the handle on top of the stack, to accept the input, or to report an error.
-      2.The goto table Goto[s,X] indicates the new state to place on top of the stack after a reduction of the nonterminal X while state s is on top of the stack.
-
-      LL is recursive descent and less powerful than LALR.  LR will allow us to show multiple errors and such.
-
-      if there is an error, clean the  stack, then you can process stuff after an error
-
       CSRegEx
 
       //////////////////////////////////////////////////////////////////////////
@@ -1543,7 +1747,7 @@ public:
             pump grammar errors
       */
 
-      /*
+    /*
       for all lexed tokens
         for all grammars, match a grammar.
           WHEN NO grammar matches.
@@ -1552,14 +1756,7 @@ public:
               expected '' (expected { } after class)
               error: unexpected '..'
       */
-
   }
 };
 
-
-
-
-
-
-
-}//ns BR2
+}  // namespace BR2

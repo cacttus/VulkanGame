@@ -22,6 +22,7 @@
 #include "../world/PhysicsWorld.h"
 #include "../bottle/BottleScript.h"
 #include "../base/LuaScript.h"
+#include "../world/CSharpScript.h"
 
 #include <signal.h>
 #include <chrono>
@@ -56,10 +57,11 @@ public:
   void loadAppPackage(const std::vector<string_t>& args);
   void runUnitTests(std::vector<std::function<bool()>>);
   void loadDebugPackage();
+  void testLUAScripts();
+  void testCSharpScripts();
+  void testCreateWindows();
 };
-
 void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
-  //Nix main()
   SDL_SetMainReady();
 
   //The Init isn't needed, but it is if we want to print the video diagnostics
@@ -80,6 +82,91 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
   }
   Gu::setGraphicsApi(_pGraphicsApi);
 
+ // testLUAScripts();
+
+  testCSharpScripts();
+
+  testCreateWindows();
+
+  BRLogInfo("Apprunner complete.");
+}
+void AppRunner_Internal::testCreateWindows(){
+    //** Editor.lua
+  
+    std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window",100,100,
+                                                                                                            Gu::getConfig()->getDefaultScreenWidth(),
+                                                                                                            Gu::getConfig()->getDefaultScreenHeight(),
+                                                                                                            0,
+                                                                                                            Gu::getConfig()->getStartFullscreen(),
+                                                                                                            true,
+                                                                                                            Gu::getConfig()->getForceAspectRatio(),
+                                                                                                            nullptr));  //Just avoid title
+  
+    initNet();
+  // 
+  //   BRLogInfo("Creating Child Window ");
+  //   std::shared_ptr<GraphicsWindow> child_win = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Window 2", 300, 600, false, true, false, mainwindow));  //Just avoid title
+  // 
+    BRLogInfo("Creating Scene");
+    std::shared_ptr<Scene> pscene = Scene::create();
+    mainwindow->setScene(pscene);
+  
+    //**TODO: Multiple windows / scene
+    //   child_win->setScene(pscene);
+    //**TODO: Multiple windows / scene
+  
+    //The game specific script
+    pscene->addComponent(std::make_shared<LuaScript>());
+    //pscene->addComponent(std::make_shared<BottleScript>());
+}
+void AppRunner_Internal::testCSharpScripts() {
+  std::string code = "\n\
+  /* Test Comment */\n \
+  /* \n \
+  Test Multiline Comment\n \
+  */\n \
+  // Test Single Line Comment\n \
+  using System.IO;\n \
+  \n \
+  namespace MyGame \n \
+  {\n \
+    class vec3 \n \
+    {\n \
+      float x, y, z;\n \
+      public vec3 operator+(vec3 rhs)\n \
+      {\n \
+        this.x = rhs.x + this.x;\n \
+        this.y = rhs.y + this.y;\n \
+        this.z = rhs.z + this.z;\n \
+        return this;\n \
+      }\n \
+    }\n \
+    class MyClass \n \
+    {\n \
+      public void OnStart()\n \
+      {\n \
+        String myStr = \"Test String\";\n \
+        int myInt = 80085;\n \
+        Console.WriteLine(String.Format(\"MyStr={0}, MyInt={1}\"),myStr,myInt);\n \
+        if(true)\n \
+        {\n \
+          Console.WriteLine(\"If then block - true!\");\n \
+        }\n \
+        else\n \
+        {\n \
+          Console.WriteLine(\"If then block - else - should not hit!.\");\n \
+        }\n \
+      } \\ Test Comment on function brace\n \
+      public void OnUpdate(){}\n \
+      public void OnExit(){}\n \
+    }\n \
+  }\n \
+  ";
+  BRLogInfo("Testing CSharp Script");
+  //std::shared_ptr<CSharpScript> s = CSharpScript::compile(code);
+  CSharpScript::lexTest(code);
+}
+void AppRunner_Internal::testLUAScripts() {
   // Run Tests
   std::shared_ptr<LuaScript> math_test = std::make_shared<LuaScript>();
   math_test->compile(FileSystem::combinePath(Gu::getPackage()->getScriptsFolder(), "/test_math.lua"));
@@ -87,35 +174,6 @@ void AppRunner_Internal::initSDLAndCreateGraphicsApi() {
 
   std::shared_ptr<LuaScript> editor = std::make_shared<LuaScript>();
   editor->compile(FileSystem::combinePath(Gu::getPackage()->getAssetsFolder(), "/Editor.lua"));
-
-  //** Editor.lua
-  //
-  //   std::shared_ptr<GraphicsWindow> mainwindow = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Main Window",
-  //                                                                                                           Gu::getConfig()->getDefaultScreenWidth(),
-  //                                                                                                           Gu::getConfig()->getDefaultScreenHeight(),
-  //                                                                                                           Gu::getConfig()->getStartFullscreen(),
-  //                                                                                                           true,
-  //                                                                                                           Gu::getConfig()->getForceAspectRatio(),
-  //                                                                                                           nullptr));  //Just avoid title
-  //
-  //   initNet();
-  //
-  //   BRLogInfo("Creating Child Window ");
-  //   std::shared_ptr<GraphicsWindow> child_win = _pGraphicsApi->createWindow(GraphicsWindowCreateParameters(Stz "Window 2", 300, 600, false, true, false, mainwindow));  //Just avoid title
-  //
-  //   BRLogInfo("Creating Scene");
-  //   std::shared_ptr<Scene> pscene = Scene::create();
-  //   mainwindow->setScene(pscene);
-  //
-  //   //**TODO: Multiple windows / scene
-  //   //   child_win->setScene(pscene);
-  //   //**TODO: Multiple windows / scene
-  //
-  //   //The game specific script
-  //   pscene->addComponent(std::make_shared<LuaScript>());
-  //   //pscene->addComponent(std::make_shared<BottleScript>());
-
-  BRLogInfo("Apprunner complete.");
 }
 void AppRunner_Internal::doShowError(const string_t& err, const Exception* const e) const {
   if (e != nullptr) {

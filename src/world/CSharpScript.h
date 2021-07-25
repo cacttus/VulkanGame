@@ -11,7 +11,7 @@
 
 namespace BR2 {
 class CSToken;
-
+class CSharpScript_Internal;
 class CSharpFile : public VirtualMemory {
 public:
   string_t _name;
@@ -29,13 +29,12 @@ private:
 *  @class CSharpScript
 *  @brief A minimally functional C Sharp script.
 */
-class CSharpScript_Internal;
 class CSharpScript : public Script {
 public:
   CSharpScript();
   virtual ~CSharpScript() override;
   
-  static std::vector<CSToken*> lexTest(string_t str);
+  static std::vector<CSToken*> lexTest(const string_t& str);
   static string_t tokensToString(std::vector<CSToken*> toks);
 
   static void initScriptSystem();

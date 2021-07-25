@@ -45,7 +45,6 @@ void GameUi::constructUI(std::shared_ptr<BottleScript> r) {
 
     std::shared_ptr<UiLabelSkin> debugTextSkin = UiLabelSkin::create(r->getScene()->getUiScreen(), Gu::getPackage()->makeAssetPath("fonts", DEBUG_FONT), "20px");
 
-
     screen->getTex()->loadImages();
     GameUi::createToolbar();
     GameUi::createCursor();
