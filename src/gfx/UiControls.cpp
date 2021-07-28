@@ -3280,7 +3280,7 @@ void UiScreen::drawForward(RenderParams& rp, Box2f& b2ClipRect) {
   //Zero useless params.
   getTex()->bind(TextureChannel::e::Channel0, rp.getShader());
   rp.setMesh(_pint->_pMesh);
-  rp.setDrawMode(DrawMode::Point);
+  rp.setPrimitiveType(PrimitiveType::Points);
   rp.draw();
   //*Debug
   UiElement::drawDebug(rp, getThis<UiScreen>());

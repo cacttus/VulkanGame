@@ -28,7 +28,7 @@ public:
   // void clearTextures() { _setTextures.clear(); }
   int32_t getCount();
   void setCount(int32_t i);
-  void setDrawMode(DrawMode e);
+  void setPrimitiveType(PrimitiveType e);
   std::shared_ptr<ShaderBase> getShader();
   void setShader(std::shared_ptr<ShaderBase> sb);
   void setMesh(std::shared_ptr<MeshNode> x);

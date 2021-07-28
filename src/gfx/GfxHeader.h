@@ -278,7 +278,10 @@ typedef enum { Fixed,
 enum class DrawMode { Point,
                       Line,
                       Solid };
-
+enum class PrimitiveType { Points,
+                      Lines,
+                      LineStrip,
+                      Triangles };
 //FWDDCL
 class ShaderSubProgram;
 class CameraNode;

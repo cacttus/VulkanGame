@@ -116,8 +116,8 @@ void AppRunner_Internal::testCreateWindows(){
     //**TODO: Multiple windows / scene
   
     //The game specific script
-    pscene->addComponent(std::make_shared<LuaScript>());
-    //pscene->addComponent(std::make_shared<BottleScript>());
+    ///pscene->addComponent(std::make_shared<LuaScript>());
+    pscene->addComponent(std::make_shared<BottleScript>());
 }
 void AppRunner_Internal::testCSharpScripts() {
   std::string code = "\n\

@@ -440,9 +440,9 @@ void Scene::drawTransparent(RenderParams& rp) {
   Perf::popPerf();
 }
 void Scene::drawUI(RenderParams& rp) {
-  BRLogTODO("Commented Out GUI Routines");
-  //_pUiScreen->update(getInput());
-  //_pUiScreen->drawForward();
+//  BRLogTODO("Commented Out GUI Routines");
+  _pUiScreen->update(getInput());
+  _pUiScreen->drawForward();
 }
 void Scene::draw2d() {
   //  Gu::getGui()->debugForceLayoutChanged();
@@ -451,7 +451,7 @@ void Scene::draw2d() {
 void Scene::setDebugMode() {
   //set some debug vars to make ikte easier
   _bShowDebugText = true;
-  _bDrawDebug = true;
+  _bDrawDebug = false;
   if (Gu::isDebug()) {
     _bShowDebugText = true;
     _bDrawDebug = false;

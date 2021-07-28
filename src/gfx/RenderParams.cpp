@@ -14,7 +14,7 @@ class RenderParams_Internal {
 public:
   std::shared_ptr<ShaderBase> _pShader = nullptr;
   int32_t _iCount = -1;  //Number of indexes
-  GLenum _eDrawMode = GL_TRIANGLES;
+  GLenum _ePrimitiveType = GL_TRIANGLES;
   //Only one of these must be set.
   std::shared_ptr<MeshNode> _pMeshNode = nullptr;
   std::shared_ptr<VaoDataGeneric> _pVaoDataGeneric = nullptr;
@@ -35,15 +35,18 @@ std::shared_ptr<CameraNode> RenderParams::getCamera() { return _pint->_pCamera; 
 void RenderParams::setCamera(std::shared_ptr<CameraNode> c) { _pint->_pCamera = c; }
 int32_t RenderParams::getCount() { return _pint->_iCount; }
 void RenderParams::setCount(int32_t i) { _pint->_iCount = i; }
-void RenderParams::setDrawMode(DrawMode e) {
-  if (e == DrawMode::Point) {
-    _pint->_eDrawMode = GL_POINT;
+void RenderParams::setPrimitiveType(PrimitiveType e) {
+  if (e == PrimitiveType::Points) {
+    _pint->_ePrimitiveType = GL_POINTS;
   }
-  else if (e == DrawMode::Line) {
-    _pint->_eDrawMode = GL_LINE;
+  else if (e == PrimitiveType::Lines) {
+    _pint->_ePrimitiveType = GL_LINES;
   }
-  else if (e == DrawMode::Solid) {
-    _pint->_eDrawMode = GL_FILL;
+  else if (e == PrimitiveType::LineStrip) {
+    _pint->_ePrimitiveType = GL_LINE_STRIP;
+  }
+  else if (e == PrimitiveType::Triangles) {
+    _pint->_ePrimitiveType = GL_TRIANGLES;
   }
   else{
     BRThrowNotImplementedException();
@@ -104,13 +107,13 @@ void RenderParams::draw() {
 
   //Draw via shader.
   if (_pint->_pMeshNode != nullptr) {
-    _pint->_pShader->draw(_pint->_pMeshNode, _pint->_iCount, _pint->_eDrawMode);
+    _pint->_pShader->draw(_pint->_pMeshNode, _pint->_iCount, _pint->_ePrimitiveType);
   }
   else if (_pint->_pVaoDataGeneric != nullptr) {
-    _pint->_pShader->draw(_pint->_pVaoDataGeneric, _pint->_iCount, _pint->_eDrawMode);
+    _pint->_pShader->draw(_pint->_pVaoDataGeneric, _pint->_iCount, _pint->_ePrimitiveType);
   }
   else if (_pint->_pVaoShader != nullptr) {
-    _pint->_pShader->draw(_pint->_pVaoShader, _pint->_iCount, _pint->_eDrawMode);
+    _pint->_pShader->draw(_pint->_pVaoShader, _pint->_iCount, _pint->_ePrimitiveType);
   }
   else {
     BRLogWarnCycle("Drawable Item was not set on RenderParams.");
