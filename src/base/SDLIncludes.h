@@ -16,7 +16,7 @@
 #elif defined(BR2_OS_LINUX)
 #include <SDL.h>
 #include <SDL_syswm.h>
-#include <SDL_net.h>
+#include <SDL2/SDL_net.h>
 #else
   OS_NOT_IMPLEMENTED
 #endif

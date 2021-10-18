@@ -406,6 +406,7 @@ std::shared_ptr<ShaderBase> ShaderMaker::makeProgram(std::vector<std::shared_ptr
   getContext()->glUseProgram(pProgram->getGlId());
   GLenum ex = glGetError();
   if (ex != GL_NO_ERROR) {
+    //It's possible there's no errors, yet there are a TON of warnings. We need to handle this.
     string_t str = "";
 
     for (size_t i = 0; i < _vecGeneralErrors.size(); ++i) {
