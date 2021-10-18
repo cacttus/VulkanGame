@@ -5,6 +5,8 @@
 # In VSCode
 #   /usr/bin/cmake --build /home/mario/git/VulkanGame/build --config Debug --target all -- -j
 #
+message("CMAKE_VERSION " ${CMAKE_VERSION})
+
 cmake_minimum_required(VERSION 3.0.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
