@@ -15,6 +15,8 @@ A demo game engine which uses the SDL2 Vulkan API.
 * cmake
 * libsdl2-dev
 * libsdl2-net-dev
+* ** NOTE: For some reason libsdl2-net isn't configured on my system. Installing libsdl-net fixed that problem.
+* libsdl-net1.2-dev
 * libvulkan-dev
 * libopengl-dev
 * liblua5.3-dev
