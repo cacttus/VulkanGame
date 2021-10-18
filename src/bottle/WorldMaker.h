@@ -20,8 +20,8 @@ public:
   virtual ~WorldMaker() override;
   void initialize();
 
-  FORCE_INLINE size_t getNumLairSpecs() { return _mapLairSpecs.size(); }
-  FORCE_INLINE  std::map<Hash32, LairSpec*>& getLairSpecs() { return _mapLairSpecs; }
+  BR2_FORCE_INLINE size_t getNumLairSpecs() { return _mapLairSpecs.size(); }
+  BR2_FORCE_INLINE  std::map<Hash32, LairSpec*>& getLairSpecs() { return _mapLairSpecs; }
 
   LairSpec* getCurrentLair() { return _pCurrentLair; }
   void selectRandomLair();
@@ -52,6 +52,6 @@ private:
   string_t getWorldGridsDir(string_t strGameName, string_t strWorldName);
   std::shared_ptr<WorldGrid> loadGridFromFile(string_t strFileName);
 };
-}//ns game
+}//ns br2
 
 #endif

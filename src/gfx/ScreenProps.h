@@ -50,7 +50,7 @@ typedef enum {
   screen_res_enum_limit
 }t_screen_resolution;
 
-}//ns game
+}//ns br2
 
 
 

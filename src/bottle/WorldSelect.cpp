@@ -176,4 +176,4 @@ void WorldSelect::drawText() {
   //    }
   //}
 }
-}//ns Game
+}//ns br2

@@ -26,7 +26,7 @@ private:
   static SDL_Surface* createSurfaceFromImage(const std::shared_ptr<Img32> bi);
 };
 
-}//ns Game
+}//ns br2
 
 
 

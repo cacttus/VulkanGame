@@ -44,7 +44,7 @@ private:
   //void checkToGrowOrShrink();
 };
 
-}//ns Game
+}//ns br2
 
 
 

@@ -61,4 +61,4 @@ TextDataFile::~TextDataFile() {
 
 }
 
-}//ns game
+}//ns br2

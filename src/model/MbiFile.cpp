@@ -218,4 +218,4 @@ void MbiFile::save(string_t file) {
 
 }
 
-}//ns Game
+}//ns br2

@@ -66,7 +66,7 @@ protected:
   void draw(RenderParams& rp, bool bTransparent);
 };
 
-}//ns Game
+}//ns br2
 
 
 

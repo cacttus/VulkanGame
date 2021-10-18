@@ -45,4 +45,4 @@ uint32_t Crc32::calculateHash(uint32_t* table, uint32_t seed, const char* buffer
 
 
 
-}//ns Game
+}//ns br2

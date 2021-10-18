@@ -34,7 +34,7 @@ private:
   void updateAwarenessSpheroidAxis(float& fAwareness, float minR, float maxR, float increment);
 };
 
-}//ns Game
+}//ns br2
 
 
 

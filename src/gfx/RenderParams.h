@@ -43,7 +43,7 @@ private:
 };
 
 
-}//ns Game
+}//ns br2
 
 
 

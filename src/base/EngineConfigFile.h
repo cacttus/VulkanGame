@@ -25,7 +25,7 @@
 //  std::shared_ptr<EngineConfig> _pConfig = nullptr;
 //};
 //
-//}//ns Game
+//}//ns br2
 //
 //
 //

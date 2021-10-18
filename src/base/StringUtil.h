@@ -21,6 +21,7 @@ public:
   StringUtil();
   virtual ~StringUtil() DOES_NOT_OVERRIDE;
   static int32_t compare(const string_t& a, const  string_t& b);
+  static int32_t compare(const wstring_t& a, const  wstring_t& b);
   static bool charIsLetterOrNumber(char c);
   static bool isEmpty(const string_t& str);
   static bool isNotEmpty(const string_t& str);
@@ -46,6 +47,7 @@ public:
   static string_t empty();
   static string_t emptyString();
   static bool equals(const string_t& a, const string_t& b);
+  static bool equals(const wstring_t& a, const wstring_t& b);
   static bool doesNotEqual(const string_t& a, const string_t& b);
   static bool equalsi(const string_t& a, const string_t& b);
   static string_t replaceAll(const string_t& str, char charToRemove, char charToAdd);
@@ -69,7 +71,8 @@ public:
   static string_t appendLine(string_t& __inout_ str, const string_t& toAppend);
   static string_t generate();
   static bool contains(const string_t& a, const string_t& b);
-  static string_t format(const string_t& fmt, ...);
+  static bool contains(const wstring_t& a, const wstring_t& b);
+  static string_t format(const string_t fmt, ...);
   static string_t formatVa(const string_t& fmt, va_list args);
   static string_t join(const string_t& delim, std::vector<string_t>& strings);
   static string_t tabify(const string_t& str_to_tabify, int number_of_tabs, bool use_spaces = true, bool tab_newlines = true, LineBreak lineBreak = LineBreak::DOS);

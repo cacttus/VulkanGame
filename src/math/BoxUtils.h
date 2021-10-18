@@ -18,6 +18,6 @@ public:
     static int32_t cubeSideToGlCubeMapEnum(BoxSide::e side);
 };
 
-}//ns Game
+}//ns br2
 
 #endif

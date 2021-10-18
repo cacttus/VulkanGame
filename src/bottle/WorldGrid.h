@@ -140,6 +140,6 @@ private:
   void iterateCells(std::function<void(WorldCell*)> func, BlockNode* parent = nullptr);
   void beginGenAsync(std::function<void()> func);
 };
-}//ns Game
+}//ns br2
 
 #endif

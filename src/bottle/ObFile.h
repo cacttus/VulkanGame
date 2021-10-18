@@ -82,7 +82,7 @@ protected:
 
 };
 
-}//ns Game
+}//ns br2
 
 
 

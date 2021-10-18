@@ -24,7 +24,7 @@ public:
   static std::shared_ptr<Scene> getScene(std::shared_ptr<SceneNode> lm);
 };
 
-}//ns Game
+}//ns br2
 
 
 

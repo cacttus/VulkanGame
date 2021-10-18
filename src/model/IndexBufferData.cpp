@@ -34,4 +34,4 @@ void IndexBufferData::appendToEnd(IndexBufferData* fb) {
 void* IndexBufferData::ptr() {
   return _pIndexes->ptr();
 }
-}//ns game
+}//ns br2

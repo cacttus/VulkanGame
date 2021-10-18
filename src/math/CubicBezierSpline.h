@@ -41,7 +41,7 @@ private:
   void normalizeControlPoints(std::vector<vec3>& __inout_ points, float length = 1);
 };
 
-}//ns Game
+}//ns br2
 
 
 

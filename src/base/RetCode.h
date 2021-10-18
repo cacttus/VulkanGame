@@ -189,7 +189,7 @@ typedef enum {
 }RetCode;
 
 
-}//ns game
+}//ns br2
 
 
 

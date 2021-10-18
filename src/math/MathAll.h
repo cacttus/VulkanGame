@@ -39,11 +39,11 @@ Vec3x<Tx> Vec3x<Tx>::operator*(const Mat3x<Tx>& m) {
   return ret;
 }
 template <class Tx>
-FORCE_INLINE bool Box3x<Tx>::sphereIntersect(Sphere3f* s) {
+BR2_FORCE_INLINE bool Box3x<Tx>::sphereIntersect(Sphere3f* s) {
   return sphereIntersect(&(s->o), s->r);
 }
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx> Mat4x<Tx>::minor(int r, int c) {
+BR2_FORCE_INLINE Mat3x<Tx> Mat4x<Tx>::minor(int r, int c) {
   //Returns the minor at the specified row and column.
   Mat3x<Tx> m;
   m.setIdentity();
@@ -61,26 +61,26 @@ FORCE_INLINE Mat3x<Tx> Mat4x<Tx>::minor(int r, int c) {
   return m;
 }
 template <typename Tx>
-FORCE_INLINE Tx Mat4x<Tx>::cofactor(int r, int c) {
+BR2_FORCE_INLINE Tx Mat4x<Tx>::cofactor(int r, int c) {
   //Returns the cofactor of this matrix at the specified row and column.
   // I.E. The determinant of the minor.
   return (Tx)pow(-1.00f, (Tx)r + (Tx)c) * minor(r, c).det();  // ** May be incorrect
 }
 
 template < typename Tx >
-FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(Vec3x<Tx> v) {
+BR2_FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(Vec3x<Tx> v) {
   return Quaternion<Tx>(x * v.x, y * v.y, z * v.z, w);
 }
 template < typename Tx >
-FORCE_INLINE Vec3x<Tx> Quaternion<Tx>::vectorPart() {
+BR2_FORCE_INLINE Vec3x<Tx> Quaternion<Tx>::vectorPart() {
   return Vec3x<Tx>(x, y, z);
 }
 template < typename Tx >
-FORCE_INLINE Vec3x<Tx> Quaternion<Tx>::rotatePoint(Vec3x<Tx>& in) {
+BR2_FORCE_INLINE Vec3x<Tx> Quaternion<Tx>::rotatePoint(Vec3x<Tx>& in) {
   return ((inverse() * in) * (*this)).vectorPart();
 }
 template < typename Tx >
-FORCE_INLINE void Quaternion<Tx>::getAxisAngle(Vec4x<Tx>& v) {
+BR2_FORCE_INLINE void Quaternion<Tx>::getAxisAngle(Vec4x<Tx>& v) {
   //http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/
 
   if (w == (Tx)1.0) {
@@ -99,7 +99,7 @@ FORCE_INLINE void Quaternion<Tx>::getAxisAngle(Vec4x<Tx>& v) {
   v.z = z * srw2_1;
 }
 template < typename Tx >
-FORCE_INLINE Mat4x<Tx> Quaternion<Tx>::toMat4() {
+BR2_FORCE_INLINE Mat4x<Tx> Quaternion<Tx>::toMat4() {
   //Convert quaternion into to mat4
   Mat4x<Tx> m;
   m._m11 = 1 - 2 * y * y - 2 * z * z;
@@ -122,7 +122,7 @@ FORCE_INLINE Mat4x<Tx> Quaternion<Tx>::toMat4() {
   return m;
 }
 template < typename Tx >
-FORCE_INLINE Mat3x<Tx> Quaternion<Tx>::toMat3() {
+BR2_FORCE_INLINE Mat3x<Tx> Quaternion<Tx>::toMat3() {
   //Convert Quaternion to mat3
   Mat3x<Tx> m;
   m._m11 = 1 - 2 * y * y - 2 * z * z;
@@ -138,7 +138,7 @@ FORCE_INLINE Mat3x<Tx> Quaternion<Tx>::toMat3() {
   return m;
 }
 template < typename Tx >
-FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getRotationRad(Tx a, Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getRotationRad(Tx a, Tx x, Tx y, Tx z) {
   // - Reference: The openGL reference.http://pyopengl.sourceforge.net/documentation/manual/reference-GL.html
   Mat3x<Tx> Temp;
 
@@ -169,19 +169,19 @@ FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getRotationRad(Tx a, Tx x, Tx y, Tx z) {
   return Temp;
 }
 template < typename Tx >
-FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getRotationRad(Tx a, const Vec3x<Tx>& v) {
+BR2_FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getRotationRad(Tx a, const Vec3x<Tx>& v) {
   return getRotationRad(a, v.x, v.y, v.z);
 }
 template < typename Tx >
-FORCE_INLINE void Mat3x<Tx>::rotateRad(Tx a, Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE void Mat3x<Tx>::rotateRad(Tx a, Tx x, Tx y, Tx z) {
   *this *= getRotationRad(a, x, y, z);
 }
 template < typename Tx >
-FORCE_INLINE void Mat3x<Tx>::rotateRad(Tx a, Vec3x<Tx>& vec) {
+BR2_FORCE_INLINE void Mat3x<Tx>::rotateRad(Tx a, Vec3x<Tx>& vec) {
   *this *= getRotationRad(a, vec.x, vec.y, vec.z);
 }
 template < typename Tx >
-FORCE_INLINE Mat4x<Tx> Mat3x<Tx>::getMat4() {
+BR2_FORCE_INLINE Mat4x<Tx> Mat3x<Tx>::getMat4() {
   Mat4x<Tx> mat;
   mat._m11 = _m11;
   mat._m12 = _m12;
@@ -196,7 +196,7 @@ FORCE_INLINE Mat4x<Tx> Mat3x<Tx>::getMat4() {
   return mat;
 }
 template < typename Tx >
-FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator=(const Mat4x<Tx>& rhs) {
+BR2_FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator=(const Mat4x<Tx>& rhs) {
   _m11 = rhs._m11;
   _m12 = rhs._m12;
   _m13 = rhs._m13;
@@ -212,7 +212,7 @@ FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator=(const Mat4x<Tx>& rhs) {
   return *this;
 }
 template < typename Tx >
-FORCE_INLINE Vec3x<Tx> Mat3x<Tx>::operator*(const Vec3x<Tx>& v) {
+BR2_FORCE_INLINE Vec3x<Tx> Mat3x<Tx>::operator*(const Vec3x<Tx>& v) {
   Vec3x<Tx> ret = {
       v.x * _m11 + v.y * _m12 + v.z * _m13,
       v.x * _m21 + v.y * _m22 + v.z * _m23,
@@ -275,7 +275,7 @@ std::string Vec4x<Tx>::toString(int precision) const {
   return out.str();
 }
 template <typename Tx>
-FORCE_INLINE std::string Mat3x<Tx>::toString(int precision) const {
+BR2_FORCE_INLINE std::string Mat3x<Tx>::toString(int precision) const {
   std::ostringstream out;
   if (precision == -1) {
     out.precision(std::numeric_limits<float>::max_digits10);
@@ -289,7 +289,7 @@ FORCE_INLINE std::string Mat3x<Tx>::toString(int precision) const {
   return out.str();
 }
 template <typename Tx>
-FORCE_INLINE std::string Mat4x<Tx>::toString(int precision) const {
+BR2_FORCE_INLINE std::string Mat4x<Tx>::toString(int precision) const {
   std::ostringstream out;
   if (precision == -1) {
     out.precision(std::numeric_limits<float>::max_digits10);

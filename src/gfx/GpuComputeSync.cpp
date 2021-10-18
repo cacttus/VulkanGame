@@ -68,4 +68,4 @@ bool GpuComputeSync::isComputeComplete() {
 //+-- CTOR/DTOR --+
 
 
-}//ns game
+}//ns br2

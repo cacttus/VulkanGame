@@ -731,4 +731,4 @@ void WorldEditor::placeObject(std::shared_ptr<ModelSpec> ms) {
     //probably show a message stating that the player can't place right now because he'as already placing
   }
 }
-}//ns Game
+}//ns br2

@@ -17,7 +17,7 @@ namespace BR2 {
 class Alg {
 public:
 // legendary 1/sqrt(x), from quake 3 et al
-FORCE_INLINE static float rsqrt( float number )
+BR2_FORCE_INLINE static float rsqrt( float number )
 {
     long i;
     float x2, y;
@@ -37,15 +37,15 @@ FORCE_INLINE static float rsqrt( float number )
 // forward modular addition keeping x+n within [0,y] (x+n)%y
 // reverse modular addition keeping x-n within [0,y] (yn+x-n)%y
 
-FORCE_INLINE static bool isPow2(int32_t x)
+BR2_FORCE_INLINE static bool isPow2(int32_t x)
 {
     return BitHacks::bitcount(x)==1;
 }
-FORCE_INLINE static bool isPow2(int64_t x)
+BR2_FORCE_INLINE static bool isPow2(int64_t x)
 {
     return BitHacks::bitcount(x)==1;
 }
-FORCE_INLINE void linear_interpolate(float a, 
+BR2_FORCE_INLINE void linear_interpolate(float a, 
                                      float b, 
                                      float& __out_ avg,
                                      float pct = 0.5f)
@@ -53,7 +53,7 @@ FORCE_INLINE void linear_interpolate(float a,
     avg =  a + ( b -  a)*pct;
 }
 // cosine interpolate between two values.
-FORCE_INLINE static float cerp_1D(float a, float b, float x){
+BR2_FORCE_INLINE static float cerp_1D(float a, float b, float x){
     float ft = x * (float)M_PI;
     float f = (1.0f - cosf(ft)) * 0.5f;
     return  a*(1-f) + b*f;
@@ -61,7 +61,7 @@ FORCE_INLINE static float cerp_1D(float a, float b, float x){
 #define cosine_interpolate cerp_1D
 
 // - Linear interpolate between two values
-FORCE_INLINE static float lerp_1D(float a, float b, float t)
+BR2_FORCE_INLINE static float lerp_1D(float a, float b, float t)
 {
     return a+t*b;
 }
@@ -84,7 +84,7 @@ FORCE_INLINE static float lerp_1D(float a, float b, float t)
 *
 *    NOTE* You must make sure that A is the start of the ray.
 */
-static FORCE_INLINE float pointOnLine_t( const vec3& a, const vec3& b, const vec3& p ) {
+static BR2_FORCE_INLINE float pointOnLine_t( const vec3& a, const vec3& b, const vec3& p ) {
     vec3 AP = p - a;    
     vec3 AB = b - a;    
     float ab2 = AB.x*AB.x + AB.y*AB.y + AB.z*AB.z;   
@@ -103,7 +103,7 @@ static FORCE_INLINE float pointOnLine_t( const vec3& a, const vec3& b, const vec
 *        Note: This had a bug as stupidly I didn't include the z component.
 *               works now 1.19.14.
 */
-static FORCE_INLINE float pointOnRay_t( const vec3& a, const vec3& p ) {
+static BR2_FORCE_INLINE float pointOnRay_t( const vec3& a, const vec3& p ) {
     vec3 AP = p - a;    
     vec3 AB = a*-1.0f;    
     float ab2 = AB.x*AB.x + AB.y*AB.y + AB.z*AB.z;   
@@ -112,7 +112,7 @@ static FORCE_INLINE float pointOnRay_t( const vec3& a, const vec3& p ) {
     return t;
 }
 //Static version of above function
-//static FORCE_INLINE float pointOnRay_tSTA( vec3& a, vec3& p ) {
+//static BR2_FORCE_INLINE float pointOnRay_tSTA( vec3& a, vec3& p ) {
 //    static vec3 AP = p - a;    
 //    static vec3 AB = a*-1.0f;    
 //    static float ab2 = AB.x*AB.x + AB.y*AB.y + AB.z*AB.z;   
@@ -142,7 +142,7 @@ static vec3 pointOnLine_SLOW( const vec3& a, const vec3& b, const vec3& p ) {
 *    ALSO NOTE: 
 *
 */
-FORCE_INLINE static vec3 ClosestPointOnAACubeFromPoint( vec3& p, Box3f& cc )
+BR2_FORCE_INLINE static vec3 ClosestPointOnAACubeFromPoint( vec3& p, Box3f& cc )
 {
     vec3 outPt;
     cc.closestPoint(p,outPt);
@@ -181,7 +181,7 @@ FORCE_INLINE static vec3 ClosestPointOnAACubeFromPoint( vec3& p, Box3f& cc )
     The higher dimension functions distribute well, but have a slight, almost unnoticable bias to stay above zero
 
 */
-static FORCE_INLINE int32_t mint(int32_t seed, int32_t off=0x9d2c5680)
+static BR2_FORCE_INLINE int32_t mint(int32_t seed, int32_t off=0x9d2c5680)
 {
      int32_t x;
      
@@ -196,7 +196,7 @@ static FORCE_INLINE int32_t mint(int32_t seed, int32_t off=0x9d2c5680)
 *    @fn mint2
 *    @brief Mersenne integer function 2 dimensions
 */
-static FORCE_INLINE int32_t mint2(int32_t x, int32_t y, int32_t off=0x9d2c5680)
+static BR2_FORCE_INLINE int32_t mint2(int32_t x, int32_t y, int32_t off=0x9d2c5680)
 {
     return mint(x,off) ^ mint(y,off);
 }
@@ -204,14 +204,14 @@ static FORCE_INLINE int32_t mint2(int32_t x, int32_t y, int32_t off=0x9d2c5680)
 *    @fn mint3
 *    @brief Mersenne integer function 3 dimensions
 */
-static FORCE_INLINE int32_t mint3(int32_t x, int32_t y, int32_t z, int32_t off=0x9d2c5680)
+static BR2_FORCE_INLINE int32_t mint3(int32_t x, int32_t y, int32_t z, int32_t off=0x9d2c5680)
 {
     return mint(x,off) ^ mint(y,off) ^ mint(z,off);
 }
 /*
 *    convert integer to floating point in the range of [-1,1]
 */
-static FORCE_INLINE float flotc11(int32_t ix)
+static BR2_FORCE_INLINE float flotc11(int32_t ix)
 {
     //0x007fffff is the fractional portion of a floating point.
     int32_t a = (ix & 0x007fffff) | 0x40000000;
@@ -220,7 +220,7 @@ static FORCE_INLINE float flotc11(int32_t ix)
 /*
 *    convert integer to floating point in the range of [0,1]
 */
-static FORCE_INLINE float flotc01(int32_t ix)
+static BR2_FORCE_INLINE float flotc01(int32_t ix)
 {
     //0x007fffff is the fractional portion of a floating point.
     int32_t a = (ix & 0x007fffff) | 0x3f800000;
@@ -231,11 +231,11 @@ static FORCE_INLINE float flotc01(int32_t ix)
 *    @brief Mersenne float function 1 dimension
 *    Return value between [-1,1]
 */
-static FORCE_INLINE float meft11(int32_t x, int32_t off=0x9d2c5680)
+static BR2_FORCE_INLINE float meft11(int32_t x, int32_t off=0x9d2c5680)
 {
     return flotc11(mint(x,off));
 }
-static FORCE_INLINE float meft01(int32_t x, int32_t off = 0x9d2c5680)
+static BR2_FORCE_INLINE float meft01(int32_t x, int32_t off = 0x9d2c5680)
 {
     return flotc01(mint(x, off));
 }
@@ -245,7 +245,7 @@ static FORCE_INLINE float meft01(int32_t x, int32_t off = 0x9d2c5680)
 *    Return value between [-1,1]
 */
 // - Mersenne float 2 param
-static FORCE_INLINE float meft2(int32_t x, int32_t y, int32_t off=0x9d2c5680)
+static BR2_FORCE_INLINE float meft2(int32_t x, int32_t y, int32_t off=0x9d2c5680)
 {
     return flotc11(mint2(x,y,off));
 }
@@ -254,12 +254,12 @@ static FORCE_INLINE float meft2(int32_t x, int32_t y, int32_t off=0x9d2c5680)
 *    @brief Mersenne float function 3 dimension
 *    Return value between [-1,1]
 */
-static FORCE_INLINE float meft3(int32_t x, int32_t y, int32_t z, int32_t off=0x9d2c5680)
+static BR2_FORCE_INLINE float meft3(int32_t x, int32_t y, int32_t z, int32_t off=0x9d2c5680)
 {
     return flotc11(mint3(x,y,z,off));
 }
 //Mean of a set of numbers.
-static FORCE_INLINE double meanf(std::vector<double>& ss)
+static BR2_FORCE_INLINE double meanf(std::vector<double>& ss)
 {
     double sum=0;
     for(size_t i=0; i<ss.size(); ++i)
@@ -267,7 +267,7 @@ static FORCE_INLINE double meanf(std::vector<double>& ss)
     return (double)(sum/(float)ss.size());
 }
 //Standard deviation of a set of numbers.
-static FORCE_INLINE double sdevf(std::vector<double>& vin)
+static BR2_FORCE_INLINE double sdevf(std::vector<double>& vin)
 {
     double mean = meanf(vin);
     double sum2=0;
@@ -281,7 +281,7 @@ static FORCE_INLINE double sdevf(std::vector<double>& vin)
     return (double)MathUtils::brSqrt((float)mean);
 }
 // - Sampled standard deviation
-static FORCE_INLINE double ssdevf(std::vector<double>& vin)
+static BR2_FORCE_INLINE double ssdevf(std::vector<double>& vin)
 {
     double mean = meanf(vin);
     double sum2=0;
@@ -300,7 +300,7 @@ static FORCE_INLINE double ssdevf(std::vector<double>& vin)
 *    @brief Given a normal vector in 3 dimensions this returns the tangent and binormal basis vectors
 *    The vectors point in the relative positive direction in the given LHS or RHS coordinate system.
 */
-static FORCE_INLINE void getNormalBasisZ(const vec3& __in_ normal, vec3& __out_ left, vec3& __out_ up)
+static BR2_FORCE_INLINE void getNormalBasisZ(const vec3& __in_ normal, vec3& __out_ left, vec3& __out_ up)
 {
     vec3 worldUp = vec3(0,1,0);
 #ifdef COORDINATE_SYSTEM_RHS
@@ -327,7 +327,7 @@ static FORCE_INLINE void getNormalBasisZ(const vec3& __in_ normal, vec3& __out_ 
 #endif
 
 }
-static FORCE_INLINE Vec3Basis getNormalBasisZ(const vec3& __in_ normal_z)
+static BR2_FORCE_INLINE Vec3Basis getNormalBasisZ(const vec3& __in_ normal_z)
 {
     Vec3Basis ret;
     ret._z = normal_z;
@@ -347,7 +347,7 @@ static FORCE_INLINE Vec3Basis getNormalBasisZ(const vec3& __in_ normal_z)
 *    @param out localMinimum - The returned local minimum value.
 *    @param out localMaximum - The returned local maximum value.
 */
-static FORCE_INLINE void getSolidVolumeProjectionBounds(
+static BR2_FORCE_INLINE void getSolidVolumeProjectionBounds(
     const vec3& __in_ viewNormal,
     const vec3& __in_ viewPos,
     const vec3* __in_ points,
@@ -426,7 +426,7 @@ static FORCE_INLINE void getSolidVolumeProjectionBounds(
     *vmax = fMaxV;
 }
 //See above comment
-static FORCE_INLINE void getSolidVolumeProjectionBounds(
+static BR2_FORCE_INLINE void getSolidVolumeProjectionBounds(
     const vec3& __in_ viewNormal,
     const vec3& __in_ viewPos,
     const vec3* __in_ points,
@@ -566,7 +566,7 @@ static FORCE_INLINE void getSolidVolumeProjectionBounds(
 //    return v;
 //}
 
-FORCE_INLINE STATIC float calcCubeDiagonal(float cubeSide)
+BR2_FORCE_INLINE STATIC float calcCubeDiagonal(float cubeSide)
 {
     //  sqrt( 3(x^2) )
     return MathUtils::brSqrt( (cubeSide*cubeSide)*3 );
@@ -574,7 +574,7 @@ FORCE_INLINE STATIC float calcCubeDiagonal(float cubeSide)
 
 };
 
-}//ns game
+}//ns br2
 
 
 

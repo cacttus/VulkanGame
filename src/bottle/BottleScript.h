@@ -90,7 +90,7 @@ private:
   void constructWorld();
 };
 
-}//ns Game
+}//ns br2
 
 
 

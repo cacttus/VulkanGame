@@ -373,4 +373,4 @@ Hash32 Sprite::getFrameAtlasIndex() {
 
 
 
-}//ns Game
+}//ns br2

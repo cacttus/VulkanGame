@@ -112,6 +112,6 @@ public:
 
   void save();
 };
-}//ns Game
+}//ns br2
 
 #endif

@@ -41,7 +41,7 @@ private:
   std::unique_ptr<ShadowBox_Internal> _pint;
 };
 
-}//ns Game
+}//ns br2
 
 
 

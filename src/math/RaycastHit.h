@@ -56,7 +56,7 @@ public:
   //Do not include ray data for optimization.
 };
 
-}//ns Game
+}//ns br2
 
 
 

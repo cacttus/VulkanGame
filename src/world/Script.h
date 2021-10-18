@@ -25,7 +25,7 @@ public:
   virtual void onServerPacketReceived(std::shared_ptr<Packet> pack) {}
 };
 
-}//ns Game
+}//ns br2
 
 
 

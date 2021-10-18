@@ -200,7 +200,7 @@ bool SceneNode::findNode(std::shared_ptr<Tx>& __out_ node) {
   return false;
 }
 
-}//ns Game
+}//ns br2
 
 
 

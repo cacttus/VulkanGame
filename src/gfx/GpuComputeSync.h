@@ -49,7 +49,7 @@ private:
   std::shared_ptr<GLContext> _pContext = nullptr;
 };
 
-}//ns game
+}//ns br2
 
 
 

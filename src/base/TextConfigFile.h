@@ -39,7 +39,7 @@ protected:
   bool cmp(const string_t& tok0, const char* ch, int32_t validateArgCount);
 };
 
-}//ns Game
+}//ns br2
 
 
 

@@ -97,6 +97,6 @@ private:
   RetCode write(const char* buf, size_t count, size_t bufcount, size_t offset);
 };
 
-}//ns game
+}//ns br2
 
 #endif

@@ -417,4 +417,4 @@ BlockPos8::e BottleUtils::oppBlockPosZ(BlockPos8::e pos) {
 
   BRThrowNotImplementedException();
 }
-}//ns Game
+}//ns br2

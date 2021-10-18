@@ -54,7 +54,7 @@ protected:
   void unlinkGrids();
 };
 
-}//ns Game
+}//ns br2
 
 
 

@@ -31,7 +31,7 @@ private:
   Allocator<v_index32>* _pIndexes = nullptr;
 };
 
-}//ns game
+}//ns br2
 
 
 

@@ -71,4 +71,4 @@ void SDLUtils::checkSDLErr(bool bLog, bool bBreak) {
 
 
 
-}//ns Game
+}//ns br2

@@ -223,7 +223,7 @@ public:
       }
     }
   }
-  FORCE_INLINE bool skipNVIDIA(int id) {
+  BR2_FORCE_INLINE bool skipNVIDIA(int id) {
     //NVidia - redundant messages / infos
     return id == 0x00020071     // GL_DYANMIC_DRAW or GL_STATIC_DRAW memory usgae
            || id == 0x00020084  // Texture state usage warning: Texture 0 is base level inconsistent. Check texture size.

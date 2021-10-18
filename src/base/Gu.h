@@ -21,6 +21,9 @@ enum class ManagerType { ShaderMaker };
 */
 class Gu : public GameMemory {
 public:
+  static std::string newline;
+
+  static std::shared_ptr<Environment> getEnvironment();
   static std::shared_ptr<RenderSettings> getRenderSettings();
   static std::shared_ptr<ApplicationPackage> getPackage();
   static std::shared_ptr<ModelCache> getModelCache();
@@ -56,6 +59,7 @@ public:
   //In synchronous rendering mode (one thread) We have an active context. We have multiple active in asynchronous rendering mode..
   static std::shared_ptr<GLContext> getActiveContext() { return _pActiveContext; }
   static void setActiveContext(std::shared_ptr<GLContext> c) { _pActiveContext = c; }
+
 
 //**Going away
  // static std::shared_ptr<GLContext> getStorageContext();
@@ -127,6 +131,7 @@ private:
   static std::shared_ptr<Net> _pNet;
   static std::shared_ptr<GLContext> _pActiveContext;
   static std::shared_ptr<Random> _pRandom;
+  static std::shared_ptr<Environment> _pEnvironment;
 };
 
 #define Config Gu::getEngineConfig()

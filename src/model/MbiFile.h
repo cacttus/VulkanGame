@@ -38,7 +38,7 @@ private:
   void parseErr(string_t str, bool bDebugBreak, bool bFatal);
 };
 
-}//ns Game
+}//ns br2
 
 
 

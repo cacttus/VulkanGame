@@ -20,7 +20,7 @@ public:
     IboData(const string_t& mesh_name, std::shared_ptr<GLContext> ctx, size_t iElementSize);
     virtual ~IboData() override;
 };
-}//ns game
+}//ns br2
 
 
 

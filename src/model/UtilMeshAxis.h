@@ -29,7 +29,7 @@ private:
   mat4 _mTransform;
 };
 
-}//ns game
+}//ns br2
 
 
 

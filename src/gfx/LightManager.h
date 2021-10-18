@@ -53,7 +53,7 @@ private:
   void setupLights(std::shared_ptr<ShadowBox> pf, std::shared_ptr<ShadowFrustum> mf);    // - Sets up all the *enabled* lights for rendering.
 };
 
-}//ns Game
+}//ns br2
 
 
 

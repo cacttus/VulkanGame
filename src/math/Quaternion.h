@@ -23,51 +23,51 @@ template <typename Tx>
 class Quaternion {
 public:
   Tx x, y, z, w;
-  FORCE_INLINE Quaternion();
-  FORCE_INLINE Quaternion(Tx a, Tx b, Tx c, Tx d);
-  FORCE_INLINE Mat4x<Tx> toMat4();
-  FORCE_INLINE Mat3x<Tx> toMat3();
-  FORCE_INLINE Tx mag();
-  FORCE_INLINE Vec3x<Tx> vectorPart();
-  FORCE_INLINE Tx Dot(const Quaternion<Tx>& rhs) const;
-  FORCE_INLINE Vec3x<Tx> rotatePoint(Vec3x<Tx>& in);
-  FORCE_INLINE Quaternion<Tx> inverse();
-  FORCE_INLINE Quaternion<Tx> operator*(const Quaternion<Tx>& rhs) const;
-  FORCE_INLINE Quaternion<Tx> operator*(Tx f) const;
-  FORCE_INLINE Quaternion<Tx> operator+(const Quaternion<Tx>& rhs) const;
-  FORCE_INLINE Quaternion<Tx> slerpTo(Quaternion<Tx>& rhs, Tx t) const;
-  FORCE_INLINE Quaternion<Tx> operator*(Vec3x<Tx> v);
-  FORCE_INLINE void getAxisAngle(Vec4x<Tx>& v);
-  FORCE_INLINE void construct(Tx dx, Tx dy, Tx dz, Tx dw);
+  BR2_FORCE_INLINE Quaternion();
+  BR2_FORCE_INLINE Quaternion(Tx a, Tx b, Tx c, Tx d);
+  BR2_FORCE_INLINE Mat4x<Tx> toMat4();
+  BR2_FORCE_INLINE Mat3x<Tx> toMat3();
+  BR2_FORCE_INLINE Tx mag();
+  BR2_FORCE_INLINE Vec3x<Tx> vectorPart();
+  BR2_FORCE_INLINE Tx Dot(const Quaternion<Tx>& rhs) const;
+  BR2_FORCE_INLINE Vec3x<Tx> rotatePoint(Vec3x<Tx>& in);
+  BR2_FORCE_INLINE Quaternion<Tx> inverse();
+  BR2_FORCE_INLINE Quaternion<Tx> operator*(const Quaternion<Tx>& rhs) const;
+  BR2_FORCE_INLINE Quaternion<Tx> operator*(Tx f) const;
+  BR2_FORCE_INLINE Quaternion<Tx> operator+(const Quaternion<Tx>& rhs) const;
+  BR2_FORCE_INLINE Quaternion<Tx> slerpTo(Quaternion<Tx>& rhs, Tx t) const;
+  BR2_FORCE_INLINE Quaternion<Tx> operator*(Vec3x<Tx> v);
+  BR2_FORCE_INLINE void getAxisAngle(Vec4x<Tx>& v);
+  BR2_FORCE_INLINE void construct(Tx dx, Tx dy, Tx dz, Tx dw);
 };
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx>::Quaternion() {
+BR2_FORCE_INLINE Quaternion<Tx>::Quaternion() {
   x = y = z = w = 0;
 }
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx>::Quaternion(Tx dx, Tx dy, Tx dz, Tx dw) {
+BR2_FORCE_INLINE Quaternion<Tx>::Quaternion(Tx dx, Tx dy, Tx dz, Tx dw) {
   x = dx;
   y = dy;
   z = dz;
   w = dw;
 }
 template <typename Tx>
-FORCE_INLINE void Quaternion<Tx>::construct(Tx dx, Tx dy, Tx dz, Tx dw) {
+BR2_FORCE_INLINE void Quaternion<Tx>::construct(Tx dx, Tx dy, Tx dz, Tx dw) {
   x = dx;
   y = dy;
   z = dz;
   w = dw;
 }
 template <typename Tx>
-FORCE_INLINE Tx Quaternion<Tx>::Dot(const Quaternion<Tx>& rhs) const {
+BR2_FORCE_INLINE Tx Quaternion<Tx>::Dot(const Quaternion<Tx>& rhs) const {
   return (x * rhs.x + y * rhs.y + z * rhs.z + w * rhs.w);
 }
 template <typename Tx>
-FORCE_INLINE Tx Quaternion<Tx>::mag() {
+BR2_FORCE_INLINE Tx Quaternion<Tx>::mag() {
   return w * w + (x * x + y * y + z * z);
 }
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::inverse() {
+BR2_FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::inverse() {
   Tx L = 1 / mag();
   Quaternion<Tx> out;
   out.w = L * w;
@@ -77,7 +77,7 @@ FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::inverse() {
   return out;
 }
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(const Quaternion<Tx>& rhs) const {
+BR2_FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(const Quaternion<Tx>& rhs) const {
   Quaternion<Tx> ret;
 
   //Normal quaternion multiplication
@@ -94,7 +94,7 @@ FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(const Quaternion<Tx>& rhs)
   return ret;
 }
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(Tx f) const {
+BR2_FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(Tx f) const {
   Quaternion<Tx> out;
   out.x = x * f;
   out.y = y * f;
@@ -103,7 +103,7 @@ FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator*(Tx f) const {
   return out;
 }
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator+(const Quaternion<Tx>& rhs) const {
+BR2_FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator+(const Quaternion<Tx>& rhs) const {
   Quaternion<Tx> out;
   out.x = x + rhs.x;
   out.y = y + rhs.y;
@@ -112,7 +112,7 @@ FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::operator+(const Quaternion<Tx>& rhs)
   return out;
 }
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::slerpTo(Quaternion<Tx>& rhs, Tx t) const {
+BR2_FORCE_INLINE Quaternion<Tx> Quaternion<Tx>::slerpTo(Quaternion<Tx>& rhs, Tx t) const {
   //SLERP Spherical Linear interpolate this quaternion to rhs.
   // @param rhs The Quat to slerp
   // @param t Interpolation value [0 to 1]

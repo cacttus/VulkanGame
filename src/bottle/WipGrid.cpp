@@ -318,4 +318,4 @@ void WipGrid::makeCell(int ix, int iy, int iz, WorldCell* __in_ pc) {
 //}
 //
 //
-}//ns Game
+}//ns br2

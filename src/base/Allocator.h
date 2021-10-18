@@ -17,81 +17,81 @@ namespace BR2 {
 */
 template <typename Tx> class Allocator : public VirtualMemory {
 public:
-  FORCE_INLINE Allocator();
-  FORCE_INLINE Allocator(size_t allocCount, Tx *ptFill = nullptr);
-  FORCE_INLINE virtual ~Allocator() override;
-  FORCE_INLINE void init();
+  BR2_FORCE_INLINE Allocator();
+  BR2_FORCE_INLINE Allocator(size_t allocCount, Tx *ptFill = nullptr);
+  BR2_FORCE_INLINE virtual ~Allocator() override;
+  BR2_FORCE_INLINE void init();
 
-  FORCE_INLINE bool isAllocated() const {
+  BR2_FORCE_INLINE bool isAllocated() const {
     return (_pT != NULL);
   }  // - Return true if this Allocator instance has allocated data.
-  FORCE_INLINE size_t byteSize() const {
+  BR2_FORCE_INLINE size_t byteSize() const {
     return tsize() * _num;
   }  // - Get the size in bytes of this buffer
-  FORCE_INLINE size_t count() const {
+  BR2_FORCE_INLINE size_t count() const {
     return _num;
   }  // - Get # of items allocated
 
-  FORCE_INLINE size_t tsize() const { return sizeof(Tx); }
-  FORCE_INLINE void _alloca(size_t count = 0);  // - Allocate * _ due to namespace conflict. TODO: rename to allocateMemory
-  FORCE_INLINE void realloca(size_t newCount);  // - Reallocate
-  FORCE_INLINE void reallocBytes(size_t newSize);
-  FORCE_INLINE void grow(size_t itemCount,
+  BR2_FORCE_INLINE size_t tsize() const { return sizeof(Tx); }
+  BR2_FORCE_INLINE void _alloca(size_t count = 0);  // - Allocate * _ due to namespace conflict. TODO: rename to allocateMemory
+  BR2_FORCE_INLINE void realloca(size_t newCount);  // - Reallocate
+  BR2_FORCE_INLINE void reallocBytes(size_t newSize);
+  BR2_FORCE_INLINE void grow(size_t itemCount,
                          size_t itemOffset = -1);  // - Grow by some elements
-  FORCE_INLINE void inflate(
+  BR2_FORCE_INLINE void inflate(
       size_t itemCount, size_t itemOffset,
       size_t staticAllocationCount =
           -1);  // - Same as grow but we do not call realloc. instead buffer copies a range of elmeents
-  FORCE_INLINE void shrink(
+  BR2_FORCE_INLINE void shrink(
       size_t itemCount,
       size_t itemOffset = -1);  // - Shrink the buffer - i.e. cut data from it.
-  FORCE_INLINE void deflate(
+  BR2_FORCE_INLINE void deflate(
       size_t itemCount, size_t itemOffset,
       size_t staticAllocationCount =
           -1);  // - Same as shrink but we do not call realloc. instead buffer copies a range of elmeents
-  FORCE_INLINE void erase(size_t start, size_t count);
-  FORCE_INLINE void dealloc();  // - Deallocate
+  BR2_FORCE_INLINE void erase(size_t start, size_t count);
+  BR2_FORCE_INLINE void dealloc();  // - Deallocate
 
-  FORCE_INLINE void insert(size_t off,
+  BR2_FORCE_INLINE void insert(size_t off,
                            const Tx &pt);  // Inserts an item into the buffer.
-  FORCE_INLINE void swapChunk(size_t iOff, size_t iCount, const Tx *pDataToSwap,
+  BR2_FORCE_INLINE void swapChunk(size_t iOff, size_t iCount, const Tx *pDataToSwap,
                               size_t iCountToSwap);
-  FORCE_INLINE void splice(size_t off,
+  BR2_FORCE_INLINE void splice(size_t off,
                            size_t count);  // Same as shrink - why we have this?
 
-  FORCE_INLINE Tx *ptr() { return _pT; }  // return a pointer
-  FORCE_INLINE char *charPtr() { return (char *)_pT; }
-  FORCE_INLINE Tx *ptrOff(size_t offset);
+  BR2_FORCE_INLINE Tx *ptr() { return _pT; }  // return a pointer
+  BR2_FORCE_INLINE char *charPtr() { return (char *)_pT; }
+  BR2_FORCE_INLINE Tx *ptrOff(size_t offset);
 
-  FORCE_INLINE const Tx *constptr() const {
+  BR2_FORCE_INLINE const Tx *constptr() const {
     return (const Tx *)_pT;
   }                                     // return a pointer
-  FORCE_INLINE Tx &at(size_t i);        // return element [i]
-  FORCE_INLINE Tx &at(size_t i) const;  // return element [i]
-  FORCE_INLINE void fill(Tx &base);     // - Fill with an item.
-  FORCE_INLINE void fillb(Tx base);     // - Fill with an item.
-  FORCE_INLINE void appendToEnd(
+  BR2_FORCE_INLINE Tx &at(size_t i);        // return element [i]
+  BR2_FORCE_INLINE Tx &at(size_t i) const;  // return element [i]
+  BR2_FORCE_INLINE void fill(Tx &base);     // - Fill with an item.
+  BR2_FORCE_INLINE void fillb(Tx base);     // - Fill with an item.
+  BR2_FORCE_INLINE void appendToEnd(
       const Allocator<Tx> *
           in);  // Merges this allocator's data with another, appending the second to the end.
-  FORCE_INLINE void appendToBeg(
+  BR2_FORCE_INLINE void appendToBeg(
       const Allocator<Tx> *
           in);  // Merges this allocator's data with another, appending the second to the beg.
-  FORCE_INLINE void copyFrom(
+  BR2_FORCE_INLINE void copyFrom(
       const Tx *in, size_t item_count, size_t my_off = 0,
       size_t other_off = 0);  // copy a buffer into this buffer.
-  FORCE_INLINE void copyFrom(const Allocator<Tx> *in);
-  FORCE_INLINE void copyTo(
+  BR2_FORCE_INLINE void copyFrom(const Allocator<Tx> *in);
+  BR2_FORCE_INLINE void copyTo(
       const Tx *in, size_t item_count, size_t my_off = 0,
       size_t other_off = 0);  // copy a buffer into this buffer.
-  FORCE_INLINE void zeroMemory();
-  FORCE_INLINE Tx &operator[](size_t index);  // - Returns the item at[]
-  FORCE_INLINE bool operator==(Tx *ptr);
-  FORCE_INLINE bool operator!=(Tx *ptr);
-  FORCE_INLINE bool operator==(
+  BR2_FORCE_INLINE void zeroMemory();
+  BR2_FORCE_INLINE Tx &operator[](size_t index);  // - Returns the item at[]
+  BR2_FORCE_INLINE bool operator==(Tx *ptr);
+  BR2_FORCE_INLINE bool operator!=(Tx *ptr);
+  BR2_FORCE_INLINE bool operator==(
       Allocator<Tx> &
           ptr);  // NOTE: IN COMPARISON YOU MUST USE REFERENTIAL OPERATOR OR THIS WILL DEALLOC
-  FORCE_INLINE bool operator!=(Allocator<Tx> &ptr);
-  FORCE_INLINE void operator=(const Allocator<Tx> &rhs);
+  BR2_FORCE_INLINE bool operator!=(Allocator<Tx> &ptr);
+  BR2_FORCE_INLINE void operator=(const Allocator<Tx> &rhs);
 
 public:
   typedef Tx dataType;
@@ -107,22 +107,22 @@ private:
   size_t _lastSize;   // - The acutal size used by the last allocation
 };
 //////////////////////////////////////////////////////////////////////////
-template <typename Tx> FORCE_INLINE Allocator<Tx>::Allocator()
+template <typename Tx> BR2_FORCE_INLINE Allocator<Tx>::Allocator()
     : _pT(NULL), _num(0), _lastNum(0), _allocSize(0), _lastSize(0) {}
 template <typename Tx>
-FORCE_INLINE Allocator<Tx>::Allocator(size_t allocCount, Tx *ptFill)
+BR2_FORCE_INLINE Allocator<Tx>::Allocator(size_t allocCount, Tx *ptFill)
     : _pT(NULL), _num(0), _lastNum(0), _allocSize(0), _lastSize(0) {
   this->_alloca(allocCount);
   if (ptFill != nullptr) {
     copyFrom(ptFill, allocCount);
   }
 }
-template <typename Tx> FORCE_INLINE Allocator<Tx>::~Allocator() { dealloc(); }
+template <typename Tx> BR2_FORCE_INLINE Allocator<Tx>::~Allocator() { dealloc(); }
 //////////////////////////////////////////////////////////////////////////
 template <typename Tx> class GenericBuffer : public Allocator<Tx> {};
 
 //////////////////////////////////////////////////////////////////////////
-template <typename Tx> FORCE_INLINE void Allocator<Tx>::init() {
+template <typename Tx> BR2_FORCE_INLINE void Allocator<Tx>::init() {
   _pT = (NULL);
   _num = (0);
   _lastNum = (0);

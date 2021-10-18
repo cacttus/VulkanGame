@@ -199,7 +199,7 @@ t_ext getExt(std::string filename) {
   else if (!filename.substr(off, filename.size() - off).compare("java"))
     return ext_java;
 
-  throw new std::runtime_error("Error: incorrect extension: " + off);
+  throw new std::runtime_error("Error: incorrect extension: " + std::to_string(off));
   return ext_cpp;
 }
 std::string uppercase(std::string& in) {
@@ -414,7 +414,7 @@ std::string wrap_text(std::string instr, int charsperline,
         w += 2;
       }
       // unix newline
-      else if ((delim == '\n')) {
+      else if (delim == '\n') {
         if (!ignore_newlines) {
           if (windows_escape)
             delim_w = "\r\n";
@@ -526,7 +526,7 @@ std::string getHeader(std::string fileName, std::string strAddExt) {
   head += "() override;\n";
   head += "};\n";
   head += "\n";
-  head += "}//ns Game\n";
+  head += "}//ns br2\n";
   head += "\n";
   head += "\n";
   head += "\n";
@@ -594,7 +594,7 @@ std::string getSource(std::string fileName, std::string strAddExt) {
   head += "\n";
   head += "}\n";
   head += "\n";
-  head += "}//ns Game\n";
+  head += "}//ns br2\n";
   return head;
 }
 std::string combinePath(std::string a, std::string b) {

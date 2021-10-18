@@ -30,7 +30,7 @@ private:
   uint64_t _iFrame = 0; //Current frame number
 };
 
-}//ns Game
+}//ns br2
 
 
 

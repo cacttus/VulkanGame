@@ -31,7 +31,7 @@ private:
     int32_t& iOff, vec3& du, vec3& dv, float siz, vec3& origin, int eMat);
 };
 
-}//ns Game
+}//ns br2
 
 
 

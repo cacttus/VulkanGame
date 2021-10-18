@@ -334,4 +334,4 @@ void Atlas::printInfoAndErrors(std::shared_ptr<Img32> sp) {
     BRThrowException("Atlas: " + getName() + "The generated texture size is " + sp->getWidth() + ". Your graphics card can't handle texture sizes above " + iMaxTextureSiz + ".  TODO: Implement shrinkage.");
   }
 }
-}//ns Game
+}//ns br2

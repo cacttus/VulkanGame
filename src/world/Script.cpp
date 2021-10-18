@@ -7,4 +7,4 @@ Script::Script() {
 Script::~Script() {
 }
 
-}//ns Game
+}//ns br2

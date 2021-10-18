@@ -64,6 +64,6 @@ private:
   void deleteCells();
   uint32_t bitOff(uint32_t x, uint32_t y, uint32_t z);
 };
-}//ns Game
+}//ns br2
 
 #endif

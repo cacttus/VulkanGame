@@ -75,7 +75,7 @@ void TileMesh25::getQuad(TileMeshVert*& p0, TileMeshVert*& p1, TileMeshVert*& p2
 
 
 
-}//ns Game
+}//ns br2
 
 
  //int TileMesh25::offBL(int x, int y) {

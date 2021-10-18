@@ -455,4 +455,4 @@ void VulkanApi::getDrawableSize(SDL_Window* win, int* w, int* h) {
 void VulkanApi::swapBuffers(SDL_Window* win) {
 }
 
-}//ns Game
+}//ns br2

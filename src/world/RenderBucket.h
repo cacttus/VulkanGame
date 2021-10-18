@@ -67,7 +67,7 @@ private:
   float distToCam(Box3f* n);
 };
 
-}//ns Game
+}//ns br2
 
 
 

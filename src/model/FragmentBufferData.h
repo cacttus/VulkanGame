@@ -57,13 +57,13 @@ private:
   // - Direct memory access to based on a component index by which we can access the size of the elemement, and 
   // a type to cast the element to, and an index offset into the buffer.
   template < class Tx >
-  FORCE_INLINE Tx& accessComponent(size_t index, std::shared_ptr<VertexComponent> pc) {
+  BR2_FORCE_INLINE Tx& accessComponent(size_t index, std::shared_ptr<VertexComponent> pc) {
     return *((Tx*)getPointerToComponentAtIndex(index, pc));
   }
   void* getPointerToComponentAtIndex(size_t index, std::shared_ptr<VertexComponent> pc);
 };
 
-}//ns game
+}//ns br2
 
 
 

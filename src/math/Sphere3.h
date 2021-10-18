@@ -16,9 +16,9 @@ namespace BR2 {
 */
 class Sphere3f : public VirtualMemory {
 public:
-  FORCE_INLINE Sphere3f();
-  FORCE_INLINE virtual ~Sphere3f() override;
-  FORCE_INLINE vec3 project(const vec3& x, vec3* outNormal = NULL); // project a point onto the sphere.  May return the normal to the point.
+  BR2_FORCE_INLINE Sphere3f();
+  BR2_FORCE_INLINE virtual ~Sphere3f() override;
+  BR2_FORCE_INLINE vec3 project(const vec3& x, vec3* outNormal = NULL); // project a point onto the sphere.  May return the normal to the point.
 
   vec3 o;    //origin
   float r;    //radius
@@ -27,7 +27,7 @@ public:
 *    @fn
 *    @brief Project point onto sphere.  possibly a faster way to do this would be to get the squared length of both vectors and multiply the one by the fraction of the other
 */
-FORCE_INLINE vec3 Sphere3f::project(const vec3& x, vec3* outNormal) {
+BR2_FORCE_INLINE vec3 Sphere3f::project(const vec3& x, vec3* outNormal) {
   vec3 diff = x - o;
   float len = diff.length();
   vec3 n;
@@ -74,10 +74,10 @@ FORCE_INLINE vec3 Sphere3f::project(const vec3& x, vec3* outNormal) {
 }
 
 //+-- CTOR/DTOR --+
-FORCE_INLINE Sphere3f::Sphere3f() {
+BR2_FORCE_INLINE Sphere3f::Sphere3f() {
 }
 
-FORCE_INLINE Sphere3f::~Sphere3f() {
+BR2_FORCE_INLINE Sphere3f::~Sphere3f() {
 
 }
 
@@ -85,7 +85,7 @@ FORCE_INLINE Sphere3f::~Sphere3f() {
 
 
 
-}//ns game
+}//ns br2
 
 
 

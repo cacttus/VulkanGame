@@ -8,4 +8,4 @@ RenderTarget::RenderTarget(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
 RenderTarget::~RenderTarget() {
 }
 
-}//ns Game
+}//ns br2

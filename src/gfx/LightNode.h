@@ -123,7 +123,7 @@ private:
   void updateFlicker();
 };
 
-}//ns game
+}//ns br2
 
 
 

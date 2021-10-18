@@ -97,7 +97,7 @@ public:
 
 
 
-}//ns Game
+}//ns br2
 
 
 

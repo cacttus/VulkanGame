@@ -28,7 +28,7 @@ public:
   void draw();
 };
 
-}//ns Game
+}//ns br2
 
 
 

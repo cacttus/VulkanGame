@@ -74,7 +74,7 @@ private:
   std::unique_ptr<SoundCache_Internal> _pint;
 };
 
-}//ns Game
+}//ns br2
 
 
 

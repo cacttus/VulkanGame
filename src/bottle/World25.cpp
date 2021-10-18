@@ -1084,4 +1084,4 @@ GridShow::e World25::toggleShowGrid() {
   }
   return _eShowGrid;
 }
-}//ns Game
+}//ns br2

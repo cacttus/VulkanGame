@@ -57,7 +57,7 @@ private:
   void updateDebugDraw();
 };
 
-}//ns Game
+}//ns br2
 
 
 

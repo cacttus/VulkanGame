@@ -39,7 +39,7 @@ protected:
   void msg(const string_t& msg, bool error = false);
 };
 
-}//ns game
+}//ns br2
 
 
 

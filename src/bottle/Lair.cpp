@@ -26,4 +26,4 @@ LairSpec:: ~LairSpec()  {
 }
 
 
-}//ns Game
+}//ns br2

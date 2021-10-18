@@ -58,6 +58,6 @@ private:
 
 
 
-}//ns game
+}//ns br2
 
 #endif

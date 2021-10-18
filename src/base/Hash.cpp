@@ -154,4 +154,4 @@ float EasyNoise::terrain(float x, float y, float z, int octaves, float persisten
 
 
 
-}//ns game
+}//ns br2

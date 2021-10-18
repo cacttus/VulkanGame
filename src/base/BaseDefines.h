@@ -75,7 +75,16 @@ OS_ERROR_NOT_IMPLEMENTED
 #define DOES_NOT_INHERIT _NoInheritClassBase
 #define OVERRIDE override
 #define NOT_VIRTUAL
-#define FORCE_INLINE inline
+
+#ifndef BR2_FORCE_INLINE
+#ifdef BR2_OS_WINDOWS
+#define BR2_FORCE_INLINE __forceinline
+#else
+#define BR2_FORCE_INLINE inline
+#endif
+#endif
+
+
 #define CONST_EXPR constexpr
 
 //Cache alignment needed for GPU memory (std430)
@@ -247,6 +256,8 @@ class ApplicationPackage;
 class GamePad;
 class GamePadButton;
 class KeyboardGamePad;
+class Locale;
+class Environment;
 
 template <class Tx>
 class DynamicBuffer;

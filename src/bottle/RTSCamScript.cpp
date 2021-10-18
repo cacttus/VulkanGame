@@ -323,4 +323,4 @@ void RTSCamScript::setTarget(std::shared_ptr<CameraNode> cam, vec3& v) {
   _vLookAt = v;
   updateCameraPosition(cam);
 }
-}//ns Game
+}//ns br2

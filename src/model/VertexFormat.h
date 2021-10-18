@@ -59,6 +59,6 @@ private:
   string_t _strName;
 };
 
-}//NS Game
+}//ns br2
 
 #endif

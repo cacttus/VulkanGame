@@ -69,7 +69,7 @@ private:
 //Tile set that morphs from one to theother based on temperature, etc.
 
 
-}//ns Game
+}//ns br2
 
 
 

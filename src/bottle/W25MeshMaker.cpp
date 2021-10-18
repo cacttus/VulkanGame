@@ -1007,4 +1007,4 @@ void W25MeshMaker::redoMeshForCellNoGpuCopy(
   fillMeshByConfig(pMesh->getVerts(), pMesh->getIndexes(), pBucket, pAtlas, pCell, eMatterMode,
     fBlockWidth, fBlockHeight, pConf, nullptr);
 }
-}//ns Game
+}//ns br2

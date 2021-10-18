@@ -79,6 +79,13 @@ std::shared_ptr<Net> Gu::_pNet = nullptr;
 std::shared_ptr<InputManager> Gu::_pGlobalInput = nullptr;
 std::shared_ptr<GLContext> Gu::_pActiveContext = nullptr;
 std::shared_ptr<Random> Gu::_pRandom = nullptr;
+std::shared_ptr<Environment> Gu::_pEnvironment = nullptr;
+
+#ifdef BR2_OS_WINDOWS
+std::string Gu::newline = std::string("\r\n");
+#else
+std::string Gu::newline = std::string("\n");
+#endif
 
 template <class Tx>
 std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> global_manager) {
@@ -92,23 +99,52 @@ std::shared_ptr<Tx> GetExistingManager(std::shared_ptr<Tx> global_manager) {
   return global_manager;
 }
 
-std::shared_ptr<RenderSettings> Gu::getRenderSettings() { return GetExistingManager(_pRenderSettings); }
-std::shared_ptr<ApplicationPackage> Gu::getPackage() { return GetExistingManager(_pPackage); }
-std::shared_ptr<ModelCache> Gu::getModelCache() { return GetExistingManager(_pModelCache); }
-std::shared_ptr<Sequencer> Gu::getSequencer() { return GetExistingManager(_pSequencer); }
-std::shared_ptr<SoundCache> Gu::getSound() { return GetExistingManager(_pSoundCache); }
-std::shared_ptr<TexCache> Gu::getTexCache() { return GetExistingManager(_pTexCache); }
-std::shared_ptr<ShaderMaker> Gu::getShaderMaker() { return GetExistingManager(_pShaderMaker); }
-std::shared_ptr<EngineConfig> Gu::getEngineConfig() { return GetExistingManager(_pEngineConfig); }
-std::shared_ptr<Logger> Gu::getLogger() { return GetExistingManager(_pLogger); }
-std::shared_ptr<GraphicsApi> Gu::getGraphicsApi() { return GetExistingManager(_pGraphicsApi); }
-std::shared_ptr<EngineConfig> Gu::getConfig() { return GetExistingManager(_pEngineConfig); }
-std::shared_ptr<Net> Gu::getNet() { return GetExistingManager(_pNet); }
-std::shared_ptr<Random> Gu::getRandom() { return GetExistingManager(_pRandom); }
-std::shared_ptr<InputManager> Gu::getGlobalInput() { return GetExistingManager(_pGlobalInput); }
-std::shared_ptr<SoundInst> Gu::playSound(const string_t& filename, const SoundPlayInfo& inf){
+std::shared_ptr<RenderSettings> Gu::getRenderSettings() {
+  return GetExistingManager(_pRenderSettings);
+}
+std::shared_ptr<ApplicationPackage> Gu::getPackage() {
+  return GetExistingManager(_pPackage);
+}
+std::shared_ptr<ModelCache> Gu::getModelCache() {
+  return GetExistingManager(_pModelCache);
+}
+std::shared_ptr<Sequencer> Gu::getSequencer() {
+  return GetExistingManager(_pSequencer);
+}
+std::shared_ptr<SoundCache> Gu::getSound() {
+  return GetExistingManager(_pSoundCache);
+}
+std::shared_ptr<TexCache> Gu::getTexCache() {
+  return GetExistingManager(_pTexCache);
+}
+std::shared_ptr<ShaderMaker> Gu::getShaderMaker() {
+  return GetExistingManager(_pShaderMaker);
+}
+std::shared_ptr<EngineConfig> Gu::getEngineConfig() {
+  return GetExistingManager(_pEngineConfig);
+}
+std::shared_ptr<Logger> Gu::getLogger() {
+  return GetExistingManager(_pLogger);
+}
+std::shared_ptr<GraphicsApi> Gu::getGraphicsApi() {
+  return GetExistingManager(_pGraphicsApi);
+}
+std::shared_ptr<EngineConfig> Gu::getConfig() {
+  return GetExistingManager(_pEngineConfig);
+}
+std::shared_ptr<Net> Gu::getNet() {
+  return GetExistingManager(_pNet);
+}
+std::shared_ptr<Random> Gu::getRandom() {
+  return GetExistingManager(_pRandom);
+}
+std::shared_ptr<InputManager> Gu::getGlobalInput() {
+  return GetExistingManager(_pGlobalInput);
+}
+std::shared_ptr<SoundInst> Gu::playSound(const string_t& filename, const SoundPlayInfo& inf) {
   return Gu::getSound()->tryPlay(filename, inf);
 }
+std::shared_ptr<Environment> Gu::getEnvironment() { return GetExistingManager(_pEnvironment); }
 std::shared_ptr<GLContext> Gu::getCoreContext() {
   std::shared_ptr<GraphicsApi> api = Gu::getGraphicsApi();
   std::shared_ptr<OpenGLApi> oglapi = std::dynamic_pointer_cast<OpenGLApi>(Gu::getGraphicsApi());
@@ -583,6 +619,7 @@ void Gu::print(char msg) {
 void Gu::print(const string_t& msg) {
   print(msg.c_str());
 }
+
 void Gu::print(const char* msg) {
   if (_pEngineConfig == nullptr) {
     ColoredConsole::print(std::string(msg), ColoredConsole::Color::FG_WHITE);
@@ -649,7 +686,6 @@ void Gu::createManagers(std::shared_ptr<GLContext> ct) {
   _pNet = std::make_shared<Net>();
   SDLUtils::checkSDLErr();
   ct->chkErrRt();
-
 }
 void Gu::updateManagers() {
   if (_pSequencer != nullptr) {
@@ -662,7 +698,6 @@ void Gu::updateManagers() {
   if (_pNet != nullptr) {
     _pNet->update();
   }
-
 }
 void Gu::sleepThread(uint64_t milliseconds) {
   std::this_thread::sleep_for(std::chrono::milliseconds(50));

@@ -40,7 +40,7 @@ private:
   void drawText();
 };
 
-}//ns Game
+}//ns br2
 
 
 

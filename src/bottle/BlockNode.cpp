@@ -329,4 +329,4 @@ void BlockNode::raycastCells(Ray_t* pr, std::multimap<float, WorldCell*>& outCel
     }
   }
 }
-}//ns Game
+}//ns br2

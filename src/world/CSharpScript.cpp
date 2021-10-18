@@ -5,13 +5,6 @@
 #include <unordered_map>
 #include <algorithm>
 namespace BR2 {
-#ifndef FORCE_INLINE
-#ifdef BR2_OS_WINDOWS
-#define FORCE_INLINE __forceinline
-#else
-#define FORCE_INLINE inline
-#endif
-#endif
 
 enum class CSharpAccessModifier {
   Public,

@@ -25,7 +25,7 @@ private:
   std::unique_ptr<Net_Internal> _pint;
 };
 
-}//ns Game
+}//ns br2
 
 
 

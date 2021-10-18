@@ -29,4 +29,4 @@ void Spline::calculate() {
   LogAssert(_points.size() == _plens.size());
 }
 
-}//ns Game
+}//ns br2

@@ -54,7 +54,7 @@ private:
   t_timeval _executed = 0;
 };
 
-}//ns Game
+}//ns br2
 
 
 

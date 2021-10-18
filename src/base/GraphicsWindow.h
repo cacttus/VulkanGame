@@ -58,7 +58,7 @@ private:
   std::unique_ptr<GraphicsWindow_Internal> _pint;
 };
 
-}//ns Game
+}//ns br2
 
 
 

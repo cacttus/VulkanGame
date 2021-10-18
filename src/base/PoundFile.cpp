@@ -248,4 +248,4 @@ bool PoundFile::parsePrs(const string_t& tok, vec3& pos, vec4& rot, vec3& scl) {
   return bValid;
 }
 
-}//ns game
+}//ns br2

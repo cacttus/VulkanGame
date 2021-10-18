@@ -17,21 +17,21 @@ namespace BR2 {
 */
 class PlaneEx3 : public Plane3f {
 public:
-  FORCE_INLINE PlaneEx3();
-  FORCE_INLINE NOT_VIRTUAL ~PlaneEx3() override;
+  BR2_FORCE_INLINE PlaneEx3();
+  BR2_FORCE_INLINE NOT_VIRTUAL ~PlaneEx3() override;
 
   float dist2d(vec2& e);  // - Return the X/Z distnace from a vector2 (where y is z)
 
-  FORCE_INLINE void calcTBN();
-  FORCE_INLINE void construct(vec3& Normal, vec3& Point);
-  FORCE_INLINE void construct(vec3& tri_p1, vec3& tri_p2, vec3& tri_p3);
+  BR2_FORCE_INLINE void calcTBN();
+  BR2_FORCE_INLINE void construct(vec3& Normal, vec3& Point);
+  BR2_FORCE_INLINE void construct(vec3& tri_p1, vec3& tri_p2, vec3& tri_p3);
 
   vec3 t, b;    // - TBN
   float u;         // - The value for texture space, this is initialized to 1.0
   vec3 origin;  // - Point on the plane.
 };
 
-FORCE_INLINE void PlaneEx3::construct(vec3& tri_p1, vec3& tri_p2, vec3& tri_p3) {
+BR2_FORCE_INLINE void PlaneEx3::construct(vec3& tri_p1, vec3& tri_p2, vec3& tri_p3) {
   //@fn construct() 
   // @brief Construct the components of the plane out of a triangle.
   // The origin will be p1.
@@ -53,15 +53,15 @@ FORCE_INLINE void PlaneEx3::construct(vec3& tri_p1, vec3& tri_p2, vec3& tri_p3) 
 
   d = -n.dot(origin);
 }
-FORCE_INLINE void PlaneEx3::construct(vec3& normal, vec3& point) {
+BR2_FORCE_INLINE void PlaneEx3::construct(vec3& normal, vec3& point) {
   Plane3f::construct(normal, point);
   origin = point;
 }
-FORCE_INLINE void PlaneEx3::calcTBN() {
+BR2_FORCE_INLINE void PlaneEx3::calcTBN() {
 }
-FORCE_INLINE PlaneEx3::PlaneEx3() {
+BR2_FORCE_INLINE PlaneEx3::PlaneEx3() {
 }
-FORCE_INLINE PlaneEx3::~PlaneEx3() {
+BR2_FORCE_INLINE PlaneEx3::~PlaneEx3() {
 }
 
 }  // namespace BR2

@@ -22,7 +22,7 @@ namespace BR2 {
 //    virtual ~Gui2d() override;
 //};
 
-}//ns Game
+}//ns br2
 
 
 

@@ -31,7 +31,7 @@ private:
   virtual void postLoad();
 };
 
-}//ns Game
+}//ns br2
 
 
 

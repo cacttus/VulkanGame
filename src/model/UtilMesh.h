@@ -54,7 +54,7 @@ private:
   std::shared_ptr<VaoDataGeneric> getVaoData() { return _pVaoData; }
 };
 
-}//ns game
+}//ns br2
 
 
 

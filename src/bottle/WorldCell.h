@@ -113,6 +113,6 @@ public:
   // t_timeval _iLightMarchStamp = 0;
 
 };
-}//ns Game
+}//ns br2
 
 #endif

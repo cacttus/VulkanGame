@@ -27,14 +27,14 @@ public:
   );
   virtual ~QuadBufferMesh() override;
   void setTexture(std::shared_ptr<Texture2D> tex);
-  FORCE_INLINE int32_t getMaxQuads() { return _iMaxQuads; }
-  FORCE_INLINE int32_t getQuadCount() { return _iCurrentQuadIndex; }
-  FORCE_INLINE void resetCopy() { _iCurrentQuadIndex = 0; }
-  FORCE_INLINE void backupQuad() {
+  BR2_FORCE_INLINE int32_t getMaxQuads() { return _iMaxQuads; }
+  BR2_FORCE_INLINE int32_t getQuadCount() { return _iCurrentQuadIndex; }
+  BR2_FORCE_INLINE void resetCopy() { _iCurrentQuadIndex = 0; }
+  BR2_FORCE_INLINE void backupQuad() {
     AssertOrThrow2(_iCurrentQuadIndex > 0);
     _iCurrentQuadIndex--;
   }
-  FORCE_INLINE void nextQuad() {
+  BR2_FORCE_INLINE void nextQuad() {
     if (_iCurrentQuadIndex < _iMaxQuads) {
       _iCurrentQuadIndex++;
     }
@@ -60,7 +60,7 @@ protected:
   void freeData();
 };
 
-}//ns game
+}//ns br2
 
 
 

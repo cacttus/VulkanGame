@@ -19,7 +19,7 @@ public:
     static std::shared_ptr<Img32> genThumb(std::shared_ptr<ModelSpec> mod, int32_t iThumbSize);
 };
 
-}//ns Game
+}//ns br2
 
 
 

@@ -107,6 +107,6 @@ public:
   static BlockPos8::e oppBlockPosY(BlockPos8::e pos);
   static BlockPos8::e oppBlockPosZ(BlockPos8::e pos);
 };
-}//ns Game
+}//ns br2
 
 #endif

@@ -30,7 +30,7 @@ private:
   AdjacencyMap* _vmap = nullptr;    // Maps vertex indexes to face indexes in a face buffer.
 };
 
-}//ns game
+}//ns br2
 
 
 

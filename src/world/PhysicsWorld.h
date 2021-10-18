@@ -132,7 +132,7 @@ private:
   void sweepGridFrustum(std::function<void(ivec3&)> func, std::shared_ptr<FrustumBase> pf, float fMaxDist2);
 };
 
-}//ns Game
+}//ns br2
 
 
 

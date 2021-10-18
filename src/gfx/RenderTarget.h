@@ -23,7 +23,7 @@ public:
   virtual int32_t getHeight() = 0;
 };
 
-}//ns Game
+}//ns br2
 
 
 

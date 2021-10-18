@@ -60,7 +60,7 @@ private:
 //  void compile();
 };
 
-}//ns Game
+}//ns br2
 
 
 

@@ -58,4 +58,4 @@ std::shared_ptr<Picker> NodeUtils::getPicker(std::shared_ptr<SceneNode> lm) {
   }
   return ret;
 }
-}//ns Game
+}//ns br2

@@ -21,86 +21,86 @@ class Vec2x {
 public:
   Tx x = 0, y = 0;
 
-  FORCE_INLINE Vec2x<Tx>();
-  FORCE_INLINE Vec2x<Tx>(const Tx& dx, const Tx& dy);
-  FORCE_INLINE Vec2x<Tx>(const Tx (&init_list)[Vec2x<Tx>::CompSize]);
+  BR2_FORCE_INLINE Vec2x<Tx>();
+  BR2_FORCE_INLINE Vec2x<Tx>(const Tx& dx, const Tx& dy);
+  BR2_FORCE_INLINE Vec2x<Tx>(const Tx (&init_list)[Vec2x<Tx>::CompSize]);
 
-  FORCE_INLINE Tx& u() { return x; }
-  FORCE_INLINE Tx& v() { return y; }
+  BR2_FORCE_INLINE Tx& u() { return x; }
+  BR2_FORCE_INLINE Tx& v() { return y; }
 
-  FORCE_INLINE const Tx& u() const { return x; }
-  FORCE_INLINE const Tx& v() const { return y; }
+  BR2_FORCE_INLINE const Tx& u() const { return x; }
+  BR2_FORCE_INLINE const Tx& v() const { return y; }
 
   //
-  FORCE_INLINE Tx length() const;
-  FORCE_INLINE Tx length2() const;
-  FORCE_INLINE Tx squaredLength() const;
-  FORCE_INLINE void len_and_norm(vec2& __out_ n, float& __out_ len) const;
-  FORCE_INLINE Vec2x<Tx>& normalize();
-  FORCE_INLINE Vec2x<Tx>& normalize(float);
-  FORCE_INLINE Vec2x<Tx> normalized();
+  BR2_FORCE_INLINE Tx length() const;
+  BR2_FORCE_INLINE Tx length2() const;
+  BR2_FORCE_INLINE Tx squaredLength() const;
+  BR2_FORCE_INLINE void len_and_norm(vec2& __out_ n, float& __out_ len) const;
+  BR2_FORCE_INLINE Vec2x<Tx>& normalize();
+  BR2_FORCE_INLINE Vec2x<Tx>& normalize(float);
+  BR2_FORCE_INLINE Vec2x<Tx> normalized();
 
-  FORCE_INLINE Tx dot(const Vec2x<Tx>& v1) const;
-  FORCE_INLINE Tx distance(const Vec2x<Tx>& v1) const;
-  FORCE_INLINE Tx distance2(const Vec2x<Tx>& v1) const;
-  FORCE_INLINE void construct(const Tx& dx, const Tx& dy);
-  FORCE_INLINE void construct(const Vec2x<Tx>& rhs);
-  FORCE_INLINE Vec2x<Tx> zero();
+  BR2_FORCE_INLINE Tx dot(const Vec2x<Tx>& v1) const;
+  BR2_FORCE_INLINE Tx distance(const Vec2x<Tx>& v1) const;
+  BR2_FORCE_INLINE Tx distance2(const Vec2x<Tx>& v1) const;
+  BR2_FORCE_INLINE void construct(const Tx& dx, const Tx& dy);
+  BR2_FORCE_INLINE void construct(const Vec2x<Tx>& rhs);
+  BR2_FORCE_INLINE Vec2x<Tx> zero();
 
   std::string toString(int precis = -1) const;
 
-  FORCE_INLINE static Vec2x<Tx> Vec2x_MIN();
-  FORCE_INLINE static Vec2x<Tx> Vec2x_MAX();
+  BR2_FORCE_INLINE static Vec2x<Tx> Vec2x_MIN();
+  BR2_FORCE_INLINE static Vec2x<Tx> Vec2x_MAX();
 
-  FORCE_INLINE static Vec2x<Tx> minv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b);  // - Returns the minimum vector from the given two
-  FORCE_INLINE static Vec2x<Tx> maxv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b);  // returns maximujm vector of given t2o
+  BR2_FORCE_INLINE static Vec2x<Tx> minv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b);  // - Returns the minimum vector from the given two
+  BR2_FORCE_INLINE static Vec2x<Tx> maxv(const Vec2x<Tx>& v_a, const Vec2x<Tx>& v_b);  // returns maximujm vector of given t2o
 
-  FORCE_INLINE bool operator==(const Vec2x<Tx>& v) const;
-  FORCE_INLINE bool operator!=(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator==(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator!=(const Vec2x<Tx>& v) const;
 
-  FORCE_INLINE bool operator==(const Tx& f) const;
-  FORCE_INLINE bool operator!=(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator==(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator!=(const Tx& f) const;
 
   //remove unary negation
-  FORCE_INLINE Vec2x<Tx> operator-() const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator-() const;
 
-  FORCE_INLINE Vec2x<Tx>& operator=(const Vec2x<Tx>& v);
-  FORCE_INLINE Vec2x<Tx>& operator+=(const Vec2x<Tx>& v);
-  FORCE_INLINE Vec2x<Tx>& operator-=(const Vec2x<Tx>& v);
-  FORCE_INLINE Vec2x<Tx>& operator*=(const Vec2x<Tx>& v);
-  FORCE_INLINE Vec2x<Tx>& operator/=(const Vec2x<Tx>& v);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator=(const Vec2x<Tx>& v);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator+=(const Vec2x<Tx>& v);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator-=(const Vec2x<Tx>& v);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator*=(const Vec2x<Tx>& v);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator/=(const Vec2x<Tx>& v);
 
-  FORCE_INLINE Vec2x<Tx>& operator=(const Tx& f);
-  FORCE_INLINE Vec2x<Tx>& operator+=(const Tx& f);
-  FORCE_INLINE Vec2x<Tx>& operator-=(const Tx& f);
-  FORCE_INLINE Vec2x<Tx>& operator*=(const Tx& f);
-  FORCE_INLINE Vec2x<Tx>& operator/=(const Tx& f);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator=(const Tx& f);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator+=(const Tx& f);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator-=(const Tx& f);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator*=(const Tx& f);
+  BR2_FORCE_INLINE Vec2x<Tx>& operator/=(const Tx& f);
 
-  FORCE_INLINE bool operator>(const Vec2x<Tx>& v) const;
-  FORCE_INLINE bool operator>=(const Vec2x<Tx>& v) const;
-  FORCE_INLINE bool operator<(const Vec2x<Tx>& v) const;
-  FORCE_INLINE bool operator<=(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator>(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator>=(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator<(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator<=(const Vec2x<Tx>& v) const;
 
-  FORCE_INLINE bool operator>(const Tx& f) const;
-  FORCE_INLINE bool operator>=(const Tx& f) const;
-  FORCE_INLINE bool operator<(const Tx& f) const;
-  FORCE_INLINE bool operator<=(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator>(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator>=(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator<(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator<=(const Tx& f) const;
 
   //MSVC doesn't like the scope resolution operator in front of templated methods with the same return type
-  FORCE_INLINE Vec2x<Tx> operator+(const Vec2x<Tx>& v) const;
-  FORCE_INLINE Vec2x<Tx> operator-(const Vec2x<Tx>& v) const;
-  FORCE_INLINE Vec2x<Tx> operator*(const Vec2x<Tx>& v) const;
-  FORCE_INLINE Vec2x<Tx> operator/(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator+(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator-(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator*(const Vec2x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator/(const Vec2x<Tx>& v) const;
 
-  FORCE_INLINE Vec2x<Tx> operator+(const Tx& f) const;
-  FORCE_INLINE Vec2x<Tx> operator-(const Tx& f) const;
-  FORCE_INLINE Vec2x<Tx> operator*(const Tx& f) const;
-  FORCE_INLINE Vec2x<Tx> operator/(const Tx& f) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator+(const Tx& f) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator-(const Tx& f) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator*(const Tx& f) const;
+  BR2_FORCE_INLINE Vec2x<Tx> operator/(const Tx& f) const;
 
-  FORCE_INLINE bool compareTo(const Vec2x<Tx>* rhs) const;
+  BR2_FORCE_INLINE bool compareTo(const Vec2x<Tx>* rhs) const;
 
   struct Vec2xCompLess {
-    FORCE_INLINE bool operator()(const Vec2x<Tx>* lhs, const Vec2x<Tx>* rhs) const {
+    BR2_FORCE_INLINE bool operator()(const Vec2x<Tx>* lhs, const Vec2x<Tx>* rhs) const {
       return lhs->compareTo(rhs);
     }
   };
@@ -435,8 +435,8 @@ bool Vec2x<Tx>::compareTo(const Vec2x<Tx>* rhs) const {
 
 //////////////////////////////////////////////////////////////////////////
 // - Vector shorthands
-STATIC FORCE_INLINE vec2& normalize(vec2& v1) { return v1.normalize(); }
-STATIC FORCE_INLINE float dot(vec2& v1, vec2& v2) { return v1.dot(v2); }
+STATIC BR2_FORCE_INLINE vec2& normalize(vec2& v1) { return v1.normalize(); }
+STATIC BR2_FORCE_INLINE float dot(vec2& v1, vec2& v2) { return v1.dot(v2); }
 
 }  // namespace BR2
 

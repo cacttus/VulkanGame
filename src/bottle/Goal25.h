@@ -32,6 +32,6 @@ private:
   typedef enum { Entered, Running, Exit } GoalState;
   GoalState _eGoalState;
 };
-}//ns Game
+}//ns br2
 
 #endif

@@ -28,7 +28,7 @@ private:
   bool _bRunning = false;
 };
 
-}//ns Game
+}//ns br2
 
 
 

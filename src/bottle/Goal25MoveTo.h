@@ -54,6 +54,6 @@ public:
   virtual void enter() override {}
   virtual void exit() override {};
 };
-}//ns Game
+}//ns br2
 
 #endif

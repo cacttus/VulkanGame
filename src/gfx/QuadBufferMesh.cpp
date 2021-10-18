@@ -175,4 +175,4 @@ void QuadBufferMesh::getQuad(v_v3n3x2*& v0, v_v3n3x2*& v1, v_v3n3x2*& v2, v_v3n3
 //}
 
 
-}//ns game
+}//ns br2

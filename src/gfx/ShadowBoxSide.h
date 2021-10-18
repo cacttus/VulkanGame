@@ -47,7 +47,7 @@ private:
   BoxSide::e _eSide;
 
 };
-}//ns Game
+}//ns br2
 
 
 

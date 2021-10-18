@@ -23,6 +23,9 @@ StringUtil::~StringUtil() {
 int32_t StringUtil::compare(const string_t& a, const string_t& b) {
   return a.compare(b);
 }
+int32_t StringUtil::compare(const wstring_t& a, const wstring_t& b) {
+  return a.compare(b);
+}
 bool StringUtil::charIsLetterOrNumber(char c) {
   int r = isalnum(c);
   return r != 0;
@@ -235,6 +238,9 @@ string_t StringUtil::emptyString() {
   return string_t("");
 }
 bool StringUtil::equals(const string_t& a, const string_t& b) {
+  return StringUtil::compare(a, b) == 0;
+}
+bool StringUtil::equals(const wstring_t& a, const wstring_t& b) {
   return StringUtil::compare(a, b) == 0;
 }
 bool StringUtil::doesNotEqual(const string_t& a, const string_t& b) {
@@ -482,7 +488,11 @@ string_t StringUtil::generate() {
 bool StringUtil::contains(const string_t& a, const string_t& b) {
   return a.find(b) != std::string::npos;
 }
-string_t StringUtil::format(const string_t& aft, ...) {
+bool StringUtil::contains(const wstring_t& a, const wstring_t& b) {
+  return a.find(b) != std::wstring::npos;
+}
+//warning: passing an object of reference type to 'va_start' has undefined behavior
+string_t StringUtil::format(const string_t aft, ...) {
   string_t strRet;
   va_list args;
   va_start(args, aft);
@@ -545,14 +555,15 @@ string_t StringUtil::tabify(const string_t& str_to_tabify, int number_of_tabs, b
   return ret;
 }
 string_t StringUtil::wStrToStr(std::wstring wstr) {
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+  //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
   std::string narrow = converter.to_bytes(wstr);
   return narrow;
 }
 wstring_t StringUtil::strToWStr(std::string str) {
-  //oh..stackoverflow
   //https://stackoverflow.com/questions/2573834/c-convert-string-or-char-to-wstring-or-wchar-t/26914562
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
   std::wstring wide = converter.from_bytes(str);
   return wide;
 }

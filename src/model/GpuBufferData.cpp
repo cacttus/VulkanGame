@@ -228,4 +228,4 @@ void GpuBufferData::verifyValidBuffer() {
 
 //+-- CTOR/DTOR --+
 
-}//ns game
+}//ns br2

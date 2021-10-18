@@ -26,7 +26,7 @@ private:
   double _fDelta = 0;
 };
 
-}//ns Game
+}//ns br2
 
 
 

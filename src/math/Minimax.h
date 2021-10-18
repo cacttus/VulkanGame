@@ -97,14 +97,14 @@ public:
 //void initMp(MpUint x);
 //void initMp(MpInt x);
 
-FORCE_INLINE void initMp(MpFloat x) { x.setMin(0.0); x.setMax(1.0); }
-FORCE_INLINE void initMp(MpVec3 x) { x.setMin(vec3(0, 0, 0)); x.setMax(vec3(1, 1, 1)); }
-FORCE_INLINE void initMp(MpVec4 x) { x.setMin(vec4(0, 0, 0, 0)); x.setMax(vec4(1, 1, 1, 1)); }
-FORCE_INLINE void initMp(MpUint x) { x.setMin(0), x.setMax(INT_MAX); }
-FORCE_INLINE void initMp(MpInt x) { x.setMin(-INT_MAX), x.setMax(INT_MAX); }
+BR2_FORCE_INLINE void initMp(MpFloat x) { x.setMin(0.0); x.setMax(1.0); }
+BR2_FORCE_INLINE void initMp(MpVec3 x) { x.setMin(vec3(0, 0, 0)); x.setMax(vec3(1, 1, 1)); }
+BR2_FORCE_INLINE void initMp(MpVec4 x) { x.setMin(vec4(0, 0, 0, 0)); x.setMax(vec4(1, 1, 1, 1)); }
+BR2_FORCE_INLINE void initMp(MpUint x) { x.setMin(0), x.setMax(INT_MAX); }
+BR2_FORCE_INLINE void initMp(MpInt x) { x.setMin(-INT_MAX), x.setMax(INT_MAX); }
 
 
-}//ns game
+}//ns br2
 
 
 

@@ -450,7 +450,7 @@ void PhysicsWorld::postCollide(uint64_t frameId, bool bAccel) {
   _vecActiveFrame.clear();
   _vecActiveFrame = vecFinalActive;
 }
-FORCE_INLINE void limit_ax(float& __inout_ v_ax, float amt, bool& bActive) {
+BR2_FORCE_INLINE void limit_ax(float& __inout_ v_ax, float amt, bool& bActive) {
   float vsl;
   //v_ax = velocity along axis.
   // if v_ax ^2 > amt^2 then we are active.
@@ -1346,4 +1346,4 @@ std::shared_ptr<PhysicsNode> PhysicsWorld::findNode(const string_t& specName) {
 }
 
 
-}//ns Game
+}//ns br2

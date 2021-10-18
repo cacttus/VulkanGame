@@ -84,4 +84,4 @@ void GameFile::save(string_t loc, std::shared_ptr<World25> pw) {
 
   df.close();
 }
-}//ns Game
+}//ns br2

@@ -56,6 +56,6 @@ private:
   //void updateActions();
 
 };
-}//ns Game
+}//ns br2
 
 #endif

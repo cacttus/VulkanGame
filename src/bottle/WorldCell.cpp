@@ -238,4 +238,4 @@ WorldCellData* WorldCell::serializeData(
 
   return pd;
 }
-}//ns Game
+}//ns br2

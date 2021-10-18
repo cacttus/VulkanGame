@@ -268,4 +268,4 @@ std::array<std::vector<PlaceMode::e>, W25SidePlace::e::Count> WorldObj::parsePla
 
   return options;
 }
-}//ns Game
+}//ns br2

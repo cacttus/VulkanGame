@@ -17,20 +17,20 @@ namespace BR2 {
 */
 class QuadPlane : public PlaneEx3 {
 public:
-  FORCE_INLINE QuadPlane();
-  FORCE_INLINE QuadPlane(vec3&, vec3&, vec3&, vec3&);
-  FORCE_INLINE NOT_VIRTUAL ~QuadPlane() override;
+  BR2_FORCE_INLINE QuadPlane();
+  BR2_FORCE_INLINE QuadPlane(vec3&, vec3&, vec3&, vec3&);
+  BR2_FORCE_INLINE NOT_VIRTUAL ~QuadPlane() override;
 
-  FORCE_INLINE PlanePoint containsPoint(vec3& point); // - True if the point falls within the region of the quad plane.
-  FORCE_INLINE PlaneHit hitTest(vec3& p1, vec3& p2);
-  FORCE_INLINE void construct(vec3& dp1, vec3& dp2, vec3& dp3, vec3& dp4);
-  FORCE_INLINE void construct();
+  BR2_FORCE_INLINE PlanePoint containsPoint(vec3& point); // - True if the point falls within the region of the quad plane.
+  BR2_FORCE_INLINE PlaneHit hitTest(vec3& p1, vec3& p2);
+  BR2_FORCE_INLINE void construct(vec3& dp1, vec3& dp2, vec3& dp3, vec3& dp4);
+  BR2_FORCE_INLINE void construct();
 
 public:
   vec3 p1, p2, p3, p4;
 };
 
-FORCE_INLINE PlaneHit
+BR2_FORCE_INLINE PlaneHit
 QuadPlane::hitTest(vec3& p1, vec3& p2) {
   PlaneHit ret;
   ret._bContained = false;
@@ -48,7 +48,7 @@ QuadPlane::hitTest(vec3& p1, vec3& p2) {
 }
 //
 //
-FORCE_INLINE PlanePoint
+BR2_FORCE_INLINE PlanePoint
 QuadPlane::containsPoint(vec3& point) {
   PlanePoint ret;
 
@@ -65,7 +65,7 @@ QuadPlane::containsPoint(vec3& point) {
 *    @fn construct()
 *    @brief Override of the plane construct.  Will calculate the data inside of the QuadPlane
 */
-FORCE_INLINE void
+BR2_FORCE_INLINE void
 QuadPlane::construct(vec3& dp1, vec3& dp2, vec3& dp3, vec3& dp4) {
   p1 = dp1;
   p2 = dp2;
@@ -77,23 +77,23 @@ QuadPlane::construct(vec3& dp1, vec3& dp2, vec3& dp3, vec3& dp4) {
 *    @fn construct()
 *    @brief Override of the plane construct.  Will calculate the data inside of the QuadPlane
 */
-FORCE_INLINE void
+BR2_FORCE_INLINE void
 QuadPlane::construct() {
   PlaneEx3::construct(p1, p2, p3);
 }
 //
 //ctor
 //
-FORCE_INLINE QuadPlane::QuadPlane(vec3& dp1, vec3& dp2, vec3& dp3, vec3& dp4) {
+BR2_FORCE_INLINE QuadPlane::QuadPlane(vec3& dp1, vec3& dp2, vec3& dp3, vec3& dp4) {
   construct(dp1, dp2, dp3, dp4);
 }
 
 
-FORCE_INLINE QuadPlane::QuadPlane() {
+BR2_FORCE_INLINE QuadPlane::QuadPlane() {
 
 }
 
-FORCE_INLINE QuadPlane::~QuadPlane() {
+BR2_FORCE_INLINE QuadPlane::~QuadPlane() {
 
 }
 

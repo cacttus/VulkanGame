@@ -31,7 +31,7 @@
 namespace BR2 {
 
 
-}//ns Game
+}//ns br2
 
 
 

@@ -44,4 +44,4 @@ bool W25Config::hideTransparentSide(W25Geom opaque, W25Geom transparent, int iSi
 
 
 
-}//ns Game
+}//ns br2

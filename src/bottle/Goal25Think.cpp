@@ -34,4 +34,4 @@ void Goal25Think::execute(float delta) {
     //for (Goal* g : options) {
   }
 }
-}//ns Game
+}//ns br2

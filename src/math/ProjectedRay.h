@@ -23,7 +23,7 @@ public:
 
   vec3 getHitPoint(PlaneHit& ph) const;
 
-  FORCE_INLINE void opt() {
+  BR2_FORCE_INLINE void opt() {
     //**New - optimization
     //http://people.csail.mit.edu/amy/papers/box-jgt.pdf
     //Don't set to zero. We need infinity (or large value) here.
@@ -91,7 +91,7 @@ private:
   vec3 _vNormal;
 };
 
-}//ns game
+}//ns br2
 
 
 

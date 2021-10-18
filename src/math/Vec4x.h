@@ -22,108 +22,108 @@ class Vec4x {
 public:
   Tx x = 0, y = 0, z = 0, w = 0;
 
-  FORCE_INLINE Vec4x<Tx>();
-  FORCE_INLINE Vec4x<Tx>(const Tx& dx, const Tx& dy, const Tx& dz, const Tx& dw);
-  FORCE_INLINE Vec4x<Tx>(const Vec2x<Tx>& a, const Tx& dz, const Tx& dw);
-  FORCE_INLINE Vec4x<Tx>(const Vec2x<Tx>& a, const Vec2x<Tx>& b);
-  FORCE_INLINE Vec4x<Tx>(const Vec3x<Tx>& a, const Tx& dw);
-  FORCE_INLINE Vec4x<Tx>(const ivec4& rhs);
-  FORCE_INLINE Vec4x<Tx>(const uvec4& rhs);
-  FORCE_INLINE Vec4x<Tx>(const vec4& rhs);
-  FORCE_INLINE Vec4x<Tx>(const Tx (&init_list)[Vec4x<Tx>::CompSize]);
+  BR2_FORCE_INLINE Vec4x<Tx>();
+  BR2_FORCE_INLINE Vec4x<Tx>(const Tx& dx, const Tx& dy, const Tx& dz, const Tx& dw);
+  BR2_FORCE_INLINE Vec4x<Tx>(const Vec2x<Tx>& a, const Tx& dz, const Tx& dw);
+  BR2_FORCE_INLINE Vec4x<Tx>(const Vec2x<Tx>& a, const Vec2x<Tx>& b);
+  BR2_FORCE_INLINE Vec4x<Tx>(const Vec3x<Tx>& a, const Tx& dw);
+  BR2_FORCE_INLINE Vec4x<Tx>(const ivec4& rhs);
+  BR2_FORCE_INLINE Vec4x<Tx>(const uvec4& rhs);
+  BR2_FORCE_INLINE Vec4x<Tx>(const vec4& rhs);
+  BR2_FORCE_INLINE Vec4x<Tx>(const Tx (&init_list)[Vec4x<Tx>::CompSize]);
 
   //Aliases
-  FORCE_INLINE Tx& r() { return x; }
-  FORCE_INLINE Tx& g() { return y; }
-  FORCE_INLINE Tx& b() { return z; }
-  FORCE_INLINE Tx& a() { return w; }
+  BR2_FORCE_INLINE Tx& r() { return x; }
+  BR2_FORCE_INLINE Tx& g() { return y; }
+  BR2_FORCE_INLINE Tx& b() { return z; }
+  BR2_FORCE_INLINE Tx& a() { return w; }
 
-  FORCE_INLINE const Tx& r() const { return x; }
-  FORCE_INLINE const Tx& g() const { return y; }
-  FORCE_INLINE const Tx& b() const { return z; }
-  FORCE_INLINE const Tx& a() const { return w; }
+  BR2_FORCE_INLINE const Tx& r() const { return x; }
+  BR2_FORCE_INLINE const Tx& g() const { return y; }
+  BR2_FORCE_INLINE const Tx& b() const { return z; }
+  BR2_FORCE_INLINE const Tx& a() const { return w; }
 
   //Swizzle ops
   //FORCE_INLINE Vec4x<Tx>  xz();
   //FORCE_INLINE Vec4x<Tx>  xy();
   //
-  FORCE_INLINE Tx length() const;
-  FORCE_INLINE Tx length2() const;
-  FORCE_INLINE Tx squaredLength() const;
+  BR2_FORCE_INLINE Tx length() const;
+  BR2_FORCE_INLINE Tx length2() const;
+  BR2_FORCE_INLINE Tx squaredLength() const;
 
-  FORCE_INLINE Vec4x<Tx>& normalize();
-  FORCE_INLINE Vec4x<Tx> normalized();
+  BR2_FORCE_INLINE Vec4x<Tx>& normalize();
+  BR2_FORCE_INLINE Vec4x<Tx> normalized();
 
-  FORCE_INLINE Vec3x<Tx> xyz() const { return Vec3x<Tx>(x, y, z); }
+  BR2_FORCE_INLINE Vec3x<Tx> xyz() const { return Vec3x<Tx>(x, y, z); }
 
-  FORCE_INLINE Tx dot(const Vec4x<Tx>& v1) const;
-  FORCE_INLINE Tx distance(const Vec4x<Tx>& v1) const;
-  FORCE_INLINE Tx distance2(const Vec4x<Tx>& v1) const;
-  FORCE_INLINE void construct(const Tx& dx, const Tx& dy, const Tx& dz, const Tx& dw);
-  FORCE_INLINE Tx combine() const;
+  BR2_FORCE_INLINE Tx dot(const Vec4x<Tx>& v1) const;
+  BR2_FORCE_INLINE Tx distance(const Vec4x<Tx>& v1) const;
+  BR2_FORCE_INLINE Tx distance2(const Vec4x<Tx>& v1) const;
+  BR2_FORCE_INLINE void construct(const Tx& dx, const Tx& dy, const Tx& dz, const Tx& dw);
+  BR2_FORCE_INLINE Tx combine() const;
 
   std::string toString(int precis = -1) const;
 
-  FORCE_INLINE static Vec4x<Tx> zero();
-  FORCE_INLINE static Vec4x<Tx> Vec4x_MIN();
-  FORCE_INLINE static Vec4x<Tx> Vec4x_MAX();
+  BR2_FORCE_INLINE static Vec4x<Tx> zero();
+  BR2_FORCE_INLINE static Vec4x<Tx> Vec4x_MIN();
+  BR2_FORCE_INLINE static Vec4x<Tx> Vec4x_MAX();
 
-  FORCE_INLINE static Vec4x<Tx> minv(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);    // - Returns the minimum vector from the given two
-  FORCE_INLINE static Vec4x<Tx> maxv(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);    // returns maximujm vector of given t2o
-  FORCE_INLINE static Vec4x<Tx> maxv_a(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);  // returns maximujm vector of given t2o ABSOLUTE
-  FORCE_INLINE static Tx maxf_a(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);         // Returns the longest component of either vector (absolute)
+  BR2_FORCE_INLINE static Vec4x<Tx> minv(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);    // - Returns the minimum vector from the given two
+  BR2_FORCE_INLINE static Vec4x<Tx> maxv(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);    // returns maximujm vector of given t2o
+  BR2_FORCE_INLINE static Vec4x<Tx> maxv_a(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);  // returns maximujm vector of given t2o ABSOLUTE
+  BR2_FORCE_INLINE static Tx maxf_a(const Vec4x<Tx>& v_a, const Vec4x<Tx>& v_b);         // Returns the longest component of either vector (absolute)
 
-  FORCE_INLINE bool operator==(const Vec4x<Tx>& v);
-  FORCE_INLINE bool operator!=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE bool operator==(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE bool operator!=(const Vec4x<Tx>& v);
 
-  FORCE_INLINE bool operator==(const Tx& f);
-  FORCE_INLINE bool operator!=(const Tx& f);
+  BR2_FORCE_INLINE bool operator==(const Tx& f);
+  BR2_FORCE_INLINE bool operator!=(const Tx& f);
 
   //remove unary negation
-  FORCE_INLINE Vec4x<Tx> operator-() const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator-() const;
 
   Vec4x<Tx> operator*(const Mat4x<Tx>& m);
 
-  FORCE_INLINE Vec4x<Tx>& operator=(const Vec4x<Tx>& v);
-  FORCE_INLINE Vec4x<Tx>& operator+=(const Vec4x<Tx>& v);
-  FORCE_INLINE Vec4x<Tx>& operator-=(const Vec4x<Tx>& v);
-  FORCE_INLINE Vec4x<Tx>& operator*=(const Vec4x<Tx>& v);
-  FORCE_INLINE Vec4x<Tx>& operator/=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator+=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator-=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator*=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator/=(const Vec4x<Tx>& v);
 
-  FORCE_INLINE Vec4x<Tx>& operator=(const Tx& f);
-  FORCE_INLINE Vec4x<Tx>& operator+=(const Tx& f);
-  FORCE_INLINE Vec4x<Tx>& operator-=(const Tx& f);
-  FORCE_INLINE Vec4x<Tx>& operator*=(const Tx& f);
-  FORCE_INLINE Vec4x<Tx>& operator/=(const Tx& f);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator=(const Tx& f);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator+=(const Tx& f);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator-=(const Tx& f);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator*=(const Tx& f);
+  BR2_FORCE_INLINE Vec4x<Tx>& operator/=(const Tx& f);
 
-  FORCE_INLINE bool operator>(const Vec4x<Tx>& v);
-  FORCE_INLINE bool operator>=(const Vec4x<Tx>& v);
-  FORCE_INLINE bool operator<(const Vec4x<Tx>& v);
-  FORCE_INLINE bool operator<=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE bool operator>(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE bool operator>=(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE bool operator<(const Vec4x<Tx>& v);
+  BR2_FORCE_INLINE bool operator<=(const Vec4x<Tx>& v);
 
-  FORCE_INLINE bool operator>(const Tx& f);
-  FORCE_INLINE bool operator>=(const Tx& f);
-  FORCE_INLINE bool operator<(const Tx& f);
-  FORCE_INLINE bool operator<=(const Tx& f);
+  BR2_FORCE_INLINE bool operator>(const Tx& f);
+  BR2_FORCE_INLINE bool operator>=(const Tx& f);
+  BR2_FORCE_INLINE bool operator<(const Tx& f);
+  BR2_FORCE_INLINE bool operator<=(const Tx& f);
 
   //For some reason it MSVC doesn't like the scope resolution operator in front of templated methods with teh same return type
-  FORCE_INLINE Vec4x<Tx> operator+(const Vec4x<Tx>& v) const;
-  FORCE_INLINE Vec4x<Tx> operator-(const Vec4x<Tx>& v) const;
-  FORCE_INLINE Vec4x<Tx> operator*(const Vec4x<Tx>& v) const;
-  FORCE_INLINE Vec4x<Tx> operator/(const Vec4x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator+(const Vec4x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator-(const Vec4x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator*(const Vec4x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator/(const Vec4x<Tx>& v) const;
 
-  FORCE_INLINE Vec4x<Tx> operator+(const Tx& f) const;
-  FORCE_INLINE Vec4x<Tx> operator-(const Tx& f) const;
-  FORCE_INLINE Vec4x<Tx> operator*(const Tx& f) const;
-  FORCE_INLINE Vec4x<Tx> operator/(const Tx& f) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator+(const Tx& f) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator-(const Tx& f) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator*(const Tx& f) const;
+  BR2_FORCE_INLINE Vec4x<Tx> operator/(const Tx& f) const;
 
   //From Color4
-  FORCE_INLINE Vec4x<Tx>& clampValues(const Tx& minVal = 0.0f, const Tx& maxVal = 1.0f);
-  FORCE_INLINE Vec4x<Tx>& saturate();
+  BR2_FORCE_INLINE Vec4x<Tx>& clampValues(const Tx& minVal = 0.0f, const Tx& maxVal = 1.0f);
+  BR2_FORCE_INLINE Vec4x<Tx>& saturate();
 
   //std::Map sort Comparator
   struct Vec4xCompLess {
-    FORCE_INLINE bool operator()(const Vec4x<Tx>* lhs, const Vec4x<Tx>* rhs) const {
+    BR2_FORCE_INLINE bool operator()(const Vec4x<Tx>* lhs, const Vec4x<Tx>* rhs) const {
       if (lhs->x < rhs->x) {
         return true;
       }

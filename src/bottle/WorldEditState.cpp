@@ -110,4 +110,4 @@ Box3f* WorldEditState::addHoverBox(Box3f b) {
   _vecHoverBoxes.push_back(bNew);
   return bNew;
 }
-}//ns Game
+}//ns br2

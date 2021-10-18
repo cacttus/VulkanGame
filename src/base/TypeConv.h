@@ -15,9 +15,6 @@
 namespace BR2 {
 #define frameStampToStr(x) uint64ToStr(x)
 
-#ifndef FORCE_INLINE
-#define FORCE_INLINE inline
-#endif
 
 /**
 *  @class TypeConv

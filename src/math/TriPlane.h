@@ -19,36 +19,36 @@ class TriPlane : public PlaneEx3 {
 public:
   vec3 p1, p2, p3;
 
-  FORCE_INLINE TriPlane();
-  FORCE_INLINE TriPlane(const vec3&, const  vec3&, const vec3&);
-  FORCE_INLINE TriPlane(const vec3&, const  vec3&, const vec3&, const vec3& n, float d);
-  FORCE_INLINE NOT_VIRTUAL ~TriPlane() override;
+  BR2_FORCE_INLINE TriPlane();
+  BR2_FORCE_INLINE TriPlane(const vec3&, const  vec3&, const vec3&);
+  BR2_FORCE_INLINE TriPlane(const vec3&, const  vec3&, const vec3&, const vec3& n, float d);
+  BR2_FORCE_INLINE NOT_VIRTUAL ~TriPlane() override;
 
-  FORCE_INLINE bool containsPoint(const vec3&) const; // - True if the point falls within the region of the quad plane.
-  FORCE_INLINE PlaneHit hitTest(const vec3& p1, const vec3& p2) const;
-  FORCE_INLINE bool hitTest(Ray_t* pr) const;
-  FORCE_INLINE void construct(const vec3& dp1, const vec3& dp2, const vec3& dp3);
-  FORCE_INLINE void construct();
+  BR2_FORCE_INLINE bool containsPoint(const vec3&) const; // - True if the point falls within the region of the quad plane.
+  BR2_FORCE_INLINE PlaneHit hitTest(const vec3& p1, const vec3& p2) const;
+  BR2_FORCE_INLINE bool hitTest(Ray_t* pr) const;
+  BR2_FORCE_INLINE void construct(const vec3& dp1, const vec3& dp2, const vec3& dp3);
+  BR2_FORCE_INLINE void construct();
 
-  FORCE_INLINE static bool containsPointSlowButWorks(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point);
-  FORCE_INLINE static bool containsPoint(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point);
+  BR2_FORCE_INLINE static bool containsPointSlowButWorks(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point);
+  BR2_FORCE_INLINE static bool containsPoint(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point);
 };
 
-FORCE_INLINE TriPlane::TriPlane(const vec3& dp1, const  vec3& dp2, const  vec3& dp3) {
+BR2_FORCE_INLINE TriPlane::TriPlane(const vec3& dp1, const  vec3& dp2, const  vec3& dp3) {
   construct(dp1, dp2, dp3);
 }
-FORCE_INLINE TriPlane::TriPlane(const vec3& _dp1, const  vec3& _dp2, const  vec3& _dp3, const  vec3& _n, float _d) {
+BR2_FORCE_INLINE TriPlane::TriPlane(const vec3& _dp1, const  vec3& _dp2, const  vec3& _dp3, const  vec3& _n, float _d) {
   p1 = _dp1;
   p2 = _dp2;
   p3 = _dp3;
   n = _n;
   d = _d;
 }
-FORCE_INLINE TriPlane::TriPlane() {
+BR2_FORCE_INLINE TriPlane::TriPlane() {
 }
-FORCE_INLINE TriPlane::~TriPlane() {
+BR2_FORCE_INLINE TriPlane::~TriPlane() {
 }
-FORCE_INLINE PlaneHit TriPlane::hitTest(const vec3& p1, const vec3& p2) const {
+BR2_FORCE_INLINE PlaneHit TriPlane::hitTest(const vec3& p1, const vec3& p2) const {
   PlaneHit ret;
   ret._bContained = false;
 
@@ -64,7 +64,7 @@ FORCE_INLINE PlaneHit TriPlane::hitTest(const vec3& p1, const vec3& p2) const {
   return ret;
 }
 
-FORCE_INLINE bool TriPlane::hitTest(Ray_t* pr) const {
+BR2_FORCE_INLINE bool TriPlane::hitTest(Ray_t* pr) const {
   PlaneHit ph = hitTest(pr->getBegin(), std::move(pr->getEnd()));
   pr->setTime(ph._fHitTime);
 
@@ -78,7 +78,7 @@ FORCE_INLINE bool TriPlane::hitTest(Ray_t* pr) const {
 *    **TODO:
 *        We need to test points and edges.
 */
-FORCE_INLINE bool TriPlane::containsPoint(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point) {
+BR2_FORCE_INLINE bool TriPlane::containsPoint(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point) {
   vec3 dp1 = cp2 - cp1;
   vec3 dp2 = cp3 - cp1;
   vec3 v = point - cp1;
@@ -98,7 +98,7 @@ FORCE_INLINE bool TriPlane::containsPoint(const vec3& cp1, const vec3& cp2, cons
 
   return false;
 }
-FORCE_INLINE bool TriPlane::containsPoint(const vec3& point) const {
+BR2_FORCE_INLINE bool TriPlane::containsPoint(const vec3& point) const {
   // - Base method copied from somewhere.  Faster than my method.
 //    return containsPoint(p1,p2,p3,point);
 
@@ -110,7 +110,7 @@ FORCE_INLINE bool TriPlane::containsPoint(const vec3& point) const {
 *    @fn construct()
 *    @brief Override of the plane construct.  Will calculate the data inside of the TriPlane
 */
-FORCE_INLINE void TriPlane::construct(const vec3& dp1, const vec3& dp2, const vec3& dp3) {
+BR2_FORCE_INLINE void TriPlane::construct(const vec3& dp1, const vec3& dp2, const vec3& dp3) {
   p1 = dp1;
   p2 = dp2;
   p3 = dp3;
@@ -121,7 +121,7 @@ FORCE_INLINE void TriPlane::construct(const vec3& dp1, const vec3& dp2, const ve
 *    @fn construct()
 *    @brief Override of the plane construct.  Will calculate the data inside of the TriPlane
 */
-FORCE_INLINE void TriPlane::construct() {
+BR2_FORCE_INLINE void TriPlane::construct() {
   PlaneEx3::construct(p1, p2, p3);
 }
 
@@ -131,7 +131,7 @@ FORCE_INLINE void TriPlane::construct() {
 *    This method works.  Was used in place of the optimized method above.
 *    ***Extensively tested assuming pointOnLine_t does not change*
 */
-FORCE_INLINE bool TriPlane::containsPointSlowButWorks(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point) {
+BR2_FORCE_INLINE bool TriPlane::containsPointSlowButWorks(const vec3& cp1, const vec3& cp2, const vec3& cp3, const vec3& point) {
 
   // get point along edge that makes edge a plane
   vec3 p1e = (cp1 - cp2); // cp3

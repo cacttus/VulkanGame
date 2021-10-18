@@ -37,7 +37,7 @@ private:
   bool shouldWait(int64_t& waitUs);
 };
 
-}//ns game
+}//ns br2
 
 
 

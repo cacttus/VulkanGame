@@ -50,7 +50,7 @@ private:
   string_t _strCacheDirectory;
 };
 
-}//ns game
+}//ns br2
 
 
 

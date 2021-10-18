@@ -227,4 +227,4 @@ void CubicBezierSpline::iterate(size_t pointA, size_t pointB, std::function<void
 }
 
 
-}//ns Game
+}//ns br2

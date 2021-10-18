@@ -96,7 +96,7 @@ protected:
   void releaseData();
   void allocData(size_t size);
 };
-FORCE_INLINE float Img32::pixelAverage24(Pixel4ub& inpx) {
+BR2_FORCE_INLINE float Img32::pixelAverage24(Pixel4ub& inpx) {
   static const float f_13 = (1.0f / 3.0f);
   static const float c_255 = (1.0f / 255.0f);
   return (
@@ -105,7 +105,7 @@ FORCE_INLINE float Img32::pixelAverage24(Pixel4ub& inpx) {
              (float)(inpx.b()) * c_255) *
          f_13;  // (r+g+b) /3
 }
-FORCE_INLINE float Img32::contrast(float pix, float C) {
+BR2_FORCE_INLINE float Img32::contrast(float pix, float C) {
   return powf(pix, C);
 }
 

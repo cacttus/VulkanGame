@@ -27,7 +27,7 @@ private:
   static void pulsePerf();
 };
 
-}//ns Game
+}//ns br2
 
 
 

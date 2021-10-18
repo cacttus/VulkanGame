@@ -19,7 +19,7 @@ public:
     virtual ~NodeDataManager() override;
 };
 
-}//ns Game
+}//ns br2
 
 
 

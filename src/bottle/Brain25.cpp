@@ -135,4 +135,4 @@ void Brain25::endGoal() {
 //ObjProps::ObjProps() {
 //    _fAwareRadius = Utils::getCellWidth() * 6;
 //}
-}//ns Game
+}//ns br2

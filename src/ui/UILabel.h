@@ -4,7 +4,7 @@
 //*  @date February 3, 2020
 //*  @author MetalMario971
 //*
-//*    © 2020 
+//*    ï¿½ 2020 
 //*
 //*
 //*/
@@ -52,7 +52,7 @@
 //  void enableWordWrap() { _bWordWrap = true; }
 //  virtual void update(std::shared_ptr<Fingers> pInput) override;
 //};
-//}//ns Game
+//}//ns br2
 //
 //
 //

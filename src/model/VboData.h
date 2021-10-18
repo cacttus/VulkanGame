@@ -22,7 +22,7 @@ public:
 
 
 
-}//ns game
+}//ns br2
 
 
 

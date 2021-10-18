@@ -1537,7 +1537,7 @@ void UiGlyph::regenMesh(std::vector<v_GuiVert>& verts, std::vector<v_index32>& i
 std::shared_ptr<UiLabel> UiLabel::create(std::string text, std::shared_ptr<UiLabelSkin> inf) {
   std::shared_ptr<UiLabel> lbl = std::make_shared<UiLabel>();
   lbl->_pFontInfo = inf;
-  lbl->_strText = text;
+  lbl->_strText = StringUtil::strToWStr(text);
   // lbl->_strText = "UiLabel";
   lbl->init();
 
@@ -1548,7 +1548,7 @@ void UiLabel::init() {
   setName("UiLabel");
 }
 void UiLabel::setText(std::string s) {
-  _strText = s;
+  _strText = StringUtil::strToWStr(s);
 }
 
 void UiLabel::performLayout(std::shared_ptr<UiScreen> pscreen, bool bForce) {
@@ -1556,11 +1556,11 @@ void UiLabel::performLayout(std::shared_ptr<UiScreen> pscreen, bool bForce) {
     //glyph creation is in performlayout because the HEIGHT of the label needs to be
     //calculated first
 #ifdef _DEBUG
-    if (StringUtil::contains(_strText, "Apple")) {
+    if (StringUtil::contains(_strText, L"Apple")) {
       int n = 0;
       n++;
     }
-    if (StringUtil::contains(_strText, "DOF")) {
+    if (StringUtil::contains(_strText, L"DOF")) {
       int n = 0;
       n++;
     }
@@ -1584,6 +1584,10 @@ void UiLabel::update(std::shared_ptr<InputManager> pFingers) {
 
   UiElement::update(pFingers);
 }
+std::string UiLabel::getText(){
+  return StringUtil::wStrToStr(_strText);
+}
+
 void UiLabel::regenMesh(std::vector<v_GuiVert>& verts, std::vector<v_index32>& inds, Box2f& b2ClipRect) {
   UiElement::regenMesh(verts, inds, b2ClipRect);
 }
@@ -3335,4 +3339,4 @@ std::shared_ptr<Picker> UiScreen::getPicker() {
   return this->_pint->_pWindow->getRenderPipe()->getPicker();
 }
 #pragma endregion
-}//ns Game
+}//ns br2

@@ -22,159 +22,159 @@ class Vec3x {
 public:
   Tx x = 0, y = 0, z = 0;
 
-  FORCE_INLINE Vec3x<Tx>();
-  FORCE_INLINE Vec3x<Tx>(const Tx& dx, const Tx& dy, const Tx& dz);
-  FORCE_INLINE Vec3x<Tx>(const Vec3x<float>& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Vec3x<double>& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Vec3x<int32_t>& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Vec3x<uint32_t>& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Vec3ub& rhs);
-  FORCE_INLINE Vec3x<Tx>(const Tx (&init_list)[Vec3x<Tx>::CompSize]);
+  BR2_FORCE_INLINE Vec3x<Tx>();
+  BR2_FORCE_INLINE Vec3x<Tx>(const Tx& dx, const Tx& dy, const Tx& dz);
+  BR2_FORCE_INLINE Vec3x<Tx>(const Vec3x<float>& rhs);
+  BR2_FORCE_INLINE Vec3x<Tx>(const Vec3x<double>& rhs);
+  BR2_FORCE_INLINE Vec3x<Tx>(const Vec3x<int32_t>& rhs);
+  BR2_FORCE_INLINE Vec3x<Tx>(const Vec3x<uint32_t>& rhs);
+  BR2_FORCE_INLINE Vec3x<Tx>(const Vec3ub& rhs);
+  BR2_FORCE_INLINE Vec3x<Tx>(const Tx (&init_list)[Vec3x<Tx>::CompSize]);
 
   //Aliases
-  FORCE_INLINE Tx& u() { return x; }
-  FORCE_INLINE Tx& v() { return y; }
-  FORCE_INLINE Tx& w() { return z; }
-  FORCE_INLINE Tx& r() { return x; }
-  FORCE_INLINE Tx& g() { return y; }
-  FORCE_INLINE Tx& b() { return z; }
+  BR2_FORCE_INLINE Tx& u() { return x; }
+  BR2_FORCE_INLINE Tx& v() { return y; }
+  BR2_FORCE_INLINE Tx& w() { return z; }
+  BR2_FORCE_INLINE Tx& r() { return x; }
+  BR2_FORCE_INLINE Tx& g() { return y; }
+  BR2_FORCE_INLINE Tx& b() { return z; }
 
-  FORCE_INLINE const Tx& u() const { return x; }
-  FORCE_INLINE const Tx& v() const { return y; }
-  FORCE_INLINE const Tx& w() const { return z; }
-  FORCE_INLINE const Tx& r() const { return x; }
-  FORCE_INLINE const Tx& g() const { return y; }
-  FORCE_INLINE const Tx& b() const { return z; }
+  BR2_FORCE_INLINE const Tx& u() const { return x; }
+  BR2_FORCE_INLINE const Tx& v() const { return y; }
+  BR2_FORCE_INLINE const Tx& w() const { return z; }
+  BR2_FORCE_INLINE const Tx& r() const { return x; }
+  BR2_FORCE_INLINE const Tx& g() const { return y; }
+  BR2_FORCE_INLINE const Tx& b() const { return z; }
 
   //Swizzle ops
-  FORCE_INLINE Vec2x<Tx> xz();
-  FORCE_INLINE Vec2x<Tx> xy();
+  BR2_FORCE_INLINE Vec2x<Tx> xz();
+  BR2_FORCE_INLINE Vec2x<Tx> xy();
 
-  FORCE_INLINE Tx length() const;
-  FORCE_INLINE Tx length2() const;
-  FORCE_INLINE double lengthd() const;
-  FORCE_INLINE Tx squaredLength() const;
-  FORCE_INLINE void len_and_norm(vec3& __out_ n, Tx& __out_ len) const;
+  BR2_FORCE_INLINE Tx length() const;
+  BR2_FORCE_INLINE Tx length2() const;
+  BR2_FORCE_INLINE double lengthd() const;
+  BR2_FORCE_INLINE Tx squaredLength() const;
+  BR2_FORCE_INLINE void len_and_norm(vec3& __out_ n, Tx& __out_ len) const;
 
-  FORCE_INLINE Vec3x<Tx>& normalize();
-  FORCE_INLINE Vec3x<Tx>& normalize(Tx len);
-  FORCE_INLINE Vec3x<Tx> normalized() const;
-  FORCE_INLINE Vec3x<Tx> abs() const;
+  BR2_FORCE_INLINE Vec3x<Tx>& normalize();
+  BR2_FORCE_INLINE Vec3x<Tx>& normalize(Tx len);
+  BR2_FORCE_INLINE Vec3x<Tx> normalized() const;
+  BR2_FORCE_INLINE Vec3x<Tx> abs() const;
 
-  FORCE_INLINE Tx dot(const Vec3x<Tx>& v1) const;
-  FORCE_INLINE Vec3x<Tx> cross(const Vec3x<Tx>& v1) const;
-  FORCE_INLINE Tx distance(const Vec3x<Tx>& v1) const;
-  FORCE_INLINE Tx distance2(const Vec3x<Tx>& v1) const;
-  FORCE_INLINE void construct(Tx dx, Tx dy, Tx dz);
-  FORCE_INLINE void construct(const Vec3x<Tx>& rhs);
-  FORCE_INLINE Tx combine() const;
-  FORCE_INLINE Vec3x<Tx> lerpTo(const Vec3x<Tx>& v1, const Tx t) const;
-  FORCE_INLINE Vec3x<Tx> clampTo(const Vec3x<Tx>& vMin, const Vec3x<Tx>& vMax) const;
+  BR2_FORCE_INLINE Tx dot(const Vec3x<Tx>& v1) const;
+  BR2_FORCE_INLINE Vec3x<Tx> cross(const Vec3x<Tx>& v1) const;
+  BR2_FORCE_INLINE Tx distance(const Vec3x<Tx>& v1) const;
+  BR2_FORCE_INLINE Tx distance2(const Vec3x<Tx>& v1) const;
+  BR2_FORCE_INLINE void construct(Tx dx, Tx dy, Tx dz);
+  BR2_FORCE_INLINE void construct(const Vec3x<Tx>& rhs);
+  BR2_FORCE_INLINE Tx combine() const;
+  BR2_FORCE_INLINE Vec3x<Tx> lerpTo(const Vec3x<Tx>& v1, const Tx t) const;
+  BR2_FORCE_INLINE Vec3x<Tx> clampTo(const Vec3x<Tx>& vMin, const Vec3x<Tx>& vMax) const;
 
   std::string toString(int precis = -1) const;
 
-  FORCE_INLINE static Vec3x<Tx> zero();
-  FORCE_INLINE static Vec3x<Tx> VEC3X_MIN();
-  FORCE_INLINE static Vec3x<Tx> VEC3X_MAX();
+  BR2_FORCE_INLINE static Vec3x<Tx> zero();
+  BR2_FORCE_INLINE static Vec3x<Tx> VEC3X_MIN();
+  BR2_FORCE_INLINE static Vec3x<Tx> VEC3X_MAX();
 
-  FORCE_INLINE static Vec3x<Tx> minv(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);    // - Returns the minimum vector from the given two
-  FORCE_INLINE static Vec3x<Tx> maxv(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);    // returns maximujm vector of given t2o
-  FORCE_INLINE static Vec3x<Tx> maxv_a(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);  // returns maximujm vector of given t2o ABSOLUTE
-  FORCE_INLINE static Tx maxf_a(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);         // Returns the longest component of either vector (absolute)
+  BR2_FORCE_INLINE static Vec3x<Tx> minv(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);    // - Returns the minimum vector from the given two
+  BR2_FORCE_INLINE static Vec3x<Tx> maxv(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);    // returns maximujm vector of given t2o
+  BR2_FORCE_INLINE static Vec3x<Tx> maxv_a(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);  // returns maximujm vector of given t2o ABSOLUTE
+  BR2_FORCE_INLINE static Tx maxf_a(const Vec3x<Tx>& v_a, const Vec3x<Tx>& v_b);         // Returns the longest component of either vector (absolute)
 
-  FORCE_INLINE bool operator==(const Vec3x<Tx>& v) const;
-  FORCE_INLINE bool operator!=(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator==(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator!=(const Vec3x<Tx>& v) const;
 
-  FORCE_INLINE bool operator==(const Tx& f) const;
-  FORCE_INLINE bool operator!=(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator==(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator!=(const Tx& f) const;
 
   //remove unary negation
-  FORCE_INLINE Vec3x<Tx> operator-() const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator-() const;
 
-  FORCE_INLINE Vec3x<Tx> operator*(const Mat3x<Tx>& m);
+  BR2_FORCE_INLINE Vec3x<Tx> operator*(const Mat3x<Tx>& m);
 
   // Script callbacks
-  FORCE_INLINE Vec3x<Tx> plus(const Vec3x<Tx>& v) const {
+  BR2_FORCE_INLINE Vec3x<Tx> plus(const Vec3x<Tx>& v) const {
     return *this + v;
   }
-  FORCE_INLINE Vec3x<Tx> plus(const Tx& f) const {
+  BR2_FORCE_INLINE Vec3x<Tx> plus(const Tx& f) const {
     return *this + f;
   }
-  FORCE_INLINE Vec3x<Tx> minus(const Vec3x<Tx>& v) const {
+  BR2_FORCE_INLINE Vec3x<Tx> minus(const Vec3x<Tx>& v) const {
     return *this - v;
   }
-  FORCE_INLINE Vec3x<Tx> minus(const Tx& f) const {
+  BR2_FORCE_INLINE Vec3x<Tx> minus(const Tx& f) const {
     return *this - f;
   }
-  FORCE_INLINE Vec3x<Tx> times(const Vec3x<Tx>& v) const {
+  BR2_FORCE_INLINE Vec3x<Tx> times(const Vec3x<Tx>& v) const {
     return *this * v;
   }
-  FORCE_INLINE Vec3x<Tx> times(const Tx& f) const {
+  BR2_FORCE_INLINE Vec3x<Tx> times(const Tx& f) const {
     return *this * f;
   }
-  FORCE_INLINE Vec3x<Tx> divide(const Vec3x<Tx>& v) const {
+  BR2_FORCE_INLINE Vec3x<Tx> divide(const Vec3x<Tx>& v) const {
     return *this / v;
   }
-  FORCE_INLINE Vec3x<Tx> divide(const Tx& f) const {
+  BR2_FORCE_INLINE Vec3x<Tx> divide(const Tx& f) const {
     return *this / f;
   }
-  FORCE_INLINE Vec3x<Tx>& operator=(const Vec3x<Tx>& v);
-  FORCE_INLINE Vec3x<Tx>& operator+=(const Vec3x<Tx>& v);
-  FORCE_INLINE Vec3x<Tx>& operator-=(const Vec3x<Tx>& v);
-  FORCE_INLINE Vec3x<Tx>& operator*=(const Vec3x<Tx>& v);
-  FORCE_INLINE Vec3x<Tx>& operator/=(const Vec3x<Tx>& v);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator=(const Vec3x<Tx>& v);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator+=(const Vec3x<Tx>& v);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator-=(const Vec3x<Tx>& v);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator*=(const Vec3x<Tx>& v);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator/=(const Vec3x<Tx>& v);
 
-  FORCE_INLINE Vec3x<Tx>& operator=(const Tx& f);
-  FORCE_INLINE Vec3x<Tx>& operator+=(const Tx& f);
-  FORCE_INLINE Vec3x<Tx>& operator-=(const Tx& f);
-  FORCE_INLINE Vec3x<Tx>& operator*=(const Tx& f);
-  FORCE_INLINE Vec3x<Tx>& operator/=(const Tx& f);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator=(const Tx& f);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator+=(const Tx& f);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator-=(const Tx& f);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator*=(const Tx& f);
+  BR2_FORCE_INLINE Vec3x<Tx>& operator/=(const Tx& f);
 
-  FORCE_INLINE bool operator>(const Vec3x<Tx>& v) const;
-  FORCE_INLINE bool operator>=(const Vec3x<Tx>& v) const;
-  FORCE_INLINE bool operator<(const Vec3x<Tx>& v) const;
-  FORCE_INLINE bool operator<=(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator>(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator>=(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator<(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE bool operator<=(const Vec3x<Tx>& v) const;
 
-  FORCE_INLINE bool operator>(const Tx& f) const;
-  FORCE_INLINE bool operator>=(const Tx& f) const;
-  FORCE_INLINE bool operator<(const Tx& f) const;
-  FORCE_INLINE bool operator<=(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator>(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator>=(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator<(const Tx& f) const;
+  BR2_FORCE_INLINE bool operator<=(const Tx& f) const;
 
-  FORCE_INLINE Vec3x<Tx> operator+(const Vec3x<Tx>& v) const;
-  FORCE_INLINE Vec3x<Tx> operator-(const Vec3x<Tx>& v) const;
-  FORCE_INLINE Vec3x<Tx> operator*(const Vec3x<Tx>& v) const;
-  FORCE_INLINE Vec3x<Tx> operator/(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator+(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator-(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator*(const Vec3x<Tx>& v) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator/(const Vec3x<Tx>& v) const;
 
-  FORCE_INLINE Vec3x<Tx> operator+(const Tx& f) const;
-  FORCE_INLINE Vec3x<Tx> operator-(const Tx& f) const;
-  FORCE_INLINE Vec3x<Tx> operator*(const Tx& f) const;
-  FORCE_INLINE Vec3x<Tx> operator/(const Tx& f) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator+(const Tx& f) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator-(const Tx& f) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator*(const Tx& f) const;
+  BR2_FORCE_INLINE Vec3x<Tx> operator/(const Tx& f) const;
 
   //From Color3
-  FORCE_INLINE uint32_t toUint();
-  FORCE_INLINE void fromUint(const uint32_t& i);
+  BR2_FORCE_INLINE uint32_t toUint();
+  BR2_FORCE_INLINE void fromUint(const uint32_t& i);
 
-  FORCE_INLINE bool compareTo(const Vec3x<Tx>* rhs) const;  //Binary compare two vectors and return the closer in the sort order.
+  BR2_FORCE_INLINE bool compareTo(const Vec3x<Tx>* rhs) const;  //Binary compare two vectors and return the closer in the sort order.
 
   //std::Map sort Comparator
   struct Vec3xCompLess {
-    FORCE_INLINE bool operator()(const Vec3x<Tx>* lhs, const Vec3x<Tx>* rhs) const {
+    BR2_FORCE_INLINE bool operator()(const Vec3x<Tx>* lhs, const Vec3x<Tx>* rhs) const {
       return lhs->compareTo(rhs);
     }
   };
 
   // - Vector shorthands
-  FORCE_INLINE STATIC Vec3x<Tx> normalize(const Vec3x<Tx>& v1);
-  FORCE_INLINE STATIC Vec3x<Tx> cross(const Vec3x<Tx>& v1, const Vec3x<Tx>& v2);
-  //   FORCE_INLINE STATIC Vec3x<Tx> rotate(const Vec3x<Tx>& v1, const float& angle, const Vec3x<Tx>& aboutNormal);
-  FORCE_INLINE STATIC Tx dot(const Vec3x<Tx>& v1, const Vec3x<Tx>& v2);
-  FORCE_INLINE STATIC void bilinear_interpolate(const Vec3x<Tx>& a,
+  BR2_FORCE_INLINE STATIC Vec3x<Tx> normalize(const Vec3x<Tx>& v1);
+  BR2_FORCE_INLINE STATIC Vec3x<Tx> cross(const Vec3x<Tx>& v1, const Vec3x<Tx>& v2);
+  //   BR2_FORCE_INLINE STATIC Vec3x<Tx> rotate(const Vec3x<Tx>& v1, const float& angle, const Vec3x<Tx>& aboutNormal);
+  BR2_FORCE_INLINE STATIC Tx dot(const Vec3x<Tx>& v1, const Vec3x<Tx>& v2);
+  BR2_FORCE_INLINE STATIC void bilinear_interpolate(const Vec3x<Tx>& a,
                                                 const Vec3x<Tx>& b,
                                                 const Vec3x<Tx>& c,
                                                 const Vec3x<Tx>& d,
                                                 Vec3x<Tx>& __out_ avg,
                                                 float pct = 0.5f);
-  FORCE_INLINE STATIC void reflect(const Vec3x<Tx>& v, const Vec3x<Tx>& n, Vec3x<Tx>& __out_ v_r);
+  BR2_FORCE_INLINE STATIC void reflect(const Vec3x<Tx>& v, const Vec3x<Tx>& n, Vec3x<Tx>& __out_ v_r);
 
   void checkNormalOrZero();                                                                // Set number to zero if it is not normal (component-wise)
   void checkNormalOrZeroAndLimitVector(float fMaxVectorLength, bool bShowWarningMessage);  // formats the number to zero if it is not normal, also truncates the vector if it's too long.
@@ -652,7 +652,7 @@ Vec3x<Tx> Vec3x<Tx>::zero() {
 }
 
 template <class Tx>
-FORCE_INLINE uint32_t Vec3x<Tx>::toUint() {
+BR2_FORCE_INLINE uint32_t Vec3x<Tx>::toUint() {
   uint32_t ret = (uint32_t)(
       ((uint32_t)0 << 16) |
       ((uint32_t)r() << 16) |
@@ -661,7 +661,7 @@ FORCE_INLINE uint32_t Vec3x<Tx>::toUint() {
   return ret;
 }
 template <class Tx>
-FORCE_INLINE void Vec3x<Tx>::fromUint(const uint32_t& i) {
+BR2_FORCE_INLINE void Vec3x<Tx>::fromUint(const uint32_t& i) {
   r() = (i >> 16) & 0xFF;
   g() = (i >> 8) & 0xFF;
   b() = (i)&0xFF;

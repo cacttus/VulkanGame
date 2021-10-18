@@ -258,4 +258,4 @@ void LightNodePoint::calcBoundBox(Box3f& __out_ pBox, const vec3& obPos, float e
 }
 #pragma endregion
 
-}//ns game
+}//ns br2

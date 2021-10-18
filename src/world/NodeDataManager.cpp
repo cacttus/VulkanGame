@@ -10,4 +10,4 @@ NodeDataManager::~NodeDataManager() {
 
 }
 
-}//ns Game
+}//ns br2

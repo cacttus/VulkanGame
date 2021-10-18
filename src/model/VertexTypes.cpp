@@ -22,4 +22,4 @@ std::shared_ptr<VertexFormat> v_v3c4x2n3::_pVertexFormat = nullptr;
 std::shared_ptr<VertexFormat> v_GuiVert::_pVertexFormat = nullptr;
 
 
-}//ns Game
+}//ns br2

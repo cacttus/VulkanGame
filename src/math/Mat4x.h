@@ -30,92 +30,92 @@ public:
       _m31, _m32, _m33, _m34,  //
       _m41, _m42, _m43, _m44;  //
 
-  FORCE_INLINE Mat4x<Tx>();
-  FORCE_INLINE Mat4x<Tx>(const Tx (&init_list)[Mat4x<Tx>::CompSize]);
-  FORCE_INLINE Mat4x<Tx>(Tx t0, Tx t1, Tx t2, Tx t3, Tx t4, Tx t5, Tx t6, Tx t7, Tx t8, Tx t9, Tx t10, Tx t11, Tx t12, Tx t13, Tx t14, Tx t15);
+  BR2_FORCE_INLINE Mat4x<Tx>();
+  BR2_FORCE_INLINE Mat4x<Tx>(const Tx (&init_list)[Mat4x<Tx>::CompSize]);
+  BR2_FORCE_INLINE Mat4x<Tx>(Tx t0, Tx t1, Tx t2, Tx t3, Tx t4, Tx t5, Tx t6, Tx t7, Tx t8, Tx t9, Tx t10, Tx t11, Tx t12, Tx t13, Tx t14, Tx t15);
 
-  FORCE_INLINE int32_t nRows() { return 4; }
-  FORCE_INLINE int32_t nCols() { return 4; }
-  FORCE_INLINE int32_t size() { return 16; }  // - Returns the number of entries in this matrix.
-  FORCE_INLINE Vec4x<Tx> row(int row);
-  FORCE_INLINE Vec4x<Tx> col(int col);
+  BR2_FORCE_INLINE int32_t nRows() { return 4; }
+  BR2_FORCE_INLINE int32_t nCols() { return 4; }
+  BR2_FORCE_INLINE int32_t size() { return 16; }  // - Returns the number of entries in this matrix.
+  BR2_FORCE_INLINE Vec4x<Tx> row(int row);
+  BR2_FORCE_INLINE Vec4x<Tx> col(int col);
 
-  FORCE_INLINE void copyTo(Mat4x<Tx>& to);
+  BR2_FORCE_INLINE void copyTo(Mat4x<Tx>& to);
 
   //These can be confusing due to the matrix Order operations. They should be removed in favor of matrix::
-  FORCE_INLINE void lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
-  FORCE_INLINE Mat4x<Tx>& translate(Tx x, Tx y, Tx z);
-  FORCE_INLINE Mat4x<Tx>& translate(const Vec3x<Tx>& v);
-  FORCE_INLINE void rotateRad(Tx radians, Tx x, Tx y, Tx z);
-  FORCE_INLINE Mat4x<Tx>& transpose();
-  FORCE_INLINE Mat4x<Tx> transposed();
-  FORCE_INLINE void clear();
-  FORCE_INLINE void setIdentity();
-  FORCE_INLINE void decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>& scale) const;
-  FORCE_INLINE void decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>& scale, bool bDegreeRotation = false) const;
-  FORCE_INLINE Tx at(int row, int col) const;
-  FORCE_INLINE int32_t colNum(int ind);
-  FORCE_INLINE int32_t rowNum(int ind);
-  FORCE_INLINE Tx det();
-  FORCE_INLINE Mat3x<Tx> minor(int r, int c);
-  FORCE_INLINE Tx cofactor(int r, int c);
-  FORCE_INLINE Mat4x<Tx> adj();
-  FORCE_INLINE Mat4x<Tx> invert();
-  FORCE_INLINE Mat4x<Tx> inverseOf();
+  BR2_FORCE_INLINE void lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
+  BR2_FORCE_INLINE Mat4x<Tx>& translate(Tx x, Tx y, Tx z);
+  BR2_FORCE_INLINE Mat4x<Tx>& translate(const Vec3x<Tx>& v);
+  BR2_FORCE_INLINE void rotateRad(Tx radians, Tx x, Tx y, Tx z);
+  BR2_FORCE_INLINE Mat4x<Tx>& transpose();
+  BR2_FORCE_INLINE Mat4x<Tx> transposed();
+  BR2_FORCE_INLINE void clear();
+  BR2_FORCE_INLINE void setIdentity();
+  BR2_FORCE_INLINE void decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>& scale) const;
+  BR2_FORCE_INLINE void decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>& scale, bool bDegreeRotation = false) const;
+  BR2_FORCE_INLINE Tx at(int row, int col) const;
+  BR2_FORCE_INLINE int32_t colNum(int ind);
+  BR2_FORCE_INLINE int32_t rowNum(int ind);
+  BR2_FORCE_INLINE Tx det();
+  BR2_FORCE_INLINE Mat3x<Tx> minor(int r, int c);
+  BR2_FORCE_INLINE Tx cofactor(int r, int c);
+  BR2_FORCE_INLINE Mat4x<Tx> adj();
+  BR2_FORCE_INLINE Mat4x<Tx> invert();
+  BR2_FORCE_INLINE Mat4x<Tx> inverseOf();
 
-  FORCE_INLINE Quaternion<Tx> getQuaternion();
-  FORCE_INLINE Vec3x<Tx> getTranslation() const;
-  FORCE_INLINE Mat4x<Tx>& setTranslation(Tx x, Tx y, Tx z);
-  FORCE_INLINE void setTranslation(const Vec3x<Tx>& vec);
-  FORCE_INLINE void setTranslationX(Tx x);
-  FORCE_INLINE void setTranslationY(Tx y);
-  FORCE_INLINE void setTranslationZ(Tx z);
-  FORCE_INLINE Tx getTranslationX() const;
-  FORCE_INLINE Tx getTranslationY() const;
-  FORCE_INLINE Tx getTranslationZ() const;
-  FORCE_INLINE Vec4x<Tx> getTranslationVector() const;
+  BR2_FORCE_INLINE Quaternion<Tx> getQuaternion();
+  BR2_FORCE_INLINE Vec3x<Tx> getTranslation() const;
+  BR2_FORCE_INLINE Mat4x<Tx>& setTranslation(Tx x, Tx y, Tx z);
+  BR2_FORCE_INLINE void setTranslation(const Vec3x<Tx>& vec);
+  BR2_FORCE_INLINE void setTranslationX(Tx x);
+  BR2_FORCE_INLINE void setTranslationY(Tx y);
+  BR2_FORCE_INLINE void setTranslationZ(Tx z);
+  BR2_FORCE_INLINE Tx getTranslationX() const;
+  BR2_FORCE_INLINE Tx getTranslationY() const;
+  BR2_FORCE_INLINE Tx getTranslationZ() const;
+  BR2_FORCE_INLINE Vec4x<Tx> getTranslationVector() const;
 
-  FORCE_INLINE std::string toString(int precision = -1) const;
+  BR2_FORCE_INLINE std::string toString(int precision = -1) const;
 
 #pragma region Operators
-  FORCE_INLINE Mat4x<Tx> operator+(const Mat4x<Tx>& m) const;
-  FORCE_INLINE Tx& operator[](size_t i);
-  FORCE_INLINE const Tx& operator[](size_t i) const;
-  FORCE_INLINE Mat4x<Tx>& operator*=(const Mat4x<Tx>& m);
-  FORCE_INLINE const Vec4x<Tx> operator*(const Vec4x<Tx>& v) const;
-  FORCE_INLINE Mat4x<Tx>& operator=(Tx f);
-  FORCE_INLINE bool operator==(const Mat4x<Tx>& rhs) const;
-  FORCE_INLINE bool operator!=(const Mat4x<Tx>& rhs) const;
-  FORCE_INLINE Mat4x<Tx>& operator=(const Mat4x<Tx>& m);
-  FORCE_INLINE const Mat4x<Tx> operator*(const Mat4x<Tx>& m) const;
+  BR2_FORCE_INLINE Mat4x<Tx> operator+(const Mat4x<Tx>& m) const;
+  BR2_FORCE_INLINE Tx& operator[](size_t i);
+  BR2_FORCE_INLINE const Tx& operator[](size_t i) const;
+  BR2_FORCE_INLINE Mat4x<Tx>& operator*=(const Mat4x<Tx>& m);
+  BR2_FORCE_INLINE const Vec4x<Tx> operator*(const Vec4x<Tx>& v) const;
+  BR2_FORCE_INLINE Mat4x<Tx>& operator=(Tx f);
+  BR2_FORCE_INLINE bool operator==(const Mat4x<Tx>& rhs) const;
+  BR2_FORCE_INLINE bool operator!=(const Mat4x<Tx>& rhs) const;
+  BR2_FORCE_INLINE Mat4x<Tx>& operator=(const Mat4x<Tx>& m);
+  BR2_FORCE_INLINE const Mat4x<Tx> operator*(const Mat4x<Tx>& m) const;
 #pragma endregion
 
 #pragma region Static Matrix Creators
-  FORCE_INLINE static Mat4x<Tx> identity();
-  FORCE_INLINE static Mat4x<Tx> translation(const Vec3x<Tx>& vTrans);
-  FORCE_INLINE static Mat4x<Tx> translation(Tx x, Tx y, Tx z);
-  FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, const Vec3x<Tx>& vAxis);
-  FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, Tx x, Tx y, Tx z);
-  FORCE_INLINE static Mat4x<Tx> scaling(const Vec3x<Tx>& vScale);
-  FORCE_INLINE static Mat4x<Tx> scaling(Tx x, Tx y, Tx z);
-  FORCE_INLINE static Mat4x<Tx> getOrientToVector(Vec3x<Tx> v, Vec3x<Tx> up);
-  FORCE_INLINE static Mat4x<Tx> getLookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
-  FORCE_INLINE static Mat4x<Tx> getOrtho(Tx left, Tx right, Tx top, Tx bottom, Tx neard, Tx fard);
-  FORCE_INLINE static Mat4x<Tx> getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up);
-  FORCE_INLINE static bool parse(std::string, Mat4x<Tx>& mOut);
-  FORCE_INLINE static Mat4x<Tx> projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b);                     // set up a projection matrix.
-  FORCE_INLINE static Mat4x<Tx> projection(Tx fov, Tx viewport_w, Tx viewport_h, Tx near, Tx far);  // set up a projection matrix.
+  BR2_FORCE_INLINE static Mat4x<Tx> identity();
+  BR2_FORCE_INLINE static Mat4x<Tx> translation(const Vec3x<Tx>& vTrans);
+  BR2_FORCE_INLINE static Mat4x<Tx> translation(Tx x, Tx y, Tx z);
+  BR2_FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, const Vec3x<Tx>& vAxis);
+  BR2_FORCE_INLINE static Mat4x<Tx> rotation(Tx radians, Tx x, Tx y, Tx z);
+  BR2_FORCE_INLINE static Mat4x<Tx> scaling(const Vec3x<Tx>& vScale);
+  BR2_FORCE_INLINE static Mat4x<Tx> scaling(Tx x, Tx y, Tx z);
+  BR2_FORCE_INLINE static Mat4x<Tx> getOrientToVector(Vec3x<Tx> v, Vec3x<Tx> up);
+  BR2_FORCE_INLINE static Mat4x<Tx> getLookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up);
+  BR2_FORCE_INLINE static Mat4x<Tx> getOrtho(Tx left, Tx right, Tx top, Tx bottom, Tx neard, Tx fard);
+  BR2_FORCE_INLINE static Mat4x<Tx> getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up);
+  BR2_FORCE_INLINE static bool parse(std::string, Mat4x<Tx>& mOut);
+  BR2_FORCE_INLINE static Mat4x<Tx> projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b);                     // set up a projection matrix.
+  BR2_FORCE_INLINE static Mat4x<Tx> projection(Tx fov, Tx viewport_w, Tx viewport_h, Tx near, Tx far);  // set up a projection matrix.
 #pragma endregion
 
 } CACHE_ALIGN_16_GCC;
 //////////////////////////////////////////////////////////////////////////
 
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>::Mat4x() {
+BR2_FORCE_INLINE Mat4x<Tx>::Mat4x() {
   *this = 0.0f;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>::Mat4x(Tx t0, Tx t1, Tx t2, Tx t3, Tx t4, Tx t5, Tx t6, Tx t7, Tx t8, Tx t9, Tx t10, Tx t11, Tx t12, Tx t13, Tx t14, Tx t15) {
+BR2_FORCE_INLINE Mat4x<Tx>::Mat4x(Tx t0, Tx t1, Tx t2, Tx t3, Tx t4, Tx t5, Tx t6, Tx t7, Tx t8, Tx t9, Tx t10, Tx t11, Tx t12, Tx t13, Tx t14, Tx t15) {
   _m11 = t0;
   _m12 = t1;
   _m13 = t2;
@@ -134,7 +134,7 @@ FORCE_INLINE Mat4x<Tx>::Mat4x(Tx t0, Tx t1, Tx t2, Tx t3, Tx t4, Tx t5, Tx t6, T
   _m44 = t15;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>::Mat4x(const Tx (&init_list)[Mat4x<Tx>::CompSize]) {
+BR2_FORCE_INLINE Mat4x<Tx>::Mat4x(const Tx (&init_list)[Mat4x<Tx>::CompSize]) {
   static_assert(Mat4x<Tx>::CompSize == 16, "Invalid number of initializer list elements.");
   _m11 = init_list[0];
   _m12 = init_list[1];
@@ -157,7 +157,7 @@ FORCE_INLINE Mat4x<Tx>::Mat4x(const Tx (&init_list)[Mat4x<Tx>::CompSize]) {
   _m44 = init_list[15];
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::identity() {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::identity() {
   return Mat4x<Tx>{
       1, 0, 0, 0,
       0, 1, 0, 0,
@@ -166,7 +166,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::identity() {
 }
 ///////////////////////////////////////////////////////////////////////////
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::copyTo(Mat4x<Tx>& __out_ to) {
+BR2_FORCE_INLINE void Mat4x<Tx>::copyTo(Mat4x<Tx>& __out_ to) {
   to._m11 = _m11;
   to._m12 = _m12;
   to._m13 = _m13;
@@ -185,7 +185,7 @@ FORCE_INLINE void Mat4x<Tx>::copyTo(Mat4x<Tx>& __out_ to) {
   to._m44 = _m44;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::setTranslation(Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::setTranslation(Tx x, Tx y, Tx z) {
   _m41 = x;
   _m42 = y;
   _m43 = z;
@@ -193,7 +193,7 @@ FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::setTranslation(Tx x, Tx y, Tx z) {
   return *this;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::operator+(const Mat4x<Tx>& m) const {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::operator+(const Mat4x<Tx>& m) const {
   Mat4x<Tx> ret;
   for (int i = 0; i < 16; ++i) {
     ret[i] = this->Mat(i) + m[i];
@@ -206,7 +206,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::operator+(const Mat4x<Tx>& m) const {
 *  (http://cache-www.intel.com/cd/00/00/29/37/293748_293748.pdf)
 */
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx> Mat4x<Tx>::getQuaternion() {
+BR2_FORCE_INLINE Quaternion<Tx> Mat4x<Tx>::getQuaternion() {
   Tx s0, s1, s2;
   int32_t k0, k1, k2, k3;
   Tx q[4];
@@ -261,11 +261,11 @@ FORCE_INLINE Quaternion<Tx> Mat4x<Tx>::getQuaternion() {
   return ret;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(const Vec3x<Tx>& vTrans) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(const Vec3x<Tx>& vTrans) {
   return translation(vTrans.x, vTrans.y, vTrans.z);
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(Tx x, Tx y, Tx z) {
   Mat4x<Tx> m = Mat4x<Tx>::identity();
 
   m._m41 = x;
@@ -275,11 +275,11 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::translation(Tx x, Tx y, Tx z) {
   return m;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::rotation(Tx radians, const Vec3x<Tx>& vAxis) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::rotation(Tx radians, const Vec3x<Tx>& vAxis) {
   return rotation(radians, vAxis.x, vAxis.y, vAxis.z);
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::rotation(Tx radians, Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::rotation(Tx radians, Tx x, Tx y, Tx z) {
   // - Reference: The openGL reference.http://pyopengl.sourceforge.net/documentation/manual/reference-GL.html
   Mat4x<Tx> Temp = Mat4x<Tx>::identity();
 
@@ -315,7 +315,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::rotation(Tx radians, Tx x, Tx y, Tx z) {
 *  @brief Returns a matrix that would, when multiplied by a vector, rotate that vector to align with this input vector v. 
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up) {
   if (v.x + v.y + v.z != 1.0) {
     v.normalize();
   }
@@ -341,7 +341,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up)
 
   //TODO: possible error may rotate opposite. (would need to do opposite cross of up.cross(v) scuz cross v
 
-  return Mat4x<Tx>::getRotationRad(ang, perp.x, perp.y, perp.z);
+  return Mat4x<Tx>::rotation(ang, perp.x, perp.y, perp.z);
 }
 /**
 *  @fn scale()
@@ -351,11 +351,11 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getRotationToVector(Vec3x<Tx> v, Vec3x<Tx> up)
 *
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(const Vec3x<Tx>& vScale) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(const Vec3x<Tx>& vScale) {
   return scaling(vScale.x, vScale.y, vScale.z);
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(Tx x, Tx y, Tx z) {
   Mat4x<Tx> m = Mat4x<Tx>::identity();
   m._m11 = x;
   m._m22 = y;
@@ -365,7 +365,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::scaling(Tx x, Tx y, Tx z) {
 }
 
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx viewport_h, Tx z_near, Tx z_far) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx viewport_h, Tx z_near, Tx z_far) {
   //setup a 3D projection matrix.
   //fov = field of view (radians)
   //viewport_w - width of viewport (swapchain image)
@@ -392,7 +392,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx fov_radians, Tx viewport_w, Tx v
       vh, -vh);
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b) {
   //Alternative projection matrix speicfying the viewport bounds.
   //TODO: [-1,1] OpenGL, [0,1] Vulkan
   Mat4x<Tx> m;
@@ -427,7 +427,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::projection(Tx n, Tx f, Tx l, Tx r, Tx t, Tx b)
 //untested
 //http://www.opengl.org/sdk/docs/man/xhtml/gluLookAt.xml
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getOrientToVector(Vec3x<Tx> v, Vec3x<Tx> up) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getOrientToVector(Vec3x<Tx> v, Vec3x<Tx> up) {
   Mat4x<Tx> m = Mat4x<Tx>::identity();
 
   v = v.normalize();
@@ -454,13 +454,13 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getOrientToVector(Vec3x<Tx> v, Vec3x<Tx> up) {
   return m;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getLookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up) {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getLookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up) {
   Mat4x<Tx> m;
   m.lookAt(eye, center, up);
   return m;
 }
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up) {
+BR2_FORCE_INLINE void Mat4x<Tx>::lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& center, const Vec3x<Tx>& up) {
   // also see
   //http://www-01.ibm.com/support/knowledgecenter/ssw_aix_53/com.ibm.aix.opengl/doc/openglrf/gluLookAt.htm%23b5c874e426rree
   /*
@@ -516,11 +516,11 @@ FORCE_INLINE void Mat4x<Tx>::lookAt(const Vec3x<Tx>& eye, const Vec3x<Tx>& cente
 *
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::translate(Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::translate(Tx x, Tx y, Tx z) {
   return (*this *= translation(x, y, z));
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::translate(const Vec3x<Tx>& v) {
+BR2_FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::translate(const Vec3x<Tx>& v) {
   return (*this *= translation(v.x, v.y, v.z));
 }
 /**
@@ -530,7 +530,7 @@ FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::translate(const Vec3x<Tx>& v) {
 *  a is in degrees
 */
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::rotateRad(Tx a, Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE void Mat4x<Tx>::rotateRad(Tx a, Tx x, Tx y, Tx z) {
   *this *= getRotationRad(a, x, y, z);
 }
 /**
@@ -538,7 +538,7 @@ FORCE_INLINE void Mat4x<Tx>::rotateRad(Tx a, Tx x, Tx y, Tx z) {
 *  @details Transpose the matrix.
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::transpose() {
+BR2_FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::transpose() {
   *this = {
       _m11, _m21, _m31, _m41,
       _m12, _m22, _m32, _m42,
@@ -548,7 +548,7 @@ FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::transpose() {
   return *this;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::transposed() {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::transposed() {
   Mat4x<Tx> ret = *this;
   ret.transpose();
   return ret;
@@ -558,7 +558,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::transposed() {
 *  @details Clear the matrix.
 */
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::clear() {
+BR2_FORCE_INLINE void Mat4x<Tx>::clear() {
   for (uint32_t n = 0; n < 16; ++n) {
     operator[](n) = (Tx)0.0;
   }
@@ -569,7 +569,7 @@ FORCE_INLINE void Mat4x<Tx>::clear() {
 *    Works on row matrices as well.
 */
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::setIdentity() {
+BR2_FORCE_INLINE void Mat4x<Tx>::setIdentity() {
   _m11 = _m22 = _m33 = _m44 = (Tx)1.0;
   _m21 = _m31 = _m41 = _m12 = (Tx)0.0;
   _m32 = _m42 = _m13 = _m23 = (Tx)0.0;
@@ -581,7 +581,7 @@ FORCE_INLINE void Mat4x<Tx>::setIdentity() {
 *  @remarks Only use 0-3 for indexes.
 */
 template <typename Tx>
-FORCE_INLINE Tx Mat4x<Tx>::at(int row, int col) const {
+BR2_FORCE_INLINE Tx Mat4x<Tx>::at(int row, int col) const {
   return operator[](row* col + row);
 }
 /**
@@ -589,7 +589,7 @@ FORCE_INLINE Tx Mat4x<Tx>::at(int row, int col) const {
 *  @brief Returns the zero-based index of the column in which the supplied index lies.
 */
 template <typename Tx>
-FORCE_INLINE int32_t Mat4x<Tx>::colNum(int ind) {
+BR2_FORCE_INLINE int32_t Mat4x<Tx>::colNum(int ind) {
   return (int32_t)floor((double)((double)ind / 4.0));
 }
 /**
@@ -597,7 +597,7 @@ FORCE_INLINE int32_t Mat4x<Tx>::colNum(int ind) {
 *  @brief Returns the zero-based index of the row in which the supplied index lies.
 */
 template <typename Tx>
-FORCE_INLINE int32_t Mat4x<Tx>::rowNum(int ind) {
+BR2_FORCE_INLINE int32_t Mat4x<Tx>::rowNum(int ind) {
   return ind % 4;
 }
 /**
@@ -609,7 +609,7 @@ FORCE_INLINE int32_t Mat4x<Tx>::rowNum(int ind) {
 *  pivoting a single element. This method can be optimized better.
 */
 template <typename Tx>
-FORCE_INLINE Tx Mat4x<Tx>::det() {
+BR2_FORCE_INLINE Tx Mat4x<Tx>::det() {
   Tx a = _m11 * ((_m22 * _m33 * _m44) + (_m23 * _m34 * _m42) + (_m24 * _m32 * _m43) - (_m22 * _m34 * _m43) - (_m23 * _m32 * _m44) - (_m24 * _m33 * _m42));
   Tx b = -_m12 * ((_m21 * _m33 * _m44) + (_m23 * _m34 * _m41) + (_m24 * _m31 * _m43) - (_m21 * _m34 * _m43) - (_m23 * _m31 * _m44) - (_m24 * _m33 * _m41));
   Tx c = +_m13 * ((_m21 * _m32 * _m44) + (_m22 * _m34 * _m41) + (_m24 * _m31 * _m42) - (_m21 * _m34 * _m42) - (_m22 * _m31 * _m44) - (_m24 * _m32 * _m41));
@@ -621,7 +621,7 @@ FORCE_INLINE Tx Mat4x<Tx>::det() {
 *  @brief returns the Adjoint of this matrix.
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::adj() {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::adj() {
   //TODO:Optimize (transpose)
   Tx f[] = {
       cofactor(0, 0), cofactor(0, 1), cofactor(0, 2), cofactor(0, 3),
@@ -636,7 +636,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::adj() {
 *  @remarks The inverse is the classical adjoint divided by the determinant of the adjoint
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::invert() {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::invert() {
   //**Note:
   //Transpose of an orthogonal matrix is it's inverse
   //If we're orthogonal return the transpose.
@@ -660,7 +660,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::invert() {
   return *this;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::inverseOf() {
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::inverseOf() {
   Mat4x<Tx> ret = *this;
   ret.invert();
   return ret;
@@ -672,7 +672,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::inverseOf() {
 TODO:ERROR - this may be a column and row interchange problem.
 */
 template <typename Tx>
-FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::row(int row) {
+BR2_FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::row(int row) {
   return Vec4x<Tx>(operator[](row), operator[](row + 4), operator[](row + 8), operator[](row + 12));
 }
 /**
@@ -681,11 +681,11 @@ FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::row(int row) {
 *  @remarks Only use 0-3 for indexes
 */
 template <typename Tx>
-FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::col(int col) {
+BR2_FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::col(int col) {
   return Vec4x<Tx>(operator[](col * 4 + 0), operator[](col * 4 + 1), operator[](col * 4 + 2), operator[](col * 4 + 3));
 }
 template <typename Tx>
-FORCE_INLINE const Tx& Mat4x<Tx>::operator[](size_t i) const {
+BR2_FORCE_INLINE const Tx& Mat4x<Tx>::operator[](size_t i) const {
   //TODO: get AssertOrThrow2 here without dependnecies.
   if (i >= Mat4x<Tx>::CompSize) {
     throw 0;
@@ -740,7 +740,7 @@ FORCE_INLINE const Tx& Mat4x<Tx>::operator[](size_t i) const {
   }
 }
 template <typename Tx>
-FORCE_INLINE Tx& Mat4x<Tx>::operator[](size_t i) {
+BR2_FORCE_INLINE Tx& Mat4x<Tx>::operator[](size_t i) {
   //TODO: get AssertOrThrow2 here without dependnecies.
   if (i >= Mat4x<Tx>::CompSize) {
     throw 0;
@@ -801,7 +801,7 @@ FORCE_INLINE Tx& Mat4x<Tx>::operator[](size_t i) {
 *  @param m: the matrix to multiply by.
 */
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator*=(const Mat4x<Tx>& m) {
+BR2_FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator*=(const Mat4x<Tx>& m) {
   if (this == &m) {
     return *this;
   }
@@ -839,7 +839,7 @@ FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator*=(const Mat4x<Tx>& m) {
 *  Vector*Matrix always yields a vector
 */
 template <typename Tx>
-FORCE_INLINE const Vec4x<Tx> Mat4x<Tx>::operator*(const Vec4x<Tx>& v) const {
+BR2_FORCE_INLINE const Vec4x<Tx> Mat4x<Tx>::operator*(const Vec4x<Tx>& v) const {
   // #if using row vectors, alert user, quit.
   Mat4x<Tx> m = *this;
   Vec4x<Tx> vret;
@@ -872,7 +872,7 @@ FORCE_INLINE const Vec4x<Tx> Mat4x<Tx>::operator*(const Vec4x<Tx>& v) const {
   return vret;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator=(const Tx f) {
+BR2_FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator=(const Tx f) {
   for (int i = 0; i < 16; ++i) {
     operator[](i) = f;
   }
@@ -880,7 +880,7 @@ FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator=(const Tx f) {
   return *this;
 }
 template <typename Tx>
-FORCE_INLINE bool Mat4x<Tx>::operator==(const Mat4x<Tx>& rhs) const {
+BR2_FORCE_INLINE bool Mat4x<Tx>::operator==(const Mat4x<Tx>& rhs) const {
   for (int i = 0; i < 16; ++i) {
     if (operator[](i) != rhs.operator[](i)) {
       return false;
@@ -889,7 +889,7 @@ FORCE_INLINE bool Mat4x<Tx>::operator==(const Mat4x<Tx>& rhs) const {
   return true;
 }
 template <typename Tx>
-FORCE_INLINE bool Mat4x<Tx>::operator!=(const Mat4x<Tx>& rhs) const {
+BR2_FORCE_INLINE bool Mat4x<Tx>::operator!=(const Mat4x<Tx>& rhs) const {
   for (int i = 0; i < 16; ++i) {
     if (operator[](i) != rhs.operator[](i)) {
       return true;
@@ -898,7 +898,7 @@ FORCE_INLINE bool Mat4x<Tx>::operator!=(const Mat4x<Tx>& rhs) const {
   return false;
 }
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator=(const Mat4x<Tx>& m) {
+BR2_FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator=(const Mat4x<Tx>& m) {
   for (int i = 0; i < 16; ++i) {
     operator[](i) = m[i];
   }
@@ -906,13 +906,13 @@ FORCE_INLINE Mat4x<Tx>& Mat4x<Tx>::operator=(const Mat4x<Tx>& m) {
   return *this;
 }
 template <typename Tx>
-FORCE_INLINE const Mat4x<Tx> Mat4x<Tx>::operator*(const Mat4x<Tx>& m) const {
+BR2_FORCE_INLINE const Mat4x<Tx> Mat4x<Tx>::operator*(const Mat4x<Tx>& m) const {
   Mat4x<Tx> tmp = *this;
   tmp *= m;
   return tmp;
 }
 template <typename Tx>
-FORCE_INLINE Vec3x<Tx> Mat4x<Tx>::getTranslation() const {
+BR2_FORCE_INLINE Vec3x<Tx> Mat4x<Tx>::getTranslation() const {
   Vec3x<Tx> ret;
   ret.x = _m41;
   ret.y = _m42;
@@ -920,42 +920,42 @@ FORCE_INLINE Vec3x<Tx> Mat4x<Tx>::getTranslation() const {
   return ret;
 }
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::setTranslation(const Vec3x<Tx>& vec) {
+BR2_FORCE_INLINE void Mat4x<Tx>::setTranslation(const Vec3x<Tx>& vec) {
   _m41 = vec.x;
   _m42 = vec.y;
   _m43 = vec.z;
 }
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::setTranslationX(Tx x) {
+BR2_FORCE_INLINE void Mat4x<Tx>::setTranslationX(Tx x) {
   _m41 = x;
 }
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::setTranslationY(Tx y) {
+BR2_FORCE_INLINE void Mat4x<Tx>::setTranslationY(Tx y) {
   _m42 = y;
 }
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::setTranslationZ(Tx z) {
+BR2_FORCE_INLINE void Mat4x<Tx>::setTranslationZ(Tx z) {
   _m43 = z;
 }
 template <typename Tx>
-FORCE_INLINE Tx Mat4x<Tx>::getTranslationX() const {
+BR2_FORCE_INLINE Tx Mat4x<Tx>::getTranslationX() const {
   return _m41;
 }
 template <typename Tx>
-FORCE_INLINE Tx Mat4x<Tx>::getTranslationY() const {
+BR2_FORCE_INLINE Tx Mat4x<Tx>::getTranslationY() const {
   return _m42;
 }
 template <typename Tx>
-FORCE_INLINE Tx Mat4x<Tx>::getTranslationZ() const {
+BR2_FORCE_INLINE Tx Mat4x<Tx>::getTranslationZ() const {
   return _m43;
 }
 template <typename Tx>
-FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::getTranslationVector() const {
+BR2_FORCE_INLINE Vec4x<Tx> Mat4x<Tx>::getTranslationVector() const {
   return Vec4x<Tx>{_m41, _m42, _m43, _m44};
 }
 
 template <typename Tx>
-FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getOrtho(Tx left, Tx right, Tx top,
+BR2_FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getOrtho(Tx left, Tx right, Tx top,
                                            Tx bottom, Tx neard, Tx fard) {
   Mat4x<Tx> mm;
 
@@ -982,7 +982,7 @@ FORCE_INLINE Mat4x<Tx> Mat4x<Tx>::getOrtho(Tx left, Tx right, Tx top,
 }
 
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>& scale) const {
+BR2_FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>& scale) const {
   //http://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati
   //11  21  31  41 << Don't use gl order
   //12  22  32  42
@@ -1008,7 +1008,7 @@ FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Mat4x<Tx>& rot, Vec4x<Tx>
   rot._m33 = _m33 / scale.z;
 }
 template <typename Tx>
-FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>& scale, bool bDegreeRotation) const {
+BR2_FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>& scale, bool bDegreeRotation) const {
   Mat4x<Tx> mOut;
   decompose(pos, mOut, scale);
 
@@ -1020,7 +1020,7 @@ FORCE_INLINE void Mat4x<Tx>::decompose(Vec4x<Tx>& pos, Vec4x<Tx>& rot, Vec4x<Tx>
   }
 }
 template <typename Tx>
-FORCE_INLINE bool Mat4x<Tx>::parse(std::string tok, Mat4x<Tx>& mOut) {
+BR2_FORCE_INLINE bool Mat4x<Tx>::parse(std::string tok, Mat4x<Tx>& mOut) {
   // - Parse csv matrix string.
 
   size_t n = 0;

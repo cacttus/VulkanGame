@@ -78,7 +78,7 @@ private:
   vec3& getCamLookAt() { return _vLookAt; }
 };
 
-}//ns Game
+}//ns br2
 
 
 

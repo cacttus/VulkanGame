@@ -222,7 +222,7 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
   //  }
   //}
   /*
-  //*************THIS
+  // *************THIS
       std::vector<future> futs
     foreach light {
       futs.push_back(light->updateandcullasync())

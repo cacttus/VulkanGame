@@ -146,7 +146,7 @@ private:
   void convertMobs();
 };
 
-}//ns Game
+}//ns br2
 
 
 

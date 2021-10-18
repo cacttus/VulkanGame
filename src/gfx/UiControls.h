@@ -271,7 +271,7 @@ public:
   UiLabel() {}
   virtual ~UiLabel() override {}
   virtual void init() override;
-  std::string getText() { return _strText; }
+  std::string getText();
   void setText(std::string s);
   virtual void performLayout(std::shared_ptr<UiScreen> s, bool bForce) override;
   void enableWordWrap() { _bWordWrap = true; }
@@ -282,8 +282,8 @@ protected:
 
 private:
   std::vector<std::shared_ptr<UiGlyph>> _vecGlyphs;
-  std::string _strText = "";
-  std::string _strTextLast = "";
+  std::wstring _strText = L"";
+  std::wstring _strTextLast = L"";
   std::shared_ptr<MeshNode> _pMesh = nullptr;
   std::shared_ptr<UiLabelSkin> _pFontInfo = nullptr;
   bool _bWordWrap = false;
@@ -673,7 +673,7 @@ private:
   void updateLayout(std::shared_ptr<InputManager> pInputManager);
 };
 
-}//ns Game
+}//ns br2
 
 
 

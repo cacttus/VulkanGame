@@ -36,7 +36,7 @@ public:
   void touchBegin(vec2& mouse, ButtonState::e b);
   void touchEnd(vec2& mouse, ButtonState::e b);
 };
-}//ns Game
+}//ns br2
 
 
 

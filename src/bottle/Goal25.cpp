@@ -5,4 +5,4 @@ Goal25::Goal25(Brain25* pBrain) : _pBrain(pBrain) {
 }
 Goal25::~Goal25() {
 }
-}//ns Game
+}//ns br2

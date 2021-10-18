@@ -344,4 +344,4 @@ void WorldCellFile::decompressGroups(std::vector<W25CompressedCellGroup*>& inGro
 
   // clearCells();
 }
-}//ns Game
+}//ns br2

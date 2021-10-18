@@ -59,6 +59,6 @@ public:
   Walker(WalkerSpec* ps) : _pSpec(ps) {}
   virtual ~Walker() override {}
 };
-}//ns Game
+}//ns br2
 
 #endif

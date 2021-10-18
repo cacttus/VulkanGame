@@ -147,6 +147,6 @@ private:
   size_t _nTotalVerts = 0;
 
 };
-}//ns Game
+}//ns br2
 
 #endif

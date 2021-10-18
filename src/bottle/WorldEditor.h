@@ -100,7 +100,7 @@ private:
   std::shared_ptr<MeshNode> _pHoverDot = nullptr;
 
 };
-}//ns Game
+}//ns br2
 
 
 

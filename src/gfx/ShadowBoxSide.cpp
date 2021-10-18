@@ -204,4 +204,4 @@ void ShadowBoxSide::renderShadows(std::shared_ptr<ShadowBox> pMasterBox, bool bF
 
   Perf::popPerf();
 }
-}//ns Game
+}//ns br2

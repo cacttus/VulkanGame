@@ -46,7 +46,7 @@ private:
   bool isEscapeCharacter(char c);
 };
 
-}//ns game
+}//ns br2
 
 
 

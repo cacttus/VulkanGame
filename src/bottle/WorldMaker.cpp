@@ -230,4 +230,4 @@ void WorldMaker::loadAllGrids(std::set<std::shared_ptr<WorldGrid>>& __out_ grids
     grids.insert(pg);
   }
 }
-}//ns game
+}//ns br2

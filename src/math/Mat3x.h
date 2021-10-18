@@ -24,44 +24,44 @@ public:
   Tx _m21, _m22, _m23;
   Tx _m31, _m32, _m33;
 
-  FORCE_INLINE Mat3x<Tx>();
-  FORCE_INLINE Mat3x<Tx>(Tx (&f)[9]);
+  BR2_FORCE_INLINE Mat3x<Tx>();
+  BR2_FORCE_INLINE Mat3x<Tx>(Tx (&f)[9]);
 
-  FORCE_INLINE Tx& Mat(size_t i) { return (Tx&)*((Tx*)(this) + i); }
-  FORCE_INLINE const Tx& Mat(size_t i) const { return (Tx&)*((Tx*)(this) + i); }
+  BR2_FORCE_INLINE Tx& Mat(size_t i) { return (Tx&)*((Tx*)(this) + i); }
+  BR2_FORCE_INLINE const Tx& Mat(size_t i) const { return (Tx&)*((Tx*)(this) + i); }
 
-  FORCE_INLINE void scale(Tx x, Tx y, Tx z);            // - Scales this matrix by some amount
-  FORCE_INLINE void rotateRad(Tx a, Tx x, Tx y, Tx z);  // - Rotates this matrix.
-  FORCE_INLINE void rotateRad(Tx a, Vec3x<Tx>& vec);         // - Rotates this matrix.
+  BR2_FORCE_INLINE void scale(Tx x, Tx y, Tx z);            // - Scales this matrix by some amount
+  BR2_FORCE_INLINE void rotateRad(Tx a, Tx x, Tx y, Tx z);  // - Rotates this matrix.
+  BR2_FORCE_INLINE void rotateRad(Tx a, Vec3x<Tx>& vec);         // - Rotates this matrix.
 
-  FORCE_INLINE Mat3x<Tx> inverse();
-  FORCE_INLINE Tx det();         // determinant
-  FORCE_INLINE Mat3x<Tx> adj();  // adjoint
+  BR2_FORCE_INLINE Mat3x<Tx> inverse();
+  BR2_FORCE_INLINE Tx det();         // determinant
+  BR2_FORCE_INLINE Mat3x<Tx> adj();  // adjoint
 
-  FORCE_INLINE Tx& operator[](const size_t i);
+  BR2_FORCE_INLINE Tx& operator[](const size_t i);
 
-  FORCE_INLINE Mat3x<Tx>& operator*=(const Mat3x<Tx>& rhs);
-  FORCE_INLINE Mat3x<Tx> operator*(const Mat3x<Tx>& rhs);
+  BR2_FORCE_INLINE Mat3x<Tx>& operator*=(const Mat3x<Tx>& rhs);
+  BR2_FORCE_INLINE Mat3x<Tx> operator*(const Mat3x<Tx>& rhs);
 
-  FORCE_INLINE Mat3x<Tx>& operator=(const Mat3x<Tx>& rhs);
-  FORCE_INLINE Mat3x<Tx>& operator=(const Mat4x<Tx>& rhs);
+  BR2_FORCE_INLINE Mat3x<Tx>& operator=(const Mat3x<Tx>& rhs);
+  BR2_FORCE_INLINE Mat3x<Tx>& operator=(const Mat4x<Tx>& rhs);
 
-  FORCE_INLINE Vec3x<Tx> operator*(const Vec3x<Tx>& v);
+  BR2_FORCE_INLINE Vec3x<Tx> operator*(const Vec3x<Tx>& v);
 
-  FORCE_INLINE void setIdentity();  // - Sets this matrix to it's identity.
-  FORCE_INLINE Mat4x<Tx> getMat4();
-  FORCE_INLINE Quaternion<Tx> getQuaternion();  // - Returns the quaternion of this matrix
+  BR2_FORCE_INLINE void setIdentity();  // - Sets this matrix to it's identity.
+  BR2_FORCE_INLINE Mat4x<Tx> getMat4();
+  BR2_FORCE_INLINE Quaternion<Tx> getQuaternion();  // - Returns the quaternion of this matrix
 
-  FORCE_INLINE STATIC Mat3x<Tx> getScale(Tx x, Tx y, Tx z);              // - Returns a scale matrix of x,y,z.
-  FORCE_INLINE STATIC Mat3x<Tx> getRotationRad(Tx a, Tx x, Tx y, Tx z);  // - Returns a rotation matrix in radians.
-  FORCE_INLINE STATIC Mat3x<Tx> getRotationRad(Tx a, const Vec3x<Tx>& v);     // - Returns a rotation matrix in radians.
-  FORCE_INLINE std::string toString(int precision = -1) const;
+  BR2_FORCE_INLINE STATIC Mat3x<Tx> getScale(Tx x, Tx y, Tx z);              // - Returns a scale matrix of x,y,z.
+  BR2_FORCE_INLINE STATIC Mat3x<Tx> getRotationRad(Tx a, Tx x, Tx y, Tx z);  // - Returns a rotation matrix in radians.
+  BR2_FORCE_INLINE STATIC Mat3x<Tx> getRotationRad(Tx a, const Vec3x<Tx>& v);     // - Returns a rotation matrix in radians.
+  BR2_FORCE_INLINE std::string toString(int precision = -1) const;
 };
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx>::Mat3x() {
+BR2_FORCE_INLINE Mat3x<Tx>::Mat3x() {
 }
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx>::Mat3x(Tx (&f)[9]) {
+BR2_FORCE_INLINE Mat3x<Tx>::Mat3x(Tx (&f)[9]) {
   _m11 = f[0];
   _m12 = f[1];
   _m13 = f[2];
@@ -73,7 +73,7 @@ FORCE_INLINE Mat3x<Tx>::Mat3x(Tx (&f)[9]) {
   _m33 = f[8];  
 }
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::adj() {
+BR2_FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::adj() {
   // - The expanded cofactor adjoint.
   Mat3x<Tx> m;
   m._m11 = 0.0f * ((_m22 * _m33) - (_m23 * _m32));
@@ -88,14 +88,14 @@ FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::adj() {
   return m;
 }
 template <typename Tx>
-FORCE_INLINE Tx Mat3x<Tx>::det() {
+BR2_FORCE_INLINE Tx Mat3x<Tx>::det() {
   return (
       _m11 * _m22 * _m33 +
       _m21 * _m32 * _m13 +
       _m12 * _m23 * _m31 - (_m13 * _m22 * _m31) - (_m12 * _m21 * _m33) - (_m23 * _m32 * _m11));
 }
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::inverse() {
+BR2_FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::inverse() {
   Mat3x<Tx> m = adj();
 
   Tx d = m.det();
@@ -106,7 +106,7 @@ FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::inverse() {
 }
 
 template <typename Tx>
-FORCE_INLINE Quaternion<Tx> Mat3x<Tx>::getQuaternion() {
+BR2_FORCE_INLINE Quaternion<Tx> Mat3x<Tx>::getQuaternion() {
   Tx s0, s1, s2;
   int32_t k0, k1, k2, k3;
   Tx q[4];
@@ -162,7 +162,7 @@ FORCE_INLINE Quaternion<Tx> Mat3x<Tx>::getQuaternion() {
 *  @brief Sets the identity of this matrix.
 */
 template <typename Tx>
-FORCE_INLINE void Mat3x<Tx>::setIdentity() {
+BR2_FORCE_INLINE void Mat3x<Tx>::setIdentity() {
   /*
     0  3  6
     1  4  7
@@ -183,7 +183,7 @@ FORCE_INLINE void Mat3x<Tx>::setIdentity() {
 *
 */
 template <typename Tx>
-FORCE_INLINE void Mat3x<Tx>::scale(Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE void Mat3x<Tx>::scale(Tx x, Tx y, Tx z) {
   *this *= getScale(x, y, z);
 }
 /**
@@ -194,7 +194,7 @@ FORCE_INLINE void Mat3x<Tx>::scale(Tx x, Tx y, Tx z) {
 *
 */
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getScale(Tx x, Tx y, Tx z) {
+BR2_FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getScale(Tx x, Tx y, Tx z) {
   Mat3x<Tx> m;
   m._m11 = x;
   m._m22 = y;
@@ -211,12 +211,12 @@ FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::getScale(Tx x, Tx y, Tx z) {
 *
 */
 template <typename Tx>
-FORCE_INLINE Tx& Mat3x<Tx>::operator[](const size_t i) {
+BR2_FORCE_INLINE Tx& Mat3x<Tx>::operator[](const size_t i) {
   return Mat(i);
 }
 
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator*=(const Mat3x<Tx>& m) {
+BR2_FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator*=(const Mat3x<Tx>& m) {
   Mat3x<Tx> tMat;
   tMat._m11 = (_m11 * m._m11) + (_m12 * m._m21) + (_m13 * m._m31);
   tMat._m21 = (_m21 * m._m11) + (_m22 * m._m21) + (_m23 * m._m31);
@@ -233,13 +233,13 @@ FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator*=(const Mat3x<Tx>& m) {
   return *this;
 }
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::operator*(const Mat3x<Tx>& rhs) {
+BR2_FORCE_INLINE Mat3x<Tx> Mat3x<Tx>::operator*(const Mat3x<Tx>& rhs) {
   Mat3x<Tx> m;
   m *= rhs;
   return m;
 }
 template <typename Tx>
-FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator=(const Mat3x<Tx>& rhs) {
+BR2_FORCE_INLINE Mat3x<Tx>& Mat3x<Tx>::operator=(const Mat3x<Tx>& rhs) {
   _m11 = rhs._m11;
   _m12 = rhs._m12;
   _m13 = rhs._m13;

@@ -34,7 +34,7 @@ private:
   float _lineWidth;
 };
 
-}//ns game
+}//ns br2
 
 
 

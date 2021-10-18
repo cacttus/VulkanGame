@@ -34,7 +34,7 @@ public:
   string_t _appName;
   HashMap<XmlConfigEntry> _entries;
 };
-}//ns Game
+}//ns br2
 
 
 
