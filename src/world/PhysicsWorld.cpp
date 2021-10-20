@@ -42,17 +42,17 @@ PhysicsWorld::~PhysicsWorld() {
 }
 
 std::shared_ptr<PhysicsWorld> PhysicsWorld::create(std::shared_ptr<Scene> s, float fNodeWidth, float fNodeHeight, const vec3& vUp,
-  MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
-  MpInt mpNodesY, uint32_t iGridCountLimit) {
+                                                   MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
+                                                   MpInt mpNodesY, uint32_t iGridCountLimit) {
   std::shared_ptr<PhysicsWorld> w = std::make_shared<PhysicsWorld>(s);
   w->init(fNodeWidth, fNodeHeight, vUp, awXZ, awXZInc, awY, awYInc, mpNodesY, iGridCountLimit);
   return w;
 }
 std::multimap<float, std::shared_ptr<PhysicsGrid>>& PhysicsWorld::getVisibleGrids() { return _pRenderBucket->getGrids(); }
 std::multimap<float, std::shared_ptr<SceneNode>>& PhysicsWorld::getVisibleNodes() { return _pRenderBucket->getObjs(); }
-void PhysicsWorld::init(float fNodeWidth, float fNodeHeight,const vec3& vUp,
-  MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
-  MpInt mpNodesY, uint32_t iGridCountLimit) {
+void PhysicsWorld::init(float fNodeWidth, float fNodeHeight, const vec3& vUp,
+                        MpFloat awXZ, float awXZInc, MpFloat awY, float awYInc,
+                        MpInt mpNodesY, uint32_t iGridCountLimit) {
   _vUp = vUp;
   _fNodeWidth = fNodeWidth;
   _fNodeHeight = fNodeHeight;
@@ -79,7 +79,7 @@ void PhysicsWorld::getNodeRangeForBox(Box3f* c, ivec3* __out_ p0, ivec3* __out_ 
   }
 
   //Validate
-  int32_t ciMaxCellsXYZ = 999999999; // 999mil
+  int32_t ciMaxCellsXYZ = 999999999;  // 999mil
   int32_t x, y, z;
   x = (p1->x - p0->x);
   y = (p1->y - p0->y);
@@ -88,7 +88,7 @@ void PhysicsWorld::getNodeRangeForBox(Box3f* c, ivec3* __out_ p0, ivec3* __out_ 
   AssertOrThrow2(x >= 0);
   AssertOrThrow2(y >= 0);
   AssertOrThrow2(z >= 0);
-  AssertOrThrow2(x < ciMaxCellsXYZ);//theoretically we can have more than this.
+  AssertOrThrow2(x < ciMaxCellsXYZ);  //theoretically we can have more than this.
   AssertOrThrow2(y < ciMaxCellsXYZ);
   AssertOrThrow2(z < ciMaxCellsXYZ);
 }
@@ -99,7 +99,7 @@ ivec3 PhysicsWorld::v3Toi3Any(vec3& v, float w1, float h1) {
   ivec3 ret;
   float ex, ey, ez;
 
-  ex = v.x * w1; //** w1 is the RECIPROCAL width of the cell/node
+  ex = v.x * w1;  //** w1 is the RECIPROCAL width of the cell/node
   ey = v.y * h1;
   ez = v.z * w1;
 
@@ -380,7 +380,7 @@ void PhysicsWorld::collisionLoopDual(float delta) {
 }
 void PhysicsWorld::postCollide(uint64_t frameId, bool bAccel) {
   std::set<std::shared_ptr<PhysicsNode>> vecFinalActive;
-  int32_t  nIter2 = 0;
+  int32_t nIter2 = 0;
   for (std::shared_ptr<PhysicsNode> ob : _vecActiveFrame) {
     vec3 p_cur = ob->getTempPos();
     vec3 p_last = ob->getLastPos();
@@ -498,7 +498,7 @@ void PhysicsWorld::unstick_loop() {
   } while (nStuck > 0 && (iStickIter++ < iMaxStickIter));
 }
 void PhysicsWorld::collide_loop() {
-  int32_t intDebugNumSteps = 0;//DEBUG
+  int32_t intDebugNumSteps = 0;  //DEBUG
   int maxIter = 32;
   int32_t collided;
 
@@ -526,7 +526,7 @@ void PhysicsWorld::calc_obj_manifold(std::shared_ptr<PhysicsNode> ob) {
   }
   if (ob->getBoundBoxObject()->limitSizeForEachAxis(ob->getPos(), PHY_MAX_BOUND_BOX_SIZE)) {
     //Restrict bound box size, this will prevent us from trying to reparent an object that has an invalid bound box
-    BRLogDebugCycle("Bound Box Of Object " + ob->getSpecName() + " was too large, >"+ PHY_MAX_BOUND_BOX_SIZE +", check meshes to ensure box is accurate.");
+    BRLogDebugCycle("Bound Box Of Object " + ob->getSpecName() + " was too large, >" + PHY_MAX_BOUND_BOX_SIZE + ", check meshes to ensure box is accurate.");
   }
 
   //Update Speedbox
@@ -646,7 +646,7 @@ bool PhysicsWorld::unstick_objs(std::shared_ptr<PhysicsNode> objA, std::shared_p
   return false;
 }
 void PhysicsWorld::unstick_if_moved(std::shared_ptr<PhysicsNode> obA, std::shared_ptr<PhysicsNode> obB, Box3f* in_bA, Box3f* in_bB,
-  vec3& velA_new, vec3& velB_new, float move_t) {
+                                    vec3& velA_new, vec3& velB_new, float move_t) {
   //update _vecActiveObjects if the objects have moved a significant amount.
 
   Box3f boxATemp;
@@ -662,7 +662,7 @@ void PhysicsWorld::unstick_if_moved(std::shared_ptr<PhysicsNode> obA, std::share
   vec3 v_new_a;
   vec3 v_new_b;
 
-  Box3f* bA = nullptr, * bB = nullptr;
+  Box3f *bA = nullptr, *bB = nullptr;
 
   //calc new positions (must come first)
   if (obA != nullptr && obA->getIsStatic() == false) {
@@ -670,7 +670,8 @@ void PhysicsWorld::unstick_if_moved(std::shared_ptr<PhysicsNode> obA, std::share
     p_last_a = obA->getTempPos();
     v_tmp_a = velA_new * move_t;
     //p_new_a = p_last_a + v_tmp_a;
-    float vl; vec3 vn;
+    float vl;
+    vec3 vn;
     v_tmp_a.len_and_norm(vn, vl);
     p_new_a = p_last_a + vn * (vl);
     obA->calcBoundBox(boxATemp, p_new_a, PHY_COLLIDE_PADDING_EPSILON);
@@ -685,7 +686,8 @@ void PhysicsWorld::unstick_if_moved(std::shared_ptr<PhysicsNode> obA, std::share
     p_last_b = obB->getTempPos();
     v_tmp_b = velB_new * move_t;
     // p_new_b = p_last_b + v_tmp_b;
-    float vl; vec3 vn;
+    float vl;
+    vec3 vn;
     v_tmp_b.len_and_norm(vn, vl);
     p_new_b = p_last_b + vn * (vl);
 
@@ -713,13 +715,13 @@ void PhysicsWorld::unstick_if_moved(std::shared_ptr<PhysicsNode> obA, std::share
   }
 }
 void PhysicsWorld::unstick_ob_v2(vec3& ob_in_p, const vec3& ob_in_v, Box3f* boxA, Box3f* boxB,
-  float move_t, float ob_friction, vec3& __out_ out_new_v) {
+                                 float move_t, float ob_friction, vec3& __out_ out_new_v) {
   //The position must already be added by ct, and
   //Assume the bounding boxes are recalculated
 
   vec3 plane_n;
   //    float plane_d;
-      //20170407 NOTE: just switched this up, this may be wrong.  Using nthe new contact pnlane here
+  //20170407 NOTE: just switched this up, this may be wrong.  Using nthe new contact pnlane here
   vec3 dv(0, 0, 0);
   Ceq::aa_box_contact_plane_3(boxA, boxB, plane_n, dv);
 
@@ -730,9 +732,9 @@ void PhysicsWorld::unstick_ob_v2(vec3& ob_in_p, const vec3& ob_in_v, Box3f* boxA
   cv = orig_v;
 #endif
 
-  vec3 cvr = cv - (plane_n * cv.dot(plane_n) * 2.0f); // reflect velocity along plane
-  vec3 o_pt2 = ob_in_p + cv + cvr; // lateral point
-  vec3 cv_lat = o_pt2 - ob_in_p; // planar direction;
+  vec3 cvr = cv - (plane_n * cv.dot(plane_n) * 2.0f);  // reflect velocity along plane
+  vec3 o_pt2 = ob_in_p + cv + cvr;                     // lateral point
+  vec3 cv_lat = o_pt2 - ob_in_p;                       // planar direction;
 
   float cv_len;
   vec3 cv_n;
@@ -740,7 +742,7 @@ void PhysicsWorld::unstick_ob_v2(vec3& ob_in_p, const vec3& ob_in_v, Box3f* boxA
 
   vec3 cv_lat_n = cv_lat.normalized();
 
-  float friction = plane_n.dot(cv_n); // "slide factor."
+  float friction = plane_n.dot(cv_n);  // "slide factor."
   friction = MathUtils::brMax(-friction, 0.0f);
   friction -= ob_friction;
   friction = MathUtils::brClamp(friction, 0.0f, 1.0f);
@@ -866,7 +868,7 @@ int32_t PhysicsWorld::collisionTestBox(std::shared_ptr<PhysicsNode> objA, std::s
     //Run the equation a second time without padding and consider that the correct Time.
     // Ceq::sat_box3_t(ca, cb, ra, rb, va, vb, t0, t1, ax_t0, ax_t1, bStuck, false);
 
-    BoxCollision bb;// = new BoxCollision();
+    BoxCollision bb;  // = new BoxCollision();
 
     bb._bStuck = bStuck;
     bb._bCollided = true;
@@ -948,8 +950,8 @@ void PhysicsWorld::resolve_pair_t(BoxCollision& pCol) {
   bb_resolve_setup_data(objA, objB, av, bv, boxA, boxB, pCol._t, pCol._ax_t0);
 }
 void PhysicsWorld::bb_resolve_setup_data(std::shared_ptr<PhysicsNode> obA, std::shared_ptr<PhysicsNode> obB,
-  vec3& v_last_a, vec3& v_last_b,
-  Box3f* boxA, Box3f* boxB, float move_t, int ax_t0) {
+                                         vec3& v_last_a, vec3& v_last_b,
+                                         Box3f* boxA, Box3f* boxB, float move_t, int ax_t0) {
   //Calc box, move out, then slide
 
   Box3f boxATemp;
@@ -967,20 +969,20 @@ void PhysicsWorld::bb_resolve_setup_data(std::shared_ptr<PhysicsNode> obA, std::
   //  vec3 a_new_a;
   // vec3 a_new_b;
 
-  Box3f* bA, * bB;
+  Box3f *bA, *bB;
 
   //calc new positions and boxes (must come first)
   if (obA->getIsStatic() == false) {
     ob_fric_a = obA->getFriction();
     p_last_a = obA->getTempPos();
     v_move_a = v_last_a * move_t;
-    p_new_a = p_last_a + v_move_a * move_t;// * (vl* move_t);
-    obA->calcBoundBox(boxATemp, p_new_a, 0);//Do not add padding - we cannot be intersecting when we calc the normal
+    p_new_a = p_last_a + v_move_a * move_t;   // * (vl* move_t);
+    obA->calcBoundBox(boxATemp, p_new_a, 0);  //Do not add padding - we cannot be intersecting when we calc the normal
     bA = &boxATemp;
   }
   else {
     bA = obA->getBoundBoxObject();
-    p_new_a = obA->getBoundBoxObject()->center(); //ONly used for calculating the collision plane
+    p_new_a = obA->getBoundBoxObject()->center();  //ONly used for calculating the collision plane
   }
 
   if (obB->getIsStatic() == false) {
@@ -988,7 +990,7 @@ void PhysicsWorld::bb_resolve_setup_data(std::shared_ptr<PhysicsNode> obA, std::
     p_last_b = obB->getTempPos();
     v_move_b = v_last_b * move_t;
     p_new_b = p_last_b + v_move_b * move_t;
-    obB->calcBoundBox(boxBTemp, p_new_b, 0);//Do not add padding - we cannot be intersecting when we calc the normal
+    obB->calcBoundBox(boxBTemp, p_new_b, 0);  //Do not add padding - we cannot be intersecting when we calc the normal
     bB = &boxBTemp;
   }
   else {
@@ -1011,8 +1013,8 @@ void PhysicsWorld::bb_resolve_setup_data(std::shared_ptr<PhysicsNode> obA, std::
   }
 }
 void PhysicsWorld::bb_move_and_slide(const vec3& ob_last_p, const vec3& ob_last_v,
-  const vec3& ob_new_p, const vec3& ob_move_v, Box3f* boxA, Box3f* boxB,
-  float move_t, float ob_friction, vec3& __out_ out_new_v, const int ax_t0) {
+                                     const vec3& ob_new_p, const vec3& ob_move_v, Box3f* boxA, Box3f* boxB,
+                                     float move_t, float ob_friction, vec3& __out_ out_new_v, const int ax_t0) {
   //The position must already be added by ct, and
   //Assume the bounding boxes are recalculated
 
@@ -1027,8 +1029,8 @@ void PhysicsWorld::bb_move_and_slide(const vec3& ob_last_p, const vec3& ob_last_
 #endif
 
   vec3 rem_v = (ob_last_v * (1.0f - move_t));
-  vec3 cvr = rem_v - (plane_n * rem_v.dot(plane_n) * 2.0f);//reflect
-  vec3 o_pt2 = ob_new_p + rem_v + cvr; // add both to get the lateral PT
+  vec3 cvr = rem_v - (plane_n * rem_v.dot(plane_n) * 2.0f);  //reflect
+  vec3 o_pt2 = ob_new_p + rem_v + cvr;                       // add both to get the lateral PT
   vec3 cv_lat = o_pt2 - ob_new_p;
   vec3 cv_lat_n = cv_lat.normalized();
 
@@ -1036,11 +1038,11 @@ void PhysicsWorld::bb_move_and_slide(const vec3& ob_last_p, const vec3& ob_last_
   vec3 cv_n;
   cv.len_and_norm(cv_n, cv_len);
 
-  float len_rem = cv_len - cv_len * move_t;//Remaining length "energy" from the collision
+  float len_rem = cv_len - cv_len * move_t;  //Remaining length "energy" from the collision
 
   float friction = 1;
-  friction = plane_n.dot(cv_n); // "slide factor."
-  friction = 1.0f + (MathUtils::brMin(friction * 0.8f, 0.0f));// we remove some friction to make the char slide more.
+  friction = plane_n.dot(cv_n);                                 // "slide factor."
+  friction = 1.0f + (MathUtils::brMin(friction * 0.8f, 0.0f));  // we remove some friction to make the char slide more.
   friction = MathUtils::brClamp(friction, 0.0f, 1.0f);
   friction *= ob_friction;
   friction = MathUtils::brClamp(friction, 0.0f, 1.0f);
@@ -1050,7 +1052,7 @@ void PhysicsWorld::bb_move_and_slide(const vec3& ob_last_p, const vec3& ob_last_
     out_new_v = cv_lat_n * len_rem * friction;
   }
   else {
-    out_new_v = 0.0;//ob_last_v;
+    out_new_v = 0.0;  //ob_last_v;
   }
 
   ////Accellertaion
@@ -1095,15 +1097,15 @@ void PhysicsWorld::refreshObjectManifold(std::shared_ptr<PhysicsNode> ob) {
   }
 }
 void PhysicsWorld::limitVelocity(vec3& __inout_ v) {
-  float c_maxVelLength = 1.0; //meters per second squared.
-  float c_maxVelLength2 = c_maxVelLength * c_maxVelLength; //meters per second squared.
+  float c_maxVelLength = 1.0;                               //meters per second squared.
+  float c_maxVelLength2 = c_maxVelLength * c_maxVelLength;  //meters per second squared.
   if (v.squaredLength() >= c_maxVelLength2) {
     v = v.normalize() * c_maxVelLength;
   }
 }
 void PhysicsWorld::limitAccelleration(vec3& __inout_ va) {
-  float c_maxAccLength = 2.0; //meters per second squared.
-  float c_maxAccLength2 = c_maxAccLength * c_maxAccLength; //meters per second squared.
+  float c_maxAccLength = 2.0;                               //meters per second squared.
+  float c_maxAccLength2 = c_maxAccLength * c_maxAccLength;  //meters per second squared.
   if (va.squaredLength() > c_maxAccLength2) {
     va = va.normalize() * c_maxAccLength;
   }
@@ -1120,12 +1122,12 @@ void PhysicsWorld::makeGrid() {
 
   std::vector<std::shared_ptr<PhysicsGrid>> vecGen;
   sweepGridBox(
-    [&](ivec3& cv) {
-      if (getGrids().size() < _iGridCountLimit) {
-        makeOrCollectGridForPos(cv, vecGen);
-      }
-    }
-  , p0, p1);
+      [&](ivec3& cv) {
+        if (getGrids().size() < _iGridCountLimit) {
+          makeOrCollectGridForPos(cv, vecGen);
+        }
+      },
+      p0, p1);
 
   vecGen.resize(0);
 }
@@ -1143,7 +1145,7 @@ void PhysicsWorld::sweepGridBox(std::function<void(ivec3&)> func, ivec3& viMin, 
     }
   }
   for (int32_t k = viMin.z; k <= viMax.z; ++k) {
-    for (int32_t j = yi; j <= ya; ++j) {//p0.y; j <= p1.y; ++j) {
+    for (int32_t j = yi; j <= ya; ++j) {  //p0.y; j <= p1.y; ++j) {
       for (int32_t i = viMin.x; i <= viMax.x; ++i) {
         ivec3 cv(i, j, k);
         func(cv);
@@ -1168,7 +1170,7 @@ void PhysicsWorld::makeOrCollectGridForPos(ivec3& cv, std::vector<std::shared_pt
   if (pGrid == nullptr) {
     //find grid.  if we can't find then add to "empty" set of ivec3
     if (_setEmpty.find(&cv) == _setEmpty.end()) {
-      pGrid = loadGrid(cv);//May return nullptr for empty grid
+      pGrid = loadGrid(cv);  //May return nullptr for empty grid
       addGrid(pGrid, cv);
     }
   }
@@ -1204,6 +1206,7 @@ void PhysicsWorld::collectVisibleNodes(std::shared_ptr<RenderBucket> rb) {
   std::set<ivec3*, ivec3::Vec3xCompLess> grids;
 
   //Get All Grids
+  //This can be distributed [async]
   sweepGridFrustum([&](ivec3& cv) {
     std::shared_ptr<PhysicsGrid> pGrid = getNodeAtPos(cv);
     if (pGrid != nullptr) {
@@ -1213,9 +1216,11 @@ void PhysicsWorld::collectVisibleNodes(std::shared_ptr<RenderBucket> rb) {
         rb->addGrid(pGrid);
       }
     }
-    }, rb->getCamera()->getFrustum(), rb->getMaxDist2());
+  },
+  rb->getCamera()->getFrustum(), rb->getMaxDist2(), std::move(rb->getCamera()->getPos()));
 
-  //Add meshes to render bucket
+  //Add meshes to render bucket slow
+  //This needs to be put into the grid sweep test ^^^^^^^^^^^^^^^^
   int32_t dbgHidden = 0;
   for (std::pair<NodeId, std::shared_ptr<PhysicsNode>> p : _mapObjects) {
     if (p.second->isHidden() == false) {
@@ -1229,7 +1234,7 @@ void PhysicsWorld::collectVisibleNodes(std::shared_ptr<RenderBucket> rb) {
     }
   }
 }
-void PhysicsWorld::sweepGridFrustum(std::function<void(ivec3&)> func, std::shared_ptr<FrustumBase> pf, float fMaxDist2) {
+void PhysicsWorld::sweepGridFrustum(std::function<void(ivec3&)> func, std::shared_ptr<FrustumBase> pf, float fMaxDistSquared, const vec3&& camera_pos) {
   vec3 cp = pf->getNearPlaneCenterPoint();
   int32_t iDebugSweepCount = 0;
   std::vector<ivec3> toCheck;
@@ -1240,11 +1245,24 @@ void PhysicsWorld::sweepGridFrustum(std::function<void(ivec3&)> func, std::share
   //Seed
   toCheck.push_back(v3Toi3Node(cp));
 
+  //Grid Sweep Algorithm:
+  // Start with some (any) node in our grid
+  // add to stack
+  //  (is it not already checked?) && (did we find it? ** - not required ) && (did it collide with camera frustum?)
+  //    func()
+  //   add all 6 neighbors to stack too check them... repeat
+  //** We don't require the actual node to exist, just the ivec3 in space. This is because it's possible to create orphaned and floating nodes. And if so, we'd end up losing information traversing them.
+
   while (toCheck.size() > 0) {
     Box3f box;
     ivec3 vi = toCheck[0];
     toCheck.erase(toCheck.begin() + 0);
     iDebugSweepCount++;
+
+    if (toCheck.size() >= 1999) {
+      int dbn = 0;
+      dbn++;
+    }
 
     if (checked.find(&vi) == checked.end()) {
       //TODO: fix this because we're getting stack overflows
@@ -1257,7 +1275,7 @@ void PhysicsWorld::sweepGridFrustum(std::function<void(ivec3&)> func, std::share
 
       float fDist2 = (pf->getNearPlaneCenterPoint() - node_center).length2();
 
-      if (fDist2 < fMaxDist2) {
+      if (fDist2 < fMaxDistSquared) {
         if (pf->hasBox(&box)) {
           func(vi);
 
@@ -1345,5 +1363,4 @@ std::shared_ptr<PhysicsNode> PhysicsWorld::findNode(const string_t& specName) {
   return nullptr;
 }
 
-
-}//ns br2
+}  // namespace BR2
