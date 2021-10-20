@@ -33,6 +33,7 @@ public:
   vec3* getFinalPosPtr();
   bool getIsShadowsEnabled();
   std::shared_ptr<LightManager> getLightManager();
+  virtual void calcGPULight() =0;
 
 protected:
   Color4f _color;
@@ -65,6 +66,7 @@ public:
   std::shared_ptr<ShadowFrustum> getShadowFrustum() { return _pShadowFrustum; }
   std::shared_ptr<GpuDirLight> getGpuLight() { return _pGpuLight; }
   void setMaxDistance(float f);
+  virtual void calcGPULight() override;
 
 protected:
   virtual void init() override;
@@ -102,7 +104,7 @@ public:
   float getLightRadius1_2() { return _f_1_Radius_2; }
   float getLightRadius();
   void setLightRadius(float r);
-
+  virtual void calcGPULight() override;
 protected:
   virtual void init() override;
 

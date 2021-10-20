@@ -196,6 +196,18 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
     BRLogError("Tried to render something while another render was currently in progress.");
     return;
   }
+  // New (faster) async collection algorithm
+  //Basically this algorithm is 
+  // For each camera frustum.
+  //  if visible
+  //    For each light 1...n in scene graph S async
+  //      If light radius is in camera frustum
+  //        For all shadow frustums in light.
+  //          Find all visible volumes in S that intersect the camera frustum, AND all light frustums.
+  //  
+  //   Note - this will essentially replace the Light*'s update routine() however the update() is a node routine. 
+  //    Lights are special in that they have a node update routine and a light update routine.
+  // Essentially we can classify them as Emitters * so light emitters have their own light update routine.
   /*
   LightNode->getCullParams()
     std::vector<std::shared_ptr<RenderBucket>> buckets;
@@ -232,14 +244,16 @@ void RenderPipe::renderScene(std::shared_ptr<Drawable> toDraw, std::shared_ptr<R
       fut.wait();
     }
   */
-  //TODO:
+
+  //Compute shadow maps
   // CullParams p;
   // std::vector<std::future<bool>> futs;
-  // for (auto light_pair : b->getLights()) {
-  //   p.setCamera(cam);
-  //   std::future<bool> bf = light_pair.second->cullShadowVolumesAsync(p);
-  //   futs.push_back(std::move(bf));
-  // }
+  for (auto light_pair : b->getLights()) {
+    //p.setCamera(cam);
+    //std::future<bool> bf = light_pair.second->cullShadowVolumesAsync(p);
+    //futs.push_back(std::move(bf));
+    light_pair.second->calcGPULight();
+  }
   // for (size_t i=0; i<futs.size();++i) {
   //   futs[i].wait();
   // }

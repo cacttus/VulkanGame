@@ -34,18 +34,28 @@ void LightNodeBase::update(float delta, std::map<Hash32, std::shared_ptr<Animato
   PhysicsNode::update(delta, mapAnimators);
 }
 vec3* LightNodeBase::getFinalPosPtr() {
-  _vGpuBufferedPosition = getFinalPos();//getTransform()->getPos();
+  _vGpuBufferedPosition = getFinalPos();
   return &_vGpuBufferedPosition;
 }
 bool LightNodeBase::getIsShadowsEnabled() {
   return _bEnableShadows && (Gu::getEngineConfig()->getEnableObjectShadows() ||
-    Gu::getEngineConfig()->getEnableTerrainShadows());
+                             Gu::getEngineConfig()->getEnableTerrainShadows());
 }
+
 #pragma endregion
 
 #pragma region LightNodeDir
 LightNodeDir::LightNodeDir(const string_t& name, bool bShadow) : LightNodeBase(name, bShadow) {
-
+}
+void LightNodeDir::calcGPULight() {
+  _pGpuLight->_vPos = getFinalPos();
+  _pGpuLight->_vDir = _vDir;
+  _pGpuLight->_fMaxDistance = _pShadowFrustum->getFrustum()->getZFar();
+  _pGpuLight->_vDiffuseColor = {_color.x, _color.y, _color.z};
+  _pGpuLight->_fLinearAttenuation = 0.0f;
+  _pGpuLight->_mView = *_pShadowFrustum->getViewMatrixPtr();
+  _pGpuLight->_mProj = *_pShadowFrustum->getProjMatrixPtr();
+  _pGpuLight->_mPVB = *_pShadowFrustum->getPVBPtr();
 }
 std::shared_ptr<LightNodeDir> LightNodeDir::create(const string_t& name, bool bShadow) {
   std::shared_ptr<LightNodeDir> lp = std::make_shared<LightNodeDir>(name, bShadow);
@@ -72,7 +82,7 @@ void LightNodeDir::init() {
 
   int32_t iShadowMapRes = Gu::getEngineConfig()->getShadowMapResolution();
   _pShadowFrustum = std::make_shared<ShadowFrustum>(std::dynamic_pointer_cast<LightNodeDir>(shared_from_this()),
-    iShadowMapRes, iShadowMapRes);    //TEST
+                                                    iShadowMapRes, iShadowMapRes);
   _pShadowFrustum->init();
   _pShadowFrustum->getFrustum()->setZFar(500);
 
@@ -101,19 +111,12 @@ std::future<bool> LightNodeDir::cullShadowVolumesAsync(CullParams& cp) {
       _vUp = (_vDir.cross(_vRight)).normalized();
 
       //update
-      _pGpuLight->_vPos = getFinalPos();
-      _pGpuLight->_vDir = _vDir;
-      _pGpuLight->_fMaxDistance = _pShadowFrustum->getFrustum()->getZFar();
-      _pGpuLight->_vDiffuseColor = {_color.x, _color.y, _color.z};
-      _pGpuLight->_fLinearAttenuation = 0.0f;
-      _pGpuLight->_mView = *_pShadowFrustum->getViewMatrixPtr();
-      _pGpuLight->_mProj = *_pShadowFrustum->getProjMatrixPtr();
-      _pGpuLight->_mPVB = *_pShadowFrustum->getPVBPtr();
+      calcGPULight();
     }
     Perf::popPerf();
 
     return true;
-    });
+  });
   return fut;
 }
 bool LightNodeDir::renderShadows(std::shared_ptr<ShadowFrustum> pf) {
@@ -160,15 +163,13 @@ void LightNodePoint::init() {
   _pGpuLight = std::make_shared<GpuPointLight>();
 
   int32_t iShadowMapRes = Gu::getEngineConfig()->getShadowMapResolution();
-  _pShadowBox = std::make_shared<ShadowBox>(std::dynamic_pointer_cast<LightNodePoint>(shared_from_this()), iShadowMapRes, iShadowMapRes);    //TEST
+  _pShadowBox = std::make_shared<ShadowBox>(std::dynamic_pointer_cast<LightNodePoint>(shared_from_this()), iShadowMapRes, iShadowMapRes);  //TEST
   _pShadowBox->init();
-
 }
 void LightNodePoint::update(float delta, std::map<Hash32, std::shared_ptr<Animator>>& mapAnimators) {
   LightNodeBase::update(delta, mapAnimators);
 }
 std::future<bool> LightNodePoint::cullShadowVolumesAsync(CullParams& cp) {
-
   //*Remove this.  It needs to be on the RenderBucket itself, per-frustum
   std::future<bool> fut = std::async(std::launch::async, [&] {
     Perf::pushPerf();
@@ -177,7 +178,7 @@ std::future<bool> LightNodePoint::cullShadowVolumesAsync(CullParams& cp) {
       //**TODO: Uncomment
       //**TODO: Uncomment
       //**TODO: Uncomment
-      //std::future<bool> b = _pShadowBox->updateAndCullAsync(cp);
+      std::future<bool> b = _pShadowBox->updateAndCullAsync(cp);
       //b.wait();
       //**TODO: Uncomment
       //**TODO: Uncomment
@@ -185,15 +186,18 @@ std::future<bool> LightNodePoint::cullShadowVolumesAsync(CullParams& cp) {
 
       updateFlicker();
 
+      calcGPULight();
       //update
-      _pGpuLight->_vPos = getFinalPos();
-      _pGpuLight->_fRadius = _fRadius;
-      _pGpuLight->_vDiffuseColor = {_color.x, _color.y, _color.z};
     }
     Perf::popPerf();
     return true;
   });
   return fut;
+}
+void LightNodePoint::calcGPULight() {
+  _pGpuLight->_vPos = getFinalPos();
+  _pGpuLight->_fRadius = _fRadius;
+  _pGpuLight->_vDiffuseColor = {_color.x, _color.y, _color.z};
 }
 bool LightNodePoint::renderShadows(std::shared_ptr<ShadowBox> pf) {
   //**Update shadow map frustum.
@@ -209,7 +213,6 @@ void LightNodePoint::updateFlicker() {
     if (s) {
       auto w = s->getWindow();
       if (w) {
-
         _fFlickerValue += (1 / 10.0f) * 1.0f / w->getFpsMeter()->getFps();
 
         if (_fFlickerValue >= 1.0f) {
@@ -219,12 +222,9 @@ void LightNodePoint::updateFlicker() {
           _fFlickerValue = 0.0f;
         }
 
-        _fFlickerAddRadius = _fFlickerMaxRadius * (Alg::cosine_interpolate(_fLastRandomValue, _fNextRandomValue, _fFlickerValue));//pnoise in range -1,1 so make it 1,1
-
+        _fFlickerAddRadius = _fFlickerMaxRadius * (Alg::cosine_interpolate(_fLastRandomValue, _fNextRandomValue, _fFlickerValue));  //pnoise in range -1,1 so make it 1,1
       }
     }
-
-
   }
 
   // optimized radius for shader.
@@ -238,7 +238,7 @@ float LightNodePoint::getLightRadius() {
   if (_fRadius == _cInfiniteLightRadius)
     return _cInfiniteLightRadius;
   else
-    return(_fRadius + _fFlickerAddRadius);
+    return (_fRadius + _fFlickerAddRadius);
 }
 void LightNodePoint::setLightRadius(float r) {
   if (r < 0.0f) {
@@ -258,4 +258,4 @@ void LightNodePoint::calcBoundBox(Box3f& __out_ pBox, const vec3& obPos, float e
 }
 #pragma endregion
 
-}//ns br2
+}  // namespace BR2

@@ -372,6 +372,10 @@ void Scene::drawDeferred(RenderParams& rp) {
   Color4f c(1, 1, 1, 1);
   //RenderUtils::drawSolidBoxShaded(getActiveCamera(), &b, path->location(), c);
 
+  //
+  //This is absolutely incorrect. We need to do away with scene entirely and just use nodes on objects.
+  // This is drawing all objects without visibility determination.
+
   SceneNode::drawDeferred(rp);
 }
 void Scene::drawForward(RenderParams& rp) {

@@ -239,34 +239,27 @@ void ShadowBox::init() {
   Gu::checkErrorsRt();  //Rt error check - this is called only once.
 }
 std::future<bool> ShadowBox::updateAndCullAsync(CullParams& cp) {
-  AssertOrThrow2(_pint->_pLightSource != nullptr);
-  _pint->_bForceUpdate = false;
+  std::future<bool> fut = std::async(std::launch::async, [&] {
+    AssertOrThrow2(_pint->_pLightSource != nullptr);
+    _pint->_bForceUpdate = false;
 
-  std::shared_ptr<LightManager> pLightMan = _pint->_pLightSource->getLightManager();
+    //Update the camera for each shadowbox side if the light has changed position or radius.
+    if (_pint->_vCachedLastPos != _pint->_pLightSource->getFinalPos() || _pint->_fCachedLastRadius != _pint->_pLightSource->getLightRadius()) {
+      _pint->_vCachedLastPos = _pint->_pLightSource->getFinalPos();
+      _pint->_fCachedLastRadius = _pint->_pLightSource->getLightRadius();
+      _pint->_bMustUpdate = true;
+      _pint->_bForceUpdate = true;
+    }
 
-  //Update the camera for each shadowbox side if the light has changed position or radius.
-  if (_pint->_vCachedLastPos != _pint->_pLightSource->getFinalPos() || _pint->_fCachedLastRadius != _pint->_pLightSource->getLightRadius()) {
-    _pint->_vCachedLastPos = _pint->_pLightSource->getFinalPos();
-    _pint->_fCachedLastRadius = _pint->_pLightSource->getLightRadius();
     _pint->_bMustUpdate = true;
-    _pint->_bForceUpdate = true;
-  }
 
-  std::weak_ptr<ShadowBoxSide> sides_weak[6];
-  for (size_t i = 0; i < 6; ++i) {
-    sides_weak[i] = _pint->_pShadowBoxSide[i];
-  }
-
-  _pint->_bMustUpdate = true;
-
-  std::future<bool> fut = std::async(std::launch::async, [&sides_weak, &cp] {
     // Collect all objects for each frustum.
     int iStartDebug = 0;
     std::vector<std::future<bool>> futs;
     for (int iFace = iStartDebug; iFace < 6; ++iFace) {
-      std::weak_ptr<ShadowBoxSide> ss_weak = sides_weak[iFace];
-      std::future<bool> fut_face = std::async(std::launch::async, [&ss_weak, &cp] {
-        if (std::shared_ptr<ShadowBoxSide> ss = ss_weak.lock()) {
+      std::weak_ptr<ShadowBoxSide> sp = _pint->_pShadowBoxSide[iFace];
+      std::future<bool> fut_face = std::async(std::launch::async, [&sp, &cp] {
+        if (auto ss = sp.lock()) {
           ss->cullObjectsAsync(cp);
         }
         return true;

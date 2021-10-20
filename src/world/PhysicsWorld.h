@@ -129,7 +129,7 @@ private:
   bool collideMesh(std::shared_ptr<PhysicsNode> ob, vec3* verts, size_t vOffBytes, size_t vStrideBytes, size_t vCount, v_index32* inds,
     int32_t iOff, int32_t iCount);
   void sweepGridBox(std::function<void(ivec3&)> func, ivec3& viMin, ivec3& viMax);
-  void sweepGridFrustum(std::function<void(ivec3&)> func, std::shared_ptr<FrustumBase> pf, float fMaxDist2);
+  void sweepGridFrustum(std::function<void(ivec3&)> func, std::shared_ptr<FrustumBase> pf, float fMaxDistSquared,const vec3&& camera_pos);
 };
 
 }//ns br2

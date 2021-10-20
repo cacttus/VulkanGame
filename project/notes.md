@@ -1,4 +1,26 @@
 # Tasks
+* Scene is at odds with physicsworld. Really, we don't need a "scene" 
+*  Draw is getting called on scene recursively. and this is incorrect. Draw should get called on the physics grids and their contained objs within the RenderBuckets that we collected.
+* -- also the object visibility in PhysicsWorld must be put into the sweep test.
+* Lights / shadowbox es are adding themselves when traversing the grid.
+* Lights - calcBoundBox in SceneNode is not calculating box because light doesn't have a default volume attached.
+*   Create a default visibility volume and attach to lights to set correct bound box.
+* Lights - still not showing.
+  * getGPULight - the data isn't set.
+    * because CullShadowVolumesAsync -- yep - because I fudged it up with that new system.
+
+Root level
+create a window
+create a  Scene 
+scene -> runs a script (a code script in this case)
+script -> Creates a world25 which creates the physicsgrid.
+but physicsgrid is part of scene
+scene has draw methods -> renders objects in the RenderPipe
+..
+so we recursively render what's in scene .. but wait.. physicsgrid sweep test determines what objects are visible
+into render bucket so render bucket has what's visible. hence renderbucket should be used to draw objects.
+it's a mess
+essentially was trying to genericize engine with "scene" - was un-smart. this is wayyyyy too complex now.
 
 ### Important
 * DestroyWindow is not wired up correctly (SDL_DestroyWindow is not gbeing called)
