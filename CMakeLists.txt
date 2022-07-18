@@ -80,7 +80,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 set(OpenGL_GL_PREFERENCE LEGACY) #GLVND or LEGACY
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
-find_package(SDL_net REQUIRED SDL2_net)
 find_package(Vulkan REQUIRED)  
 find_package(Threads REQUIRED) #This is better than -pthread
 

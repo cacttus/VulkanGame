@@ -33,7 +33,7 @@ if [ ${#v_missing[@]} != 0 ]; then
     #Install each.
     for pkg in ${v_missing[@]}; do
         echo VG: Installing ${pkg}...
-        sudo apt install ${pkg}         
+        sudo apt install ${pkg} -y         
     done
 fi
 
