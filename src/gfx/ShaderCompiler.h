@@ -40,8 +40,8 @@ private:
   void debugPrintShaderSource(const string_t& loc, std::vector<string_t>& sourceLines);  //PRINTS ENTIRE INCLUDED SOURCE
   void searchIncludes(std::shared_ptr<ShaderSubProgram> subProg, std::vector<string_t>& lines, time_t& greatestModifyTime, int_fast32_t iIncludeLevel);
   void loadSource_r(std::shared_ptr<ShaderSubProgram> subProg, const string_t& location, std::vector<string_t>& out_lines, time_t& greatestModifyTime, int_fast32_t iIncludeLevel);
-  void parseSourceIntoLines(std::shared_ptr<BinaryFile>, std::vector<string_t>& out_lines);
-  void loadSourceData(const string_t& location, std::shared_ptr<BinaryFile> __out_ data);
+  void parseSourceIntoLines(BinaryFile*, std::vector<string_t>& out_lines);
+  void loadSourceData(const string_t& location, BinaryFile* __out_ data);
   void addSourceLineAt(size_t pos, std::vector<string_t>& vec, string_t line);
 };
 

@@ -18,7 +18,7 @@
 
 namespace BR2 {
 MbiFile::MbiFile(std::shared_ptr<GLContext> ct) : GLFramework(ct) {
-  _pFile = std::make_shared<BinaryFile>(c_strMbiVersion);
+  _pFile = std::make_unique<BinaryFile>(c_strMbiVersion);
 }
 MbiFile::~MbiFile() {
   _pFile = nullptr;
@@ -50,8 +50,8 @@ bool MbiFile::loadAndParse(string_t file) {
   _fileLoc = file;
   BRLogInfo(" -->Loading MBI '"+ file +"'");
 
-  std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>(c_strMbiVersion);
-  Gu::getPackage()->getFile(file, fb, false);
+  auto fb = std::make_unique<BinaryFile>(c_strMbiVersion);
+  Gu::getPackage()->getFile(file, fb.get(), false);
 
   //    return false;
 
@@ -81,13 +81,12 @@ bool MbiFile::loadAndParse(string_t file) {
   BRLogInfo("  -->Loading " + nModels + " model(s).");
   for (int32_t iModel = 0; iModel < nModels; ++iModel) {
     std::shared_ptr<ModelSpec> ms = std::make_shared<ModelSpec>();
-    ms->deserialize(fb);
+    ms->deserialize(fb.get());
     _vecModels.push_back(ms);
 
     Gu::getModelCache()->addSpec(ms);
   }
   BRLogInfo(" -->Done.");
-
 
   //Read textures
   std::map<Hash32, std::shared_ptr<Texture2D>> texs;
@@ -100,7 +99,7 @@ bool MbiFile::loadAndParse(string_t file) {
     fb->readUint32(hTex);
 
     std::shared_ptr<Texture2D> pTex = std::make_shared<Texture2D>("<unset>", TextureFormat::Image4ub, getContext());
-    pTex->deserialize(fb);
+    pTex->deserialize(fb.get());
     if (Gu::getTexCache()->add(pTex->getLocation(), pTex, false) == false) {
       string_t loc = pTex->getLocation();
       //DEL_MEM(pTex);
@@ -161,7 +160,7 @@ bool MbiFile::loadAndParse(string_t file) {
 }
 void MbiFile::save(string_t file) {
   _fileLoc = file;
-  std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>(c_strMbiVersion);
+  auto fb = std::make_unique<BinaryFile>(c_strMbiVersion);
   fb->rewind();
 
   //header
@@ -181,7 +180,7 @@ void MbiFile::save(string_t file) {
   //models
   fb->writeInt32((int32_t)_vecModels.size());
   for (std::shared_ptr<ModelSpec> ms : _vecModels) {
-    ms->serialize(fb);
+    ms->serialize(fb.get());
   }
 
   //Collect textures
@@ -203,7 +202,7 @@ void MbiFile::save(string_t file) {
   Img32 img;
   for (std::pair<Hash32, std::shared_ptr<Texture2D>> p : texs) {
     fb->writeUint32(std::move(p.first));
-    p.second->serialize(fb);
+    p.second->serialize(fb.get());
   }
 
   //Footer

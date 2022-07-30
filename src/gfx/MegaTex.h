@@ -112,7 +112,7 @@ private:
   std::unique_ptr<stbtt_packedchar[]> _charInfo;
   stbtt_fontinfo _fontInfo;
   float _fScaleForPixelHeight;               //return value of stbtt_ScaleForPixelHeight
-  std::shared_ptr<BinaryFile> _pFontBuffer;  // STB:  "Load" a font file from a memory buffer (you have to keep the buffer loaded)
+  std::unique_ptr<BinaryFile> _pFontBuffer;  // STB:  "Load" a font file from a memory buffer (you have to keep the buffer loaded)
   bool _bInitialized = false;
 
   float fontSizeToFontScale(float fontSz);

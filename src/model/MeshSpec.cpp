@@ -783,7 +783,7 @@ void MeshSpec::testAccess(std::shared_ptr<ModelSpec> ms, GpuAnimatedMeshWeightDa
 
   BRLogDebug("..Skin test complete.");
 }
-void MeshSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
+void MeshSpec::deserialize(BinaryFile* fb) {
   BaseSpec::deserialize(fb);
 
   fb->readBool(_bHideRender);
@@ -888,7 +888,7 @@ void MeshSpec::int32ToVertexFormat(int32_t i) {
   else if (i == 4) { _pVertexFormat = v_v3::getVertexFormat(); }
   else BRThrowException("Unsupported vertex format while deserializing");
 }
-void MeshSpec::serialize(std::shared_ptr<BinaryFile> fb) {
+void MeshSpec::serialize(BinaryFile* fb) {
   BaseSpec::serialize(fb);
 
   fb->writeBool(std::move(_bHideRender));

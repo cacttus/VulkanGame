@@ -15,6 +15,8 @@ namespace BR2 {
 *  @class MbiFile
 *  @brief Mob Binary file.  The main file for all models.
 *   TODO: When we release this, we must implement multiple file version importers for backwards compat.
+*
+*  TODO: put the file format here. 
 */
 class MbiFile : public GLFramework {
 public:
@@ -31,7 +33,7 @@ private:
 */
   const string_t c_strMbiVersion = "0.04";
   std::vector<std::shared_ptr<ModelSpec>> _vecModels;
-  std::shared_ptr<BinaryFile> _pFile = nullptr;
+  std::unique_ptr<BinaryFile> _pFile;
   string_t _fileLoc;
    
   void postLoad();

@@ -9,10 +9,10 @@ NodeData::NodeData(const string_t& name) {
 }
 NodeData::~NodeData() {
 }
-void NodeData::deserialize(std::shared_ptr<BinaryFile> bf) {
+void NodeData::deserialize(BinaryFile* bf) {
   bf->readString(_strName);
 }
-void NodeData::serialize(std::shared_ptr<BinaryFile> bf) {
+void NodeData::serialize(BinaryFile* bf) {
   bf->writeString(std::move(_strName));
 }
 uint32_t NodeData::getHashedName() {

@@ -120,14 +120,13 @@ void MtFont::loadData() {
 }
 void MtFont::createFont() {
   _iBakedCharSizePixels = Gu::getConfig()->getBakedCharSize();
-  ;
   _atlasWidth = Gu::getConfig()->getFontBitmapSize();
   _atlasHeight = Gu::getConfig()->getFontBitmapSize();
 
   BRLogInfo("Creating font '" + getName() + "'. size=" + _atlasWidth + "x" + _atlasHeight + ".  Baked Char Size =" + _iBakedCharSizePixels);
 
-  _pFontBuffer = std::make_shared<BinaryFile>("<none>");
-  if (Gu::getPackage()->getFile(getName(), _pFontBuffer) == false) {
+  _pFontBuffer = std::make_unique<BinaryFile>("<none>");
+  if (Gu::getPackage()->getFile(getName(), _pFontBuffer.get()) == false) {
     BRLogError("Failed to get font file '" + getName() + "'");
     Gu::debugBreak();
     return;

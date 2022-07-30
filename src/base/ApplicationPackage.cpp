@@ -39,11 +39,11 @@ public:
   string_t _strFontsFolder = "";
 
   void makeDefaultPaths();
-  bool loadPackedFile(std::string fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull);
-  int32_t parseInt32(std::shared_ptr<BinaryFile> fb, int32_t& off);
-  std::string parseStr(std::shared_ptr<BinaryFile> fb, int32_t& off);
+  bool loadPackedFile(std::string fileLoc, BinaryFile* fb, bool bAddNull);
+  int32_t parseInt32(BinaryFile* fb, int32_t& off);
+  std::string parseStr(BinaryFile* fb, int32_t& off);
   ProjectPackageFileEntry* getEntry(std::string fileLoc);
-  bool loadExe(std::shared_ptr<BinaryFile> fb);
+  bool loadExe(BinaryFile* fb);
   void setSz(const string_t& name, string_t& value, std::shared_ptr<PackageConfiguration> entries);
   void load(const string_t& file_path);
 };
@@ -66,7 +66,7 @@ void ApplicationPackage_Internal::makeDefaultPaths() {
   _strIconPath = FileSystem::combinePath(_strAssetsDir, "/icon.png");
   _strEnvTexturePath = FileSystem::combinePath(_strTextureDir, "/env1_huge.png");
 }
-bool ApplicationPackage_Internal::loadPackedFile(std::string fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull) {
+bool ApplicationPackage_Internal::loadPackedFile(std::string fileLoc, BinaryFile* fb, bool bAddNull) {
   //Open executable with fstream
   //then seek to the file, copy file contents to buffer, exit.
   ProjectPackageFileEntry* fe = getEntry(fileLoc);
@@ -94,13 +94,13 @@ bool ApplicationPackage_Internal::loadPackedFile(std::string fileLoc, std::share
 
   return true;
 }
-int32_t ApplicationPackage_Internal::parseInt32(std::shared_ptr<BinaryFile> fb, int32_t& off) {
+int32_t ApplicationPackage_Internal::parseInt32(BinaryFile* fb, int32_t& off) {
   int32_t ret;
   ret = *((int32_t*)(fb->getData().ptr() + off));
   off += sizeof(int32_t);
   return ret;
 }
-std::string ApplicationPackage_Internal::parseStr(std::shared_ptr<BinaryFile> fb, int32_t& off) {
+std::string ApplicationPackage_Internal::parseStr(BinaryFile* fb, int32_t& off) {
   int32_t iCount = parseInt32(fb, off);
 
   char* tmp = new char[iCount + 1];
@@ -125,7 +125,7 @@ ProjectPackageFileEntry* ApplicationPackage_Internal::getEntry(std::string fileL
   }
   return nullptr;
 }
-bool ApplicationPackage_Internal::loadExe(std::shared_ptr<BinaryFile> fb) {
+bool ApplicationPackage_Internal::loadExe(BinaryFile* fb) {
   return fb->loadFromDisk(_strExeLoc);
 }
 void ApplicationPackage_Internal::setSz(const string_t& name, string_t& value, std::shared_ptr<PackageConfiguration> config) {
@@ -203,8 +203,9 @@ string_t ApplicationPackage::makeAssetPath(const string_t& folder, const string_
 }
 void ApplicationPackage::build(const string_t& exeLoc) {
   _pint->_strExeLoc = exeLoc;
-  std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>(c_strVersion);
-  _pint->loadExe(fb);
+  std::unique_ptr<BinaryFile> fb = std::make_unique<BinaryFile>(c_strVersion);
+  auto fbpt = fb.get();
+  _pint->loadExe(fbpt);
 
   int32_t tmp;
   //the last 4 bytes are the EXE length.
@@ -223,23 +224,23 @@ void ApplicationPackage::build(const string_t& exeLoc) {
   }
 
   tmp = (int32_t)fb->getData().count() - 8;
-  _pint->_iExeLenBytes = _pint->parseInt32(fb, tmp);
+  _pint->_iExeLenBytes = _pint->parseInt32(fbpt, tmp);
   BRLogInfo("ExeLen: " + _pint->_iExeLenBytes);
 
   //Start parsing at the end fo the exe
   int32_t iByteIdx = _pint->_iExeLenBytes;
 
   // 8 bytes, table length (total) and num entries
-  _pint->_iTableLenBytes = _pint->parseInt32(fb, iByteIdx);
-  int32_t iNumEntries = _pint->parseInt32(fb, iByteIdx);
+  _pint->_iTableLenBytes = _pint->parseInt32(fbpt, iByteIdx);
+  int32_t iNumEntries = _pint->parseInt32(fbpt, iByteIdx);
   BRLogInfo("Num Entries: " + iNumEntries);
 
   for (int32_t iEntry = 0; iEntry < iNumEntries; ++iEntry) {
     ProjectPackageFileEntry* fe = new ProjectPackageFileEntry();
-    fe->_strUnformattedPath = _pint->parseStr(fb, iByteIdx);
+    fe->_strUnformattedPath = _pint->parseStr(fbpt, iByteIdx);
     fe->_strLoc = FileSystem::formatPath(fe->_strUnformattedPath);
-    fe->_iOff = _pint->parseInt32(fb, iByteIdx);
-    fe->_iSize = _pint->parseInt32(fb, iByteIdx);
+    fe->_iOff = _pint->parseInt32(fbpt, iByteIdx);
+    fe->_iSize = _pint->parseInt32(fbpt, iByteIdx);
     _pint->_vecEntries.push_back(fe);
   }
 }
@@ -253,7 +254,8 @@ string_t ApplicationPackage::getFileAsString(const string_t& fileLoc) {
   // @fn getFileString
   // @brief Get file as a string.
   // @return Returns file as a string. Throws a ::Exception if there was a problem.
-  std::shared_ptr<BinaryFile> bf = std::make_shared<BinaryFile>("<none>");
+  auto b = std::make_unique<BinaryFile>("<none>");
+  BinaryFile* bf = b.get();
   bool ret = getFile(fileLoc, bf, true);
   if (!ret) {
     bf = nullptr;
@@ -262,7 +264,7 @@ string_t ApplicationPackage::getFileAsString(const string_t& fileLoc) {
   string_t str = bf->toString();
   return str;
 }
-bool ApplicationPackage::getFile(const string_t& fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull) {
+bool ApplicationPackage::getFile(const string_t& fileLoc, BinaryFile* fb, bool bAddNull) {
   if (fb == nullptr) {
     BRLogError("Buffered file was nullptr, no file was read. Initialize binaryfile.");
     Gu::debugBreak();
@@ -282,7 +284,8 @@ string_t ApplicationPackage::debugPrint() {
     ret += "  Loc:" + fe->_strLoc;
     ret += "  Off:" + std::to_string(fe->_iOff);
     ret += " Size: " + std::to_string(fe->_iSize);
-    std::shared_ptr<BinaryFile> tmp = std::make_shared<BinaryFile>(c_strVersion);
+    auto bb = std::make_unique<BinaryFile>(c_strVersion);
+    BinaryFile* tmp = bb.get();
     if (getFile(fe->_strLoc, tmp)) {
       ret += " Data: " + tmp->toString();
     }
@@ -317,7 +320,7 @@ string_t ApplicationPackage::getDataPath() {
 }
 string_t ApplicationPackage::getCacheFolder() {
   if (StringUtil::isEmpty(ApplicationPackage_Internal::_strCacheFolderName)) {
-    ApplicationPackage_Internal::_strCacheFolderName = FileSystem::combinePath(getDataPath(), "/cache");
+    ApplicationPackage_Internal::_strCacheFolderName = FileSystem::combinePath(".", "/cache");
   }
   return ApplicationPackage_Internal::_strCacheFolderName;
 }

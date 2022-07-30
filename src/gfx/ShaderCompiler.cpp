@@ -65,8 +65,8 @@ void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg, co
   greatestModifyTime = MathUtils::brMax(modTime, greatestModifyTime);
 
   // Load all source bytes
-  std::shared_ptr<BinaryFile> bf = std::make_shared<BinaryFile>(c_strShaderFileVersion);
-  loadSourceData(location, bf);
+  auto bf = std::make_unique<BinaryFile>(c_strShaderFileVersion);
+  loadSourceData(location, bf.get());
 
   if (_loadStatus != ShaderStatus::Uninitialized) {
     return;
@@ -77,7 +77,7 @@ void ShaderCompiler::loadSource_r(std::shared_ptr<ShaderSubProgram> pSubProg, co
   addSourceLineAt(0, lines, nameHdr);
 
   // Parse Lines
-  parseSourceIntoLines(bf, lines);
+  parseSourceIntoLines(bf.get(), lines);
 
   string_t nameHdr2 = Stz "// ----------- END " + FileSystem::getFileNameFromPath(location);
   addSourceLineAt(lines.size(), lines, nameHdr2);
@@ -197,7 +197,7 @@ ShaderCompiler::IncludeVec ShaderCompiler::getIncludes(std::vector<string_t>& li
 
   return _includes;
 }
-void ShaderCompiler::loadSourceData(const string_t& location, std::shared_ptr<BinaryFile> __out_ sourceData) {
+void ShaderCompiler::loadSourceData(const string_t& location, BinaryFile* __out_ sourceData) {
   if (!Gu::getPackage()->fileExists(location)) {
     sourceData = NULL;
     _loadStatus = ShaderStatus::e::FileNotFound;
@@ -212,7 +212,7 @@ void ShaderCompiler::loadSourceData(const string_t& location, std::shared_ptr<Bi
  * @param data [in] The binary data.
  * @param out_lines [inout] The source file lines.
  */
-void ShaderCompiler::parseSourceIntoLines(std::shared_ptr<BinaryFile> data, std::vector<string_t>& out_lines) {
+void ShaderCompiler::parseSourceIntoLines(BinaryFile* data, std::vector<string_t>& out_lines) {
   // - Parse file into lines
   string_t strTemp;
   char *c = data->getData().ptr(), *d;

@@ -43,10 +43,10 @@ public:
   TexFilter::e getFilter() { return _eFilter; }  // false = nearest
   void setWrapU(TexWrap::e wrap);
   void setWrapV(TexWrap::e wrap);
-  bool getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image);
+  bool getTextureDataFromGpu(Img32* __out_ image);
 
-  void serialize(std::shared_ptr<BinaryFile> fb);
-  void deserialize(std::shared_ptr<BinaryFile> fb);
+  void serialize(BinaryFile* fb);
+  void deserialize(BinaryFile* fb);
 
   static int32_t generateMipmapLevels(uint32_t width, uint32_t height);  //return a computed set of mipmap levels for the texture.
 

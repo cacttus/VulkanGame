@@ -166,9 +166,9 @@ void WorldMaker::saveGrid(std::shared_ptr<WorldGrid> g) {
   g->getCellData(nullptr, &wFile);
   g->getObjData(&wFile);
 
-  AssertOrThrow2(_pCurrentLair != nullptr);//We must have a lair.
+  //AssertOrThrow2(_pCurrentLair != nullptr);//We must have a lair.
 
-  wFile.getGlobData()->setLairId(_pCurrentLair->getLairId());
+  wFile.getGlobData()->setLairId(0);//_pCurrentLair->getLairId());
   wFile.save();
 
   //if (bConsolidateAndExpand) {

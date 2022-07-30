@@ -1,8 +1,21 @@
+# Phew ok, new tasks for 2022
+* System Level
+  * Shared ptr -> Unique ptr everywhere..
+* Fixing UI is of paramount importance
+  * performance 
+  * "udim" must be removed.
+  * Single color for buttons (no textures), Slaver won't need textures.
+  * Lua Scripts were to be used as the UI config.
+* Fixing the shadow box / volumes (see below)
+* Remove "scene" and use just physicsworld.
+* Rewrite of "node" system.
+
+
 # Tasks
 * Scene is at odds with physicsworld. Really, we don't need a "scene" 
 *  Draw is getting called on scene recursively. and this is incorrect. Draw should get called on the physics grids and their contained objs within the RenderBuckets that we collected.
 * -- also the object visibility in PhysicsWorld must be put into the sweep test.
-* Lights / shadowbox es are adding themselves when traversing the grid.
+* Lights / shadowboxes are adding themselves when traversing the grid.
 * Lights - calcBoundBox in SceneNode is not calculating box because light doesn't have a default volume attached.
 *   Create a default visibility volume and attach to lights to set correct bound box.
 * Lights - still not showing.

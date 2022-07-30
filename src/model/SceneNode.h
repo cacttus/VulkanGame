@@ -47,8 +47,8 @@ public:
   }
   void setParentName(string_t str, ParentType ee) { _strParentName = str; setParentType(ee); }
   string_t getParentName() { return _strParentName; }
-  virtual void serialize(std::shared_ptr<BinaryFile> fb);
-  virtual void deserialize(std::shared_ptr<BinaryFile> fb);
+  virtual void serialize(BinaryFile* fb);
+  virtual void deserialize(BinaryFile* fb);
 
 protected:
   Box3f* _pBox = nullptr;//Base Box.

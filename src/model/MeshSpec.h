@@ -68,8 +68,8 @@ public:
 
   std::shared_ptr<ShaderStorageBuffer> getWeightOffsetsGpu() { return _pWeightOffsetsGpu; }
   std::shared_ptr<ShaderStorageBuffer> getWeightsGpu() { return _pWeightsGpu; }
-  virtual void deserialize(std::shared_ptr<BinaryFile> fb) override;
-  virtual void serialize(std::shared_ptr<BinaryFile> fb) override;
+  virtual void deserialize(BinaryFile* fb) override;
+  virtual void serialize(BinaryFile* fb) override;
 
 protected:
   std::shared_ptr<VertexFormat> _pVertexFormat = nullptr;

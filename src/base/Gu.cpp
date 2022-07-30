@@ -340,8 +340,8 @@ std::shared_ptr<Img32> Gu::loadImage(std::string imgLoc) {
   // uint32_t imgSize;
   std::shared_ptr<Img32> ret = nullptr;
 
-  std::shared_ptr<BinaryFile> fb = std::make_shared<BinaryFile>("<none>");
-  if (Gu::getPackage()->getFile(imgLoc, fb)) {
+  auto fb = std::make_unique<BinaryFile>("<none>");
+  if (Gu::getPackage()->getFile(imgLoc, fb.get())) {
     //decode
     err = lodepng_decode32(&image, &width, &height, (unsigned char*)fb->getData().ptr(), fb->getData().count());
     if (err != 0) {

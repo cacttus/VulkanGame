@@ -175,7 +175,7 @@ void Material::unbind() {
   //   glBindTexture(GL_TEXTURE_2D, 0);
   // }
 }
-void Material::deserialize(std::shared_ptr<BinaryFile> fb) {
+void Material::deserialize(BinaryFile* fb) {
   fb->readString(_strName);
   int32_t nTextures;
   fb->readInt32(nTextures);
@@ -198,7 +198,7 @@ void Material::deserialize(std::shared_ptr<BinaryFile> fb) {
   fb->readFloat(_fTpFilter);
   fb->readFloat(_fTpIOR);
 }
-void Material::serialize(std::shared_ptr<BinaryFile> fb) {
+void Material::serialize(BinaryFile* fb) {
   fb->writeString(std::move(_strName));
   fb->writeInt32((int32_t)_mapTextureBindings.size());
   for (std::pair<TextureChannel::e, std::shared_ptr<TextureSlot>> p : _mapTextureBindings) {
@@ -214,7 +214,7 @@ void Material::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeFloat(std::move(_fTpFilter));
   fb->writeFloat(std::move(_fTpIOR));
 }
-void TextureSlot::deserialize(std::shared_ptr<BinaryFile> fb) {
+void TextureSlot::deserialize(BinaryFile* fb) {
   fb->readUint32((uint32_t&)_iTexFileHashed);
   fb->readFloat(_fInfluence);
   int32_t n;
@@ -223,7 +223,7 @@ void TextureSlot::deserialize(std::shared_ptr<BinaryFile> fb) {
   fb->readInt32(n);
   _eChannel = (TextureChannel::e)n;
 }
-void TextureSlot::serialize(std::shared_ptr<BinaryFile> fb) {
+void TextureSlot::serialize(BinaryFile* fb) {
   if (_pTex != nullptr) {
     string_t fn = FileSystem::getFileNameFromPath(_pTex->getLocation());
     if (StringUtil::isNotEmpty(_pTex->getLocation())) {

@@ -841,7 +841,7 @@ void GLContext::getCompatibleDepthComponent(GLenum eRequestedDepth, std::functio
     }
   }
 }
-bool GLContext::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLuint iGLTexId, GLenum eTexTargetBase, int iCubeMapSide) {
+bool GLContext::getTextureDataFromGpu(Img32* __out_ image, GLuint iGLTexId, GLenum eTexTargetBase, int iCubeMapSide) {
   AssertOrThrow2(image != nullptr);
   GLint iSavedTextureBinding;
   GLenum eTexBinding = texTargetToTexBindingQuery(eTexTargetBase);

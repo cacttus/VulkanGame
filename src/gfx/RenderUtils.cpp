@@ -261,7 +261,7 @@ void RenderUtils::drawFrustumShader(std::shared_ptr<CameraNode> cam, std::shared
 
 void RenderUtils::saveTexture(string_t&& strLoc, GLuint iGLTexId, GLenum eTexTarget, int iCubeMapSide) {
   std::shared_ptr<Img32> bi = std::make_shared<Img32>();
-  if (getContext()->getTextureDataFromGpu(bi, iGLTexId, eTexTarget, iCubeMapSide) == true) {
+  if (getContext()->getTextureDataFromGpu(bi.get(), iGLTexId, eTexTarget, iCubeMapSide) == true) {
     //the GL tex image must be flipped to show upriht/
     bi->flipV();
     Gu::saveImage(strLoc, bi);

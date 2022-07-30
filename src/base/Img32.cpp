@@ -864,7 +864,7 @@ bool Img32::parseImagePatch(std::shared_ptr<Img32> master, std::vector<std::shar
   return bRet;
 }
 
-void Img32::serialize(std::shared_ptr<BinaryFile> bf) {
+void Img32::serialize(BinaryFile* bf) {
   size_t nbytes = getData()->byteSize();
   bf->writeString(std::move(_strNameOrFilePath));
   bf->writeUint32(std::move((uint32_t)_iWidth));
@@ -872,7 +872,7 @@ void Img32::serialize(std::shared_ptr<BinaryFile> bf) {
   bf->writeUint32(std::move((uint32_t)nbytes));
   bf->write((const char*)getData()->ptr(), nbytes);
 }
-void Img32::deserialize(std::shared_ptr<BinaryFile> bf) {
+void Img32::deserialize(BinaryFile* bf) {
   bf->readString(_strNameOrFilePath);
   bf->readUint32(_iWidth);
   bf->readUint32(_iHeight);

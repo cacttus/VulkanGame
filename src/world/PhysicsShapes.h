@@ -20,8 +20,8 @@ class PhysicsShape : public VirtualMemory {
 public:
   PhysicsShape() {}
   virtual ~PhysicsShape() override {}
-  virtual void deserialize(std::shared_ptr<BinaryFile> fb);
-  virtual void serialize(std::shared_ptr<BinaryFile> fb);
+  virtual void deserialize(BinaryFile* fb);
+  virtual void serialize(BinaryFile* fb);
 };
 class SphereShape : public PhysicsShape {
   float _fRadius;
@@ -30,8 +30,8 @@ public:
   SphereShape() {}
   SphereShape(VertexBufferPointer& vbPointer, float r);
   virtual ~SphereShape() override;
-  virtual void deserialize(std::shared_ptr<BinaryFile> fb) override;
-  virtual void serialize(std::shared_ptr<BinaryFile> fb) override;
+  virtual void deserialize(BinaryFile* fb) override;
+  virtual void serialize(BinaryFile* fb) override;
 };
 class HullShape : public PhysicsShape {
   std::vector<vec3> _vecPoints;
@@ -40,8 +40,8 @@ public:
   HullShape() {}
   HullShape(VertexBufferPointer& vbPointer);
   virtual ~HullShape() override;
-  virtual void deserialize(std::shared_ptr<BinaryFile> fb) override;
-  virtual void serialize(std::shared_ptr<BinaryFile> fb) override;
+  virtual void deserialize(BinaryFile* fb) override;
+  virtual void serialize(BinaryFile* fb) override;
 };
 //class BoxShape : public PhysicsShape {
 //    Box3f* _pBox = nullptr;

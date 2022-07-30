@@ -22,8 +22,8 @@ public:
   void setName(const string_t& n) { _strName = n; }
   uint32_t getHashedName();
 
-  virtual void deserialize(std::shared_ptr<BinaryFile> bf) override;
-  virtual void serialize(std::shared_ptr<BinaryFile> bf) override;
+  virtual void deserialize(BinaryFile* bf) override;
+  virtual void serialize(BinaryFile* bf) override;
 
   virtual std::shared_ptr<NodeData> clone() = 0;
   virtual void copy(std::shared_ptr<NodeData> other) = 0;

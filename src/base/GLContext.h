@@ -123,7 +123,7 @@ public:
   // Textures
   void createDepthTexture(const string_t& owner, GLuint* __out_ texId, int32_t w, int32_t h, bool bMsaaEnabled, int32_t nMsaaSamples, GLenum eRequestedDepth);
   GLenum getSupportedDepthSize();
-  bool getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image, GLuint iGLTexId, GLenum eTarget, int iCubeMapSide = -1);
+  bool getTextureDataFromGpu(Img32* __out_ image, GLuint iGLTexId, GLenum eTarget, int iCubeMapSide = -1);
 
   //Conversion
   static string_t openGlTypeToString(GLenum type);  //TODO: move this to the GL hardware or Gd::..

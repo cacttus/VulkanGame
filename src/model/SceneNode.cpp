@@ -37,7 +37,7 @@ BaseSpec::~BaseSpec() {
   DEL_MEM(_pBox);
   //_pBox = nullptr;
 }
-void BaseSpec::serialize(std::shared_ptr<BinaryFile> fb) {
+void BaseSpec::serialize(BinaryFile* fb) {
   fb->writeString(std::move(_strName));
   fb->writeString(std::move(_strParentName));
   fb->writeInt32(std::move((int32_t)_eParentType));
@@ -46,7 +46,7 @@ void BaseSpec::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeVec3(std::move(_pBox->_min));
   fb->writeVec3(std::move(_pBox->_max));
 }
-void BaseSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
+void BaseSpec::deserialize(BinaryFile* fb) {
   fb->readString(_strName);
   _iNameHashed = STRHASH(_strName);
   fb->readString(_strParentName);

@@ -56,10 +56,10 @@ void PhysicsNode::afterAddedToScene(std::shared_ptr<Scene> scene) {
 void PhysicsNode::afterRemovedFromScene(std::shared_ptr<Scene> scene) {
 
 }
-void PhysicsSpec::serialize(std::shared_ptr<BinaryFile> fb) {
+void PhysicsSpec::serialize(BinaryFile* fb) {
   BaseSpec::serialize(fb);
 }
-void PhysicsSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
+void PhysicsSpec::deserialize(BinaryFile* fb) {
   BaseSpec::deserialize(fb);
 
 }

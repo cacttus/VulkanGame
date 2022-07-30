@@ -29,7 +29,7 @@ public:
   ApplicationPackage();
   virtual ~ApplicationPackage() override;
 
-  bool getFile(const string_t& fileLoc, std::shared_ptr<BinaryFile> fb, bool bAddNull = false);
+  bool getFile(const string_t& fileLoc, BinaryFile* fb, bool bAddNull = false);
   string_t getFileAsString(const string_t& fileLoc);
   std::vector<string_t> getFileAsLines(const string_t& fileLoc);
   void build(const string_t& exeLoc);

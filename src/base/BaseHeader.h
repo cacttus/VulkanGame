@@ -145,8 +145,8 @@ class ISerializable : public VirtualMemoryShared<Tx> {
 public:
   ISerializable() {}
   virtual ~ISerializable() override {}
-  virtual void deserialize(std::shared_ptr<BinaryFile> fb) = 0;
-  virtual void serialize(std::shared_ptr<BinaryFile> fb) = 0;
+  virtual void deserialize(BinaryFile* fb) = 0;
+  virtual void serialize(BinaryFile* fb) = 0;
 };
 
 class SoundPlayInfo : public VirtualMemory {

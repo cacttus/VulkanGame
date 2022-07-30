@@ -1,8 +1,8 @@
 /**
-*  @file EngineConfig.h
-*  @date May 8, 2017
-*  @author MetalMario971
-*/
+ *  @file EngineConfig.h
+ *  @date May 8, 2017
+ *  @author MetalMario971
+ */
 #pragma once
 #ifndef __ENGINECONFIG_14942867052644616215_H__
 #define __ENGINECONFIG_14942867052644616215_H__
@@ -26,6 +26,7 @@ public:
     _value = value;
   }
   bool value() { return _value; }
+
 private:
   bool _value;
 };
@@ -53,10 +54,10 @@ private:
 };
 
 /**
-*  @class EngineConfig
-*  @brief Stores configuration options for the graphics engine.
-*  TODO: this class is getting too big. Create a property system for it.
-*/
+ *  @class EngineConfig
+ *  @brief Stores configuration options for the graphics engine.
+ *  TODO: this class is getting too big. Create a property system for it.
+ */
 #define XMLCONFIG_PROP(x) const std::string c_##x = #x;
 
 #define XMLCONFIG_PROP_T(_x, _t)  \
@@ -84,18 +85,18 @@ private:                                \
 #define XMLCONFIG_PROP_INT32_GS(_x, _def)        \
 public:                                          \
   const std::string c_##_x = #_x;                \
-  int_fast32_t get##_x() { return _i32##_x; }            \
+  int_fast32_t get##_x() { return _i32##_x; }    \
   void set##_x(int_fast32_t v) { _i32##_x = v; } \
                                                  \
 private:                                         \
   int_fast32_t _i32##_x = _def;
 
-#define XMLCONFIG_PROP_INT32_G(_x, _def) \
-public:                                  \
-  const std::string c_##_x = #_x;        \
-  int_fast32_t get##_x() { return _i32##_x; }    \
-                                         \
-private:                                 \
+#define XMLCONFIG_PROP_INT32_G(_x, _def)      \
+public:                                       \
+  const std::string c_##_x = #_x;             \
+  int_fast32_t get##_x() { return _i32##_x; } \
+                                              \
+private:                                      \
   int_fast32_t _i32##_x = _def;
 
 class EngineConfig_Internal;
@@ -152,7 +153,7 @@ public:
   XMLCONFIG_PROP_INT32_G(MaxDirLights, 32)
   XMLCONFIG_PROP_INT32_G(MaxCubeShadowSamples, 4)
   XMLCONFIG_PROP_INT32_G(MaxFrustShadowSamples, 4)
-  XMLCONFIG_PROP_INT32_G(DefaultScreenWidth, 800)  //This shouldn't even be a thing. We should use the screen dims to create the window.
+  XMLCONFIG_PROP_INT32_G(DefaultScreenWidth, 800)  // This shouldn't even be a thing. We should use the screen dims to create the window.
   XMLCONFIG_PROP_INT32_G(DefaultScreenHeight, 600)
   XMLCONFIG_PROP_INT32_G(GameHostTimeoutMs, 60000)
   XMLCONFIG_PROP_INT32_G(GameHostPort, 44244)

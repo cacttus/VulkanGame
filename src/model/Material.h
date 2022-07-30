@@ -19,8 +19,8 @@ public:
   TextureType::e _eTextureType = TextureType::e::Undefined;
   std::shared_ptr<Texture2D> _pTex = nullptr;
   float _fInfluence = 1.0f;
-  void deserialize(std::shared_ptr<BinaryFile> fb);
-  void serialize(std::shared_ptr<BinaryFile> fb);
+  void deserialize(BinaryFile* fb);
+  void serialize(BinaryFile* fb);
 };
 /**
 *  @class Material
@@ -61,8 +61,8 @@ public:
   void setTpFilter(float f) { _fTpFilter = f; }
 
   std::shared_ptr<Material> makeCopy();
-  void deserialize(std::shared_ptr<BinaryFile> fb);
-  void serialize(std::shared_ptr<BinaryFile> fb);
+  void deserialize(BinaryFile* fb);
+  void serialize(BinaryFile* fb);
 
   virtual void unbind();
 

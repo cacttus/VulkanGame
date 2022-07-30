@@ -934,7 +934,7 @@ std::shared_ptr<Img32> RenderPipe::getResultAsImage() {
 
   std::shared_ptr<BufferRenderTarget> pTarget;
   pTarget = _pBlittedForward->getTargetByName(ForwardFramebuffer::c_strColorMRT_FW);
-  if (getContext()->getTextureDataFromGpu(bi, pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
+  if (getContext()->getTextureDataFromGpu(bi.get(), pTarget->getGlTexId(), GL_TEXTURE_2D) == true) {
     //the GL tex image must be flipped to show upriht/
   }
 

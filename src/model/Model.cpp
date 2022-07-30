@@ -95,13 +95,13 @@ void KeyFrame::animate(float ct, std::shared_ptr<KeyFrame> pNext, mat4& mOut) {
     BRThrowNotImplementedException();
   }
 }
-void KeyFrame::deserialize(std::shared_ptr<BinaryFile> fb) {
+void KeyFrame::deserialize(BinaryFile* fb) {
   fb->readInt32(_iSequenceKeyFrame);
   fb->readVec3(_pos);
   fb->readVec4(*(vec4*)&_rot);//hmm this doesn't look portable
   fb->readVec3(_scl);
 }
-void KeyFrame::serialize(std::shared_ptr<BinaryFile> fb) {
+void KeyFrame::serialize(BinaryFile* fb) {
   fb->writeInt32(std::move(_iSequenceKeyFrame));
   fb->writeVec3(std::move(_pos));
   fb->writeVec4(std::move(*(vec4*)&_rot));//hmm this doesn't look portable
@@ -173,7 +173,7 @@ void ActionKeys::addKeyFrame(int iTime, vec3& p, quat& r, vec3& s) {
   std::shared_ptr<KeyFrame> newKf = std::make_shared<KeyFrame>(p, r, s, iTime);//fTime is zero - calc this later
   getKeyFrames().push_back(newKf);
 }
-void ActionKeys::deserialize(std::shared_ptr<BinaryFile> fb) {
+void ActionKeys::deserialize(BinaryFile* fb) {
   fb->readString(_strObjectName);
   _iNameHashed = STRHASH(_strObjectName);
 
@@ -186,7 +186,7 @@ void ActionKeys::deserialize(std::shared_ptr<BinaryFile> fb) {
   }
 
 }
-void ActionKeys::serialize(std::shared_ptr<BinaryFile> fb) {
+void ActionKeys::serialize(BinaryFile* fb) {
   fb->writeString(std::move(_strObjectName));
 
   fb->writeInt32((int32_t)_vecKeys.size());
@@ -231,7 +231,7 @@ void ActionGroup::scaleKeys() {
 bool ActionGroup::isValid() {
   return _fEndTime >= 0.0 && _mapActions.size() > 0;
 }
-void ActionGroup::deserialize(std::shared_ptr<BinaryFile> fb) {
+void ActionGroup::deserialize(BinaryFile* fb) {
   fb->readString(_strName);
   _iNameHashed = STRHASH(_strName);
 
@@ -246,7 +246,7 @@ void ActionGroup::deserialize(std::shared_ptr<BinaryFile> fb) {
   //**Important
   scaleKeys();
 }
-void ActionGroup::serialize(std::shared_ptr<BinaryFile> fb) {
+void ActionGroup::serialize(BinaryFile* fb) {
   fb->writeString(std::move(_strName));
 
   fb->writeInt32((int32_t)_mapActions.size());
@@ -282,7 +282,7 @@ void BoneSpec::addChild(std::shared_ptr<BoneSpec> bs) {
     _vecChildren.push_back(bs);
   }
 }
-void BoneSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
+void BoneSpec::deserialize(BinaryFile* fb) {
   BaseSpec::deserialize(fb);
   //fb->readString(_strName);
   //_iNameHashed = STRHASH(_strName);
@@ -296,7 +296,7 @@ void BoneSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
 
   _mInvBind = _mBind.inverseOf();
 }
-void BoneSpec::serialize(std::shared_ptr<BinaryFile> fb) {
+void BoneSpec::serialize(BinaryFile* fb) {
   BaseSpec::serialize(fb);
   //fb->writeString(std::move(_strName));
   //fb->writeString(std::move(_strParentName));
@@ -369,7 +369,7 @@ Armature::~Armature() {
   //}
   _mapBoneCacheOrdered.clear();
 }
-void Armature::deserialize(std::shared_ptr<BinaryFile> fb) {
+void Armature::deserialize(BinaryFile* fb) {
   BaseSpec::deserialize(fb);
 
   fb->readInt32(_iArmatureId);
@@ -385,7 +385,7 @@ void Armature::deserialize(std::shared_ptr<BinaryFile> fb) {
   compileHierarchy();
 
 }
-void Armature::serialize(std::shared_ptr<BinaryFile> fb) {
+void Armature::serialize(BinaryFile* fb) {
   BaseSpec::serialize(fb);
 
   fb->writeInt32(std::move(_iArmatureId));
@@ -674,7 +674,7 @@ ModelSpec::~ModelSpec() {
   //_vecMeshes.clear();
   //_vecArmatures.clear();
 }
-void ModelSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
+void ModelSpec::deserialize(BinaryFile* fb) {
   BRLogInfo("Reading Model..");
   PhysicsSpec::deserialize(fb);
   //fb->readString(std::move(_strName));
@@ -726,7 +726,7 @@ void ModelSpec::deserialize(std::shared_ptr<BinaryFile> fb) {
 
   BRLogInfo("..Done");
 }
-void ModelSpec::serialize(std::shared_ptr<BinaryFile> fb) {
+void ModelSpec::serialize(BinaryFile* fb) {
   PhysicsSpec::serialize(fb);
 
   fb->writeString(std::move(getFriendlyName()));

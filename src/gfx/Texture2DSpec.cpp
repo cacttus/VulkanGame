@@ -265,12 +265,12 @@ void Texture2D::setFilter(TexFilter::e filter) {
 
   unbind(TextureChannel::e::Channel0);
 }
-bool Texture2D::getTextureDataFromGpu(std::shared_ptr<Img32> __out_ image) {
+bool Texture2D::getTextureDataFromGpu(Img32* __out_ image) {
   return getContext()->getTextureDataFromGpu(image, _glId, _eGLTextureBinding);
 }
-void Texture2D::serialize(std::shared_ptr<BinaryFile> fb) {
-  std::shared_ptr<Img32> img = std::make_shared<Img32>();
-  getTextureDataFromGpu(img);
+void Texture2D::serialize(BinaryFile* fb) {
+  auto img = std::make_unique<Img32>();
+  getTextureDataFromGpu(img.get());
 
   fb->writeVersion();
   fb->writeString(std::move(_strName));
@@ -285,7 +285,7 @@ void Texture2D::serialize(std::shared_ptr<BinaryFile> fb) {
   fb->writeUint32(std::move((uint32_t)img->getData()->byteSize()));
   fb->write((const char*)img->getData()->ptr(), img->getData()->byteSize());
 }
-void Texture2D::deserialize(std::shared_ptr<BinaryFile> fb) {
+void Texture2D::deserialize(BinaryFile* fb) {
   fb->readVersion();
   fb->readString(_strName);
   fb->readString(_strLocation);
